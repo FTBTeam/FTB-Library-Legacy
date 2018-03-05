@@ -18,7 +18,7 @@ public abstract class GuiButtonListBase extends GuiBase
 
 	public GuiButtonListBase()
 	{
-		panelButtons = new Panel(gui)
+		panelButtons = new Panel(this)
 		{
 			@Override
 			public void addWidgets()
@@ -43,20 +43,20 @@ public abstract class GuiButtonListBase extends GuiBase
 
 				int size = align(WidgetLayout.VERTICAL);
 
-				setHeight(Math.min(size, 146));
+				setHeight(140);
 
 				scrollBar.setPosAndSize(posX + width + 6, 8, 16, height + 2);
 				scrollBar.setElementSize(size);
 				scrollBar.setSrollStepFromOneElementSize(20);
 
-				gui.setWidth(scrollBar.posX + scrollBar.width + 8);
-				gui.setHeight(height + 18);
+				getGui().setWidth(scrollBar.posX + scrollBar.width + 8);
+				getGui().setHeight(height + 18);
 			}
 
 			@Override
 			public Icon getIcon()
 			{
-				return gui.getTheme().getPanelBackground();
+				return getTheme().getPanelBackground();
 			}
 		};
 
@@ -112,7 +112,7 @@ public abstract class GuiButtonListBase extends GuiBase
 
 		if (!title.isEmpty())
 		{
-			drawString(title, getAX() + (width - gui.getStringWidth(title)) / 2, getAY() - getFontHeight() - 2, SHADOW);
+			drawString(title, getAX() + (width - getStringWidth(title)) / 2, getAY() - getFontHeight() - 2, SHADOW);
 		}
 	}
 }

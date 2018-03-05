@@ -8,15 +8,15 @@ public abstract class Button extends Widget
 	private String title = "";
 	protected Icon icon = Icon.EMPTY;
 
-	public Button(GuiBase gui)
+	public Button(Panel panel)
 	{
-		super(gui);
+		super(panel);
 		setSize(16, 16);
 	}
 
-	public Button(GuiBase gui, String title, Icon icon)
+	public Button(Panel panel, String title, Icon icon)
 	{
-		this(gui);
+		this(panel);
 		setIcon(icon);
 		setTitle(title);
 	}
@@ -41,7 +41,7 @@ public abstract class Button extends Widget
 
 	public Icon getButtonBackground()
 	{
-		return gui.getTheme().getButton(gui.isMouseOver(this));
+		return getTheme().getButton(getWidgetType());
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public abstract class Button extends Widget
 	@Override
 	public boolean mousePressed(MouseButton button)
 	{
-		if (gui.isMouseOver(this))
+		if (isMouseOver() && getWidgetType() != WidgetType.DISABLED)
 		{
 			onClicked(button);
 			return true;

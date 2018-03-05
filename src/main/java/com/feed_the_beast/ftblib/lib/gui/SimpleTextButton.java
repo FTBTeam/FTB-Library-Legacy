@@ -9,9 +9,9 @@ import java.util.List;
  */
 public abstract class SimpleTextButton extends Button
 {
-	public SimpleTextButton(GuiBase gui, String txt, Icon icon)
+	public SimpleTextButton(Panel panel, String txt, Icon icon)
 	{
-		super(gui, txt, icon);
+		super(panel, txt, icon);
 		setHeight(20);
 	}
 
@@ -19,7 +19,7 @@ public abstract class SimpleTextButton extends Button
 	public SimpleTextButton setTitle(String txt)
 	{
 		super.setTitle(txt);
-		setWidth(gui.getStringWidth(getTitle()) + (getIcon().isEmpty() ? 8 : 28));
+		setWidth(getStringWidth(getTitle()) + (getIcon().isEmpty() ? 8 : 28));
 		return this;
 	}
 
@@ -50,11 +50,11 @@ public abstract class SimpleTextButton extends Button
 		Icon icon = getIcon();
 		String title = getTitle();
 		int textX = ax;
-		int textY = ay + (height - gui.getFontHeight() + 1) / 2;
+		int textY = ay + (height - getFontHeight() + 1) / 2;
 
 		if (renderTitleInCenter())
 		{
-			textX += (width - gui.getStringWidth(title) - (icon.isEmpty() ? 0 : off + 16)) / 2;
+			textX += (width - getStringWidth(title) - (icon.isEmpty() ? 0 : off + 16)) / 2;
 		}
 		else
 		{
@@ -67,6 +67,6 @@ public abstract class SimpleTextButton extends Button
 			textX += off + 16;
 		}
 
-		gui.drawString(title, textX, textY, SHADOW);
+		drawString(title, textX, textY, getTheme().getContentColor(getWidgetType()), SHADOW);
 	}
 }

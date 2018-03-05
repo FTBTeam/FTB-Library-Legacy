@@ -25,6 +25,7 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig>
 	public MessageEditConfig(ConfigGroup _group)
 	{
 		group = _group;
+		//TODO: Logger
 	}
 
 	@Override

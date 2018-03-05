@@ -32,12 +32,17 @@ public final class Response
 		return StringUtils.readString(stream);
 	}
 
+	public String asString(int bufferSize) throws Exception
+	{
+		return StringUtils.readString(stream, bufferSize);
+	}
+
 	public List<String> asStringList() throws Exception
 	{
 		return StringUtils.readStringList(stream);
 	}
 
-	public JsonElement asJson() throws Exception
+	public JsonElement asJson()
 	{
 		return JsonUtils.fromJson(stream);
 	}

@@ -81,7 +81,8 @@ public class CachedVertexData
 
 	public class CachedVertex
 	{
-		private double x, y, z, u, v;
+		private final double x, y, z;
+		private double u, v;
 		private int r = color.redi(), g = color.greeni(), b = color.bluei(), a = color.alphai();
 		private float nx, ny, nz;
 

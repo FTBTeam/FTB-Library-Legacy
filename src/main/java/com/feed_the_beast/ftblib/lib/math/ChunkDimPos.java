@@ -69,4 +69,19 @@ public final class ChunkDimPos
 	{
 		return new ChunkPos(posX, posZ);
 	}
+
+	public int getBlockX()
+	{
+		return (posX << 4) + 8;
+	}
+
+	public int getBlockZ()
+	{
+		return (posZ << 4) + 8;
+	}
+
+	public BlockDimPos getBlockPos(int y)
+	{
+		return new BlockDimPos(getBlockX(), y, getBlockZ(), dim);
+	}
 }

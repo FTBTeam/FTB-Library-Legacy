@@ -2,14 +2,12 @@ package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
-
-import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -17,13 +15,12 @@ import javax.annotation.Nullable;
 public class ConfigBlockState extends ConfigValue
 {
 	public static final String ID = "blockstate";
-	public static final IBlockState AIR_STATE = Blocks.AIR.getDefaultState();
 
 	private IBlockState value;
 
 	public ConfigBlockState()
 	{
-		this(AIR_STATE);
+		this(CommonUtils.AIR_STATE);
 	}
 
 	public ConfigBlockState(IBlockState state)
@@ -47,7 +44,6 @@ public class ConfigBlockState extends ConfigValue
 		value = state;
 	}
 
-	@Nullable
 	@Override
 	public Object getValue()
 	{
@@ -63,7 +59,7 @@ public class ConfigBlockState extends ConfigValue
 	@Override
 	public boolean getBoolean()
 	{
-		return getBlockState() != Blocks.AIR.getDefaultState();
+		return getBlockState() != CommonUtils.AIR_STATE;
 	}
 
 	@Override
@@ -81,7 +77,7 @@ public class ConfigBlockState extends ConfigValue
 	@Override
 	public void fromJson(JsonElement o)
 	{
-		value = Blocks.AIR.getDefaultState();
+		value = CommonUtils.AIR_STATE;
 
 		if (o.isJsonPrimitive())
 		{

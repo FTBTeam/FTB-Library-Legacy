@@ -1,5 +1,7 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
@@ -28,6 +30,11 @@ public class ItemIcon extends Icon
 			{
 				stack = ItemStackSerializer.parseItem(lazyStackString);
 				createdStack = true;
+
+				if (FTBLibConfig.debugging.print_more_errors && stack.isEmpty())
+				{
+					FTBLib.LOGGER.warn("Couldn't parse item '" + lazyStackString + "'!");
+				}
 			}
 
 			return stack;
@@ -67,6 +74,10 @@ public class ItemIcon extends Icon
 		if (!GuiHelper.drawItem(getStack(), x, y, w / 16D, h / 16D, true, col))
 		{
 			stack = InvUtils.ERROR_ITEM;
+		}
+		else
+		{
+			GuiHelper.setupDrawing();
 		}
 	}
 

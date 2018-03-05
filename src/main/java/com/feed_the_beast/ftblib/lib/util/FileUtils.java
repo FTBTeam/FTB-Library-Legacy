@@ -1,9 +1,14 @@
 package com.feed_the_beast.ftblib.lib.util;
 
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+
+import javax.annotation.Nullable;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.channels.Channels;
@@ -50,18 +55,40 @@ public class FileUtils
 		return file;
 	}
 
-	public static void save(File f, List<String> al) throws Exception
+	public static void save(File file, List<String> list) throws Exception
 	{
-		save(f, String.join("\n", al));
+		OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(newFile(file)), StandardCharsets.UTF_8);
+		BufferedWriter br = new BufferedWriter(fw);
+
+		for (String s : list)
+		{
+			br.write(s);
+			br.write('\n');
+		}
+
+		br.close();
+		fw.close();
 	}
 
-	public static void save(File f, String s) throws Exception
+	public static void save(File file, String s) throws Exception
 	{
-		OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(newFile(f)), StandardCharsets.UTF_8);
+		OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(newFile(file)), StandardCharsets.UTF_8);
 		BufferedWriter br = new BufferedWriter(fw);
 		br.write(s);
 		br.close();
 		fw.close();
+	}
+
+	public static void writeNBT(File f, NBTTagCompound tag)
+	{
+		try
+		{
+			CompressedStreamTools.write(tag, FileUtils.newFile(f));
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 
 	public static List<String> load(File f) throws Exception
@@ -71,7 +98,35 @@ public class FileUtils
 
 	public static String loadAsText(File f) throws Exception
 	{
-		return StringUtils.readString(new FileInputStream(f));
+		return StringUtils.readString(new FileInputStream(f), 1024);
+	}
+
+	@Nullable
+	public static NBTTagCompound readNBT(File file)
+	{
+		if (!file.exists() || !file.isFile())
+		{
+			return null;
+		}
+
+		try
+		{
+			return CompressedStreamTools.read(file);
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+
+			try (InputStream stream = new FileInputStream(file))
+			{
+				return CompressedStreamTools.readCompressed(stream);
+			}
+			catch (Exception ex1)
+			{
+			}
+		}
+
+		return null;
 	}
 
 	public static boolean downloadFile(String url, File out)

@@ -117,7 +117,7 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 
 	public E offset(E value, int index)
 	{
-		return get(MathUtils.wrap(getIndex(value) + index, values.size()));
+		return get(MathUtils.mod(getIndex(value) + index, values.size()));
 	}
 
 	public E getNext(E value)
@@ -130,7 +130,7 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 		return offset(value, -1);
 	}
 
-	public int getIndex(Object e)
+	public int getIndex(E e)
 	{
 		return values.indexOf(e);
 	}
@@ -140,7 +140,7 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 		return getIndex(map.get(s));
 	}
 
-	public void writeToNBT(NBTTagCompound nbt, String name, EnumSaveType type, Object value)
+	public void writeToNBT(NBTTagCompound nbt, String name, EnumSaveType type, E value)
 	{
 		if (value == defaultValue)
 		{

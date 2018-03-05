@@ -8,57 +8,47 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
  */
 public abstract class Theme
 {
-	public abstract Color4I getContentColor(boolean mouseOver);
+	public abstract Color4I getContentColor(WidgetType type);
 
-	public abstract Icon getGui(boolean mouseOver);
+	public abstract Icon getGui(WidgetType type);
 
-	public abstract Icon getWidget(boolean mouseOver);
+	public abstract Icon getWidget(WidgetType type);
 
-	public Icon getDisabledWidget()
-	{
-		return getWidget(false);
-	}
-
-	public abstract Icon getSlot(boolean mouseOver);
+	public abstract Icon getSlot(WidgetType type);
 
 	public Icon getContainerSlot()
 	{
-		return getSlot(false).withBorder(-1);
+		return getSlot(WidgetType.NORMAL).withBorder(-1);
 	}
 
-	public Icon getButton(boolean mouseOver)
+	public Icon getButton(WidgetType type)
 	{
-		return getWidget(mouseOver);
-	}
-
-	public Icon getDisabledButton()
-	{
-		return getButton(false);
+		return getWidget(type);
 	}
 
 	public Icon getScrollBarBackground()
 	{
-		return getSlot(false);
+		return getSlot(WidgetType.NORMAL);
 	}
 
-	public Icon getScrollBar(boolean grabbed, boolean vertical)
+	public Icon getScrollBar(WidgetType type, boolean vertical)
 	{
-		return getWidget(grabbed);
+		return getWidget(type);
 	}
 
 	public Icon getTextBox()
 	{
-		return getSlot(false);
+		return getSlot(WidgetType.NORMAL);
 	}
 
 	public Icon getCheckboxBackground(boolean radioButton)
 	{
-		return getSlot(false);
+		return getSlot(WidgetType.NORMAL);
 	}
 
-	public Icon getCheckbox(boolean mouseOver, boolean selected, boolean radioButton)
+	public Icon getCheckbox(WidgetType type, boolean selected, boolean radioButton)
 	{
-		return selected ? getWidget(mouseOver) : Icon.EMPTY;
+		return selected ? getWidget(type) : Icon.EMPTY;
 	}
 
 	public Icon getPanelBackground()

@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * @author LatvianModder
  */
-public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
+public class NBTDataStorage implements INBTSerializable<NBTTagCompound>, IHasCache
 {
 	public static final NBTDataStorage EMPTY = new NBTDataStorage()
 	{
@@ -100,6 +100,18 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 			}
 
 			entry.getValue().deserializeNBT(tag);
+		}
+	}
+
+	@Override
+	public void clearCache()
+	{
+		for (Map.Entry<String, INBTSerializable<NBTTagCompound>> entry : map.entrySet())
+		{
+			if (entry.getValue() instanceof IHasCache)
+			{
+				((IHasCache) entry.getValue()).clearCache();
+			}
 		}
 	}
 }

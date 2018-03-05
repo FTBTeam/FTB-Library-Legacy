@@ -29,7 +29,6 @@ public class TextBox extends Widget
 	public TextBox(GuiBase gui)
 	{
 		super(gui);
-		text = getText();
 	}
 
 	public final boolean isFocused()
@@ -147,12 +146,12 @@ public class TextBox extends Widget
 		}
 
 		int j = width - 10;
-		String s = gui.trimStringToWidth(text.substring(lineScrollOffset), j, false);
+		String s = trimStringToWidth(text.substring(lineScrollOffset), j, false);
 		int k = s.length() + lineScrollOffset;
 
 		if (position == lineScrollOffset)
 		{
-			lineScrollOffset -= gui.trimStringToWidth(text, j, true).length();
+			lineScrollOffset -= trimStringToWidth(text, j, true).length();
 		}
 
 		if (position > k)
@@ -274,7 +273,7 @@ public class TextBox extends Widget
 	@Override
 	public boolean mousePressed(MouseButton button)
 	{
-		if (gui.isMouseOver(this))
+		if (isMouseOver())
 		{
 			setFocused(true);
 			Keyboard.enableRepeatEvents(true);
@@ -283,9 +282,9 @@ public class TextBox extends Widget
 			{
 				if (isFocused)
 				{
-					int i = gui.getMouseX() - getAX();
-					String s = gui.trimStringToWidth(text.substring(lineScrollOffset), width, false);
-					setCursorPosition(gui.trimStringToWidth(s, i, false).length() + lineScrollOffset);
+					int i = getMouseX() - getAX();
+					String s = trimStringToWidth(text.substring(lineScrollOffset), width, false);
+					setCursorPosition(trimStringToWidth(s, i, false).length() + lineScrollOffset);
 				}
 			}
 			else if (getText().length() > 0)
@@ -466,12 +465,12 @@ public class TextBox extends Widget
 		int ay = getAY();
 		getIcon().draw(ax, ay, width, height);
 		String textToDraw = (!isFocused() && text.isEmpty()) ? ghostText : text;
-		GuiHelper.pushScissor(gui.getScreen(), ax, ay, width, height);
+		GuiHelper.pushScissor(getScreen(), ax, ay, width, height);
 
-		Color4I col = validText ? (textColor.isEmpty() ? gui.getTheme().getContentColor(false) : textColor) : Color4I.RED;
+		Color4I col = validText ? textColor.isEmpty() ? getTheme().getContentColor(WidgetType.NORMAL) : textColor : Color4I.RED;
 		int j = cursorPosition - lineScrollOffset;
 		int k = selectionEnd - lineScrollOffset;
-		String s = gui.trimStringToWidth(textToDraw.substring(lineScrollOffset), width, false);
+		String s = trimStringToWidth(textToDraw.substring(lineScrollOffset), width, false);
 		boolean flag = j >= 0 && j <= s.length();
 		boolean flag1 = isFocused() && flag && (Minecraft.getSystemTime() % 1000L > 500L);
 		int textX = ax + 4;
@@ -486,7 +485,7 @@ public class TextBox extends Widget
 		if (!s.isEmpty())
 		{
 			String s1 = flag ? s.substring(0, j) : s;
-			textX1 = gui.drawString(s1, textX, textY, col, 0);
+			textX1 = drawString(s1, textX, textY, col, 0);
 		}
 
 		boolean drawCursor = cursorPosition < textToDraw.length() || textToDraw.length() >= charLimit;
@@ -504,26 +503,26 @@ public class TextBox extends Widget
 
 		if (!s.isEmpty() && flag && j < s.length())
 		{
-			gui.drawString(s.substring(j), textX1, textY, col, 0);
+			drawString(s.substring(j), textX1, textY, col, 0);
 		}
 
 		if (flag1)
 		{
 			if (drawCursor)
 			{
-				col.draw(cursorX, textY - 1, 1, gui.getFontHeight() + 2);
+				col.draw(cursorX, textY - 1, 1, getFontHeight() + 2);
 			}
 			else
 			{
-				col.draw(cursorX, textY + gui.getFontHeight() - 2, 5, 1);
+				col.draw(cursorX, textY + getFontHeight() - 2, 5, 1);
 			}
 		}
 
 		if (k != j)
 		{
-			int l1 = textX + gui.getStringWidth(s.substring(0, k));
+			int l1 = textX + getStringWidth(s.substring(0, k));
 
-			int startX = cursorX, startY = textY - 1, endX = l1 - 1, endY = textY + 1 + gui.getFontHeight();
+			int startX = cursorX, startY = textY - 1, endX = l1 - 1, endY = textY + 1 + getFontHeight();
 
 			if (startX < endX)
 			{
@@ -565,14 +564,14 @@ public class TextBox extends Widget
 			GlStateManager.enableTexture2D();
 		}
 
-		GuiHelper.popScissor(gui.getScreen());
+		GuiHelper.popScissor(getScreen());
 		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 
 	@Override
 	public Icon getIcon()
 	{
-		return gui.getTheme().getTextBox();
+		return getTheme().getTextBox();
 	}
 
 	public boolean isValid(String txt)

@@ -25,23 +25,23 @@ public class ModelBase implements IBakedModel
 {
 	private static final ImmutableMap<ItemCameraTransforms.TransformType, TRSRTransformation> TRANSFORM_MAP;
 
-	private static TRSRTransformation get(float tx, float ty, float tz, float ax, float ay, float az, float s)
+	private static TRSRTransformation get(float ty, float ax, float ay, float s)
 	{
-		return TRSRTransformation.blockCenterToCorner(new TRSRTransformation(new javax.vecmath.Vector3f(tx / 16F, ty / 16F, tz / 16F), TRSRTransformation.quatFromXYZDegrees(new javax.vecmath.Vector3f(ax, ay, az)), new javax.vecmath.Vector3f(s, s, s), null));
+		return TRSRTransformation.blockCenterToCorner(new TRSRTransformation(new javax.vecmath.Vector3f(0F, ty / 16F, 0F), TRSRTransformation.quatFromXYZDegrees(new javax.vecmath.Vector3f(ax, ay, 0F)), new javax.vecmath.Vector3f(s, s, s), null));
 	}
 
 	static
 	{
-		TRSRTransformation thirdperson = get(0, 2.5F, 0, 75, 45, 0, 0.375F);
+		TRSRTransformation thirdperson = get(2.5F, 75, 45, 0.375F);
 		TRSRTransformation flipX = new TRSRTransformation(null, null, new javax.vecmath.Vector3f(-1, 1, 1), null);
 		ImmutableMap.Builder<ItemCameraTransforms.TransformType, TRSRTransformation> builder = ImmutableMap.builder();
-		builder.put(ItemCameraTransforms.TransformType.GUI, get(0, 0, 0, 30, 225, 0, 0.625F));
-		builder.put(ItemCameraTransforms.TransformType.GROUND, get(0, 3, 0, 0, 0, 0, 0.25F));
-		builder.put(ItemCameraTransforms.TransformType.FIXED, get(0, 0, 0, 0, 0, 0, 0.5F));
+		builder.put(ItemCameraTransforms.TransformType.GUI, get(0, 30, 225, 0.625F));
+		builder.put(ItemCameraTransforms.TransformType.GROUND, get(3, 0, 0, 0.25F));
+		builder.put(ItemCameraTransforms.TransformType.FIXED, get(0, 0, 0, 0.5F));
 		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, thirdperson);
 		builder.put(ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, TRSRTransformation.blockCenterToCorner(flipX.compose(TRSRTransformation.blockCornerToCenter(thirdperson)).compose(flipX)));
-		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, get(0, 0, 0, 0, 45, 0, 0.4F));
-		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, get(0, 0, 0, 0, 225, 0, 0.4F));
+		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_RIGHT_HAND, get(0, 0, 45, 0.4F));
+		builder.put(ItemCameraTransforms.TransformType.FIRST_PERSON_LEFT_HAND, get(0, 0, 225, 0.4F));
 		TRANSFORM_MAP = Maps.immutableEnumMap(builder.build());
 	}
 

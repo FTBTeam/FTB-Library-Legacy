@@ -138,7 +138,7 @@ public class GuiChunkSelectorBase extends GuiBase
 					w = Math.max(w, widget.width);
 				}
 
-				panelButtons.setPosAndSize(gui.width + 2, -2, w, h);
+				panelButtons.setPosAndSize(getGui().width + 2, -2, w, h);
 			}
 		};
 

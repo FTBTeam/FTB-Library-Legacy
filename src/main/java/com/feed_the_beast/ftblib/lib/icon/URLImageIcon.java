@@ -2,7 +2,10 @@ package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -15,17 +18,24 @@ public class URLImageIcon extends ImageIcon
 
 	URLImageIcon(String _url, double u0, double v0, double u1, double v1)
 	{
-		super(_url, u0, v0, u1, v1);
+		super(new ResourceLocation(_url), u0, v0, u1, v1);
 		url = _url;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ITextureObject bindTexture()
+	public void bindTexture()
 	{
-		ITextureObject obj = ClientUtils.getDownloadImage(texture, url, MISSING_IMAGE, null);
-		GlStateManager.bindTexture(obj.getGlTextureId());
-		return obj;
+		TextureManager manager = ClientUtils.MC.getTextureManager();
+		ITextureObject img = manager.getTexture(texture);
+
+		if (img == null)
+		{
+			img = new ThreadDownloadImageData(null, url, MISSING_IMAGE, null);
+			manager.loadTexture(texture, img);
+		}
+
+		GlStateManager.bindTexture(img.getGlTextureId());
 	}
 
 	public String toString()

@@ -45,8 +45,8 @@ public class BuiltinChunkMap extends ChunkSelectorMap
 
 		if (cx >= startX && cy >= startZ && cx < startX + TILES_GUI && cy < startZ + TILES_GUI)
 		{
-			double x = ((cx - startX) * 16D + MathUtils.wrap(player.posX, 16D));
-			double y = ((cy - startZ) * 16D + MathUtils.wrap(player.posZ, 16D));
+			double x = ((cx - startX) * 16D + MathUtils.mod(player.posX, 16D));
+			double y = ((cy - startZ) * 16D + MathUtils.mod(player.posZ, 16D));
 
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(ax + x * GuiChunkSelectorBase.TILE_SIZE / 16D, ay + y * GuiChunkSelectorBase.TILE_SIZE / 16D, 0D);

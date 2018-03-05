@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.lib.io;
 
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -11,7 +12,6 @@ import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -39,15 +39,15 @@ public class DataOut
 		void write(DataOut data, T object);
 	}
 
-	public static Serializer<String> STRING = DataOut::writeString;
-	public static Serializer<Integer> INT = DataOut::writeInt;
-	public static Serializer<Boolean> BOOLEAN = DataOut::writeBoolean;
-	public static Serializer<UUID> UUID = DataOut::writeUUID;
-	public static Serializer<BlockPos> BLOCK_POS = DataOut::writePos;
-	public static Serializer<BlockDimPos> BLOCK_DIM_POS = DataOut::writeDimPos;
-	public static Serializer<JsonElement> JSON = DataOut::writeJson;
-	public static Serializer<ITextComponent> TEXT_COMPONENT = DataOut::writeTextComponent;
-	public static Serializer<ResourceLocation> RESOURCE_LOCATION = DataOut::writeResourceLocation;
+	public static final Serializer<String> STRING = DataOut::writeString;
+	public static final Serializer<Integer> INT = DataOut::writeInt;
+	public static final Serializer<Boolean> BOOLEAN = DataOut::writeBoolean;
+	public static final Serializer<UUID> UUID = DataOut::writeUUID;
+	public static final Serializer<BlockPos> BLOCK_POS = DataOut::writePos;
+	public static final Serializer<BlockDimPos> BLOCK_DIM_POS = DataOut::writeDimPos;
+	public static final Serializer<JsonElement> JSON = DataOut::writeJson;
+	public static final Serializer<ITextComponent> TEXT_COMPONENT = DataOut::writeTextComponent;
+	public static final Serializer<ResourceLocation> RESOURCE_LOCATION = DataOut::writeResourceLocation;
 
 	public static final DataOut.Serializer<ChunkPos> CHUNK_POS = (data, pos) ->
 	{
@@ -320,7 +320,7 @@ public class DataOut
 
 	public void writeBlockState(IBlockState state)
 	{
-		writeInt(state == Blocks.AIR.getDefaultState() ? 0 : Block.getStateId(state));
+		writeInt(state == CommonUtils.AIR_STATE ? 0 : Block.getStateId(state));
 	}
 
 	public void writeIcon(@Nullable Icon icon)

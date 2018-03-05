@@ -5,20 +5,13 @@ import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.item.EntityItem;
@@ -33,7 +26,6 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.model.ModelLoader;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -42,7 +34,6 @@ public class ClientUtils
 {
 	public static final Minecraft MC = Minecraft.getMinecraft();
 	private static final Frustum FRUSTUM = new Frustum();
-	public static final Map<String, ResourceLocation> CACHED_SKINS = new HashMap<>();
 	public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> MC.getTextureMapBlocks().registerSprite(location);
 	public static final NameMap<EnumBlockRenderType> BLOCK_RENDER_TYPE_NAME_MAP = NameMap.create(EnumBlockRenderType.MODEL, EnumBlockRenderType.values());
 	public static final NameMap<BlockRenderLayer> BLOCK_RENDER_LAYER_NAME_MAP = NameMap.create(BlockRenderLayer.SOLID, BlockRenderLayer.values());
@@ -91,35 +82,6 @@ public class ClientUtils
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
 	}
 
-	public static ITextureObject bindTexture(ResourceLocation texture)
-	{
-		TextureManager t = MC.getTextureManager();
-
-		ITextureObject textureObject = t.getTexture(texture);
-		if (textureObject == null)
-		{
-			textureObject = new SimpleTexture(texture);
-			t.loadTexture(texture, textureObject);
-		}
-
-		GlStateManager.bindTexture(textureObject.getGlTextureId());
-		return textureObject;
-	}
-
-	public static ITextureObject getDownloadImage(ResourceLocation out, String url, ResourceLocation def, @Nullable IImageBuffer buffer)
-	{
-		TextureManager t = MC.getTextureManager();
-		ITextureObject img = t.getTexture(out);
-
-		if (img == null)
-		{
-			img = new ThreadDownloadImageData(null, url, def, buffer);
-			t.loadTexture(out, img);
-		}
-
-		return img;
-	}
-
 	public static void execClientCommand(String s, boolean printChat)
 	{
 		Minecraft mc = MC;
@@ -138,28 +100,6 @@ public class ClientUtils
 	public static void execClientCommand(String s)
 	{
 		execClientCommand(s, false);
-	}
-
-	public static ResourceLocation getSkinTexture(String username)
-	{
-		ResourceLocation r = CACHED_SKINS.get(username);
-
-		if (r == null)
-		{
-			r = AbstractClientPlayer.getLocationSkin(username);
-
-			try
-			{
-				AbstractClientPlayer.getDownloadImageSkin(r, username);
-				CACHED_SKINS.put(username, r);
-			}
-			catch (Exception e)
-			{
-				e.printStackTrace();
-			}
-		}
-
-		return r;
 	}
 
 	public static void renderItem(World w, ItemStack is)

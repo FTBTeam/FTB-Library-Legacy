@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
-import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -18,9 +17,9 @@ public class IconWithParent extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ITextureObject bindTexture()
+	public void bindTexture()
 	{
-		return parent.bindTexture();
+		parent.bindTexture();
 	}
 
 	@Override

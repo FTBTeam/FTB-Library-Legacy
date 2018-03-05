@@ -1,10 +1,11 @@
 package com.feed_the_beast.ftblib.client;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.cmd.CmdFTBC;
+import com.feed_the_beast.ftblib.events.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftblib.events.player.IGuiProvider;
-import com.feed_the_beast.ftblib.events.player.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.cmd.CommandMirror;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
@@ -20,6 +21,7 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.command.ICommand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -27,9 +29,12 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 
 /**
@@ -40,6 +45,8 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 	public static final List<SidebarButtonGroup> SIDEBAR_BUTTON_GROUPS = new ArrayList<>();
 	private static final Map<ResourceLocation, IGuiProvider> GUI_PROVIDERS = new HashMap<>();
 	public static final Map<String, ClientConfig> CLIENT_CONFIG_MAP = new HashMap<>();
+	public static final Collection<String> OPTIONAL_SERVER_MODS_CLIENT = new HashSet<>();
+	public static UUID UNIVERSE_UUID = null;
 
 	private static class MessageTask implements Callable<Object>
 	{
@@ -56,9 +63,9 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 		{
 			message.onMessage(CommonUtils.cast(message), ClientUtils.MC.player);
 
-			if (FTBLibConfig.general.log_net)
+			if (FTBLibConfig.debugging.log_network)
 			{
-				CommonUtils.DEV_LOGGER.info("Net RX: " + message.getClass().getName());
+				FTBLib.LOGGER.info("Net RX: " + message.getClass().getName());
 			}
 
 			return null;
@@ -71,7 +78,7 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 		super.preInit(event);
 		FTBLibClientConfig.sync();
 		new RegisterGuiProvidersEvent(GUI_PROVIDERS::put).post();
-		ClientUtils.localPlayerHead = new PlayerHeadIcon(ClientUtils.MC.getSession().getProfile().getName());
+		ClientUtils.localPlayerHead = new PlayerHeadIcon(ClientUtils.MC.getSession().getProfile());
 		((IReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(this);
 		ChunkSelectorMap.setMap(new BuiltinChunkMap());
 	}
@@ -174,7 +181,7 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 									continue;
 								}
 
-								if (!CommonUtils.DEV_ENV && buttonJson.has("dev_only") && buttonJson.get("dev_only").getAsBoolean())
+								if (!FTBLibConfig.debugging.dev_sidebar_buttons && buttonJson.has("dev_only") && buttonJson.get("dev_only").getAsBoolean())
 								{
 									continue;
 								}
@@ -264,27 +271,41 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 
 	public static void saveSidebarButtonConfig()
 	{
-		JsonObject o = new JsonObject();
-
-		for (SidebarButtonGroup group : SIDEBAR_BUTTON_GROUPS)
+		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
 		{
-			for (SidebarButton button : group.getButtons())
+			JsonObject o = new JsonObject();
+
+			for (SidebarButtonGroup group : SIDEBAR_BUTTON_GROUPS)
 			{
-				if (button.getDefaultConfig() != null)
+				for (SidebarButton button : group.getButtons())
 				{
-					JsonObject o1 = o.getAsJsonObject(button.id.getResourceDomain());
-
-					if (o1 == null)
+					if (button.getDefaultConfig() != null)
 					{
-						o1 = new JsonObject();
-						o.add(button.id.getResourceDomain(), o1);
-					}
+						JsonObject o1 = o.getAsJsonObject(button.id.getResourceDomain());
 
-					o1.addProperty(button.id.getResourcePath(), button.getConfig());
+						if (o1 == null)
+						{
+							o1 = new JsonObject();
+							o.add(button.id.getResourceDomain(), o1);
+						}
+
+						o1.addProperty(button.id.getResourcePath(), button.getConfig());
+					}
 				}
 			}
-		}
 
-		JsonUtils.toJson(o, new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"));
+			JsonUtils.toJson(o, new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"));
+			return false;
+		});
+	}
+
+	public static boolean isModLoadedOnServer(String modid)
+	{
+		return !modid.isEmpty() && OPTIONAL_SERVER_MODS_CLIENT.contains(modid);
+	}
+
+	public static boolean areAllModsLoadedOnServer(Collection<String> modids)
+	{
+		return modids.isEmpty() || OPTIONAL_SERVER_MODS_CLIENT.containsAll(modids);
 	}
 }

@@ -1,15 +1,13 @@
 package com.feed_the_beast.ftblib.client.teamsgui;
 
+import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.feed_the_beast.ftblib.lib.gui.Button;
-import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
-import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
-import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
+import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
+import com.feed_the_beast.ftblib.lib.gui.WidgetType;
+import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 
 import java.util.ArrayList;
@@ -19,19 +17,16 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class GuiSelectTeam extends GuiBase
+public class GuiSelectTeam extends GuiButtonListBase
 {
-	private final Panel panelTeams;
-	private final PanelScrollBar scrollTeams;
-
-	private static class ButtonCreateTeam extends Button
+	private static class ButtonCreateTeam extends SimpleTextButton
 	{
-		private ButtonCreateTeam(GuiBase gui)
+		private final boolean canCreate;
+
+		private ButtonCreateTeam(Panel panel, boolean c)
 		{
-			super(gui);
-			setSize(32, 32);
-			setTitle("Create a New Team");
-			setIcon(GuiIcons.ADD);
+			super(panel, FTBLibLang.TEAM_GUI_CREATE_TEAM.translate(), GuiIcons.ADD);
+			canCreate = c;
 		}
 
 		@Override
@@ -42,29 +37,20 @@ public class GuiSelectTeam extends GuiBase
 		}
 
 		@Override
-		public void draw()
+		public WidgetType getWidgetType()
 		{
-			int ax = getAX();
-			int ay = getAY();
-			getButtonBackground().draw(ax, ay, 32, 32);
-			getIcon().draw(ax + 8, ay + 8, 16, 16);
+			return canCreate ? WidgetType.mouseOver(isMouseOver()) : WidgetType.DISABLED;
 		}
 	}
 
-	private static class ButtonTeam extends Button
+	private static class ButtonTeam extends SimpleTextButton
 	{
 		private final PublicTeamData team;
-		private final Icon background;
-		private static final Color4I INVITED_COLOR = Color4I.rgba(0x6620A32B);
 
-		private ButtonTeam(GuiBase gui, PublicTeamData t)
+		private ButtonTeam(Panel panel, PublicTeamData t)
 		{
-			super(gui);
+			super(panel, t.displayName.getFormattedText(), t.icon.withOutline(t.color.getColor(), false));
 			team = t;
-			setSize(32, 32);
-			setTitle(team.color.getTextFormatting() + team.displayName);
-			setIcon(new PlayerHeadIcon(t.ownerName));
-			background = team.isInvited ? INVITED_COLOR : Icon.EMPTY.withOutline(team.color.getColor(), true);
 		}
 
 		@Override
@@ -72,7 +58,7 @@ public class GuiSelectTeam extends GuiBase
 		{
 			GuiHelper.playClickSound();
 
-			if (team.isInvited)
+			if (team.type == PublicTeamData.Type.CAN_JOIN)
 			{
 				ClientUtils.execClientCommand("/ftb team join " + team.getName());
 			}
@@ -81,13 +67,12 @@ public class GuiSelectTeam extends GuiBase
 				ClientUtils.execClientCommand("/ftb team request_invite " + team.getName());
 			}
 
-			gui.closeGui();
+			getGui().closeGui();
 		}
 
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			list.add(getTitle());
 			list.add("ID: " + team.getName());
 
 			if (!team.description.isEmpty())
@@ -96,89 +81,39 @@ public class GuiSelectTeam extends GuiBase
 				list.add(team.description);
 			}
 
-			list.add("");
-			list.add("Click to " + (team.isInvited ? "join the team" : "request invite to this team")); //LANG
+			if (team.type != PublicTeamData.Type.ENEMY)
+			{
+				list.add("");
+				list.add((team.type == PublicTeamData.Type.CAN_JOIN ? FTBLibLang.TEAM_GUI_JOIN_TEAM : FTBLibLang.TEAM_GUI_REQUEST_INVITE).translate());
+			}
 		}
 
 		@Override
-		public void draw()
+		public WidgetType getWidgetType()
 		{
-			int ax = getAX();
-			int ay = getAY();
-			getButtonBackground().draw(ax, ay, width, height);
-			background.draw(ax + 6, ay + 6, 20, 20);
-			getIcon().draw(ax + 8, ay + 8, 16, 16);
+			return team.type == PublicTeamData.Type.ENEMY ? WidgetType.DISABLED : WidgetType.mouseOver(isMouseOver());
 		}
 	}
 
-	public GuiSelectTeam(Collection<PublicTeamData> teams0)
+	private final boolean canCreate;
+	private final List<PublicTeamData> teams;
+
+	public GuiSelectTeam(Collection<PublicTeamData> teams0, boolean c)
 	{
-		setSize(192, 170);
-		List<PublicTeamData> teams = new ArrayList<>(teams0);
+		setTitle(FTBLibLang.TEAM_GUI_SELECT_TEAM.translate());
+		teams = new ArrayList<>(teams0);
 		teams.sort(null);
-
-		panelTeams = new Panel(this)
-		{
-			@Override
-			public void addWidgets()
-			{
-				Button b = new ButtonCreateTeam(gui);
-				b.setX(8);
-				b.setY(8);
-				add(b);
-
-				int x = 1;
-				int y = 8;
-
-				for (PublicTeamData t : teams)
-				{
-					b = new ButtonTeam(gui, t);
-					b.setX(8 + x * 40);
-					b.setY(y);
-					add(b);
-
-					x++;
-
-					if (x == 4)
-					{
-						x = 0;
-						y += 40;
-					}
-				}
-
-				scrollTeams.setElementSize(y);
-			}
-
-			@Override
-			public void alignWidgets()
-			{
-			}
-		};
-
-		panelTeams.setPosAndSize(0, 1, 168, 168);
-		panelTeams.addFlags(Panel.DEFAULTS);
-
-		scrollTeams = new PanelScrollBar(this, panelTeams)
-		{
-			@Override
-			public boolean shouldDraw()
-			{
-				return true;
-			}
-		};
-
-		scrollTeams.setPosAndSize(168, 8, 16, 152);
+		canCreate = c;
 	}
 
 	@Override
-	public void addWidgets()
+	public void addButtons(Panel panel)
 	{
-		add(panelTeams);
-		add(scrollTeams);
-	}
+		panel.add(new ButtonCreateTeam(panel, canCreate));
 
-	@Override
-	public void alignWidgets()
-	{
+		for (PublicTeamData t : teams)
+		{
+			panel.add(new ButtonTeam(panel, t));
+		}
 	}
 }

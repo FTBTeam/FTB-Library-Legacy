@@ -45,7 +45,7 @@ public class GuiTransferOwnership extends GuiManagePlayersBase
 					new MessageMyTeamAction(FTBLibTeamGuiActions.TRANSFER_OWNERSHIP.getId(), data).sendToServer();
 				}
 
-				gui.closeGui(!result);
+				getGui().closeGui(!result);
 			}, FTBLibLang.TEAM_GUI_TRANSFER_OWNERSHIP.translate() + "?", ClientUtils.MC.getSession().getUsername() + " => " + entry.name, 0));
 		}
 	}

@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftblib.lib.gui.misc.ThemeVanilla;
-import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.io.Bits;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.NetUtils;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanStack;
@@ -15,8 +13,6 @@ import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -27,7 +23,6 @@ import org.lwjgl.input.Mouse;
 import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -68,12 +63,18 @@ public abstract class GuiBase extends Panel
 
 	public GuiBase()
 	{
+		//noinspection ConstantConditions
 		super(null);
 		setSize(176, 166);
-		gui = this;
 		font = createFont();
 		prevScreen = ClientUtils.MC.currentScreen;
 		fontUnicode = new BooleanArrayList();
+	}
+
+	@Override
+	public final GuiBase getGui()
+	{
+		return this;
 	}
 
 	@Override
@@ -88,10 +89,12 @@ public abstract class GuiBase extends Panel
 		{
 			super.refreshWidgets();
 			fixUnicode = screen.getScaleFactor() % 2 == 1;
+			alignWidgets();
 			onPostInit();
 		}
 	}
 
+	@Override
 	public Theme getTheme()
 	{
 		if (theme == null)
@@ -127,6 +130,18 @@ public abstract class GuiBase extends Panel
 	@Override
 	public void setScrollY(int scroll)
 	{
+	}
+
+	@Override
+	public int getScrollX()
+	{
+		return 0;
+	}
+
+	@Override
+	public int getScrollY()
+	{
+		return 0;
 	}
 
 	@Override
@@ -204,6 +219,12 @@ public abstract class GuiBase extends Panel
 		return false;
 	}
 
+	@Override
+	public FontRenderer getFont()
+	{
+		return font;
+	}
+
 	protected FontRenderer createFont()
 	{
 		return ClientUtils.MC.fontRenderer;
@@ -257,34 +278,29 @@ public abstract class GuiBase extends Panel
 	{
 		List<String> tempTextList = new ArrayList<>(0);
 		addMouseOverText(tempTextList);
-		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, font);
+		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, getFont());
 	}
 
 	@Override
 	public boolean keyPressed(int key, char keyChar)
 	{
-		if (CommonUtils.DEV_ENV && key == Keyboard.KEY_B)
+		if (FTBLibConfig.debugging.gui_widget_bounds && key == Keyboard.KEY_B)
 		{
 			renderDebugBoxes = true;
-			return true;
 		}
-		else
-		{
-			return super.keyPressed(key, keyChar);
-		}
+
+		return super.keyPressed(key, keyChar);
 	}
 
 	@Override
 	public void keyReleased(int key)
 	{
-		if (CommonUtils.DEV_ENV && key == Keyboard.KEY_B)
+		if (FTBLibConfig.debugging.gui_widget_bounds && key == Keyboard.KEY_B)
 		{
 			renderDebugBoxes = false;
 		}
-		else
-		{
-			super.keyReleased(key);
-		}
+
+		super.keyReleased(key);
 	}
 
 	@Override
@@ -308,39 +324,34 @@ public abstract class GuiBase extends Panel
 		ClientUtils.runLater(this::openGui);
 	}
 
+	@Override
 	public final ScaledResolution getScreen()
 	{
 		return screen;
 	}
 
+	@Override
 	public final int getMouseX()
 	{
 		return mouseX;
 	}
 
+	@Override
 	public final int getMouseY()
 	{
 		return mouseY;
 	}
 
+	@Override
 	public final int getMouseWheel()
 	{
 		return mouseWheel;
 	}
 
+	@Override
 	public final float getPartialTicks()
 	{
 		return partialTicks;
-	}
-
-	public final boolean isMouseButtonDown(int button)
-	{
-		return Mouse.isButtonDown(button);
-	}
-
-	public final boolean isKeyDown(int key)
-	{
-		return Keyboard.isKeyDown(key);
 	}
 
 	public boolean isMouseOver(int x, int y, int w, int h)
@@ -368,103 +379,22 @@ public abstract class GuiBase extends Panel
 
 	public void pushFontUnicode(boolean flag)
 	{
-		fontUnicode.push(font.getUnicodeFlag());
-		font.setUnicodeFlag(flag);
+		fontUnicode.push(getFont().getUnicodeFlag());
+		getFont().setUnicodeFlag(flag);
 	}
 
 	public void popFontUnicode()
 	{
-		font.setUnicodeFlag(fontUnicode.pop());
-	}
-
-	public int getStringWidth(String text)
-	{
-		return font.getStringWidth(text);
-	}
-
-	public int getFontHeight()
-	{
-		return font.FONT_HEIGHT;
-	}
-
-	public String trimStringToWidth(String text, int width, boolean reverse)
-	{
-		return font.trimStringToWidth(text, width, reverse);
-	}
-
-	public List<String> listFormattedStringToWidth(String text, int width)
-	{
-		if (width <= 0)
-		{
-			return Collections.emptyList();
-		}
-
-		return font.listFormattedStringToWidth(text, width);
-	}
-
-	public int drawString(String text, int x, int y, Color4I color, boolean shadow, boolean centered)
-	{
-		if (text.isEmpty() || color.isEmpty())
-		{
-			return 0;
-		}
-
-		if (centered)
-		{
-			x -= font.getStringWidth(text) / 2;
-			y -= font.FONT_HEIGHT / 2;
-		}
-
-		int i = font.drawString(text, x, y, color.rgba(), shadow);
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		return i;
-	}
-
-	public int drawString(String text, int x, int y, Color4I color, int flags)
-	{
-		return drawString(text, x, y, color, Bits.getFlag(flags, SHADOW), Bits.getFlag(flags, CENTERED));
-	}
-
-	public final int drawString(String text, int x, int y, int flags)
-	{
-		return drawString(text, x, y, getTheme().getContentColor(Bits.getFlag(flags, MOUSE_OVER)), flags);
-	}
-
-	public final int drawString(String text, int x, int y)
-	{
-		return drawString(text, x, y, getTheme().getContentColor(false), false, false);
-	}
-
-	public boolean isShiftDown()
-	{
-		return GuiScreen.isShiftKeyDown();
-	}
-
-	public boolean isCtrlDown()
-	{
-		return GuiScreen.isCtrlKeyDown();
+		getFont().setUnicodeFlag(fontUnicode.pop());
 	}
 
 	@Override
 	public Icon getIcon()
 	{
-		return getTheme().getGui(false);
+		return getTheme().getGui(WidgetType.NORMAL);
 	}
 
-	public final boolean handleClick(String click)
-	{
-		int i = click.indexOf(':');
-
-		if (i != -1)
-		{
-			return handleClick(click.substring(0, i), click.substring(i + 1, click.length()));
-		}
-		else
-		{
-			return handleClick("", click);
-		}
-	}
-
+	@Override
 	public boolean handleClick(String scheme, String path)
 	{
 		switch (scheme)
@@ -531,47 +461,5 @@ public abstract class GuiBase extends Panel
 			default:
 				return false;
 		}
-	}
-
-	//TODO: Improve me to fix occasional offset
-	public List<PositionedTextData> createDataFrom(ITextComponent component, FontRenderer font, int width)
-	{
-		if (width <= 0 || component.getUnformattedText().isEmpty())
-		{
-			return Collections.emptyList();
-		}
-
-		List<PositionedTextData> list = new ArrayList<>();
-
-		int line = 0;
-		int currentWidth = 0;
-
-		for (ITextComponent t : component.createCopy())
-		{
-			String text = t.getUnformattedComponentText();
-			int textWidth = font.getStringWidth(text);
-
-			while (textWidth > 0)
-			{
-				int w = textWidth;
-				if (w > width - currentWidth)
-				{
-					w = width - currentWidth;
-				}
-
-				list.add(new PositionedTextData(currentWidth, line * 10, w, 10, t.getStyle()));
-
-				currentWidth += w;
-				textWidth -= w;
-
-				if (currentWidth >= width)
-				{
-					currentWidth = 0;
-					line++;
-				}
-			}
-		}
-
-		return list;
 	}
 }

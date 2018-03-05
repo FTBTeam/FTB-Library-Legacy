@@ -7,8 +7,8 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
  */
 public class UniverseClosedEvent extends UniverseEvent
 {
-	public UniverseClosedEvent(Universe u)
+	public UniverseClosedEvent(Universe universe)
 	{
-		super(u);
+		super(universe);
 	}
 }

@@ -10,9 +10,9 @@ public class UniverseSavedEvent extends UniverseEvent
 {
 	private NBTTagCompound data;
 
-	public UniverseSavedEvent(Universe u, NBTTagCompound nbt)
+	public UniverseSavedEvent(Universe universe, NBTTagCompound nbt)
 	{
-		super(u);
+		super(universe);
 		data = nbt;
 	}
 

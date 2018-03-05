@@ -192,7 +192,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 	{
 		ForgeTeam team = Universe.get().getTeam(s);
 
-		if (team != null)
+		if (team.isValid())
 		{
 			return team;
 		}

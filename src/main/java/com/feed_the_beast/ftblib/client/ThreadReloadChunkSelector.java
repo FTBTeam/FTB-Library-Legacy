@@ -3,8 +3,8 @@ package com.feed_the_beast.ftblib.client;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.client.PixelBuffer;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
+import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
-import com.feed_the_beast.ftblib.lib.util.ColorUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.MapColor;
@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
@@ -30,10 +29,10 @@ public class ThreadReloadChunkSelector extends Thread
 	private static ByteBuffer pixelBuffer = null;
 	private static final int PIXEL_SIZE = ChunkSelectorMap.TILES_TEX * 16;
 	private static final PixelBuffer PIXELS = new PixelBuffer(PIXEL_SIZE, PIXEL_SIZE);
-	private static final Map<IBlockState, Integer> COLOR_CACHE = new HashMap<>();
+	private static final Map<IBlockState, Color4I> COLOR_CACHE = new HashMap<>();
 	private static final BlockPos.MutableBlockPos CURRENT_BLOCK_POS = new BlockPos.MutableBlockPos(0, 0, 0);
 	private static World world = null;
-	private static final Function<IBlockState, Integer> COLOR_GETTER = state1 -> 0xFF000000 | getBlockColor0(state1);
+	private static final Function<IBlockState, Color4I> COLOR_GETTER = state1 -> Color4I.rgb(getBlockColor0(state1));
 	private static ThreadReloadChunkSelector instance;
 	private static int textureID = -1;
 	private static final int[] HEIGHT_MAP = new int[PIXEL_SIZE * PIXEL_SIZE];
@@ -187,13 +186,13 @@ public class ThreadReloadChunkSelector extends Thread
 	@Override
 	public void run()
 	{
-		Vec3d skyColor = world.getSkyColor(ClientUtils.MC.player, 0);
-		Arrays.fill(PIXELS.getPixels(), ColorUtils.getRGBAF((float) skyColor.x, (float) skyColor.y, (float) skyColor.z, 1F));
+		Arrays.fill(PIXELS.getPixels(), Color4I.rgb(world.getSkyColor(ClientUtils.MC.player, 0)).rgba());
 		Arrays.fill(HEIGHT_MAP, -1);
-		pixelBuffer = ColorUtils.toByteBuffer(PIXELS.getPixels(), false);
+		pixelBuffer = PIXELS.toByteBuffer(false);
 
 		Chunk chunk;
-		int cx, cz, x, z, wi, wx, wz, by, color, topY;
+		int cx, cz, x, z, wi, wx, wz, by, topY;
+		Color4I color;
 		IBlockState state;
 
 		int startY = ClientUtils.MC.player.getPosition().getY();
@@ -263,26 +262,26 @@ public class ThreadReloadChunkSelector extends Thread
 							CURRENT_BLOCK_POS.setPos(x + wx, by, z + wz);
 							state = chunk.getBlockState(wx, by, wz);
 
-							color = ColorUtils.addBrightness(COLOR_CACHE.computeIfAbsent(state, COLOR_GETTER), MathUtils.RAND.nextFloat() * 0.04F);
+							color = COLOR_CACHE.computeIfAbsent(state, COLOR_GETTER).addBrightness(MathUtils.RAND.nextFloat() * 0.04F);
 
 							int bn = getHeight(cx * 16 + wx, cz * 16 + wz - 1);
 							int bw = getHeight(cx * 16 + wx - 1, cz * 16 + wz);
 
 							if (by > bn && bn != -1 || by > bw && bw != -1)
 							{
-								color = ColorUtils.addBrightness(color, 0.1F);
+								color = color.addBrightness(0.1F);
 							}
 
 							if (by < bn && bn != -1 || by < bw && bw != -1)
 							{
-								color = ColorUtils.addBrightness(color, -0.1F);
+								color = color.addBrightness(-0.1F);
 							}
 
-							PIXELS.setRGB(cx * 16 + wx, cz * 16 + wz, color);
+							PIXELS.setRGB(cx * 16 + wx, cz * 16 + wz, color.rgba());
 						}
 					}
 
-					pixelBuffer = ColorUtils.toByteBuffer(PIXELS.getPixels(), false);
+					pixelBuffer = PIXELS.toByteBuffer(false);
 				}
 			}
 		}
@@ -291,7 +290,7 @@ public class ThreadReloadChunkSelector extends Thread
 			e.printStackTrace();
 		}
 
-		pixelBuffer = ColorUtils.toByteBuffer(PIXELS.getPixels(), false);
+		pixelBuffer = PIXELS.toByteBuffer(false);
 		world = null;
 		instance = null;
 	}

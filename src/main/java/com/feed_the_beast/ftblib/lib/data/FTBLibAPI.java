@@ -39,6 +39,7 @@ public class FTBLibAPI
 	public static void reloadServer(Universe universe, ICommandSender sender, EnumReloadType type, ResourceLocation id)
 	{
 		long ms = System.currentTimeMillis();
+		universe.clearCache();
 
 		HashSet<ResourceLocation> failed = new HashSet<>();
 		ServerReloadEvent event = new ServerReloadEvent(universe, sender, type, id, failed);
@@ -47,7 +48,7 @@ public class FTBLibAPI
 		for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 		{
 			ForgePlayer p = universe.getPlayer(player);
-			new MessageSyncData(player, p).sendTo(player);
+			new MessageSyncData(false, player, p).sendTo(player);
 		}
 
 		String millis = (System.currentTimeMillis() - ms) + "ms";
@@ -145,6 +146,6 @@ public class FTBLibAPI
 		}
 
 		ForgePlayer p2 = Universe.get().getPlayer(player2);
-		return p2 != null && p1.getTeam() != null && p1.getTeam().equalsTeam(p2.getTeam());
+		return p2 != null && p1.team.equalsTeam(p2.team);
 	}
 }

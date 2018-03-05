@@ -21,7 +21,7 @@ public class CmdFTB extends CmdTreeBase
 
 		if (CommonUtils.DEV_ENV)
 		{
-			addSubcommand(new CmdAddFakePlayer());
+			addSubcommand(new CmdAddFakePlayer()); //FIXME: Implement server created teams and players
 		}
 
 		new RegisterFTBCommandsEvent(this, dedi).post();

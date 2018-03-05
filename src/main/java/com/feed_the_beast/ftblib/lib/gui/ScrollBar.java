@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.List;
@@ -34,9 +35,9 @@ public class ScrollBar extends Widget
 	@Override
 	public boolean mousePressed(MouseButton button)
 	{
-		if (gui.isMouseOver(this))
+		if (isMouseOver())
 		{
-			grab = (getPlane().isVertical() ? (gui.getMouseY() - (getAY() + getValueI(height))) : (gui.getMouseX() - (getAX() + getValueI(width))));
+			grab = (getPlane().isVertical() ? (getMouseY() - (getAY() + getValueI(height))) : (getMouseX() - (getAX() + getValueI(width))));
 			return true;
 		}
 
@@ -51,7 +52,7 @@ public class ScrollBar extends Widget
 
 		if (min < max)
 		{
-			String s = "" + (int) MathUtils.map(value, 0D, 1D, min, max);
+			String s = "" + (int) MathUtils.map(0D, 1D, min, max, value);
 			String t = getTitle();
 			list.add(t.isEmpty() ? s : (t + ": " + s));
 		}
@@ -70,15 +71,15 @@ public class ScrollBar extends Widget
 
 			if (grab != -10000)
 			{
-				if (gui.isMouseButtonDown(0))
+				if (isMouseButtonDown(MouseButton.LEFT))
 				{
 					if (getPlane().isVertical())
 					{
-						v = (gui.getMouseY() - (ay + grab)) / (double) (height - sliderSize);
+						v = (getMouseY() - (ay + grab)) / (double) (height - sliderSize);
 					}
 					else
 					{
-						v = (gui.getMouseX() - (ax + grab)) / (double) (width - sliderSize);
+						v = (getMouseX() - (ax + grab)) / (double) (width - sliderSize);
 					}
 				}
 				else
@@ -87,9 +88,9 @@ public class ScrollBar extends Widget
 				}
 			}
 
-			if (gui.getMouseWheel() != 0 && gui.isShiftDown() != getPlane().isVertical() && canMouseScroll())
+			if (getMouseWheel() != 0 && GuiScreen.isShiftKeyDown() != getPlane().isVertical() && canMouseScroll())
 			{
-				v += (gui.getMouseWheel() < 0) ? getScrollStep() : -getScrollStep();
+				v += (getMouseWheel() < 0) ? getScrollStep() : -getScrollStep();
 			}
 
 			v = MathHelper.clamp(v, 0D, 1D);
@@ -117,13 +118,13 @@ public class ScrollBar extends Widget
 
 	public Icon getBackground()
 	{
-		return isEnabled() ? gui.getTheme().getScrollBarBackground() : gui.getTheme().getScrollBarBackground().withTint(Color4I.BLACK_A[100]);
+		return isEnabled() ? getTheme().getScrollBarBackground() : getTheme().getScrollBarBackground().withTint(Color4I.BLACK_A[100]);
 	}
 
 	@Override
 	public Icon getIcon()
 	{
-		return gui.getTheme().getScrollBar(grab != -10000, getPlane().isVertical());
+		return getTheme().getScrollBar(WidgetType.mouseOver(grab != -10000), getPlane().isVertical());
 	}
 
 	public void onMoved()
@@ -132,7 +133,7 @@ public class ScrollBar extends Widget
 
 	public boolean canMouseScroll()
 	{
-		return gui.isMouseOver(this);
+		return isMouseOver();
 	}
 
 	public void setValue(double v)

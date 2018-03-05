@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentCountdown;
 import net.minecraft.util.text.ITextComponent;
@@ -46,7 +45,7 @@ public class ExtendedTextField extends TextField
 			}
 
 			super.setText(textComponent.getFormattedText());
-			textData = gui.createDataFrom(textComponent, ClientUtils.MC.fontRenderer, width);
+			textData = createDataFrom(textComponent, width);
 		}
 
 		return this;
@@ -60,7 +59,7 @@ public class ExtendedTextField extends TextField
 
 		for (GuiBase.PositionedTextData data : textData)
 		{
-			if (gui.isMouseOver(data.posX + ax, data.posY + ay, data.width, data.height))
+			if (getGui().isMouseOver(data.posX + ax, data.posY + ay, data.width, data.height))
 			{
 				return data;
 			}
@@ -83,11 +82,11 @@ public class ExtendedTextField extends TextField
 	@Override
 	public boolean mousePressed(MouseButton button)
 	{
-		if (gui.isMouseOver(this))
+		if (isMouseOver())
 		{
 			GuiBase.PositionedTextData data = getDataAtMouse();
 
-			if (data != null && data.clickEvent != null && gui.handleClick(GuiHelper.clickEventToString(data.clickEvent)))
+			if (data != null && data.clickEvent != null && handleClick(GuiHelper.clickEventToString(data.clickEvent)))
 			{
 				GuiHelper.playClickSound();
 				return true;

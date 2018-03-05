@@ -4,7 +4,10 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.google.common.base.Objects;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.SimpleTexture;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,9 +22,9 @@ public class ImageIcon extends Icon
 	public final ResourceLocation texture;
 	public final double minU, minV, maxU, maxV;
 
-	ImageIcon(String tex, double u0, double v0, double u1, double v1)
+	ImageIcon(ResourceLocation tex, double u0, double v0, double u1, double v1)
 	{
-		texture = new ResourceLocation(tex);
+		texture = tex;
 		minU = Math.min(u0, u1);
 		minV = Math.min(v0, v1);
 		maxU = Math.max(u0, u1);
@@ -30,9 +33,18 @@ public class ImageIcon extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public ITextureObject bindTexture()
+	public void bindTexture()
 	{
-		return ClientUtils.bindTexture(texture);
+		TextureManager manager = ClientUtils.MC.getTextureManager();
+		ITextureObject tex = manager.getTexture(texture);
+
+		if (tex == null)
+		{
+			tex = new SimpleTexture(texture);
+			manager.loadTexture(texture, tex);
+		}
+
+		GlStateManager.bindTexture(tex.getGlTextureId());
 	}
 
 	@Override
@@ -72,7 +84,7 @@ public class ImageIcon extends Icon
 
 	public ImageIcon withUV(double u0, double v0, double u1, double v1)
 	{
-		return new ImageIcon(texture.toString(), u0, v0, u1, v1);
+		return new ImageIcon(texture, u0, v0, u1, v1);
 	}
 
 	public ImageIcon withUVfromCoords(int x, int y, int w, int h, int tw, int th)

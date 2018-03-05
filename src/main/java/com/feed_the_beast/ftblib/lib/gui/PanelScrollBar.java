@@ -61,7 +61,7 @@ public class PanelScrollBar extends ScrollBar
 	@Override
 	public boolean canMouseScroll()
 	{
-		return super.canMouseScroll() || gui.isMouseOver(panel);
+		return super.canMouseScroll() || panel.isMouseOver();
 	}
 
 	@Override

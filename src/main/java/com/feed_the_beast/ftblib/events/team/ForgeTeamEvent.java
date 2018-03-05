@@ -15,7 +15,7 @@ public class ForgeTeamEvent extends UniverseEvent
 	public ForgeTeamEvent(ForgeTeam t)
 	{
 		super(t.universe);
-		team = Objects.requireNonNull(t, "Null IForgeTeam in ForgeTeamEvent!");
+		team = Objects.requireNonNull(t, "Null ForgeTeam in ForgeTeamEvent!");
 	}
 
 	public ForgeTeam getTeam()

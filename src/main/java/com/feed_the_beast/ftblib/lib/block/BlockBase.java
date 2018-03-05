@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.tile.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -35,11 +36,11 @@ public class BlockBase extends Block
 	}
 
 	@Override
-	public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player)
+	public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player)
 	{
 		if (dropSpecial(state))
 		{
-			TileEntity tileEntity = worldIn.getTileEntity(pos);
+			TileEntity tileEntity = world.getTileEntity(pos);
 
 			if (tileEntity instanceof TileBase)
 			{
@@ -49,27 +50,27 @@ public class BlockBase extends Block
 	}
 
 	@Override
-	public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune)
+	public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float chance, int fortune)
 	{
 		if (!dropSpecial(state))
 		{
-			super.dropBlockAsItemWithChance(worldIn, pos, state, chance, fortune);
+			super.dropBlockAsItemWithChance(world, pos, state, chance, fortune);
 		}
 	}
 
 	@Override
 	@Deprecated
-	public boolean isSideSolid(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing side)
+	public BlockFaceShape getBlockFaceShape(IBlockAccess world, IBlockState state, BlockPos pos, EnumFacing face)
 	{
-		return isNormalCube(state, world, pos);
+		return isNormalCube(state, world, pos) ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
 	}
 
 	@Override
-	public void breakBlock(World worldIn, BlockPos pos, IBlockState state)
+	public void breakBlock(World world, BlockPos pos, IBlockState state)
 	{
 		if (dropSpecial(state))
 		{
-			TileEntity tileEntity = worldIn.getTileEntity(pos);
+			TileEntity tileEntity = world.getTileEntity(pos);
 
 			if (tileEntity instanceof TileBase)
 			{
@@ -77,17 +78,17 @@ public class BlockBase extends Block
 
 				if (!tile.destroyedByCreativePlayer || tile.shouldDrop())
 				{
-					spawnAsEntity(worldIn, pos, createStack(state, ((TileBase) tileEntity)));
+					spawnAsEntity(world, pos, createStack(state, ((TileBase) tileEntity)));
 				}
 
 				if (tile.updateComparator())
 				{
-					worldIn.updateComparatorOutputLevel(pos, state.getBlock());
+					world.updateComparatorOutputLevel(pos, state.getBlock());
 				}
 			}
 		}
 
-		super.breakBlock(worldIn, pos, state);
+		super.breakBlock(world, pos, state);
 	}
 
 	public ItemStack createStack(IBlockState state, TileBase tile)

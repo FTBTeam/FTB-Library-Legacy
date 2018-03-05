@@ -46,6 +46,7 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 	public void onMessage(MessageEditConfigResponse m, EntityPlayer player)
 	{
 		FTBLibCommon.EditingConfig c = FTBLibCommon.TEMP_SERVER_CONFIG.get(player.getGameProfile().getId());
+		//TODO: Logger
 
 		if (c != null)
 		{

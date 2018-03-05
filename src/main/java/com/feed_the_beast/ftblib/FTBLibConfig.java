@@ -21,29 +21,53 @@ public class FTBLibConfig
 
 	public static final Teams teams = new Teams();
 
+	@Config.Comment("Don't set any values to true, unless you are debugging the mod.")
+	public static final Debugging debugging = new Debugging();
+
 	public static class General
 	{
-		@Config.Comment("When this mode is enabled, FTBLib assumes that server clients don't have FTBLib and/or other mods installed")
+		@Config.Comment("When this mode is enabled, FTBLib assumes that server clients don't have FTBLib and/or other mods installed.")
 		public boolean clientless_mode = false;
 
-		@Config.Comment("This will make all '/ftb x' commands work just as '/x'. Example: '/ftb home abc' => '/home abc'")
+		@Config.Comment("This will make all '/ftb x' commands work just as '/x'. Example: '/ftb home abc' => '/home abc'.")
 		@Config.RequiresWorldRestart
 		public boolean mirror_ftb_commands = true;
 
-		@Config.Comment({"Merges player profiles, in case player logged in without internet connection/in offline mode server", "If set to DEFAULT, it will only merge on singleplayer worlds"})
+		@Config.Comment({"Merges player profiles, in case player logged in without internet connection/in offline mode server.", "If set to DEFAULT, it will only merge on singleplayer worlds."})
 		public EnumTristate merge_offline_mode_players = EnumTristate.TRUE;
-
-		@Config.Comment("Prints incoming and outgoing network messages in console. Don't set to true, unless you are debugging net spam")
-		public boolean log_net = false;
 	}
 
 	public static class Teams
 	{
-		@Config.Comment("Automatically creates a team for player on multiplayer, based on their username and with a random color")
+		@Config.Comment("Automatically creates a team for player on multiplayer, based on their username and with a random color.")
 		public boolean autocreate_mp = false;
 
-		@Config.Comment("Automatically creates (or joins) a team on singleplayer/LAN with ID 'singleplayer'")
+		@Config.Comment("Automatically creates (or joins) a team on singleplayer/LAN with ID 'singleplayer'.")
 		public boolean autocreate_sp = true;
+	}
+
+	public static class Debugging
+	{
+		@Config.Comment("Print more info.")
+		public boolean print_more_info = false;
+
+		@Config.Comment("Print more errors.")
+		public boolean print_more_errors = false;
+
+		@Config.Comment("Log incoming and outgoing network messages.")
+		public boolean log_network = false;
+
+		@Config.Comment("Log player teleporting.")
+		public boolean log_teleport = false;
+
+		@Config.Comment("Log config editing.")
+		public boolean log_config_editing = false;
+
+		@Config.Comment("See dev-only sidebar buttons. They probably don't do anything.")
+		public boolean dev_sidebar_buttons = false;
+
+		@Config.Comment("See GUI widget bounds when you hold B.")
+		public boolean gui_widget_bounds = false;
 	}
 
 	public static void sync()

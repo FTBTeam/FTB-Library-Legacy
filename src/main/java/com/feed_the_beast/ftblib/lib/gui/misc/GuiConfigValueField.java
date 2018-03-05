@@ -9,6 +9,7 @@ import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.TextBox;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.gui.GuiScreen;
 
 public class GuiConfigValueField extends GuiBase
 {
@@ -99,5 +100,12 @@ public class GuiConfigValueField extends GuiBase
 		add(buttonCancel);
 		add(buttonAccept);
 		add(textBox);
+	}
+
+	@Override
+	public boolean doesGuiPauseGame()
+	{
+		GuiScreen screen = getPrevScreen();
+		return screen != null && screen.doesGuiPauseGame();
 	}
 }

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
-import com.feed_the_beast.ftblib.lib.util.ColorUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -83,11 +82,10 @@ public class MutableColor4I extends Color4I
 
 	public Color4I set(int r, int g, int b, int a)
 	{
-		red = r;
-		green = g;
-		blue = b;
-		alpha = a;
-		rgba = ColorUtils.getRGBA(red, green, blue, alpha);
+		red = r & 0xFF;
+		green = g & 0xFF;
+		blue = b & 0xFF;
+		alpha = a & 0xFF;
 		return this;
 	}
 
@@ -103,12 +101,12 @@ public class MutableColor4I extends Color4I
 
 	public Color4I set(int col, int a)
 	{
-		return set(ColorUtils.getRed(col), ColorUtils.getGreen(col), ColorUtils.getBlue(col), a);
+		return set(col >> 16, col >> 8, col, a);
 	}
 
 	public Color4I set(int col)
 	{
-		return set(col, ColorUtils.getAlpha(col));
+		return set(col, col >> 24);
 	}
 
 	public Color4I setAlpha(int a)

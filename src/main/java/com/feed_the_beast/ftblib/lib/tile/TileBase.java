@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.tile;
 
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -190,7 +191,7 @@ public abstract class TileBase extends TileEntity implements IWorldNameable
 		{
 			if (world == null)
 			{
-				return Blocks.AIR.getDefaultState();
+				return CommonUtils.AIR_STATE;
 			}
 
 			currentState = createState(world.getBlockState(getPos()));

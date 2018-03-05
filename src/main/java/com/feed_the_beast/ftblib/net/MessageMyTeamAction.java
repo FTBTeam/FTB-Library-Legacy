@@ -59,9 +59,9 @@ public class MessageMyTeamAction extends MessageToServer<MessageMyTeamAction>
 		{
 			ForgePlayer p = Universe.get().getPlayer(player);
 
-			if (p.getTeam() != null && action.isAvailable(p.getTeam(), p, m.nbt))
+			if (p.hasTeam() && action.getType(p, m.nbt) == TeamGuiAction.Type.ENABLED)
 			{
-				action.onAction(p.getTeam(), p, m.nbt);
+				action.onAction(p, m.nbt);
 			}
 		}
 	}

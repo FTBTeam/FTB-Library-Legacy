@@ -20,7 +20,7 @@ public class IconWithTint extends Icon
 	@Override
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
-		parent.draw(x, y, w, h, (col.isEmpty() ? Color4I.WHITE : col).withTint(tint));
+		parent.draw(x, y, w, h, col.whiteIfEmpty().withTint(tint));
 	}
 
 	@Override

@@ -49,7 +49,7 @@ public class BroadcastSender implements ICommandSender
 	@Override
 	public WorldServer getEntityWorld()
 	{
-		return (WorldServer) server.getEntityWorld();
+		return server.getWorld(0);
 	}
 
 	@Override

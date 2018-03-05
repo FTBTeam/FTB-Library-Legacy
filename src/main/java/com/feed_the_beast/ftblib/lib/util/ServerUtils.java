@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
-import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.Channel;
 import net.minecraft.command.ICommand;
@@ -18,7 +18,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
@@ -41,8 +40,6 @@ import java.util.UUID;
  */
 public class ServerUtils
 {
-	public static final NameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = NameMap.create(TextFormatting.RESET, TextFormatting.values());
-
 	public enum SpawnType
 	{
 		CANT_SPAWN,
@@ -140,7 +137,7 @@ public class ServerUtils
 				}
 				catch (Exception ex)
 				{
-					FTBLib.LOGGER.error("Error creating an entity to be created in new dimension." + ex);
+					FTBLib.LOGGER.error("Error creating an entity to be created in new dimension: " + ex);
 					return false;
 				}
 			}
@@ -162,23 +159,13 @@ public class ServerUtils
 		}
 
 		entity.fallDistance = 0;
-		return true;
 
-		/*
-		//Old teleporter code
-		if (dim != player.dimension)
+		if (FTBLibConfig.debugging.log_teleport)
 		{
-			WorldServer toDim = player.mcServer.getWorld(dim);
-			player.mcServer.getPlayerList().transferPlayerToDimension(player, toDim.provider.getDimension(), new TeleporterBlank(toDim));
+			FTBLib.LOGGER.info("'" + entity.getName() + "' teleported to [" + pos.getX() + ',' + pos.getY() + ',' + pos.getZ() + "] in " + ServerUtils.getDimensionName(entity, targetDim).getUnformattedText());
 		}
 
-		player.connection.setPlayerLocation(pos.x, pos.y, pos.z, player.rotationYaw, player.rotationPitch);
-		player.motionX = player.motionY = player.motionZ = 0D;
-		player.fallDistance = 0F;
-		player.addExperienceLevel(0);
-		player.world.updateEntityWithOptionalForce(player, true);
 		return true;
-		*/
 	}
 
 	public static double getMovementFactor(int dim)
@@ -186,11 +173,10 @@ public class ServerUtils
 		switch (dim)
 		{
 			case 0:
+			case 1:
 				return 1D;
 			case -1:
 				return 8D;
-			case 1:
-				return 1D;
 			default:
 			{
 				WorldServer w = DimensionManager.getWorld(dim);

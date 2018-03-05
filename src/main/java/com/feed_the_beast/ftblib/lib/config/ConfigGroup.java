@@ -13,6 +13,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
@@ -23,6 +24,7 @@ public final class ConfigGroup implements IJsonSerializable
 	private String supergroup = "";
 	private final Map<String, ConfigValueInstance> map;
 	private final Map<String, ITextComponent> groupNames;
+	public Consumer<ConfigGroup> readCallback = null;
 
 	public ConfigGroup(@Nullable ITextComponent t, boolean linked)
 	{

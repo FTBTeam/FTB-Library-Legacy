@@ -45,7 +45,7 @@ public class CmdAddFakePlayer extends CmdBase
 		}
 
 		ForgePlayer p = new ForgePlayer(Universe.get(), id, args[1]);
-		p.universe.players.put(p.getId(), p);
+		p.team.universe.players.put(p.getId(), p);
 
 		FTBLibLang.CONFIG_ADD_FAKE_PLAYER_ADDED.sendMessage(sender, args[1]);
 	}

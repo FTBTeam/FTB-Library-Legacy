@@ -1,16 +1,17 @@
 package com.feed_the_beast.ftblib.client.teamsgui;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
+import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.net.MessageMyTeamAction;
 import com.feed_the_beast.ftblib.net.MessageMyTeamGui;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 
 import java.util.Collection;
 
@@ -23,9 +24,9 @@ public class GuiMyTeam extends GuiButtonListBase
 	{
 		private final MessageMyTeamGui.Action action;
 
-		private TeamActionButton(GuiBase gui, MessageMyTeamGui.Action a)
+		private TeamActionButton(Panel panel, MessageMyTeamGui.Action a)
 		{
-			super(gui, a.title.getFormattedText(), a.icon);
+			super(panel, a.title.getFormattedText(), a.icon);
 			action = a;
 		}
 
@@ -38,7 +39,7 @@ public class GuiMyTeam extends GuiButtonListBase
 			{
 				ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) ->
 				{
-					gui.openGui();
+					getGui().openGui();
 
 					if (result)
 					{
@@ -57,13 +58,19 @@ public class GuiMyTeam extends GuiButtonListBase
 		{
 			return false;
 		}
+
+		@Override
+		public WidgetType getWidgetType()
+		{
+			return action.enabled ? WidgetType.mouseOver(isMouseOver()) : WidgetType.DISABLED;
+		}
 	}
 
 	private Collection<MessageMyTeamGui.Action> actions;
 
-	public GuiMyTeam(String t, Collection<MessageMyTeamGui.Action> l)
+	public GuiMyTeam(ITextComponent t, Collection<MessageMyTeamGui.Action> l)
 	{
-		setTitle(t);
+		setTitle(t.getFormattedText());
 		actions = l;
 	}
 
@@ -72,7 +79,7 @@ public class GuiMyTeam extends GuiButtonListBase
 	{
 		for (MessageMyTeamGui.Action action : actions)
 		{
-			panel.add(new TeamActionButton(this, action));
+			panel.add(new TeamActionButton(panel, action));
 		}
 	}
 }

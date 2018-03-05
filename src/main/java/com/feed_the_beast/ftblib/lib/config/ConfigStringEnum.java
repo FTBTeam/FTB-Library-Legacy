@@ -160,7 +160,7 @@ public class ConfigStringEnum extends ConfigValue
 	@Override
 	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
 	{
-		setString(keys.get(MathUtils.wrap(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
+		setString(keys.get(MathUtils.mod(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
 		gui.onChanged(info.id, getSerializableElement());
 	}
 

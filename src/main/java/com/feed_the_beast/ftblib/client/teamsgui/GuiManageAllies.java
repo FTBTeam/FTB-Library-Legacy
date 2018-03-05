@@ -6,7 +6,6 @@ import com.feed_the_beast.ftblib.lib.data.FTBLibTeamGuiActions;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.util.ColorUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.net.MessageMyTeamAction;
 import com.feed_the_beast.ftblib.net.MessageMyTeamPlayerList;
@@ -31,7 +30,7 @@ public class GuiManageAllies extends GuiManagePlayersBase
 		@Override
 		Color4I getPlayerColor()
 		{
-			return entry.status.isEqualOrGreaterThan(EnumTeamStatus.ALLY) ? ColorUtils.getChatFormattingColor(TextFormatting.DARK_AQUA.ordinal()) : getDefaultPlayerColor();
+			return entry.status.isEqualOrGreaterThan(EnumTeamStatus.ALLY) ? Color4I.getChatFormattingColor(TextFormatting.DARK_AQUA) : getDefaultPlayerColor();
 		}
 
 		@Override

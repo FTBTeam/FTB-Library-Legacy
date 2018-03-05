@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.util.ColorUtils;
 import net.minecraftforge.common.config.Config;
 
 /**
@@ -23,16 +22,16 @@ public class ConfigRGB
 
 	public ConfigRGB(int r, int g, int b)
 	{
-		red = r;
-		green = g;
-		blue = b;
+		red = r & 0xFF;
+		green = g & 0xFF;
+		blue = b & 0xFF;
 	}
 
-	public ConfigRGB(int color)
+	public ConfigRGB(Color4I col)
 	{
-		red = ColorUtils.getRed(color);
-		green = ColorUtils.getGreen(color);
-		blue = ColorUtils.getBlue(color);
+		red = col.redi();
+		green = col.greeni();
+		blue = col.bluei();
 	}
 
 	public Color4I createColor(int a)

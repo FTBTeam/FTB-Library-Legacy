@@ -57,9 +57,9 @@ public abstract class MessageBase<E extends MessageBase<E>> implements IMessage,
 			{
 				message.onMessage(CommonUtils.cast(message), context.getServerHandler().player);
 
-				if (FTBLibConfig.general.log_net)
+				if (FTBLibConfig.debugging.log_network)
 				{
-					CommonUtils.DEV_LOGGER.info("Net TX: " + message.getClass().getName());
+					FTBLib.LOGGER.info("Net TX: " + message.getClass().getName());
 				}
 			});
 		}

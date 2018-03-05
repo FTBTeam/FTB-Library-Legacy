@@ -46,11 +46,7 @@ public class TileInvBase extends TileBase
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing)
 	{
-		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-		{
-			return (T) itemHandler;
-		}
-		return super.getCapability(capability, facing);
+		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T) itemHandler : super.getCapability(capability, facing);
 	}
 
 	@Override

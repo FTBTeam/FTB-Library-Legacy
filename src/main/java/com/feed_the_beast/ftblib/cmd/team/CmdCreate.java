@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftblib.cmd.team;
 
+import com.feed_the_beast.ftblib.FTBLibGameRules;
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
-import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
-import com.feed_the_beast.ftblib.lib.data.Universe;
+import com.feed_the_beast.ftblib.lib.data.TeamType;
 import com.feed_the_beast.ftblib.net.MessageMyTeamGui;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -51,10 +51,15 @@ public class CmdCreate extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
+		if (!FTBLibGameRules.canCreateTeam(server.getWorld(0)))
+		{
+			throw FTBLibLang.FEATURE_DISABLED.commandError();
+		}
+
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 		ForgePlayer p = getForgePlayer(player);
 
-		if (p.getTeam() != null)
+		if (p.hasTeam())
 		{
 			throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
 		}
@@ -66,26 +71,26 @@ public class CmdCreate extends CmdBase
 			throw FTBLibLang.TEAM_ID_INVALID.commandError();
 		}
 
-		if (Universe.get().getTeam(args[0]) != null)
+		if (p.team.universe.getTeam(args[0]).isValid())
 		{
 			throw FTBLibLang.TEAM_ID_ALREADY_EXISTS.commandError();
 		}
 
-		ForgeTeam team = new ForgeTeam(Universe.get(), args[0]);
+		ForgeTeam team = new ForgeTeam(p.team.universe, args[0], TeamType.PLAYER);
 
 		if (args.length > 1)
 		{
 			team.setColor(EnumTeamColor.NAME_MAP.get(args[1]));
 		}
 
+		p.team = team;
+		team.owner = p;
 		team.universe.teams.put(team.getName(), team);
-		p.setTeamId(team.getName());
-		team.setStatus(p, EnumTeamStatus.OWNER);
-
 		new ForgeTeamCreatedEvent(team).post();
-		new ForgeTeamPlayerJoinedEvent(team, p).post();
-
+		new ForgeTeamPlayerJoinedEvent(p).post();
 		FTBLibLang.TEAM_CREATED.sendMessage(sender, team.getName());
-		new MessageMyTeamGui(team, p).sendTo(player);
+		new MessageMyTeamGui(p).sendTo(player);
+		team.markDirty();
+		p.markDirty();
 	}
 }

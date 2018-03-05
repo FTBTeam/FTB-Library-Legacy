@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 
@@ -17,9 +18,9 @@ public abstract class Panel extends Widget
 	private int offsetX = 0, offsetY = 0;
 	private int flags = 0;
 
-	public Panel(GuiBase gui)
+	public Panel(Panel panel)
 	{
-		super(gui);
+		super(panel);
 		widgets = new ArrayList<>();
 	}
 
@@ -44,16 +45,23 @@ public abstract class Panel extends Widget
 
 		if (unicode)
 		{
-			gui.pushFontUnicode(true);
+			getGui().pushFontUnicode(true);
 		}
 
-		addWidgets();
-		alignWidgets();
-
-		if (unicode)
+		try
 		{
-			gui.popFontUnicode();
+			addWidgets();
 		}
+		catch (MismatchingParentPanelException ex)
+		{
+			FTBLib.LOGGER.error(ex.getMessage());
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+
+		alignWidgets();
 
 		for (Widget widget : widgets)
 		{
@@ -62,20 +70,23 @@ public abstract class Panel extends Widget
 				((Panel) widget).refreshWidgets();
 			}
 		}
+
+		alignWidgets();
+
+		if (unicode)
+		{
+			getGui().popFontUnicode();
+		}
 	}
 
 	public void add(Widget widget)
 	{
-		widget.parent = this;
-		widgets.add(widget);
-	}
-
-	public void addAll(Widget... widgets)
-	{
-		for (Widget w : widgets)
+		if (widget.parent != this)
 		{
-			add(w);
+			throw new MismatchingParentPanelException(this, widget);
 		}
+
+		widgets.add(widget);
 	}
 
 	public void addAll(Iterable<? extends Widget> list)
@@ -155,11 +166,21 @@ public abstract class Panel extends Widget
 		scrollY = scroll;
 	}
 
+	public int getScrollX()
+	{
+		return scrollX;
+	}
+
+	public int getScrollY()
+	{
+		return scrollY;
+	}
+
 	@Override
 	public void draw()
 	{
 		boolean renderInside = hasFlag(ONLY_RENDER_WIDGETS_INSIDE);
-		gui.pushFontUnicode(hasFlag(UNICODE));
+		getGui().pushFontUnicode(hasFlag(UNICODE));
 
 		int ax = getAX();
 		int ay = getAY();
@@ -168,10 +189,11 @@ public abstract class Panel extends Widget
 
 		if (renderInside)
 		{
-			GuiHelper.pushScissor(gui.getScreen(), ax, ay, width, height);
+			GuiHelper.pushScissor(getScreen(), ax, ay, width, height);
 		}
 
 		setOffset(true);
+		drawOffsetPanelBackground(ax + offsetX, ay + offsetY);
 
 		for (int i = 0; i < widgets.size(); i++)
 		{
@@ -187,13 +209,18 @@ public abstract class Panel extends Widget
 
 		if (renderInside)
 		{
-			GuiHelper.popScissor(gui.getScreen());
+			GuiHelper.popScissor(getScreen());
 		}
 
-		gui.popFontUnicode();
+		getGui().popFontUnicode();
 	}
 
 	protected void drawPanelBackground(int ax, int ay)
+	{
+		getIcon().draw(ax, ay, width, height);
+	}
+
+	protected void drawOffsetPanelBackground(int ax, int ay)
 	{
 		getIcon().draw(ax, ay, width, height);
 	}
@@ -202,16 +229,18 @@ public abstract class Panel extends Widget
 	{
 		widget.draw();
 
-		if (gui.renderDebugBoxes)
+		if (getGui().renderDebugBoxes)
 		{
-			GuiHelper.drawHollowRect(widget.getAX(), widget.getAY(), widget.width, widget.height, Color4I.rgb(java.awt.Color.HSBtoRGB((widget.hashCode() & 255) / 255F, 1F, 1F)).withAlpha(150), false);
+			Color4I col = Color4I.rgb(java.awt.Color.HSBtoRGB((widget.hashCode() & 255) / 255F, 1F, 1F));
+			GuiHelper.drawHollowRect(widget.getAX(), widget.getAY(), widget.width, widget.height, col.withAlpha(150), false);
+			col.withAlpha(30).draw(widget.getAX() + 1, widget.getAY() + 1, widget.width - 2, widget.height - 2);
 		}
 	}
 
 	@Override
 	public void addMouseOverText(List<String> list)
 	{
-		if (hasFlag(ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !gui.isMouseOver(this))
+		if (hasFlag(ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !isMouseOver())
 		{
 			return;
 		}
@@ -234,7 +263,7 @@ public abstract class Panel extends Widget
 	@Override
 	public boolean mousePressed(MouseButton button)
 	{
-		if (hasFlag(ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !gui.isMouseOver(this))
+		if (hasFlag(ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !isMouseOver())
 		{
 			return false;
 		}

@@ -15,7 +15,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -361,7 +360,7 @@ public class DataIn
 	public IBlockState readBlockState()
 	{
 		int id = readInt();
-		return id == 0 ? Blocks.AIR.getDefaultState() : Block.getStateById(id);
+		return id == 0 ? CommonUtils.AIR_STATE : Block.getStateById(id);
 	}
 
 	public Icon readIcon()

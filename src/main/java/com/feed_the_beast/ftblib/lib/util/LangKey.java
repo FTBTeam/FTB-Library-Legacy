@@ -14,6 +14,8 @@ import javax.annotation.Nullable;
  */
 public final class LangKey implements IStringSerializable
 {
+	private static final Class[] NO_ARGUMENTS = { };
+
 	private final String key;
 	private final Class[] arguments;
 	private Style defaultStyle;
@@ -21,6 +23,11 @@ public final class LangKey implements IStringSerializable
 	public static LangKey of(String key, Class... args)
 	{
 		return new LangKey(key, args);
+	}
+
+	public static LangKey of(String key)
+	{
+		return new LangKey(key, NO_ARGUMENTS);
 	}
 
 	private LangKey(String s, Class[] a)

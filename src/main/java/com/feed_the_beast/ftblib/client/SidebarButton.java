@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.client;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.feed_the_beast.ftblib.lib.data.SharedClientData;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
@@ -161,7 +160,7 @@ public class SidebarButton implements Comparable<SidebarButton>
 
 	public boolean isAvailable()
 	{
-		return (!hideWithNEI || !CommonUtils.isNEILoaded()) && (!requiresOp || ClientUtils.isClientOP()) && (requiredServerMods.isEmpty() || SharedClientData.INSTANCE.optionalServerMods().containsAll(requiredServerMods));
+		return (!hideWithNEI || !CommonUtils.isNEILoaded()) && (!requiresOp || ClientUtils.isClientOP()) && FTBLibClient.areAllModsLoadedOnServer(requiredServerMods);
 	}
 
 	public boolean hasCustomText()

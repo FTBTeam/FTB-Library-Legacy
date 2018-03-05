@@ -90,19 +90,19 @@ public class CheckBoxList extends Button
 
 	public Icon getCheckboxBackground()
 	{
-		return gui.getTheme().getCheckboxBackground(radioButtons);
+		return getTheme().getCheckboxBackground(radioButtons);
 	}
 
 	public Icon getCheckboxIcon(int index, int value)
 	{
-		return gui.getTheme().getCheckbox(gui.isMouseOver(this), value != 0, radioButtons);
+		return getTheme().getCheckbox(WidgetType.mouseOver(isMouseOver()), value != 0, radioButtons);
 	}
 
 	public void addBox(CheckBoxEntry checkBox)
 	{
 		checkBox.checkBoxList = this;
 		entries.add(checkBox);
-		setWidth(Math.max(width, gui.getStringWidth(checkBox.name)));
+		setWidth(Math.max(width, getStringWidth(checkBox.name)));
 		setHeight(height + 11);
 	}
 
@@ -116,7 +116,7 @@ public class CheckBoxList extends Button
 	@Override
 	public void onClicked(MouseButton button)
 	{
-		int y = gui.getMouseY() - getAY();
+		int y = getMouseY() - getAY();
 
 		if (y % 11 == 10)
 		{
@@ -156,7 +156,7 @@ public class CheckBoxList extends Button
 			int y = ay + i * 11 + 1;
 			bg.draw(ax, y, 10, 10);
 			getCheckboxIcon(i, entry.value).draw(ax + 1, y + 1, 8, 8);
-			gui.drawString(entry.name, ax + 12, y + 1);
+			drawString(entry.name, ax + 12, y + 1);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 	}

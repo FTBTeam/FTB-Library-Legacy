@@ -41,6 +41,6 @@ public class UtilsCommon
 
 	long getWorldTime()
 	{
-		return FMLServerHandler.instance().getServer().getEntityWorld().getTotalWorldTime();
+		return FMLServerHandler.instance().getServer().getWorld(0).getTotalWorldTime();
 	}
 }

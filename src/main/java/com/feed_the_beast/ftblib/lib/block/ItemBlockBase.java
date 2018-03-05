@@ -1,10 +1,7 @@
 package com.feed_the_beast.ftblib.lib.block;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.RayTraceResult;
 
 import java.util.Objects;
 
@@ -36,10 +33,5 @@ public class ItemBlockBase extends ItemBlock
 	public int getMetadata(int metadata)
 	{
 		return getHasSubtypes() ? metadata : 0;
-	}
-
-	public boolean renderPlacement(ItemStack stack, EntityPlayer player, RayTraceResult ray)
-	{
-		return false;
 	}
 }

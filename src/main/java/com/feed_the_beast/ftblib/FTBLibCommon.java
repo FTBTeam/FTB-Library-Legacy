@@ -1,25 +1,18 @@
 package com.feed_the_beast.ftblib;
 
 import com.feed_the_beast.ftblib.events.RegisterConfigValueProvidersEvent;
-import com.feed_the_beast.ftblib.events.RegisterDataProvidersEvent;
-import com.feed_the_beast.ftblib.events.RegisterOptionalServerModsEvent;
+import com.feed_the_beast.ftblib.events.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigEvent;
 import com.feed_the_beast.ftblib.events.RegisterSyncDataEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.player.IContainerProvider;
-import com.feed_the_beast.ftblib.events.player.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftblib.lib.EventHandler;
-import com.feed_the_beast.ftblib.lib.IDataProvider;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.ISyncData;
-import com.feed_the_beast.ftblib.lib.data.NBTDataStorage;
-import com.feed_the_beast.ftblib.lib.data.SharedServerData;
 import com.feed_the_beast.ftblib.lib.data.TeamGuiAction;
 import com.feed_the_beast.ftblib.lib.net.MessageBase;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
@@ -51,8 +44,6 @@ public class FTBLibCommon
 	public static final Map<UUID, EditingConfig> TEMP_SERVER_CONFIG = new HashMap<>();
 	public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
 	public static final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
-	public static final Map<String, IDataProvider<ForgePlayer>> DATA_PROVIDER_PLAYER = new HashMap<>();
-	public static final Map<String, IDataProvider<ForgeTeam>> DATA_PROVIDER_TEAM = new HashMap<>();
 	private static final Map<String, RankConfigValueInfo> RANK_CONFIGS = new HashMap<>();
 	public static final Map<String, RankConfigValueInfo> RANK_CONFIGS_MIRROR = Collections.unmodifiableMap(RANK_CONFIGS);
 	public static final HashSet<ResourceLocation> RELOAD_IDS = new HashSet<>();
@@ -147,10 +138,7 @@ public class FTBLibCommon
 
 		FTBLibNetHandler.init();
 
-		new RegisterOptionalServerModsEvent(SharedServerData.INSTANCE.optionalServerMods::add).post();
 		new RegisterConfigValueProvidersEvent(CONFIG_VALUE_PROVIDERS::put).post();
-		new RegisterDataProvidersEvent.Player(DATA_PROVIDER_PLAYER::put).post();
-		new RegisterDataProvidersEvent.Team(DATA_PROVIDER_TEAM::put).post();
 		new RegisterContainerProvidersEvent(GUI_CONTAINER_PROVIDERS::put).post();
 		new RegisterSyncDataEvent(SYNCED_DATA::put).post();
 		new RegisterRankConfigEvent((id, defPlayer, defOP) ->
@@ -177,25 +165,6 @@ public class FTBLibCommon
 		{
 		}
 	}*/
-
-	public <T> NBTDataStorage createDataStorage(T owner, Map<String, IDataProvider<T>> map)
-	{
-		NBTDataStorage storage = new NBTDataStorage();
-
-		for (Map.Entry<String, IDataProvider<T>> entry : map.entrySet())
-		{
-			try
-			{
-				storage.add(entry.getKey(), entry.getValue().getData(owner));
-			}
-			catch (Exception ex)
-			{
-				ex.printStackTrace();
-			}
-		}
-
-		return storage.isEmpty() ? NBTDataStorage.EMPTY : storage;
-	}
 
 	public void handleClientMessage(MessageBase<?> message)
 	{

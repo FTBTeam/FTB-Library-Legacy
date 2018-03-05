@@ -40,7 +40,7 @@ public class CmdRequestInvite extends CmdBase
 	{
 		ForgePlayer p = getForgePlayer(getCommandSenderAsPlayer(sender));
 
-		if (p.getTeam() != null)
+		if (p.hasTeam())
 		{
 			throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
 		}

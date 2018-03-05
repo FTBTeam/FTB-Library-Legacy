@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.client;
 
-import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
@@ -27,9 +26,9 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 		private final SidebarButton sidebarButton;
 		private String tooltip = "";
 
-		public ButtonConfigSidebarButton(GuiBase gui, SidebarButton s)
+		public ButtonConfigSidebarButton(Panel panel, SidebarButton s)
 		{
-			super(gui, StringUtils.translate(s.getLangKey()), s.getIcon());
+			super(panel, StringUtils.translate(s.getLangKey()), s.getIcon());
 			sidebarButton = s;
 
 			if (StringUtils.canTranslate(s.getTooltipLangKey()))
@@ -77,7 +76,7 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 			{
 				if (button.getDefaultConfig() != null)
 				{
-					panel.add(new ButtonConfigSidebarButton(gui, button));
+					panel.add(new ButtonConfigSidebarButton(panel, button));
 				}
 			}
 		}

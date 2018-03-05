@@ -10,6 +10,13 @@ import net.minecraft.util.text.ITextComponent;
  */
 public abstract class TeamGuiAction
 {
+	public enum Type
+	{
+		ENABLED,
+		DISABLED,
+		INVISIBLE
+	}
+
 	private final ResourceLocation id;
 	private ITextComponent title;
 	private boolean requiresConfirm;
@@ -30,9 +37,9 @@ public abstract class TeamGuiAction
 		return id;
 	}
 
-	public abstract boolean isAvailable(ForgeTeam team, ForgePlayer player, NBTTagCompound data);
+	public abstract Type getType(ForgePlayer player, NBTTagCompound data);
 
-	public abstract void onAction(ForgeTeam team, ForgePlayer player, NBTTagCompound data);
+	public abstract void onAction(ForgePlayer player, NBTTagCompound data);
 
 	public TeamGuiAction setTitle(ITextComponent t)
 	{

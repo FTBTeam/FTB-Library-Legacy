@@ -87,12 +87,19 @@ ftblib.general=General
 ftblib.general.clientless_mode=Clientless Mode
 ftblib.general.mirror_ftb_commands=Mirror /ftb Commands
 ftblib.general.merge_offline_mode_players=Merge Offline Mode Players
-ftblib.general.log_net=Log Network IO
 
 ftblib.teams=Teams
 ftblib.teams.autocreate_sp=Autocreate on Singleplayer
 ftblib.teams.autocreate_mp=Autocreate on Multiplayer
-ftblib.teams.max_team_chat_history=Max Chat History
+
+ftblib.debugging=Debugging
+ftblib.debugging.print_more_info=Print More Info
+ftblib.debugging.print_more_errors=Print More Errors
+ftblib.debugging.log_network=Log Network IO
+ftblib.debugging.log_teleport=Log Teleporting
+ftblib.debugging.log_config_editing=Log Config Editing
+ftblib.debugging.dev_sidebar_buttons=Dev-only Sidebar Buttons
+ftblib.debugging.gui_widget_bounds=GUI Widget Bounds
 
 # Client Config
 ftblib_client.general.item_ore_names=Display Item OreDictionary names
@@ -143,6 +150,10 @@ ftblib.lang.team.notification=You haven't joined or created a team yet! %s to op
 ftblib.lang.team.notification.hide=Hide this Message
 ftblib.lang.team.chat_message=[Team %s] %s
 
+ftblib.lang.team.gui.select_team=Select Team to Join
+ftblib.lang.team.gui.create_team=Create a New Team
+ftblib.lang.team.gui.join_team=Click to join the team
+ftblib.lang.team.gui.request_invite=Click to request invite to this team
 ftblib.lang.team.gui.members=Members
 ftblib.lang.team.gui.members.invite=Click to invite to your team
 ftblib.lang.team.gui.members.requesting_invite=This player is requesting invite

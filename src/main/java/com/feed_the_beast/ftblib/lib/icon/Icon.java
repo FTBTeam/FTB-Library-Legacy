@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.client.renderer.texture.ITextureObject;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -150,16 +150,26 @@ public abstract class Icon
 		{
 			return LoadingIcon.INSTANCE;
 		}
-		else if (id.startsWith("item:"))
+		String[] ida = id.split(":", 2);
+
+		if (ida.length == 2)
 		{
-			return ItemIcon.getItemIcon(id.substring(5));
-		}
-		else if (id.startsWith("http:") || id.startsWith("https:"))
-		{
-			return new URLImageIcon(id, 0D, 0D, 1D, 1D);
+			switch (ida[0])
+			{
+				case "item":
+					return ItemIcon.getItemIcon(ida[1]);
+				case "http":
+				case "https":
+					return new URLImageIcon(id, 0D, 0D, 1D, 1D);
+				case "player":
+				{
+					String[] ida2 = ida[1].split(":");
+					return ida2.length == 2 ? new PlayerHeadIcon(new GameProfile(StringUtils.fromString(ida2[0]), ida2[1])) : EMPTY;
+				}
+			}
 		}
 
-		return (id.endsWith(".png") || id.endsWith(".jpg")) ? new ImageIcon(id, 0D, 0D, 1D, 1D) : new AtlasSpriteIcon(new ResourceLocation(id));
+		return (id.endsWith(".png") || id.endsWith(".jpg")) ? new ImageIcon(new ResourceLocation(id), 0D, 0D, 1D, 1D) : new AtlasSpriteIcon(new ResourceLocation(id));
 	}
 
 	public boolean isEmpty()
@@ -168,9 +178,8 @@ public abstract class Icon
 	}
 
 	@SideOnly(Side.CLIENT)
-	public ITextureObject bindTexture()
+	public void bindTexture()
 	{
-		return ClientUtils.bindTexture(ImageIcon.MISSING_IMAGE);
 	}
 
 	@SideOnly(Side.CLIENT)

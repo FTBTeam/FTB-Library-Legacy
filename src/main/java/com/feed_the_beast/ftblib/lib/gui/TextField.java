@@ -13,18 +13,18 @@ public class TextField extends Widget
 {
 	public List<String> text = Collections.emptyList();
 	public int textFlags = 0;
-	public boolean autoSizeWidth, autoSizeHeight;
+	public boolean autoSizeWidth = true, autoSizeHeight = true;
 
-	public TextField(GuiBase gui, String txt, int flags)
+	public TextField(Panel panel, String txt, int flags)
 	{
-		super(gui);
+		super(panel);
 		textFlags = flags;
 		setText(txt);
 	}
 
-	public TextField(GuiBase gui, String txt)
+	public TextField(Panel panel, String txt)
 	{
-		this(gui, txt, 0);
+		this(panel, txt, 0);
 	}
 
 	public TextField setText(String txt)
@@ -33,7 +33,7 @@ public class TextField extends Widget
 
 		if (!txt.isEmpty())
 		{
-			text = new ArrayList<>(autoSizeWidth ? CommonUtils.asList(txt.split("\n")) : gui.listFormattedStringToWidth(txt, width));
+			text = new ArrayList<>(autoSizeWidth ? CommonUtils.asList(txt.split("\n")) : listFormattedStringToWidth(txt, width));
 		}
 
 		if (text == null || text.isEmpty())
@@ -47,13 +47,13 @@ public class TextField extends Widget
 
 			for (String s : text)
 			{
-				setWidth(Math.max(width, gui.getStringWidth(s)));
+				setWidth(Math.max(width, getStringWidth(s)));
 			}
 		}
 
 		if (autoSizeHeight)
 		{
-			int h1 = gui.getFontHeight() + 1;
+			int h1 = getFontHeight() + 1;
 			setHeight(text.isEmpty() ? h1 : h1 * text.size());
 		}
 
@@ -80,7 +80,7 @@ public class TextField extends Widget
 
 		for (int i = 0; i < text.size(); i++)
 		{
-			gui.drawString(text.get(i), ax, ay + i * 10 + 1, textFlags);
+			drawString(text.get(i), ax, ay + i * 10 + 1, textFlags);
 		}
 	}
 }

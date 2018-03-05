@@ -11,26 +11,26 @@ public class SimpleButton extends Button
 {
 	public interface Callback
 	{
-		void onClicked(GuiBase gui, MouseButton button);
+		void onClicked(SimpleButton widget, MouseButton button);
 	}
 
 	private final Callback consumer;
 
-	public SimpleButton(GuiBase gui, String text, Icon icon, Callback c)
+	public SimpleButton(Panel panel, String text, Icon icon, Callback c)
 	{
-		super(gui, text, icon);
+		super(panel, text, icon);
 		consumer = c;
 	}
 
-	public SimpleButton(GuiBase gui, LangKey text, Icon icon, Callback c)
+	public SimpleButton(Panel panel, LangKey text, Icon icon, Callback c)
 	{
-		this(gui, text.translate(), icon, c);
+		this(panel, text.translate(), icon, c);
 	}
 
 	@Override
 	public void onClicked(MouseButton button)
 	{
 		GuiHelper.playClickSound();
-		consumer.onClicked(gui, button);
+		consumer.onClicked(this, button);
 	}
 }

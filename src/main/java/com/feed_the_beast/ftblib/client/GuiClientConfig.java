@@ -2,9 +2,7 @@ package com.feed_the_beast.ftblib.client;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.feed_the_beast.ftblib.lib.data.SharedClientData;
 import com.feed_the_beast.ftblib.lib.gui.Button;
-import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
@@ -46,7 +44,7 @@ public class GuiClientConfig extends GuiButtonListBase
 				boolean flag = true;
 				try
 				{
-					if ((configID != null || parentScreen == null || !(parentScreen instanceof GuiConfig)) && (entryList.hasChangedEntry(true)))
+					if ((configID != null || !(parentScreen instanceof GuiConfig)) && entryList.hasChangedEntry(true))
 					{
 						boolean requiresMcRestart = entryList.saveConfigElements();
 
@@ -90,9 +88,9 @@ public class GuiClientConfig extends GuiButtonListBase
 	{
 		private final String modId;
 
-		public ButtonClientConfig(GuiBase gui, ClientConfig config)
+		public ButtonClientConfig(Panel panel, ClientConfig config)
 		{
-			super(gui, config.name.getFormattedText(), config.icon);
+			super(panel, config.name.getFormattedText(), config.icon);
 			modId = config.id;
 		}
 
@@ -116,12 +114,12 @@ public class GuiClientConfig extends GuiButtonListBase
 
 		for (ClientConfig config : FTBLibClient.CLIENT_CONFIG_MAP.values())
 		{
-			buttons.add(new ButtonClientConfig(gui, config));
+			buttons.add(new ButtonClientConfig(panel, config));
 		}
 
 		buttons.sort((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
 
-		buttons.add(0, new SimpleTextButton(gui, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/teams.png"))
+		buttons.add(0, new SimpleTextButton(panel, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/teams.png"))
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -131,9 +129,9 @@ public class GuiClientConfig extends GuiButtonListBase
 			}
 		});
 
-		if (SharedClientData.INSTANCE.optionalServerMods().contains(FTBLib.MOD_ID))
+		if (FTBLibClient.isModLoadedOnServer(FTBLib.MOD_ID))
 		{
-			buttons.add(0, new SimpleTextButton(gui, StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
+			buttons.add(0, new SimpleTextButton(panel, StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
 			{
 				@Override
 				public void onClicked(MouseButton button)

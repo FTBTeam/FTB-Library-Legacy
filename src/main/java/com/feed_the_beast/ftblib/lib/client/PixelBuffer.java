@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftblib.lib.client;
 
-import com.feed_the_beast.ftblib.lib.util.ColorUtils;
+import org.lwjgl.BufferUtils;
 
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 public class PixelBuffer
@@ -171,8 +172,20 @@ public class PixelBuffer
 		return b;
 	}
 
-	public void addHSB(float h, float s, float b)
+	public ByteBuffer toByteBuffer(boolean alpha)
 	{
-		ColorUtils.addHSB(pixels, h, s, b);
+		ByteBuffer bb = BufferUtils.createByteBuffer(pixels.length * 4);
+		byte alpha255 = (byte) 255;
+
+		for (int c : pixels)
+		{
+			bb.put((byte) (c >> 16));
+			bb.put((byte) (c >> 8));
+			bb.put((byte) c);
+			bb.put(alpha ? (byte) (c >> 24) : alpha255);
+		}
+
+		bb.flip();
+		return bb;
 	}
 }

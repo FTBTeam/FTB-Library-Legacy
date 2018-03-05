@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -44,13 +43,12 @@ public class CmdSetStatus extends CmdBase
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
 		ForgePlayer p = getForgePlayer(getCommandSenderAsPlayer(sender));
-		ForgeTeam team = p.getTeam();
 
-		if (team == null)
+		if (!p.hasTeam())
 		{
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
-		else if (!team.isModerator(p))
+		else if (!p.team.isModerator(p))
 		{
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
@@ -58,11 +56,11 @@ public class CmdSetStatus extends CmdBase
 		checkArgs(sender, args, 2);
 		ForgePlayer p1 = getForgePlayer(sender, args[0]);
 
-		if (team.isOwner(p1))
+		if (p.team.isOwner(p1))
 		{
 			throw FTBLibLang.TEAM_PERMISSION_OWNER.commandError();
 		}
-		else if (!team.isModerator(p))
+		else if (!p.team.isModerator(p))
 		{
 			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
@@ -71,7 +69,7 @@ public class CmdSetStatus extends CmdBase
 
 		if (status.canBeSet())
 		{
-			team.setStatus(p1, status);
+			p.team.setStatus(p1, status);
 		}
 
 		//TODO: Display notification

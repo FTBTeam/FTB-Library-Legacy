@@ -127,9 +127,7 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 
 		for (ConfigValue value : list)
 		{
-			Object o = value.getValue();
-
-			if (o != null && val.equals(o))
+			if (val.equals(value.getValue()))
 			{
 				return true;
 			}

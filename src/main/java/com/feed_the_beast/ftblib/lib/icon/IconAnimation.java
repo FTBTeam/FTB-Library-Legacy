@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
-import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -24,7 +23,7 @@ public class IconAnimation extends Icon
 		{
 			if (!stack.isEmpty())
 			{
-				icons.add(ItemIcon.getItemIcon(stack));
+				icons.add(ItemIcon.getItemIcon(stack.copy()));
 			}
 		}
 
@@ -32,7 +31,7 @@ public class IconAnimation extends Icon
 	}
 
 	public final List<Icon> list;
-	private Icon current = Icon.EMPTY;
+	public Icon current = Icon.EMPTY;
 	public long timer = 1000L;
 
 	public IconAnimation(Collection<Icon> l)
@@ -68,16 +67,13 @@ public class IconAnimation extends Icon
 
 	public void setIndex(int i)
 	{
-		current = list.get(MathUtils.wrap(i, list.size()));
+		current = list.get(i % list.size());
 	}
 
 	@Override
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
-		if (current != null)
-		{
-			current.draw(x, y, w, h, col);
-		}
+		current.draw(x, y, w, h, col);
 
 		if (!list.isEmpty())
 		{

@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.io.Bits;
+import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -14,13 +15,11 @@ import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
 
 public class StringUtils
 {
@@ -28,7 +27,7 @@ public class StringUtils
 
 	public static final String ALLOWED_TEXT_CHARS = " .-_!@#$%^&*()+=\\/,<>?\'\"[]{}|;:`~";
 	public static final char FORMATTING_CHAR = '\u00a7';
-	public static final String FORMATTING = "\u00a7";
+	public static final String FORMATTING = "" + FORMATTING_CHAR;
 	public static final String[] EMPTY_ARRAY = { };
 
 	public static final int FLAG_ID_ALLOW_EMPTY = 1;
@@ -44,6 +43,7 @@ public class StringUtils
 	public static final Map<String, String> TEMP_MAP = new HashMap<>();
 	public static final DecimalFormat SMALL_DOUBLE_FORMATTER = new DecimalFormat("#0.00");
 	public final static int[] INT_SIZE_TABLE = {9, 99, 999, 9999, 99999, 999999, 9999999, 99999999, 999999999, Integer.MAX_VALUE};
+	public static final NameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = NameMap.create(TextFormatting.RESET, TextFormatting.values());
 
 	public static String emptyIfNull(@Nullable Object o)
 	{
@@ -131,107 +131,6 @@ public class StringUtils
 		return id;
 	}
 
-	public static String toString(@Nullable Object object, @Nullable Function<Object, String> nameSupplier)
-	{
-		if (object == null)
-		{
-			return "null";
-		}
-		else if (object.getClass().isArray())
-		{
-			Object[] objects = (Object[]) object;
-
-			if (objects.length == 0)
-			{
-				return "[]";
-			}
-
-			StringBuilder sb = new StringBuilder();
-			sb.append('[');
-
-			for (int i = 0; i < objects.length; i++)
-			{
-				sb.append(toString(objects[i], nameSupplier));
-
-				if (i != objects.length - 1)
-				{
-					sb.append(',');
-					sb.append(' ');
-				}
-			}
-
-			sb.append(']');
-			return sb.toString();
-		}
-		else if (object instanceof Map)
-		{
-			Map<?, ?> map = (Map<?, ?>) object;
-
-			if (map.isEmpty())
-			{
-				return "{}";
-			}
-
-			StringBuilder sb = new StringBuilder();
-			sb.append('{');
-
-			int s = map.size();
-			int i = 0;
-			for (Map.Entry<?, ?> e : map.entrySet())
-			{
-				sb.append(toString(e.getKey(), nameSupplier));
-				sb.append(':');
-				sb.append(' ');
-				sb.append(toString(e.getValue(), nameSupplier));
-
-				i++;
-				if (i != s)
-				{
-					sb.append(',');
-					sb.append(' ');
-				}
-			}
-
-			sb.append(' ');
-
-			sb.append('}');
-			return sb.toString();
-		}
-		else if (object instanceof Collection)
-		{
-			Collection<?> c = (Collection) object;
-
-			if (c.isEmpty())
-			{
-				return "[]";
-			}
-
-			StringBuilder sb = new StringBuilder();
-			sb.append('[');
-
-			int s = c.size();
-			int i = 0;
-
-			for (Object o : c)
-			{
-				sb.append(toString(o, nameSupplier));
-
-				i++;
-				if (i != s)
-				{
-					sb.append(',');
-					sb.append(' ');
-				}
-			}
-
-			sb.append(']');
-			return sb.toString();
-		}
-
-		String s = nameSupplier == null ? null : nameSupplier.apply(object);
-		return s == null ? object.toString() : s;
-	}
-
 	public static String[] shiftArray(@Nullable String[] s)
 	{
 		if (s == null || s.length <= 1)
@@ -244,43 +143,47 @@ public class StringUtils
 		return s1;
 	}
 
-	public static String readString(InputStream is) throws Exception
+	public static String readString(InputStream stream) throws Exception
 	{
-		final char[] buffer = new char[0x10000];
+		return readString(stream, 64);
+	}
+
+	public static String readString(InputStream stream, int bufferSize) throws Exception
+	{
+		final char[] buffer = new char[bufferSize];
 		final StringBuilder out = new StringBuilder();
-		try (Reader in = new InputStreamReader(is, StandardCharsets.UTF_8))
+		try (Reader in = new InputStreamReader(stream, StandardCharsets.UTF_8))
 		{
 			int read;
 			do
 			{
-				read = in.read(buffer, 0, buffer.length);
+				read = in.read(buffer, 0, bufferSize);
 				if (read > 0)
 				{
 					out.append(buffer, 0, read);
 				}
 			}
 			while (read >= 0);
-			in.close();
 		}
 		return out.toString();
 	}
 
-	public static List<String> readStringList(Reader r) throws Exception
+	public static List<String> readStringList(Reader reader) throws Exception
 	{
 		List<String> l = new ArrayList<>();
-		BufferedReader reader = new BufferedReader(r);
+		BufferedReader breader = new BufferedReader(reader);
 		String s;
-		while ((s = reader.readLine()) != null)
+		while ((s = breader.readLine()) != null)
 		{
 			l.add(s);
 		}
-		reader.close();
+		breader.close();
 		return l;
 	}
 
-	public static List<String> readStringList(InputStream is) throws Exception
+	public static List<String> readStringList(InputStream stream) throws Exception
 	{
-		return readStringList(new InputStreamReader(is, StandardCharsets.UTF_8));
+		return readStringList(new InputStreamReader(stream, StandardCharsets.UTF_8));
 	}
 
 	public static List<String> toStringList(String s, String regex)

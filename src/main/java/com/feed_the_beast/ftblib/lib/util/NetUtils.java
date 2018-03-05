@@ -27,7 +27,7 @@ public class NetUtils
 	{
 		try
 		{
-			return StringUtils.emptyIfNull(StringUtils.readString(new URL("https://api.ipify.org").openStream()));
+			return StringUtils.emptyIfNull(StringUtils.readString(new URL("https://api.ipify.org").openStream(), 15));
 		}
 		catch (Exception e)
 		{

@@ -3,7 +3,6 @@ package com.feed_the_beast.ftblib.net;
 import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.client.teamsgui.GuiMyTeam;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.TeamGuiAction;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
@@ -36,6 +35,7 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 		public final boolean requiresConfirm;
 		public final Icon icon;
 		private int order;
+		public boolean enabled;
 
 		private Action(DataIn data)
 		{
@@ -43,15 +43,17 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 			title = data.readTextComponent();
 			requiresConfirm = data.readBoolean();
 			icon = data.readIcon();
+			enabled = data.readBoolean();
 		}
 
-		public Action(TeamGuiAction action)
+		public Action(TeamGuiAction action, TeamGuiAction.Type t)
 		{
 			id = action.getId();
 			title = action.getTitle();
 			requiresConfirm = action.getRequireConfirm();
 			icon = action.getIcon();
 			order = action.getOrder();
+			enabled = t == TeamGuiAction.Type.ENABLED;
 		}
 
 		private void writeData(DataOut data)
@@ -60,26 +62,30 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 			data.writeTextComponent(title);
 			data.writeBoolean(requiresConfirm);
 			data.writeIcon(icon);
+			data.writeBoolean(enabled);
 		}
 	}
 
-	private String title;
+	private ITextComponent title;
 	private Collection<Action> actions;
 
 	public MessageMyTeamGui()
 	{
 	}
 
-	public MessageMyTeamGui(ForgeTeam team, ForgePlayer player)
+	public MessageMyTeamGui(ForgePlayer player)
 	{
-		title = team.getColor().getTextFormatting() + team.getTitle();
+		title = player.team.getTitle();
 		actions = new ArrayList<>();
+		NBTTagCompound emptyData = new NBTTagCompound();
 
 		for (TeamGuiAction action : FTBLibCommon.TEAM_GUI_ACTIONS.values())
 		{
-			if (action.isAvailable(team, player, new NBTTagCompound()))
+			TeamGuiAction.Type type = action.getType(player, emptyData);
+
+			if (type != TeamGuiAction.Type.INVISIBLE)
 			{
-				actions.add(new Action(action));
+				actions.add(new Action(action, type));
 			}
 		}
 
@@ -95,14 +101,14 @@ public class MessageMyTeamGui extends MessageToClient<MessageMyTeamGui>
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeString(title);
+		data.writeTextComponent(title);
 		data.writeCollection(actions, Action.SERIALIZER);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		title = data.readString();
+		title = data.readTextComponent();
 		actions = data.readCollection(Action.DESERIALIZER);
 	}
 

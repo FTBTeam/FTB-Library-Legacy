@@ -18,6 +18,7 @@ import com.feed_the_beast.ftblib.lib.gui.SimpleButton;
 import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
+import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.gui.misc.ThemeVanilla;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -42,27 +43,21 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	public static Theme THEME = new ThemeVanilla()
 	{
 		@Override
-		public Color4I getContentColor(boolean mouseOver)
-		{
-			return super.getContentColor(mouseOver);
-		}
-
-		@Override
-		public Icon getGui(boolean mouseOver)
+		public Icon getGui(WidgetType type)
 		{
 			return Icon.EMPTY;
 		}
 
 		@Override
-		public Icon getWidget(boolean mouseOver)
+		public Icon getScrollBarBackground()
 		{
-			return super.getWidget(mouseOver);
+			return Icon.EMPTY;
 		}
 
 		@Override
-		public Icon getSlot(boolean mouseOver)
+		public Icon getScrollBar(WidgetType type, boolean vertical)
 		{
-			return super.getSlot(mouseOver);
+			return getContentColor(type).withAlpha(100).withBorder(1);
 		}
 	};
 
@@ -72,9 +67,9 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		public String title = "-", info = "";
 		public boolean collapsed = false;
 
-		public ButtonConfigGroup(GuiBase gui, String id)
+		public ButtonConfigGroup(Panel panel, String id)
 		{
-			super(gui);
+			super(panel);
 			groupId = id;
 
 			if (!groupId.isEmpty())
@@ -130,10 +125,10 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			int ay = getAY();
 
 			COLOR_BACKGROUND.draw(ax, ay, width, height);
-			gui.drawString(getTitle(), ax + 3, ay + 4);
+			drawString(getTitle(), ax + 3, ay + 4);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
-			if (gui.isMouseOver(this))
+			if (isMouseOver())
 			{
 				Color4I.WHITE_A[33].draw(ax, ay, width, height);
 			}
@@ -152,7 +147,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		public void onClicked(MouseButton button)
 		{
 			setCollapsed(!collapsed);
-			gui.refreshWidgets();
+			getGui().refreshWidgets();
 		}
 	}
 
@@ -164,13 +159,13 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		public String keyText;
 		public List<String> infoText;
 
-		public ButtonConfigEntry(GuiEditConfig gui, ButtonConfigGroup g, ConfigValueInfo i, ConfigValue e)
+		public ButtonConfigEntry(Panel panel, ButtonConfigGroup g, ConfigValueInfo i, ConfigValue e)
 		{
-			super(gui);
+			super(panel);
 			group = g;
 			info = i;
 			value = e;
-			String keyLang = gui.group.getNameKey(info);
+			String keyLang = GuiEditConfig.this.group.getNameKey(info);
 			keyText = StringUtils.translate(keyLang);
 			String infoText = StringUtils.canTranslate(keyLang + ".tooltip") ? StringUtils.translate(keyLang + ".tooltip") : "";
 
@@ -180,7 +175,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 				for (String s : infoText.split("\\\\n"))
 				{
-					this.infoText.addAll(gui.listFormattedStringToWidth(s, 230));
+					this.infoText.addAll(listFormattedStringToWidth(s, 230));
 				}
 			}
 
@@ -193,7 +188,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		@Override
 		public void draw()
 		{
-			boolean mouseOver = gui.getMouseY() >= 20 && gui.isMouseOver(this);
+			boolean mouseOver = getMouseY() >= 20 && isMouseOver();
 
 			int ax = getAX();
 			int ay = getAY();
@@ -203,16 +198,16 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				Color4I.WHITE_A[33].draw(ax, ay, width, height);
 			}
 
-			gui.drawString(keyText, ax + 4, ay + 4, Bits.setFlag(0, SHADOW, mouseOver));
+			drawString(keyText, ax + 4, ay + 4, Bits.setFlag(0, SHADOW, mouseOver));
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
 			String s = value.hasCustomName() ? value.getCustomDisplayName().getFormattedText() : value.getString();
 
-			int slen = gui.getStringWidth(s);
+			int slen = getStringWidth(s);
 
 			if (slen > 150)
 			{
-				s = gui.trimStringToWidth(s, 150, false) + "...";
+				s = trimStringToWidth(s, 150, false) + "...";
 				slen = 152;
 			}
 
@@ -230,20 +225,20 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			{
 				textCol.addBrightness(60);
 
-				if (gui.getMouseX() > ax + width - slen - 9)
+				if (getMouseX() > ax + width - slen - 9)
 				{
 					Color4I.WHITE_A[33].draw(ax + width - slen - 8, ay, slen + 8, height);
 				}
 			}
 
-			gui.drawString(s, gui.width - (slen + 20), ay + 4, textCol, 0);
+			drawString(s, getGui().width - (slen + 20), ay + 4, textCol, 0);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 
 		@Override
 		public void onClicked(MouseButton button)
 		{
-			if (gui.getMouseY() >= 20 && !info.cantEdit)
+			if (getMouseY() >= 20 && !info.cantEdit)
 			{
 				GuiHelper.playClickSound();
 				value.onClicked(GuiEditConfig.this, info, button);
@@ -253,14 +248,14 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			if (gui.getMouseY() > 18)
+			if (getMouseY() > 18)
 			{
-				if (!infoText.isEmpty() && gui.getMouseX() < getAX() + gui.getStringWidth(keyText) + 10)
+				if (!infoText.isEmpty() && getMouseX() < getAX() + getStringWidth(keyText) + 10)
 				{
 					list.addAll(infoText);
 				}
 
-				if (gui.getMouseX() > gui.width - (Math.min(150, gui.getStringWidth(value.getString())) + 25))
+				if (getMouseX() > getGui().width - (Math.min(150, getStringWidth(value.getString())) + 25))
 				{
 					value.addInfo(info, list);
 				}
@@ -291,38 +286,6 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 		configEntryButtons = new ArrayList<>();
 
-		List<ConfigValueInstance> list = new ArrayList<>();
-
-		for (ConfigValueInstance instance : group.getMap().values())
-		{
-			if (!instance.info.hidden)
-			{
-				list.add(instance);
-			}
-		}
-
-		if (!list.isEmpty())
-		{
-			list.sort((o1, o2) ->
-			{
-				int i = o1.info.group.compareToIgnoreCase(o2.info.group);
-				return i == 0 ? StringUtils.translate(group.getNameKey(o1.info)).compareToIgnoreCase(StringUtils.translate(group.getNameKey(o2.info))) : i;
-			});
-
-			ButtonConfigGroup group = null;
-
-			for (ConfigValueInstance instance : list)
-			{
-				if (group == null || !group.groupId.equalsIgnoreCase(instance.info.group))
-				{
-					group = new ButtonConfigGroup(this, instance.info.group);
-					configEntryButtons.add(group);
-				}
-
-				configEntryButtons.add(new ButtonConfigEntry(this, group, instance.info, instance.value.copy()));
-			}
-		}
-
 		configPanel = new Panel(this)
 		{
 			@Override
@@ -351,6 +314,38 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 		configPanel.addFlags(Panel.DEFAULTS);
 
+		List<ConfigValueInstance> list = new ArrayList<>();
+
+		for (ConfigValueInstance instance : group.getMap().values())
+		{
+			if (!instance.info.hidden)
+			{
+				list.add(instance);
+			}
+		}
+
+		if (!list.isEmpty())
+		{
+			list.sort((o1, o2) ->
+			{
+				int i = o1.info.group.compareToIgnoreCase(o2.info.group);
+				return i == 0 ? StringUtils.translate(group.getNameKey(o1.info)).compareToIgnoreCase(StringUtils.translate(group.getNameKey(o2.info))) : i;
+			});
+
+			ButtonConfigGroup group = null;
+
+			for (ConfigValueInstance instance : list)
+			{
+				if (group == null || !group.groupId.equalsIgnoreCase(instance.info.group))
+				{
+					group = new ButtonConfigGroup(configPanel, instance.info.group);
+					configEntryButtons.add(group);
+				}
+
+				configEntryButtons.add(new ButtonConfigEntry(configPanel, group, instance.info, instance.value.copy()));
+			}
+		}
+
 		scroll = new PanelScrollBar(this, configPanel)
 		{
 			@Override
@@ -360,33 +355,19 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			}
 		};
 
-		buttonAccept = new SimpleButton(this, GuiLang.ACCEPT, GuiIcons.ACCEPT, (gui, button) ->
+		buttonAccept = new SimpleButton(this, GuiLang.ACCEPT, GuiIcons.ACCEPT, (widget, button) ->
 		{
 			shouldClose = 1;
-			gui.closeGui();
+			widget.getGui().closeGui();
 		});
 
-		buttonCancel = new SimpleButton(this, GuiLang.CANCEL, GuiIcons.CANCEL, (gui, button) ->
+		buttonCancel = new SimpleButton(this, GuiLang.CANCEL, GuiIcons.CANCEL, (widget, button) ->
 		{
 			shouldClose = 2;
-			gui.closeGui();
+			widget.getGui().closeGui();
 		});
 
-		buttonCollapseAll = new SimpleButton(this, GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (gui, button) ->
-		{
-			for (Widget w : configEntryButtons)
-			{
-				if (w instanceof ButtonConfigGroup)
-				{
-					((ButtonConfigGroup) w).setCollapsed(true);
-				}
-			}
-
-			scroll.setValue(0D);
-			gui.refreshWidgets();
-		});
-
-		buttonExpandAll = new SimpleButton(this, GuiLang.EXPAND_ALL, GuiIcons.ADD, (gui, button) ->
+		buttonExpandAll = new SimpleButton(this, GuiLang.EXPAND_ALL, GuiIcons.ADD, (widget, button) ->
 		{
 			for (Widget w : configEntryButtons)
 			{
@@ -397,7 +378,21 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			}
 
 			scroll.setValue(0D);
-			gui.refreshWidgets();
+			widget.getGui().refreshWidgets();
+		});
+
+		buttonCollapseAll = new SimpleButton(this, GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (widget, button) ->
+		{
+			for (Widget w : configEntryButtons)
+			{
+				if (w instanceof ButtonConfigGroup)
+				{
+					((ButtonConfigGroup) w).setCollapsed(true);
+				}
+			}
+
+			scroll.setValue(0D);
+			widget.getGui().refreshWidgets();
 		});
 	}
 
@@ -410,8 +405,12 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	@Override
 	public void addWidgets()
 	{
-		addAll(buttonAccept, buttonCancel, buttonCollapseAll, buttonExpandAll);
-		addAll(configPanel, scroll);
+		add(buttonAccept);
+		add(buttonCancel);
+		add(buttonExpandAll);
+		add(buttonCollapseAll);
+		add(configPanel);
+		add(scroll);
 	}
 
 	@Override

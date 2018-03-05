@@ -2,30 +2,21 @@ package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.google.common.base.Optional;
-import com.google.gson.JsonElement;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.fml.common.Loader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.annotation.Nullable;
 import java.io.File;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -34,12 +25,10 @@ import java.util.function.Predicate;
 public class CommonUtils
 {
 	public static final boolean DEV_ENV = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
-	public static final Logger DEV_LOGGER = LogManager.getLogger("FTBLibDev");
 
 	public static boolean isNEILoaded = false;
-	public static File folderConfig, folderMinecraft, folderLocal, folderWorld;
+	public static File folderConfig, folderMinecraft, folderLocal;
 
-	public static final Comparator<Package> PACKAGE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
 	private static final Predicate<Object> PREDICATE_ALWAYS_TRUE = object -> true;
 	public static final Object[] NO_OBJECTS = { };
 	public static final JsonContext MINECRAFT_JSON_CONTEXT = new JsonContext("minecraft");
@@ -49,6 +38,8 @@ public class CommonUtils
 	public static final long TICKS_HOUR = TICKS_MINUTE * 60L;
 
 	public static final char[] HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+	public static final IBlockState AIR_STATE = Blocks.AIR.getDefaultState();
 
 	@SuppressWarnings({"unchecked", "ConstantConditions"})
 	public static <T> T cast(@Nullable Object o)
@@ -87,33 +78,9 @@ public class CommonUtils
 		isNEILoaded = Loader.isModLoaded(OtherMods.NEI);
 	}
 
-	public static <E> Map<String, E> getObjects(@Nullable Class<E> type, Class<?> fields, @Nullable Object obj, boolean immutable)
-	{
-		Map<String, E> map = new HashMap<>();
-
-		for (Field f : fields.getDeclaredFields())
-		{
-			f.setAccessible(true);
-
-			if (type == null || type.isAssignableFrom(f.getType()))
-			{
-				try
-				{
-					map.put(f.getName(), (E) f.get(obj));
-				}
-				catch (Exception ex)
-				{
-					ex.printStackTrace();
-				}
-			}
-		}
-
-		return immutable ? Collections.unmodifiableMap(map) : map;
-	}
-
 	public static String getNameFromState(IBlockState state)
 	{
-		if (state == Blocks.AIR.getDefaultState())
+		if (state == AIR_STATE)
 		{
 			return "minecraft:air";
 		}
@@ -159,7 +126,7 @@ public class CommonUtils
 		String stateName = p == -1 ? name : name.substring(0, p);
 		IBlockState state = Block.REGISTRY.getObject(new ResourceLocation(stateName)).getDefaultState();
 
-		if (state == Blocks.AIR.getDefaultState())
+		if (state == AIR_STATE)
 		{
 			return def;
 		}
@@ -188,30 +155,7 @@ public class CommonUtils
 
 	public static IBlockState getStateFromName(String name)
 	{
-		return getStateFromName(name, Blocks.AIR.getDefaultState());
-	}
-
-	public static boolean isOneOf(Object original, Object... objects)
-	{
-		for (Object o : objects)
-		{
-			if (Objects.equals(original, o))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	public static Ingredient getIngredient(@Nullable JsonElement element)
-	{
-		if (JsonUtils.isNull(element) || element.isJsonArray() && element.getAsJsonArray().size() == 0)
-		{
-			return Ingredient.EMPTY;
-		}
-
-		return CraftingHelper.getIngredient(element, MINECRAFT_JSON_CONTEXT);
+		return getStateFromName(name, CommonUtils.AIR_STATE);
 	}
 
 	public static long getWorldTime()

@@ -67,7 +67,7 @@ public class FTBLibOreIngredient extends Ingredient
 
 						if (!entry.isEmpty())
 						{
-							map.put(entry, stack);
+							map.put(entry, stack.copy());
 						}
 					}
 				}
@@ -78,6 +78,19 @@ public class FTBLibOreIngredient extends Ingredient
 		else
 		{
 			ores = OreDictionary.getOres(ore);
+
+			if (map != null)
+			{
+				for (ItemStack stack : ores)
+				{
+					ItemEntry entry = ItemEntry.get(stack);
+
+					if (!entry.isEmpty())
+					{
+						map.put(entry, stack.copy());
+					}
+				}
+			}
 		}
 	}
 

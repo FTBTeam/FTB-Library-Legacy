@@ -1,16 +1,15 @@
 package com.feed_the_beast.ftblib.client;
 
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.CustomSidebarButtonTextEvent;
 import com.feed_the_beast.ftblib.lib.ClientATHelper;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.feed_the_beast.ftblib.lib.data.SharedClientData;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.AtlasSpriteIcon;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.IconPresets;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
@@ -189,7 +188,8 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event)
 	{
-		SharedClientData.INSTANCE.reset();
+		FTBLibClient.UNIVERSE_UUID = null;
+		FTBLibClient.OPTIONAL_SERVER_MODS_CLIENT.clear();
 		currentNotification = null;
 		Temp.MAP.clear();
 		ClientATHelper.getChatListeners().get(ChatType.GAME_INFO).clear();
@@ -361,7 +361,7 @@ public class FTBLibClientEventHandler
 		}
 		catch (Exception ex)
 		{
-			if (CommonUtils.DEV_ENV)
+			if (FTBLibConfig.debugging.print_more_errors)
 			{
 				ex.printStackTrace();
 			}
@@ -454,7 +454,7 @@ public class FTBLibClientEventHandler
 			zLevel = 0F;
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(0, 0, 310);
+			GlStateManager.translate(0, 0, 500);
 
 			FontRenderer font = mc.fontRenderer;
 

@@ -1,23 +1,15 @@
 package com.feed_the_beast.ftblib.events.team;
 
+import com.feed_the_beast.ftblib.events.player.ForgePlayerEvent;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 
 /**
  * @author LatvianModder
  */
-public class ForgeTeamPlayerLeftEvent extends ForgeTeamEvent
+public class ForgeTeamPlayerLeftEvent extends ForgePlayerEvent
 {
-	private final ForgePlayer player;
-
-	public ForgeTeamPlayerLeftEvent(ForgeTeam team, ForgePlayer p)
+	public ForgeTeamPlayerLeftEvent(ForgePlayer player)
 	{
-		super(team);
-		player = p;
-	}
-
-	public ForgePlayer getPlayer()
-	{
-		return player;
+		super(player);
 	}
 }

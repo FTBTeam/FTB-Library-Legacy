@@ -6,7 +6,6 @@ import com.feed_the_beast.ftblib.lib.data.FTBLibTeamGuiActions;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.util.ColorUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.net.MessageMyTeamAction;
 import com.feed_the_beast.ftblib.net.MessageMyTeamPlayerList;
@@ -33,7 +32,7 @@ public class GuiManageMembers extends GuiManagePlayersBase
 		{
 			if (entry.requestingInvite)
 			{
-				return ColorUtils.getChatFormattingColor(TextFormatting.GOLD.ordinal());
+				return Color4I.getChatFormattingColor(TextFormatting.GOLD);
 			}
 
 			switch (entry.status)
@@ -42,11 +41,11 @@ public class GuiManageMembers extends GuiManagePlayersBase
 					return getDefaultPlayerColor();
 				case MEMBER:
 				case MOD:
-					return ColorUtils.getChatFormattingColor(TextFormatting.DARK_GREEN.ordinal());
+					return Color4I.getChatFormattingColor(TextFormatting.DARK_GREEN);
 				case INVITED:
-					return ColorUtils.getChatFormattingColor(TextFormatting.BLUE.ordinal());
+					return Color4I.getChatFormattingColor(TextFormatting.BLUE);
 				case ALLY:
-					return ColorUtils.getChatFormattingColor(TextFormatting.DARK_AQUA.ordinal());
+					return Color4I.getChatFormattingColor(TextFormatting.DARK_AQUA);
 			}
 
 			return getDefaultPlayerColor();

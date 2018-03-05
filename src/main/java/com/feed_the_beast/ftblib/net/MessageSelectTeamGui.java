@@ -20,19 +20,33 @@ import java.util.Collection;
 public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 {
 	private Collection<PublicTeamData> teams;
+	private boolean canCreate;
 
 	public MessageSelectTeamGui()
 	{
 	}
 
-	public MessageSelectTeamGui(ForgePlayer player)
+	public MessageSelectTeamGui(ForgePlayer player, boolean c)
 	{
 		teams = new ArrayList<>();
 
 		for (ForgeTeam team : Universe.get().getTeams())
 		{
-			teams.add(new PublicTeamData(team, team.isInvited(player)));
+			PublicTeamData.Type type = PublicTeamData.Type.NEEDS_INVITE;
+
+			if (team.isEnemy(player))
+			{
+				type = PublicTeamData.Type.ENEMY;
+			}
+			else if (team.isInvited(player))
+			{
+				type = PublicTeamData.Type.CAN_JOIN;
+			}
+
+			teams.add(new PublicTeamData(team, type));
 		}
+
+		canCreate = c;
 	}
 
 	@Override
@@ -45,17 +59,19 @@ public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 	public void writeData(DataOut data)
 	{
 		data.writeCollection(teams, PublicTeamData.SERIALIZER);
+		data.writeBoolean(canCreate);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
 		teams = data.readCollection(null, PublicTeamData.DESERIALIZER);
+		canCreate = data.readBoolean();
 	}
 
 	@Override
 	public void onMessage(MessageSelectTeamGui m, EntityPlayer player)
 	{
-		new GuiSelectTeam(m.teams).openGuiLater();
+		new GuiSelectTeam(m.teams, m.canCreate).openGuiLater();
 	}
 }

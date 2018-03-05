@@ -17,4 +17,5 @@ public interface OtherMods
 	String CHISEL = "chisel";
 	String SILENTGEMS = "silentgems";
 	String REFINED_STORAGE = "refinedstorage";
+	String FTBGUIDES = "ftbguides";
 }

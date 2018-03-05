@@ -1,20 +1,24 @@
 package com.feed_the_beast.ftblib.net;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibCommon;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.FTBLibConfig;
+import com.feed_the_beast.ftblib.client.FTBLibClient;
+import com.feed_the_beast.ftblib.events.SyncGamerulesEvent;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ISyncData;
-import com.feed_the_beast.ftblib.lib.data.SharedClientData;
-import com.feed_the_beast.ftblib.lib.data.SharedServerData;
+import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -23,19 +27,22 @@ import java.util.UUID;
  */
 public class MessageSyncData extends MessageToClient<MessageSyncData>
 {
+	private static final int LOGIN = 1;
+
 	private int flags;
 	private UUID universeId;
 	private NBTTagCompound syncData;
 	private Collection<String> optionalServerMods;
+	private Map<String, String> gamerules;
 
 	public MessageSyncData()
 	{
 	}
 
-	public MessageSyncData(EntityPlayerMP player, ForgePlayer forgePlayer)
+	public MessageSyncData(boolean login, EntityPlayerMP player, ForgePlayer forgePlayer)
 	{
-		flags = 0;//unused currently, 1 was used for OP
-		universeId = SharedServerData.INSTANCE.getUniverseId();
+		flags = Bits.setFlag(0, LOGIN, login);
+		universeId = forgePlayer.team.universe.getUUID();
 		syncData = new NBTTagCompound();
 
 		for (Map.Entry<String, ISyncData> entry : FTBLibCommon.SYNCED_DATA.entrySet())
@@ -43,7 +50,10 @@ public class MessageSyncData extends MessageToClient<MessageSyncData>
 			syncData.setTag(entry.getKey(), entry.getValue().writeSyncData(player, forgePlayer));
 		}
 
-		optionalServerMods = SharedServerData.INSTANCE.optionalServerMods;
+		gamerules = new HashMap<>();
+		new SyncGamerulesEvent(gamerule -> gamerules.put(gamerule, player.world.getGameRules().getString(gamerule))).post();
+
+		optionalServerMods = forgePlayer.team.universe.optionalServerMods;
 	}
 
 	@Override
@@ -59,6 +69,7 @@ public class MessageSyncData extends MessageToClient<MessageSyncData>
 		data.writeUUID(universeId);
 		data.writeNBT(syncData);
 		data.writeCollection(optionalServerMods, DataOut.STRING);
+		data.writeMap(gamerules, DataOut.STRING, DataOut.STRING);
 	}
 
 	@Override
@@ -68,14 +79,15 @@ public class MessageSyncData extends MessageToClient<MessageSyncData>
 		universeId = data.readUUID();
 		syncData = data.readNBT();
 		optionalServerMods = data.readCollection(DataIn.STRING);
+		gamerules = data.readMap(DataIn.STRING, DataIn.STRING);
 	}
 
 	@Override
 	public void onMessage(MessageSyncData m, EntityPlayer player)
 	{
-		SharedClientData.INSTANCE.reset();
-		SharedClientData.INSTANCE.universeId = m.universeId;
-		SharedClientData.INSTANCE.optionalServerMods.addAll(m.optionalServerMods);
+		FTBLibClient.UNIVERSE_UUID = m.universeId;
+		FTBLibClient.OPTIONAL_SERVER_MODS_CLIENT.clear();
+		FTBLibClient.OPTIONAL_SERVER_MODS_CLIENT.addAll(m.optionalServerMods);
 
 		for (String key : m.syncData.getKeySet())
 		{
@@ -87,6 +99,14 @@ public class MessageSyncData extends MessageToClient<MessageSyncData>
 			}
 		}
 
-		ClientUtils.CACHED_SKINS.clear();
+		for (Map.Entry<String, String> entry : m.gamerules.entrySet())
+		{
+			player.world.getGameRules().setOrCreateGameRule(entry.getKey(), entry.getValue());
+		}
+
+		if (FTBLibConfig.debugging.print_more_info && Bits.getFlag(m.flags, LOGIN))
+		{
+			FTBLib.LOGGER.info("Synced data from universe " + StringUtils.fromUUID(FTBLibClient.UNIVERSE_UUID));
+		}
 	}
 }

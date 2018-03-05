@@ -1,6 +1,6 @@
-package com.feed_the_beast.ftblib.events.player;
+package com.feed_the_beast.ftblib.events;
 
-import com.feed_the_beast.ftblib.events.FTBLibEvent;
+import com.feed_the_beast.ftblib.events.player.IContainerProvider;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.function.BiConsumer;

@@ -8,8 +8,6 @@ import com.feed_the_beast.ftblib.client.teamsgui.GuiTransferOwnership;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.data.FTBLibTeamGuiActions;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
-import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
@@ -74,20 +72,20 @@ public class MessageMyTeamPlayerList extends MessageToClient<MessageMyTeamPlayer
 	{
 	}
 
-	public MessageMyTeamPlayerList(ResourceLocation _id, ForgeTeam team, ForgePlayer player, Predicate<EnumTeamStatus> predicate)
+	public MessageMyTeamPlayerList(ResourceLocation _id, ForgePlayer player, Predicate<EnumTeamStatus> predicate)
 	{
 		id = _id;
 		entries = new ArrayList<>();
 
-		for (ForgePlayer p : Universe.get().getPlayers())
+		for (ForgePlayer p : player.team.universe.getPlayers())
 		{
 			if (p != player && !p.isFake())
 			{
-				EnumTeamStatus status = team.getHighestStatus(p);
+				EnumTeamStatus status = player.team.getHighestStatus(p);
 
 				if (status != EnumTeamStatus.OWNER && predicate.test(status))
 				{
-					entries.add(new Entry(p, status, team.isRequestingInvite(p)));
+					entries.add(new Entry(p, status, player.team.isRequestingInvite(p)));
 				}
 			}
 		}

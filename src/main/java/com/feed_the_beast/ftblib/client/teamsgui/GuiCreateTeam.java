@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.TextBox;
+import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -42,7 +43,7 @@ public class GuiCreateTeam extends GuiBase
 
 				if (!textBoxId.getText().isEmpty())
 				{
-					gui.closeGui(false);
+					getGui().closeGui(false);
 					ClientUtils.execClientCommand("/ftb team create " + textBoxId.getText() + " " + color.getName());
 				}
 			}
@@ -62,7 +63,7 @@ public class GuiCreateTeam extends GuiBase
 			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
-				gui.closeGui();
+				getGui().closeGui();
 			}
 
 			@Override
@@ -107,7 +108,7 @@ public class GuiCreateTeam extends GuiBase
 				@Override
 				public Icon getIcon()
 				{
-					return getTheme().getGui(false).withTint(col.getColor().mutable().setAlpha(color == col || gui.isMouseOver(this) ? 200 : 100));
+					return getTheme().getGui(WidgetType.NORMAL).withTint(col.getColor().withAlpha(color == col || isMouseOver() ? 200 : 100));
 				}
 			};
 
