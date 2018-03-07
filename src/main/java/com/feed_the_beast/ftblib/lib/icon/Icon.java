@@ -160,6 +160,7 @@ public abstract class Icon
 					return ItemIcon.getItemIcon(ida[1]);
 				case "http":
 				case "https":
+				case "file":
 					return new URLImageIcon(id, 0D, 0D, 1D, 1D);
 				case "player":
 				{

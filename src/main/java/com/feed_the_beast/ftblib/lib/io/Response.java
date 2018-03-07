@@ -56,4 +56,9 @@ public final class Response
 	{
 		return method + "-" + responseCode;
 	}
+
+	public String getHeaderField(String name)
+	{
+		return StringUtils.emptyIfNull(connection.getHeaderField(name));
+	}
 }

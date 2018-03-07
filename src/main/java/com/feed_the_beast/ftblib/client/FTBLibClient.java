@@ -21,7 +21,6 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.command.ICommand;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -271,32 +270,28 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 
 	public static void saveSidebarButtonConfig()
 	{
-		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
+		JsonObject o = new JsonObject();
+
+		for (SidebarButtonGroup group : SIDEBAR_BUTTON_GROUPS)
 		{
-			JsonObject o = new JsonObject();
-
-			for (SidebarButtonGroup group : SIDEBAR_BUTTON_GROUPS)
+			for (SidebarButton button : group.getButtons())
 			{
-				for (SidebarButton button : group.getButtons())
+				if (button.getDefaultConfig() != null)
 				{
-					if (button.getDefaultConfig() != null)
+					JsonObject o1 = o.getAsJsonObject(button.id.getResourceDomain());
+
+					if (o1 == null)
 					{
-						JsonObject o1 = o.getAsJsonObject(button.id.getResourceDomain());
-
-						if (o1 == null)
-						{
-							o1 = new JsonObject();
-							o.add(button.id.getResourceDomain(), o1);
-						}
-
-						o1.addProperty(button.id.getResourcePath(), button.getConfig());
+						o1 = new JsonObject();
+						o.add(button.id.getResourceDomain(), o1);
 					}
+
+					o1.addProperty(button.id.getResourcePath(), button.getConfig());
 				}
 			}
+		}
 
-			JsonUtils.toJson(o, new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"));
-			return false;
-		});
+		JsonUtils.toJsonSafe(new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"), o);
 	}
 
 	public static boolean isModLoadedOnServer(String modid)

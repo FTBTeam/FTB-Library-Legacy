@@ -7,6 +7,7 @@ import org.apache.http.entity.ContentType;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.Proxy;
 import java.net.URL;
 
 public class HttpConnection
@@ -26,11 +27,11 @@ public class HttpConnection
 		return new HttpConnection(url, requestMethod, contentType);
 	}
 
-	public static JsonElement getJson(String url)
+	public static JsonElement getJson(String url, Proxy proxy)
 	{
 		try
 		{
-			return connection(url, RequestMethod.GET, JSON).connect().asJson();
+			return connection(url, RequestMethod.GET, JSON).connect(proxy).asJson();
 		}
 		catch (Exception ex)
 		{
@@ -46,10 +47,10 @@ public class HttpConnection
 		data = null;
 	}
 
-	public Response connect() throws Exception
+	public Response connect(Proxy proxy) throws Exception
 	{
 		long startTime = System.currentTimeMillis();
-		HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
+		HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection(proxy);
 		con.setRequestMethod(requestMethod.name());
 		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3");
 

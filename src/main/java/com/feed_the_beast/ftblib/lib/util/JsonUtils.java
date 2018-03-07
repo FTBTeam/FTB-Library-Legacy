@@ -33,6 +33,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -65,7 +66,7 @@ public class JsonUtils
 		return element == null || element == JsonNull.INSTANCE || element.isJsonNull();
 	}
 
-	public static void toJson(@Nullable JsonElement element, Writer writer, boolean prettyPrinting)
+	public static void toJson(Writer writer, @Nullable JsonElement element, boolean prettyPrinting)
 	{
 		if (isNull(element))
 		{
@@ -104,16 +105,16 @@ public class JsonUtils
 	public static String toJson(@Nullable JsonElement element, boolean prettyPrinting)
 	{
 		StringWriter writer = new StringWriter();
-		toJson(element, writer, prettyPrinting);
+		toJson(writer, element, prettyPrinting);
 		return writer.toString();
 	}
 
-	public static void toJson(@Nullable JsonElement element, File file, boolean prettyPrinting)
+	public static void toJson(File file, @Nullable JsonElement element, boolean prettyPrinting)
 	{
 		try (OutputStreamWriter output = new OutputStreamWriter(new FileOutputStream(FileUtils.newFile(file)), StandardCharsets.UTF_8);
 			 BufferedWriter writer = new BufferedWriter(output))
 		{
-			toJson(element, writer, prettyPrinting);
+			toJson(writer, element, prettyPrinting);
 		}
 		catch (Exception ex)
 		{
@@ -126,9 +127,18 @@ public class JsonUtils
 		return toJson(element, false);
 	}
 
-	public static void toJson(@Nullable JsonElement element, File file)
+	public static void toJson(File file, @Nullable JsonElement element)
 	{
-		toJson(element, file, true);
+		toJson(file, element, true);
+	}
+
+	public static void toJsonSafe(final File file, final @Nullable JsonElement element)
+	{
+		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
+		{
+			toJson(file, element);
+			return false;
+		});
 	}
 
 	public static JsonElement fromJson(@Nullable String json)

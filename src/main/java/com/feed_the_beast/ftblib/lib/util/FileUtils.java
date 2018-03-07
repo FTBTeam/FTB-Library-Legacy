@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.lib.util;
 
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.storage.ThreadedFileIOBase;
 
 import javax.annotation.Nullable;
 import java.io.BufferedWriter;
@@ -70,13 +71,47 @@ public class FileUtils
 		fw.close();
 	}
 
-	public static void save(File file, String s) throws Exception
+	public static void save(File file, String string) throws Exception
 	{
 		OutputStreamWriter fw = new OutputStreamWriter(new FileOutputStream(newFile(file)), StandardCharsets.UTF_8);
 		BufferedWriter br = new BufferedWriter(fw);
-		br.write(s);
+		br.write(string);
 		br.close();
 		fw.close();
+	}
+
+	public static void saveSafe(final File file, final List<String> list)
+	{
+		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
+		{
+			try
+			{
+				save(file, list);
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+
+			return false;
+		});
+	}
+
+	public static void saveSafe(final File file, final String string)
+	{
+		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
+		{
+			try
+			{
+				save(file, string);
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+
+			return false;
+		});
 	}
 
 	public static void writeNBT(File f, NBTTagCompound tag)
