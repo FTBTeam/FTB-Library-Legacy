@@ -68,6 +68,9 @@ public class FTBLibConfig
 
 		@Config.Comment("See GUI widget bounds when you hold B.")
 		public boolean gui_widget_bounds = false;
+
+		@Config.Comment("Log all events that extend EventBase.")
+		public boolean log_events = false;
 	}
 
 	public static void sync()

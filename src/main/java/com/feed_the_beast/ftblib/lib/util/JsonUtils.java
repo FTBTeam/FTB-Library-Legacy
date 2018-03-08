@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentCountdown;
@@ -189,6 +190,7 @@ public class JsonUtils
 		}
 		catch (Exception ex)
 		{
+			FTBLib.LOGGER.error("Failed to parse " + file.getAbsolutePath() + "! " + ex);
 			return JsonNull.INSTANCE;
 		}
 	}
