@@ -236,27 +236,21 @@ public class Widget
 		return getFont().listFormattedStringToWidth(text, width);
 	}
 
-	public final int drawString(String text, int x, int y, Color4I color, boolean shadow, boolean centered)
+	public final int drawString(String text, int x, int y, Color4I color, int flags)
 	{
 		if (text.isEmpty() || color.isEmpty())
 		{
 			return 0;
 		}
 
-		if (centered)
+		if (Bits.getFlag(flags, CENTERED))
 		{
 			x -= getStringWidth(text) / 2;
-			y -= getFontHeight() / 2;
 		}
 
-		int i = getFont().drawString(text, x, y, color.rgba(), shadow);
+		int i = getFont().drawString(text, x, y, color.rgba(), Bits.getFlag(flags, SHADOW));
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		return i;
-	}
-
-	public final int drawString(String text, int x, int y, Color4I color, int flags)
-	{
-		return drawString(text, x, y, color, Bits.getFlag(flags, SHADOW), Bits.getFlag(flags, CENTERED));
 	}
 
 	public final int drawString(String text, int x, int y, int flags)
@@ -266,7 +260,17 @@ public class Widget
 
 	public final int drawString(String text, int x, int y)
 	{
-		return drawString(text, x, y, getTheme().getContentColor(WidgetType.NORMAL), false, false);
+		return drawString(text, x, y, getTheme().getContentColor(WidgetType.NORMAL), 0);
+	}
+
+	public void pushFontUnicode(boolean flag)
+	{
+		parent.pushFontUnicode(flag);
+	}
+
+	public void popFontUnicode()
+	{
+		parent.popFontUnicode();
 	}
 
 	public boolean handleClick(String scheme, String path)

@@ -85,6 +85,7 @@ public abstract class GuiBase extends Panel
 	public final void initGui()
 	{
 		screen = new ScaledResolution(ClientUtils.MC);
+
 		if (onInit())
 		{
 			super.refreshWidgets();
@@ -142,12 +143,6 @@ public abstract class GuiBase extends Panel
 	public int getScrollY()
 	{
 		return 0;
-	}
-
-	@Override
-	public boolean hasFlag(int flag)
-	{
-		return false;
 	}
 
 	public boolean onInit()
@@ -286,21 +281,10 @@ public abstract class GuiBase extends Panel
 	{
 		if (FTBLibConfig.debugging.gui_widget_bounds && key == Keyboard.KEY_B)
 		{
-			renderDebugBoxes = true;
+			renderDebugBoxes = !renderDebugBoxes;
 		}
 
 		return super.keyPressed(key, keyChar);
-	}
-
-	@Override
-	public void keyReleased(int key)
-	{
-		if (FTBLibConfig.debugging.gui_widget_bounds && key == Keyboard.KEY_B)
-		{
-			renderDebugBoxes = false;
-		}
-
-		super.keyReleased(key);
 	}
 
 	@Override
@@ -377,12 +361,14 @@ public abstract class GuiBase extends Panel
 		return false;
 	}
 
+	@Override
 	public void pushFontUnicode(boolean flag)
 	{
 		fontUnicode.push(getFont().getUnicodeFlag());
 		getFont().setUnicodeFlag(flag);
 	}
 
+	@Override
 	public void popFontUnicode()
 	{
 		getFont().setUnicodeFlag(fontUnicode.pop());

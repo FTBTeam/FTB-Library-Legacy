@@ -55,7 +55,6 @@ public class BuiltinChunkMap extends ChunkSelectorMap
 			GlStateManager.rotate(player.rotationYaw + 180F, 0F, 0F, 1F);
 			TEX_ENTITY.draw(-8, -8, 16, 16, Color4I.WHITE_A[33]);
 			GlStateManager.popMatrix();
-			ClientUtils.localPlayerHead.draw(-2, -2, 4, 4);
 			GlStateManager.popMatrix();
 		}
 	}

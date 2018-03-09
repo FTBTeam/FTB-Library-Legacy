@@ -45,7 +45,7 @@ public abstract class Panel extends Widget
 
 		if (unicode)
 		{
-			getGui().pushFontUnicode(true);
+			pushFontUnicode(true);
 		}
 
 		try
@@ -75,7 +75,7 @@ public abstract class Panel extends Widget
 
 		if (unicode)
 		{
-			getGui().popFontUnicode();
+			popFontUnicode();
 		}
 	}
 
@@ -180,7 +180,7 @@ public abstract class Panel extends Widget
 	public void draw()
 	{
 		boolean renderInside = hasFlag(ONLY_RENDER_WIDGETS_INSIDE);
-		getGui().pushFontUnicode(hasFlag(UNICODE));
+		pushFontUnicode(hasFlag(UNICODE));
 
 		int ax = getAX();
 		int ay = getAY();
@@ -212,7 +212,7 @@ public abstract class Panel extends Widget
 			GuiHelper.popScissor(getScreen());
 		}
 
-		getGui().popFontUnicode();
+		popFontUnicode();
 	}
 
 	protected void drawPanelBackground(int ax, int ay)

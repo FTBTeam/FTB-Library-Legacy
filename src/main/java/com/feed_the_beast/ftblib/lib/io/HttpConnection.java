@@ -27,7 +27,7 @@ public class HttpConnection
 		return new HttpConnection(url, requestMethod, contentType);
 	}
 
-	public static JsonElement getJson(String url, Proxy proxy)
+	public static JsonElement getJson(String url, Proxy proxy, boolean printError)
 	{
 		try
 		{
@@ -35,6 +35,11 @@ public class HttpConnection
 		}
 		catch (Exception ex)
 		{
+			if (printError)
+			{
+				ex.printStackTrace();
+			}
+
 			return JsonNull.INSTANCE;
 		}
 	}

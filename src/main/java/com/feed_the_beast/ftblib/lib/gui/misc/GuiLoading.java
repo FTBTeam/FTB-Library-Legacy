@@ -46,7 +46,7 @@ public class GuiLoading extends GuiBase
 
 				for (int i = 0; i < s1.length; i++)
 				{
-					drawString(s1[i], ax + width / 2, ay - 30 + i * 12, CENTERED);
+					drawString(s1[i], ax + width / 2, ay - 26 + i * 12, CENTERED);
 				}
 			}
 		}

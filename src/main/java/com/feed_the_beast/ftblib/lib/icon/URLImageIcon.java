@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.File;
+
 /**
  * @author LatvianModder
  */
@@ -31,7 +33,15 @@ public class URLImageIcon extends ImageIcon
 
 		if (img == null)
 		{
-			img = new ThreadDownloadImageData(null, url, MISSING_IMAGE, null);
+			if (url.startsWith("http:") || url.startsWith("https:") || url.startsWith("file:"))
+			{
+				img = new ThreadDownloadImageData(null, url, MISSING_IMAGE, null);
+			}
+			else
+			{
+				img = new ThreadDownloadImageData(new File(url), url, MISSING_IMAGE, null);
+			}
+
 			manager.loadTexture(texture, img);
 		}
 

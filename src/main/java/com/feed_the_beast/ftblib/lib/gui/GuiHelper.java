@@ -264,11 +264,15 @@ public class GuiHelper
 
 	public static void popScissor(ScaledResolution screen)
 	{
-		SCISSOR.pop().scissor(screen);
+		SCISSOR.pop();
 
 		if (SCISSOR.isEmpty())
 		{
 			GL11.glDisable(GL11.GL_SCISSOR_TEST);
+		}
+		else
+		{
+			SCISSOR.lastElement().scissor(screen);
 		}
 	}
 
