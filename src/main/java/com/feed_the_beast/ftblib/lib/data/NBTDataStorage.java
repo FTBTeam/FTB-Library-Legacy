@@ -90,16 +90,14 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>, IHasCac
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
+		CommonUtils.renameTag(nbt, "ftbl:data", "ftblib");
+		CommonUtils.renameTag(nbt, "ftbl", "ftblib");
+		CommonUtils.renameTag(nbt, "ftbu:data", "ftbutilities");
+		CommonUtils.renameTag(nbt, "ftbu", "ftbutilities");
+
 		for (Map.Entry<String, INBTSerializable<NBTTagCompound>> entry : map.entrySet())
 		{
-			NBTTagCompound tag = nbt.getCompoundTag(entry.getKey());
-
-			if (tag.hasNoTags())
-			{
-				tag = nbt.getCompoundTag(entry.getKey() + ":data");
-			}
-
-			entry.getValue().deserializeNBT(tag);
+			entry.getValue().deserializeNBT(nbt.getCompoundTag(entry.getKey()));
 		}
 	}
 

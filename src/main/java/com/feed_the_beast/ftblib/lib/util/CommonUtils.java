@@ -7,6 +7,8 @@ import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.fml.common.Loader;
@@ -161,5 +163,16 @@ public class CommonUtils
 	public static long getWorldTime()
 	{
 		return UtilsCommon.INSTANCE.getWorldTime();
+	}
+
+	public static void renameTag(NBTTagCompound nbt, String oldName, String newName)
+	{
+		NBTBase tag = nbt.getTag(oldName);
+
+		if (tag != null)
+		{
+			nbt.removeTag(oldName);
+			nbt.setTag(newName, tag);
+		}
 	}
 }
