@@ -59,7 +59,7 @@ public abstract class GuiBase extends Panel
 	private GuiScreen prevScreen;
 	private final BooleanStack fontUnicode;
 	private Theme theme;
-	public boolean renderDebugBoxes = false;
+	public static boolean renderDebugBoxes = false;
 
 	public GuiBase()
 	{

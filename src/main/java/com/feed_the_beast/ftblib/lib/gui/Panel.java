@@ -229,7 +229,7 @@ public abstract class Panel extends Widget
 	{
 		widget.draw();
 
-		if (getGui().renderDebugBoxes)
+		if (GuiBase.renderDebugBoxes)
 		{
 			Color4I col = Color4I.rgb(java.awt.Color.HSBtoRGB((widget.hashCode() & 255) / 255F, 1F, 1F));
 			GuiHelper.drawHollowRect(widget.getAX(), widget.getAY(), widget.width, widget.height, col.withAlpha(150), false);
