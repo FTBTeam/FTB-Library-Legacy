@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.gui;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -254,6 +255,11 @@ public abstract class Panel extends Widget
 			if (w.shouldAddMouseOverText())
 			{
 				w.addMouseOverText(list);
+
+				if (GuiBase.renderDebugBoxes)
+				{
+					list.add(TextFormatting.DARK_GRAY + w.getClass().getSimpleName() + ": " + w.width + "x" + w.height);
+				}
 			}
 		}
 

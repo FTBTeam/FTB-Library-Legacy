@@ -161,7 +161,7 @@ public abstract class Icon
 				case "http":
 				case "https":
 				case "file":
-					return new URLImageIcon(id, 0D, 0D, 1D, 1D);
+					return new URLImageIcon(id);
 				case "player":
 				{
 					String[] ida2 = ida[1].split(":");

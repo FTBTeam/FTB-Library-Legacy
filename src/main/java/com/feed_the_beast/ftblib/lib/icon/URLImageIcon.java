@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
+import java.net.URI;
 
 /**
  * @author LatvianModder
@@ -18,10 +19,15 @@ public class URLImageIcon extends ImageIcon
 {
 	public final String url;
 
-	URLImageIcon(String _url, double u0, double v0, double u1, double v1)
+	public URLImageIcon(String _url, double u0, double v0, double u1, double v1)
 	{
 		super(new ResourceLocation(_url), u0, v0, u1, v1);
 		url = _url;
+	}
+
+	public URLImageIcon(String _url)
+	{
+		this(_url, 0, 0, 1, 1);
 	}
 
 	@Override
@@ -33,13 +39,32 @@ public class URLImageIcon extends ImageIcon
 
 		if (img == null)
 		{
-			if (url.startsWith("http:") || url.startsWith("https:") || url.startsWith("file:"))
+			if (url.startsWith("http:") || url.startsWith("https:"))
 			{
 				img = new ThreadDownloadImageData(null, url, MISSING_IMAGE, null);
 			}
 			else
 			{
-				img = new ThreadDownloadImageData(new File(url), url, MISSING_IMAGE, null);
+				File file = null;
+
+				if (url.startsWith("file:"))
+				{
+					try
+					{
+						file = new File(new URI(url).getPath());
+					}
+					catch (Exception ex)
+					{
+						ex.printStackTrace();
+					}
+				}
+
+				if (file == null)
+				{
+					file = new File(url);
+				}
+
+				img = new ThreadDownloadImageData(file, url, MISSING_IMAGE, null);
 			}
 
 			manager.loadTexture(texture, img);
