@@ -44,6 +44,10 @@ public class FTBLibConfig
 
 		@Config.Comment("Automatically creates (or joins) a team on singleplayer/LAN with ID 'singleplayer'.")
 		public boolean autocreate_sp = true;
+
+		@Config.Comment("Disable no team notification entirely.")
+		@Config.LangKey("player_config.ftblib.hide_team_notification")
+		public boolean hide_team_notification = false;
 	}
 
 	public static class Debugging

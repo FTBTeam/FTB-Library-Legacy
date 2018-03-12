@@ -2,7 +2,6 @@ package com.feed_the_beast.ftblib.lib.io;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import org.apache.http.entity.ContentType;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,10 +11,10 @@ import java.net.URL;
 
 public class HttpConnection
 {
-	public static final String TEXT = ContentType.TEXT_PLAIN.getMimeType();
-	public static final String JSON = ContentType.APPLICATION_JSON.getMimeType();
-	public static final String HTML = ContentType.TEXT_HTML.getMimeType();
-	public static final String XML = ContentType.TEXT_XML.getMimeType();
+	public static final String TEXT = "text/plain";
+	public static final String JSON = "application/json";
+	public static final String HTML = "text/html";
+	public static final String XML = "text/xml";
 
 	public final String url;
 	public final String contentType;

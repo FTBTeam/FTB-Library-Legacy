@@ -19,7 +19,6 @@ import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
-import com.feed_the_beast.ftblib.lib.gui.misc.ThemeVanilla;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.MutableColor4I;
@@ -40,7 +39,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 {
 	public static final Color4I COLOR_BACKGROUND = Color4I.rgba(0x99333333);
 
-	public static Theme THEME = new ThemeVanilla()
+	public static Theme THEME = new Theme()
 	{
 		@Override
 		public Icon getGui(WidgetType type)

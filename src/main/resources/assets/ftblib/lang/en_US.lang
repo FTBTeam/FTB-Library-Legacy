@@ -112,7 +112,6 @@ ftblib_client.general.replace_vanilla_status_messages=Replace vanilla status mes
 # Player Settings
 player_config=My Server Settings
 player_config.ftblib.hide_team_notification=Hide Team Notification on Login
-player_config.ftblib.hide_new_team_msg_notification=Hide New Team Message Notification
 
 # Team Settings
 team_config.ftblib.display=Display

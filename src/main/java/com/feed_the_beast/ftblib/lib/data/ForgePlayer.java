@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.data;
 
 import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
@@ -309,7 +310,7 @@ public final class ForgePlayer implements IStringSerializable, INBTSerializable<
 
 	public boolean hideTeamNotification()
 	{
-		return hideTeamNotification.getBoolean() || isFake();
+		return FTBLibConfig.teams.hide_team_notification || hideTeamNotification.getBoolean() || isFake();
 	}
 
 	public long getLastTimeSeen()
