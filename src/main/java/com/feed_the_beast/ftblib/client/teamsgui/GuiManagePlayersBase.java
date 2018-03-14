@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.client.teamsgui;
 
-import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
@@ -9,7 +8,6 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.net.MessageMyTeamPlayerList;
-import com.mojang.authlib.GameProfile;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -33,9 +31,9 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 	{
 		final MessageMyTeamPlayerList.Entry entry;
 
-		ButtonPlayerBase(GuiBase gui, MessageMyTeamPlayerList.Entry m)
+		ButtonPlayerBase(Panel panel, MessageMyTeamPlayerList.Entry m)
 		{
-			super(gui, "", Icon.EMPTY);
+			super(panel, "", Icon.EMPTY);
 			entry = m;
 			updateIcon();
 			setTitle(entry.name);
@@ -54,7 +52,7 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 		final void updateIcon()
 		{
 			//Variant 2: setIcon(gui.getTheme().getWidget(false).withColorAndBorder(getPlayerColor(), 1).combineWith(gui.getTheme().getSlot(false).withColorAndBorder(Color4I.DARK_GRAY, 3), new PlayerHeadIcon(entry.name).withBorder(4)));
-			setIcon(new PlayerHeadIcon(new GameProfile(entry.uuid, entry.name)).withOutline(getPlayerColor(), false).withOutline(Color4I.DARK_GRAY, true).withBorder(2));
+			setIcon(new PlayerHeadIcon(entry.uuid).withOutline(getPlayerColor(), false).withOutline(Color4I.DARK_GRAY, true).withBorder(2));
 		}
 
 		@Override
@@ -69,9 +67,9 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 	}
 
 	private final List<MessageMyTeamPlayerList.Entry> entries;
-	private final BiFunction<GuiBase, MessageMyTeamPlayerList.Entry, ButtonPlayerBase> buttonFunction;
+	private final BiFunction<Panel, MessageMyTeamPlayerList.Entry, ButtonPlayerBase> buttonFunction;
 
-	public GuiManagePlayersBase(String title, Collection<MessageMyTeamPlayerList.Entry> m, BiFunction<GuiBase, MessageMyTeamPlayerList.Entry, ButtonPlayerBase> b)
+	public GuiManagePlayersBase(String title, Collection<MessageMyTeamPlayerList.Entry> m, BiFunction<Panel, MessageMyTeamPlayerList.Entry, ButtonPlayerBase> b)
 	{
 		setTitle(title);
 		entries = new ArrayList<>(m);
@@ -85,7 +83,7 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 
 		for (MessageMyTeamPlayerList.Entry m : entries)
 		{
-			panel.add(buttonFunction.apply(this, m));
+			panel.add(buttonFunction.apply(panel, m));
 		}
 	}
 }

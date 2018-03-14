@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.mojang.authlib.GameProfile;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -13,6 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * @author LatvianModder
@@ -164,13 +164,13 @@ public abstract class Icon
 					return new URLImageIcon(id);
 				case "player":
 				{
-					String[] ida2 = ida[1].split(":");
-					return ida2.length == 2 ? new PlayerHeadIcon(new GameProfile(StringUtils.fromString(ida2[0]), ida2[1])) : EMPTY;
+					UUID uuid = StringUtils.fromString(ida[1]);
+					return uuid != null ? new PlayerHeadIcon(uuid) : EMPTY;
 				}
 			}
 		}
 
-		return (id.endsWith(".png") || id.endsWith(".jpg")) ? new ImageIcon(new ResourceLocation(id), 0D, 0D, 1D, 1D) : new AtlasSpriteIcon(new ResourceLocation(id));
+		return (id.endsWith(".png") || id.endsWith(".jpg")) ? new ImageIcon(new ResourceLocation(id)) : new AtlasSpriteIcon(new ResourceLocation(id));
 	}
 
 	public boolean isEmpty()

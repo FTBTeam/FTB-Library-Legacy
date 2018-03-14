@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.client.teamsgui;
 
 import com.feed_the_beast.ftblib.FTBLibLang;
+import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
@@ -8,7 +9,9 @@ import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -49,8 +52,21 @@ public class GuiSelectTeam extends GuiButtonListBase
 
 		private ButtonTeam(Panel panel, PublicTeamData t)
 		{
-			super(panel, t.displayName.getFormattedText(), t.icon.withOutline(t.color.getColor(), false));
+			super(panel, t.displayName.getUnformattedText(), t.icon.withOutline(t.color.getColor(), false));
 			team = t;
+
+			if (team.type == PublicTeamData.Type.REQUESTING_INVITE)
+			{
+				setTitle(TextFormatting.AQUA + getTitle());
+			}
+			else if (team.type == PublicTeamData.Type.ENEMY)
+			{
+				setTitle(TextFormatting.RED + getTitle());
+			}
+			else if (team.type == PublicTeamData.Type.CAN_JOIN)
+			{
+				setTitle(TextFormatting.GREEN + getTitle());
+			}
 		}
 
 		@Override
@@ -61,30 +77,37 @@ public class GuiSelectTeam extends GuiButtonListBase
 			if (team.type == PublicTeamData.Type.CAN_JOIN)
 			{
 				ClientUtils.execClientCommand("/ftb team join " + team.getName());
+				getGui().closeGui();
+				ClientUtils.execClientCommand("/ftb team gui");
 			}
-			else
+			else if (team.type != PublicTeamData.Type.ENEMY && team.type != PublicTeamData.Type.REQUESTING_INVITE)
 			{
 				ClientUtils.execClientCommand("/ftb team request_invite " + team.getName());
+				team.type = PublicTeamData.Type.REQUESTING_INVITE;
+				setTitle(TextFormatting.AQUA + getTitle());
+				parent.alignWidgets();
 			}
-
-			getGui().closeGui();
 		}
 
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			list.add("ID: " + team.getName());
-
 			if (!team.description.isEmpty())
 			{
-				list.add("");
-				list.add(team.description);
+				list.add(TextFormatting.ITALIC + team.description);
 			}
 
-			if (team.type != PublicTeamData.Type.ENEMY)
+			if (team.type == PublicTeamData.Type.REQUESTING_INVITE)
 			{
-				list.add("");
-				list.add((team.type == PublicTeamData.Type.CAN_JOIN ? FTBLibLang.TEAM_GUI_JOIN_TEAM : FTBLibLang.TEAM_GUI_REQUEST_INVITE).translate());
+				list.add(TextFormatting.GRAY + StringUtils.translate("ftblib.lang.team_status.requesting_invite"));
+			}
+			else if (team.type == PublicTeamData.Type.ENEMY)
+			{
+				list.add(TextFormatting.GRAY + EnumTeamStatus.ENEMY.getLangKey().translate());
+			}
+			else
+			{
+				list.add(TextFormatting.GRAY + (team.type == PublicTeamData.Type.CAN_JOIN ? FTBLibLang.TEAM_GUI_JOIN_TEAM : FTBLibLang.TEAM_GUI_REQUEST_INVITE).translate(team.color.getTextFormatting() + team.getName() + TextFormatting.GRAY));
 			}
 		}
 

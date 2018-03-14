@@ -15,6 +15,7 @@ public class HttpConnection
 	public static final String JSON = "application/json";
 	public static final String HTML = "text/html";
 	public static final String XML = "text/xml";
+	public static final String PNG = "image/png";
 
 	public final String url;
 	public final String contentType;
@@ -28,9 +29,12 @@ public class HttpConnection
 
 	public static JsonElement getJson(String url, Proxy proxy, boolean printError)
 	{
-		try
+		try (Response response = connection(url, RequestMethod.GET, JSON).connect(proxy))
 		{
-			return connection(url, RequestMethod.GET, JSON).connect(proxy).asJson();
+			if (response.isOK())
+			{
+				return response.asJson();
+			}
 		}
 		catch (Exception ex)
 		{
@@ -38,9 +42,9 @@ public class HttpConnection
 			{
 				ex.printStackTrace();
 			}
-
-			return JsonNull.INSTANCE;
 		}
+
+		return JsonNull.INSTANCE;
 	}
 
 	private HttpConnection(String s, RequestMethod t, String c)

@@ -19,15 +19,20 @@ public class URLImageIcon extends ImageIcon
 {
 	public final String url;
 
-	public URLImageIcon(String _url, double u0, double v0, double u1, double v1)
+	public URLImageIcon(ResourceLocation tex, String _url, double u0, double v0, double u1, double v1)
 	{
-		super(new ResourceLocation(_url), u0, v0, u1, v1);
+		super(tex, u0, v0, u1, v1);
 		url = _url;
 	}
 
-	public URLImageIcon(String _url)
+	public URLImageIcon(ResourceLocation tex, String url)
 	{
-		this(_url, 0, 0, 1, 1);
+		this(tex, url, 0, 0, 1, 1);
+	}
+
+	public URLImageIcon(String url)
+	{
+		this(new ResourceLocation(url), url);
 	}
 
 	@Override
@@ -81,7 +86,7 @@ public class URLImageIcon extends ImageIcon
 	@Override
 	public URLImageIcon withUV(double u0, double v0, double u1, double v1)
 	{
-		return new URLImageIcon(url, u0, v0, u1, v1);
+		return new URLImageIcon(texture, url, u0, v0, u1, v1);
 	}
 
 	@Override

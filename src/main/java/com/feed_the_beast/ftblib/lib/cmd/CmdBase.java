@@ -142,13 +142,13 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 			case "@r":
 			{
 				ForgePlayer[] players = Universe.get().getOnlinePlayers().toArray(new ForgePlayer[0]);
-				p = players[MathUtils.RAND.nextInt(players.length)];
+				p = players.length == 0 ? null : players[MathUtils.RAND.nextInt(players.length)];
 				break;
 			}
 			case "@ra":
 			{
 				ForgePlayer[] players = Universe.get().getPlayers().toArray(new ForgePlayer[0]);
-				p = players[MathUtils.RAND.nextInt(players.length)];
+				p = players.length == 0 ? null : players[MathUtils.RAND.nextInt(players.length)];
 				break;
 			}
 			case "@p":
@@ -177,7 +177,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 				break;
 			}
 			default:
-				p = null;
+				p = Universe.get().getPlayer(name);
 		}
 
 		if (p == null || p.isFake())

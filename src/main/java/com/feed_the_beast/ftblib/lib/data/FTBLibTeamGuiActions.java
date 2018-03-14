@@ -56,7 +56,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
 		{
-			return (player.team.isModerator(player) && player.team.universe.getRealPlayers().size() > 1) ? Type.ENABLED : Type.DISABLED;
+			return (player.team.isModerator(player) && player.team.universe.getPlayers().size() > 1) ? Type.ENABLED : Type.DISABLED;
 		}
 
 		@Override
@@ -93,7 +93,14 @@ public class FTBLibTeamGuiActions
 
 					if (player.team.isRequestingInvite(p))
 					{
-						player.team.addMember(p, false);
+						if (p.hasTeam())
+						{
+							player.team.setRequestingInvite(p, false);
+						}
+						else
+						{
+							player.team.addMember(p, false);
+						}
 					}
 
 					break;
@@ -121,7 +128,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
 		{
-			return (player.team.isModerator(player) && player.team.universe.getRealPlayers().size() > 1) ? Type.ENABLED : Type.DISABLED;
+			return (player.team.isModerator(player) && player.team.universe.getPlayers().size() > 1) ? Type.ENABLED : Type.DISABLED;
 		}
 
 		@Override
@@ -172,7 +179,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
 		{
-			return (player.team.isModerator(player) && player.team.universe.getRealPlayers().size() > 1) ? Type.ENABLED : Type.DISABLED;
+			return (player.team.isModerator(player) && player.team.universe.getPlayers().size() > 1) ? Type.ENABLED : Type.DISABLED;
 		}
 
 		@Override

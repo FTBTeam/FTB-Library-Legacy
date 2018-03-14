@@ -104,7 +104,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 			if (isSelected || gui.isMouseOver(this))
 			{
-				Color4I.WHITE_A[33].draw(ax, ay, TILE_SIZE, TILE_SIZE);
+				Color4I.WHITE.withAlpha(33).draw(ax, ay, TILE_SIZE, TILE_SIZE);
 			}
 		}
 	}

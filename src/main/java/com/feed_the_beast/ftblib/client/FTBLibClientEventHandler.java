@@ -471,7 +471,7 @@ public class FTBLibClientEventHandler
 				if (mx >= b.x && my >= b.y && mx < b.x + b.width && my < b.y + b.height)
 				{
 					mouseOver = b;
-					Color4I.WHITE_A[33].draw(b.x, b.y, b.width, b.height);
+					Color4I.WHITE.withAlpha(33).draw(b.x, b.y, b.width, b.height);
 				}
 
 				if (b.button.hasCustomText())

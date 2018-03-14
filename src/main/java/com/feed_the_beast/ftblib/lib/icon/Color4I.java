@@ -30,8 +30,8 @@ import javax.annotation.Nullable;
  */
 public class Color4I extends Icon
 {
-	public static final Color4I BLACK_A[] = new Color4I[256];
-	public static final Color4I WHITE_A[] = new Color4I[256];
+	private static final Color4I BLACK_A[] = new Color4I[256];
+	private static final Color4I WHITE_A[] = new Color4I[256];
 
 	static
 	{
@@ -42,7 +42,7 @@ public class Color4I extends Icon
 				@Override
 				public Color4I withAlpha(int a)
 				{
-					return alpha == a ? this : BLACK_A[MathHelper.clamp(a, 0, 255)];
+					return alpha == a ? this : BLACK_A[a & 255];
 				}
 			};
 
@@ -51,7 +51,7 @@ public class Color4I extends Icon
 				@Override
 				public Color4I withAlpha(int a)
 				{
-					return alpha == a ? this : WHITE_A[MathHelper.clamp(a, 0, 255)];
+					return alpha == a ? this : WHITE_A[a & 255];
 				}
 			};
 		}

@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.google.common.base.Optional;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
@@ -27,6 +28,7 @@ import java.util.function.Predicate;
 public class CommonUtils
 {
 	public static final boolean DEV_ENV = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
+	public static final GameProfile FAKE_PLAYER_PROFILE = new GameProfile(StringUtils.fromString("069be1413c1b45c3b3b160d3f9fcd236"), "FakeForgePlayer");
 
 	public static boolean isNEILoaded = false;
 	public static File folderConfig, folderMinecraft, folderLocal;

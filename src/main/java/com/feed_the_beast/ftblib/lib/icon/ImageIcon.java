@@ -22,13 +22,18 @@ public class ImageIcon extends Icon
 	public final ResourceLocation texture;
 	public final double minU, minV, maxU, maxV;
 
-	ImageIcon(ResourceLocation tex, double u0, double v0, double u1, double v1)
+	public ImageIcon(ResourceLocation tex, double u0, double v0, double u1, double v1)
 	{
 		texture = tex;
 		minU = Math.min(u0, u1);
 		minV = Math.min(v0, v1);
 		maxU = Math.max(u0, u1);
 		maxV = Math.max(v0, v1);
+	}
+
+	public ImageIcon(ResourceLocation tex)
+	{
+		this(tex, 0D, 0D, 1D, 1D);
 	}
 
 	@Override

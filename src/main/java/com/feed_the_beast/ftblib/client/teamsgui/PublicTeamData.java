@@ -16,6 +16,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
 	public enum Type
 	{
 		CAN_JOIN,
+		REQUESTING_INVITE,
 		NEEDS_INVITE,
 		ENEMY
 	}
@@ -36,7 +37,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
 	public final String description;
 	public final EnumTeamColor color;
 	public final Icon icon;
-	public final Type type;
+	public Type type;
 
 	public PublicTeamData(DataIn data)
 	{
@@ -65,7 +66,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
 
 		if (i == 0)
 		{
-			i = displayName.getUnformattedText().compareToIgnoreCase(o.displayName.getFormattedText());
+			i = displayName.getUnformattedText().compareToIgnoreCase(o.displayName.getUnformattedText());
 		}
 
 		return i;

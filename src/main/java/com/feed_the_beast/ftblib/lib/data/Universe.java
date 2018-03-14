@@ -12,6 +12,8 @@ import com.feed_the_beast.ftblib.events.universe.UniverseClosedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseLoadedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
+import com.feed_the_beast.ftblib.lib.EnumTeamColor;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -37,12 +39,10 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -137,6 +137,8 @@ public class Universe implements IHasCache
 	public final Collection<String> optionalServerMods;
 	public boolean needsSaving;
 	public boolean checkSaving;
+	public ForgeTeam fakePlayerTeam;
+	public ForgePlayer fakePlayer;
 
 	@SuppressWarnings("ConstantConditions")
 	public Universe(WorldServer w)
@@ -277,6 +279,33 @@ public class Universe implements IHasCache
 			ex.printStackTrace();
 		}
 
+		fakePlayerTeam = new ForgeTeam(this, "fakeplayer", TeamType.SERVER_NO_SAVE)
+		{
+			@Override
+			public void markDirty()
+			{
+				universe.markDirty();
+			}
+		};
+
+		fakePlayer = new ForgePlayer(this, CommonUtils.FAKE_PLAYER_PROFILE.getId(), CommonUtils.FAKE_PLAYER_PROFILE.getName())
+		{
+			@Override
+			public void markDirty()
+			{
+				team.universe.markDirty();
+			}
+
+			@Override
+			public boolean isFake()
+			{
+				return true;
+			}
+		};
+
+		fakePlayer.team = fakePlayerTeam;
+		fakePlayerTeam.setColor(EnumTeamColor.GRAY);
+
 		new UniverseLoadedEvent.CreateServerTeams(this, world).post();
 
 		for (ForgePlayer player : players.values())
@@ -305,6 +334,18 @@ public class Universe implements IHasCache
 			}
 		}
 
+		if (universeData.hasKey("FakePlayer"))
+		{
+			fakePlayer.deserializeNBT(universeData.getCompoundTag("FakePlayer"));
+		}
+
+		if (universeData.hasKey("FakeTeam"))
+		{
+			fakePlayerTeam.deserializeNBT(universeData.getCompoundTag("FakeTeam"));
+		}
+
+		fakePlayerTeam.owner = fakePlayer;
+
 		new UniverseLoadedEvent.Post(this, world, data).post();
 		new UniverseLoadedEvent.Finished(this, world).post();
 
@@ -329,6 +370,8 @@ public class Universe implements IHasCache
 			new UniverseSavedEvent(this, data).post();
 			universeData.setTag("Data", data);
 			universeData.setString("UUID", StringUtils.fromUUID(getUUID()));
+			universeData.setTag("FakePlayer", fakePlayer.serializeNBT());
+			universeData.setTag("FakeTeam", fakePlayerTeam.serializeNBT());
 			needsSaving = false;
 		}
 
@@ -336,15 +379,11 @@ public class Universe implements IHasCache
 		{
 			if (player.needsSaving)
 			{
-				if (!player.isFake())
-				{
-					NBTTagCompound nbt = player.serializeNBT();
-					nbt.setString("Name", player.getName());
-					nbt.setString("UUID", StringUtils.fromUUID(player.getId()));
-					nbt.setString("TeamID", player.team.getName());
-					playerDataMap.put(player.getName().toLowerCase(), nbt);
-				}
-
+				NBTTagCompound nbt = player.serializeNBT();
+				nbt.setString("Name", player.getName());
+				nbt.setString("UUID", StringUtils.fromUUID(player.getId()));
+				nbt.setString("TeamID", player.team.getName());
+				playerDataMap.put(player.getName().toLowerCase(), nbt);
 				player.needsSaving = false;
 			}
 		}
@@ -540,25 +579,19 @@ public class Universe implements IHasCache
 		return players.values();
 	}
 
-	public List<ForgePlayer> getRealPlayers()
-	{
-		List<ForgePlayer> list = new ArrayList<>();
-
-		for (ForgePlayer player : getPlayers())
-		{
-			if (!player.isFake())
-			{
-				list.add(player);
-			}
-		}
-
-		return list;
-	}
-
 	@Nullable
 	public ForgePlayer getPlayer(@Nullable UUID id)
 	{
-		return (id == null || id.getLeastSignificantBits() == 0L && id.getMostSignificantBits() == 0L) ? null : players.get(id);
+		if (id == null || id.getLeastSignificantBits() == 0L && id.getMostSignificantBits() == 0L)
+		{
+			return null;
+		}
+		else if (id.equals(CommonUtils.FAKE_PLAYER_PROFILE.getId()))
+		{
+			return fakePlayer;
+		}
+
+		return players.get(id);
 	}
 
 	@Nullable
@@ -576,6 +609,10 @@ public class Universe implements IHasCache
 		if (id != null)
 		{
 			return getPlayer(id);
+		}
+		else if (s.equals(CommonUtils.FAKE_PLAYER_PROFILE.getName().toLowerCase()))
+		{
+			return fakePlayer;
 		}
 
 		for (ForgePlayer p : players.values())
@@ -599,21 +636,14 @@ public class Universe implements IHasCache
 
 	public ForgePlayer getPlayer(ICommandSender sender)
 	{
-		EntityPlayerMP player = (EntityPlayerMP) sender;
-		ForgePlayer p = getPlayer(player.getGameProfile());
-
-		if (p == null && player instanceof FakePlayer)
+		if (sender instanceof FakePlayer)
 		{
-			p = new ForgePlayer(this, player.getUniqueID(), player.getName());
-			p.entityPlayer = player;
-			p.clearCache();
-			players.put(p.getId(), p);
-			new ForgePlayerLoggedInEvent(p).post();
-			p.markDirty();
-			return p;
+			fakePlayer.entityPlayer = (FakePlayer) sender;
+			fakePlayer.clearCache();
+			return fakePlayer;
 		}
 
-		return Objects.requireNonNull(p);
+		return Objects.requireNonNull(getPlayer(((EntityPlayerMP) sender).getGameProfile()));
 	}
 
 	public ForgePlayer getPlayer(ForgePlayer player)
@@ -649,7 +679,7 @@ public class Universe implements IHasCache
 	public ForgeTeam getTeam(String id)
 	{
 		ForgeTeam team = id.isEmpty() ? null : teams.get(id);
-		return team == null ? noneTeam : team;
+		return team == null ? (id.equals("fakeplayer") ? fakePlayerTeam : noneTeam) : team;
 	}
 
 	public Collection<ForgePlayer> getOnlinePlayers()
@@ -684,5 +714,7 @@ public class Universe implements IHasCache
 		{
 			player.clearCache();
 		}
+
+		fakePlayer.clearCache();
 	}
 }

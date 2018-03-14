@@ -48,9 +48,9 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		}
 
 		@Override
-		public Icon getScrollBarBackground()
+		public Icon getScrollBarBackground(WidgetType type)
 		{
-			return Icon.EMPTY;
+			return Color4I.BLACK.withAlpha(70);
 		}
 
 		@Override
@@ -129,7 +129,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 			if (isMouseOver())
 			{
-				Color4I.WHITE_A[33].draw(ax, ay, width, height);
+				Color4I.WHITE.withAlpha(33).draw(ax, ay, width, height);
 			}
 		}
 
@@ -194,7 +194,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 			if (mouseOver)
 			{
-				Color4I.WHITE_A[33].draw(ax, ay, width, height);
+				Color4I.WHITE.withAlpha(33).draw(ax, ay, width, height);
 			}
 
 			drawString(keyText, ax + 4, ay + 4, Bits.setFlag(0, SHADOW, mouseOver));
@@ -226,7 +226,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 				if (getMouseX() > ax + width - slen - 9)
 				{
-					Color4I.WHITE_A[33].draw(ax + width - slen - 8, ay, slen + 8, height);
+					Color4I.WHITE.withAlpha(33).draw(ax + width - slen - 8, ay, slen + 8, height);
 				}
 			}
 

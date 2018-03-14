@@ -66,8 +66,8 @@ public interface FTBLibLang
 
 	LangKey TEAM_GUI_SELECT_TEAM = get("lang.team.gui.select_team");
 	LangKey TEAM_GUI_CREATE_TEAM = get("lang.team.gui.create_team");
-	LangKey TEAM_GUI_JOIN_TEAM = get("lang.team.gui.join_team");
-	LangKey TEAM_GUI_REQUEST_INVITE = get("lang.team.gui.request_invite");
+	LangKey TEAM_GUI_JOIN_TEAM = get("lang.team.gui.join_team", String.class);
+	LangKey TEAM_GUI_REQUEST_INVITE = get("lang.team.gui.request_invite", String.class);
 	LangKey TEAM_GUI_MEMBERS = get("lang.team.gui.members");
 	LangKey TEAM_GUI_MEMBERS_INVITE = get("lang.team.gui.members.invite");
 	LangKey TEAM_GUI_MEMBERS_REQUESTING_INVITE = get("lang.team.gui.members.requesting_invite");

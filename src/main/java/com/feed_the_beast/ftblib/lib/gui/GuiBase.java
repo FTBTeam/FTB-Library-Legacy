@@ -3,7 +3,6 @@ package com.feed_the_beast.ftblib.lib.gui;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
-import com.feed_the_beast.ftblib.lib.gui.misc.ThemeVanilla;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.NetUtils;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
@@ -108,7 +107,7 @@ public abstract class GuiBase extends Panel
 
 	protected Theme createTheme()
 	{
-		return ThemeVanilla.INSTANCE;
+		return Theme.DEFAULT;
 	}
 
 	@Override

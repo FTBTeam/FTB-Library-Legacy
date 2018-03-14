@@ -151,8 +151,8 @@ ftblib.lang.team.chat_message=[Team %s] %s
 
 ftblib.lang.team.gui.select_team=Select Team to Join
 ftblib.lang.team.gui.create_team=Create a New Team
-ftblib.lang.team.gui.join_team=Click to join the team
-ftblib.lang.team.gui.request_invite=Click to request invite to this team
+ftblib.lang.team.gui.join_team=Click to join '%s'
+ftblib.lang.team.gui.request_invite=Click to request invite to '%s'
 ftblib.lang.team.gui.members=Members
 ftblib.lang.team.gui.members.invite=Click to invite to your team
 ftblib.lang.team.gui.members.requesting_invite=This player is requesting invite

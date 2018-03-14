@@ -9,6 +9,7 @@ import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -38,7 +39,7 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public final class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTagCompound>, Comparable<ForgePlayer>, IHasCache
+public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTagCompound>, Comparable<ForgePlayer>, IHasCache
 {
 	private static FakePlayer playerForStats;
 
@@ -128,7 +129,11 @@ public final class ForgePlayer implements IStringSerializable, INBTSerializable<
 
 	public final GameProfile getProfile()
 	{
-		if (isOnline())
+		if (isFake())
+		{
+			return CommonUtils.FAKE_PLAYER_PROFILE;
+		}
+		else if (isOnline())
 		{
 			return entityPlayer.getGameProfile();
 		}
@@ -149,7 +154,7 @@ public final class ForgePlayer implements IStringSerializable, INBTSerializable<
 
 	public final void setName(String n)
 	{
-		if (!playerName.equals(n))
+		if (!isFake() && !playerName.equals(n))
 		{
 			new File(team.universe.world.getSaveHandler().getWorldDirectory(), "data/ftb_lib/players/" + playerName.toLowerCase() + ".dat").delete();
 			playerName = n;
@@ -185,12 +190,12 @@ public final class ForgePlayer implements IStringSerializable, INBTSerializable<
 
 	public final String toString()
 	{
-		return playerName;
+		return getName();
 	}
 
 	public final int hashCode()
 	{
-		return playerId.hashCode();
+		return getId().hashCode();
 	}
 
 	public boolean equals(Object o)
@@ -232,12 +237,12 @@ public final class ForgePlayer implements IStringSerializable, INBTSerializable<
 
 	public boolean isFake()
 	{
-		return entityPlayer instanceof FakePlayer;
+		return false;
 	}
 
 	public boolean isOP()
 	{
-		return !isFake() && ServerUtils.isOP(team.universe.server, getProfile());
+		return ServerUtils.isOP(team.universe.server, getProfile());
 	}
 
 	public void onLoggedOut()

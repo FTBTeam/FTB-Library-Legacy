@@ -6,11 +6,12 @@ import com.google.gson.JsonElement;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.Closeable;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.List;
 
-public final class Response
+public final class Response implements Closeable
 {
 	public final HttpURLConnection connection;
 	public final RequestMethod method;
@@ -25,6 +26,11 @@ public final class Response
 		millis = ms;
 		responseCode = r;
 		stream = is;
+	}
+
+	public boolean isOK()
+	{
+		return responseCode / 100 == 2;
 	}
 
 	public String asString() throws Exception
@@ -60,5 +66,11 @@ public final class Response
 	public String getHeaderField(String name)
 	{
 		return StringUtils.emptyIfNull(connection.getHeaderField(name));
+	}
+
+	@Override
+	public void close()
+	{
+		connection.disconnect();
 	}
 }

@@ -51,10 +51,10 @@ public class BuiltinChunkMap extends ChunkSelectorMap
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(ax + x * GuiChunkSelectorBase.TILE_SIZE / 16D, ay + y * GuiChunkSelectorBase.TILE_SIZE / 16D, 0D);
 			GlStateManager.pushMatrix();
-			//GlStateManager.rotate((int)((ep.rotationYaw + 180F) / (180F / 8F)) * (180F / 8F), 0F, 0F, 1F);
 			GlStateManager.rotate(player.rotationYaw + 180F, 0F, 0F, 1F);
-			TEX_ENTITY.draw(-8, -8, 16, 16, Color4I.WHITE_A[33]);
+			TEX_ENTITY.draw(-8, -8, 16, 16, Color4I.WHITE.withAlpha(80));
 			GlStateManager.popMatrix();
+			ClientUtils.localPlayerHead.draw(-2, -2, 4, 4);
 			GlStateManager.popMatrix();
 		}
 	}

@@ -77,7 +77,7 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 		super.preInit(event);
 		FTBLibClientConfig.sync();
 		new RegisterGuiProvidersEvent(GUI_PROVIDERS::put).post();
-		ClientUtils.localPlayerHead = new PlayerHeadIcon(ClientUtils.MC.getSession().getProfile());
+		ClientUtils.localPlayerHead = new PlayerHeadIcon(ClientUtils.MC.getSession().getProfile().getId());
 		((IReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(this);
 		ChunkSelectorMap.setMap(new BuiltinChunkMap());
 	}

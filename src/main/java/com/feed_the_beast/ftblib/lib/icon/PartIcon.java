@@ -20,7 +20,7 @@ public class PartIcon extends ImageIcon
 
 	public PartIcon(ImageIcon icon, int x, int y, int w, int h, int c, int mh, int mv, boolean r)
 	{
-		super(icon.texture, 0D, 0D, 1D, 1D);
+		super(icon.texture);
 		parent = icon;
 		width = w;
 		height = h;

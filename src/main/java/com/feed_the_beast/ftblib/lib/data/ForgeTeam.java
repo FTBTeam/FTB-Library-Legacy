@@ -43,7 +43,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public final class ForgeTeam extends FinalIDObject implements IStringSerializable, INBTSerializable<NBTTagCompound>, IHasCache
+public class ForgeTeam extends FinalIDObject implements IStringSerializable, INBTSerializable<NBTTagCompound>, IHasCache
 {
 	public final Universe universe;
 	public final TeamType type;
@@ -285,7 +285,7 @@ public final class ForgeTeam extends FinalIDObject implements IStringSerializabl
 			{
 				if (hasOwner())
 				{
-					cachedIcon = new PlayerHeadIcon(owner.getProfile());
+					cachedIcon = new PlayerHeadIcon(owner.getProfile().getId());
 				}
 				else
 				{

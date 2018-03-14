@@ -3,8 +3,8 @@ package com.feed_the_beast.ftblib.client.teamsgui;
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.data.FTBLibTeamGuiActions;
-import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
+import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.net.MessageMyTeamAction;
@@ -22,9 +22,9 @@ public class GuiManageEnemies extends GuiManagePlayersBase
 {
 	private static class ButtonPlayer extends ButtonPlayerBase
 	{
-		private ButtonPlayer(GuiBase gui, MessageMyTeamPlayerList.Entry m)
+		private ButtonPlayer(Panel panel, MessageMyTeamPlayerList.Entry m)
 		{
-			super(gui, m);
+			super(panel, m);
 		}
 
 		@Override

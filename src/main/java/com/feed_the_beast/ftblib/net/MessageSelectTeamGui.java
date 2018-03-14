@@ -42,6 +42,10 @@ public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 			{
 				type = PublicTeamData.Type.CAN_JOIN;
 			}
+			else if (team.isRequestingInvite(player))
+			{
+				type = PublicTeamData.Type.REQUESTING_INVITE;
+			}
 
 			teams.add(new PublicTeamData(team, type));
 		}
