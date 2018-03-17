@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.util;
 
-import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentCountdown;
@@ -14,7 +13,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.internal.Streams;
 import com.google.gson.stream.JsonWriter;
-import net.minecraft.client.resources.IResource;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
@@ -36,19 +34,12 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -140,77 +131,6 @@ public class JsonUtils
 			toJson(file, element);
 			return false;
 		});
-	}
-
-	public static JsonElement fromJson(@Nullable String json)
-	{
-		if (json == null || json.isEmpty())
-		{
-			return JsonNull.INSTANCE;
-		}
-
-		try
-		{
-			return PARSER.parse(json);
-		}
-		catch (Exception e)
-		{
-			return JsonNull.INSTANCE;
-		}
-	}
-
-	public static JsonElement fromJson(@Nullable Reader reader)
-	{
-		if (reader == null)
-		{
-			return JsonNull.INSTANCE;
-		}
-
-		try
-		{
-			return PARSER.parse(reader);
-		}
-		catch (Exception ex)
-		{
-			return JsonNull.INSTANCE;
-		}
-	}
-
-	public static JsonElement fromJson(@Nullable File file)
-	{
-		if (file == null || !file.exists())
-		{
-			return JsonNull.INSTANCE;
-		}
-
-		try (FileInputStream fis = new FileInputStream(file);
-			 BufferedReader reader = new BufferedReader(new InputStreamReader(fis, StandardCharsets.UTF_8)))
-		{
-			return PARSER.parse(reader);
-		}
-		catch (Exception ex)
-		{
-			FTBLib.LOGGER.error("Failed to parse " + file.getAbsolutePath() + "! " + ex);
-			return JsonNull.INSTANCE;
-		}
-	}
-
-	public static JsonElement fromJson(InputStream stream)
-	{
-		try
-		{
-			return PARSER.parse(new InputStreamReader(stream, StandardCharsets.UTF_8));
-		}
-		catch (Exception ex)
-		{
-			return JsonNull.INSTANCE;
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static JsonElement fromJson(IResource resource)
-	{
-		return fromJson(resource.getInputStream());
 	}
 
 	public static JsonArray toArray(JsonElement element)

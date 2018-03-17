@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueInstance;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
@@ -108,7 +109,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 
 			try
 			{
-				JsonElement value = JsonUtils.fromJson(JsonUtils.fixJsonString(json));
+				JsonElement value = DataReader.get(JsonUtils.fixJsonString(json)).json();
 				JsonObject json1 = new JsonObject();
 				json1.add(args[0], value);
 				getCallback(sender).saveConfig(group, sender, json1);

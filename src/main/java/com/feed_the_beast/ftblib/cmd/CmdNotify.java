@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.cmd;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -47,7 +48,7 @@ public class CmdNotify extends CmdBase
 	{
 		checkArgs(sender, args, 2);
 		EntityPlayerMP player = getPlayer(server, sender, args[0]);
-		ITextComponent component = JsonUtils.deserializeTextComponent(JsonUtils.fromJson(String.join(" ", StringUtils.shiftArray(args))));
+		ITextComponent component = JsonUtils.deserializeTextComponent(DataReader.get(String.join(" ", StringUtils.shiftArray(args))).safeJson());
 		ServerUtils.notify(server, player, Objects.requireNonNull(component));
 	}
 }

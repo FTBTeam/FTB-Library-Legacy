@@ -10,6 +10,7 @@ import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.cmd.CommandMirror;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.net.MessageBase;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
@@ -94,7 +95,7 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 			{
 				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "client_config.json")))
 				{
-					for (JsonElement e : JsonUtils.fromJson(resource).getAsJsonArray())
+					for (JsonElement e : DataReader.get(resource).json().getAsJsonArray())
 					{
 						ClientConfig c = new ClientConfig(e.getAsJsonObject());
 						CLIENT_CONFIG_MAP.put(c.id, c);
@@ -110,7 +111,7 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 			}
 		}
 
-		JsonElement element = JsonUtils.fromJson(new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"));
+		JsonElement element = DataReader.get(new File(CommonUtils.folderLocal, "client/sidebar_buttons.json")).safeJson();
 		JsonObject sidebarButtonConfig;
 
 		if (element.isJsonObject())
@@ -130,7 +131,7 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 			{
 				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "sidebar_button_groups.json")))
 				{
-					JsonElement json = JsonUtils.fromJson(resource);
+					JsonElement json = DataReader.get(resource).json();
 
 					for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
 					{
@@ -165,7 +166,7 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 			{
 				for (IResource resource : manager.getAllResources(new ResourceLocation(domain, "sidebar_buttons.json")))
 				{
-					JsonElement json = JsonUtils.fromJson(resource);
+					JsonElement json = DataReader.get(resource).json();
 
 					if (json.isJsonObject())
 					{

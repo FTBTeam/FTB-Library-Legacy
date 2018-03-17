@@ -13,9 +13,9 @@ import com.feed_the_beast.ftblib.events.universe.UniverseLoadedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
-import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.net.MessageSyncData;
 import com.google.gson.JsonElement;
@@ -182,7 +182,7 @@ public class Universe implements IHasCache
 		}
 
 		File worldDataJsonFile = new File(world.getSaveHandler().getWorldDirectory(), "world_data.json");
-		JsonElement worldData = JsonUtils.fromJson(worldDataJsonFile);
+		JsonElement worldData = DataReader.get(worldDataJsonFile).safeJson();
 
 		if (worldData.isJsonObject())
 		{
@@ -230,7 +230,7 @@ public class Universe implements IHasCache
 
 							if (uuidString.isEmpty())
 							{
-								uuidString = FileUtils.getRawFileName(f);
+								uuidString = FileUtils.getBaseName(f);
 								FileUtils.delete(f);
 							}
 
@@ -266,7 +266,7 @@ public class Universe implements IHasCache
 
 						if (nbt != null)
 						{
-							String s = FileUtils.getRawFileName(file);
+							String s = FileUtils.getBaseName(file);
 							teamNBT.put(s, nbt);
 							teams.put(s, new ForgeTeam(this, s, TeamType.NAME_MAP.get(nbt.getString("Type"))));
 						}

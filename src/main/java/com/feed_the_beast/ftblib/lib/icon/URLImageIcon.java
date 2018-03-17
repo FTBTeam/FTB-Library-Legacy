@@ -17,22 +17,24 @@ import java.net.URI;
  */
 public class URLImageIcon extends ImageIcon
 {
-	public final String url;
+	public final URI uri;
+	private final String url;
 
-	public URLImageIcon(ResourceLocation tex, String _url, double u0, double v0, double u1, double v1)
+	public URLImageIcon(ResourceLocation tex, URI _uri, double u0, double v0, double u1, double v1)
 	{
 		super(tex, u0, v0, u1, v1);
-		url = _url;
+		uri = _uri;
+		url = uri.toString();
 	}
 
-	public URLImageIcon(ResourceLocation tex, String url)
+	public URLImageIcon(ResourceLocation tex, URI uri)
 	{
-		this(tex, url, 0, 0, 1, 1);
+		this(tex, uri, 0, 0, 1, 1);
 	}
 
-	public URLImageIcon(String url)
+	public URLImageIcon(URI uri)
 	{
-		this(new ResourceLocation(url), url);
+		this(new ResourceLocation(uri.toString()), uri);
 	}
 
 	@Override
@@ -44,7 +46,7 @@ public class URLImageIcon extends ImageIcon
 
 		if (img == null)
 		{
-			if (url.startsWith("http:") || url.startsWith("https:"))
+			if (uri.getScheme().equals("http") || uri.getScheme().equals("https"))
 			{
 				img = new ThreadDownloadImageData(null, url, MISSING_IMAGE, null);
 			}
@@ -52,11 +54,11 @@ public class URLImageIcon extends ImageIcon
 			{
 				File file = null;
 
-				if (url.startsWith("file:"))
+				if (uri.getScheme().equals("file"))
 				{
 					try
 					{
-						file = new File(new URI(url).getPath());
+						file = new File(uri.getPath());
 					}
 					catch (Exception ex)
 					{
@@ -66,7 +68,7 @@ public class URLImageIcon extends ImageIcon
 
 				if (file == null)
 				{
-					file = new File(url);
+					file = new File(uri);
 				}
 
 				img = new ThreadDownloadImageData(file, url, MISSING_IMAGE, null);
@@ -86,7 +88,7 @@ public class URLImageIcon extends ImageIcon
 	@Override
 	public URLImageIcon withUV(double u0, double v0, double u1, double v1)
 	{
-		return new URLImageIcon(texture, url, u0, v0, u1, v1);
+		return new URLImageIcon(texture, uri, u0, v0, u1, v1);
 	}
 
 	@Override

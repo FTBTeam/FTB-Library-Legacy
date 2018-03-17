@@ -10,6 +10,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -161,7 +162,13 @@ public abstract class Icon
 				case "http":
 				case "https":
 				case "file":
-					return new URLImageIcon(id);
+					try
+					{
+						return new URLImageIcon(new URI(id));
+					}
+					catch (Exception ex)
+					{
+					}
 				case "player":
 				{
 					UUID uuid = StringUtils.fromString(ida[1]);

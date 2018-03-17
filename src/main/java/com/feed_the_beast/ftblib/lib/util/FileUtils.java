@@ -11,13 +11,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
+import java.net.Proxy;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 
@@ -114,26 +114,16 @@ public class FileUtils
 		});
 	}
 
-	public static void writeNBT(File f, NBTTagCompound tag)
+	public static void writeNBT(File file, NBTTagCompound tag)
 	{
 		try
 		{
-			CompressedStreamTools.write(tag, FileUtils.newFile(f));
+			CompressedStreamTools.write(tag, FileUtils.newFile(file));
 		}
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
-	}
-
-	public static List<String> load(File f) throws Exception
-	{
-		return StringUtils.readStringList(new FileInputStream(f));
-	}
-
-	public static String loadAsText(File f) throws Exception
-	{
-		return StringUtils.readString(new FileInputStream(f), 1024);
 	}
 
 	@Nullable
@@ -164,63 +154,57 @@ public class FileUtils
 		return null;
 	}
 
-	public static boolean downloadFile(String url, File out)
+	public static void downloadFile(URL url, File out, Proxy proxy) throws Exception
 	{
-		try
+		try (InputStream input = url.openConnection(proxy).getInputStream();
+			 ReadableByteChannel channel = Channels.newChannel(input);
+			 FileOutputStream output = new FileOutputStream(out))
 		{
-			ReadableByteChannel rbc = Channels.newChannel(new URL(url).openStream());
-			FileOutputStream fos = new FileOutputStream(out);
-			fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-			fos.close();
-			return true;
-		}
-		catch (Exception e)
-		{
-			return false;
+			output.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
 		}
 	}
 
-	public static List<File> listAll(File f)
+	public static List<File> listTree(File file)
 	{
 		List<File> l = new ArrayList<>();
-		addAllFiles(l, f);
+		listTree0(l, file);
 		return l;
 	}
 
-	public static void addAllFiles(Collection<File> l, File f)
+	public static void listTree0(List<File> list, File file)
 	{
-		if (f.isDirectory())
+		if (file.isDirectory())
 		{
-			File[] fl = f.listFiles();
+			File[] fl = file.listFiles();
 
 			if (fl != null && fl.length > 0)
 			{
 				for (File aFl : fl)
 				{
-					addAllFiles(l, aFl);
+					listTree0(list, aFl);
 				}
 			}
 		}
-		else if (f.isFile())
+		else if (file.isFile())
 		{
-			l.add(f);
+			list.add(file);
 		}
 	}
 
-	public static long getSize(File f)
+	public static long getSize(File file)
 	{
-		if (!f.exists())
+		if (!file.exists())
 		{
 			return 0L;
 		}
-		else if (f.isFile())
+		else if (file.isFile())
 		{
-			return f.length();
+			return file.length();
 		}
-		else if (f.isDirectory())
+		else if (file.isDirectory())
 		{
 			long length = 0L;
-			File[] f1 = f.listFiles();
+			File[] f1 = file.listFiles();
 			if (f1 != null && f1.length > 0)
 			{
 				for (File aF1 : f1)
@@ -233,7 +217,7 @@ public class FileUtils
 		return 0L;
 	}
 
-	public static String getSizeS(double b)
+	public static String getSizeString(double b)
 	{
 		if (b >= GB_D)
 		{
@@ -257,9 +241,9 @@ public class FileUtils
 		return b + "B";
 	}
 
-	public static String getSizeS(File f)
+	public static String getSizeString(File file)
 	{
-		return getSizeS(getSize(f));
+		return getSizeString(getSize(file));
 	}
 
 	public static void copyFile(File src, File dst) throws Exception
@@ -268,7 +252,7 @@ public class FileUtils
 		{
 			if (src.isDirectory() && dst.isDirectory())
 			{
-				for (File f : listAll(src))
+				for (File f : listTree(src))
 				{
 					File dst1 = new File(dst.getAbsolutePath() + File.separatorChar + (f.getAbsolutePath().replace(src.getAbsolutePath(), "")));
 					copyFile(f, dst1);
@@ -286,44 +270,55 @@ public class FileUtils
 		}
 	}
 
-	public static boolean delete(File f)
+	public static boolean delete(File file)
 	{
-		if (!f.exists())
+		if (!file.exists())
 		{
 			return false;
 		}
-		else if (f.isFile())
+		else if (file.isFile())
 		{
-			return f.delete();
+			return file.delete();
 		}
 
-		String[] files = f.list();
+		String[] files = file.list();
+
 		if (files != null)
 		{
-			for (String file : files)
+			for (String s : files)
 			{
-				delete(new File(f, file));
+				delete(new File(file, s));
 			}
 		}
 
-		return f.delete();
+		return file.delete();
 	}
 
-	public static File getSourceDirectory(Class<?> c)
+	public static String getBaseName(File file)
 	{
-		return new File(c.getProtectionDomain().getCodeSource().getLocation().getFile());
-	}
-
-	public static String getRawFileName(File f)
-	{
-		if (f.isDirectory())
+		if (file.isDirectory())
 		{
-			return f.getName();
+			return file.getName();
 		}
 		else
 		{
-			String s = f.getName();
-			return s.substring(0, s.lastIndexOf('.'));
+			String name = file.getName();
+			int index = name.lastIndexOf('.');
+			return index == -1 ? name : name.substring(0, index);
+		}
+	}
+
+	public static String getExtension(File file)
+	{
+		if (file.isDirectory())
+		{
+			return "";
+		}
+		else
+		{
+			String name = file.getName();
+			int index = name.lastIndexOf('.');
+			return index == -1 ? "" : name.substring(index + 1);
 		}
 	}
 }

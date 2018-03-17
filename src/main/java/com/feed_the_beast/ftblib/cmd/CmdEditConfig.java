@@ -7,7 +7,6 @@ import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.google.gson.JsonObject;
-import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.TextComponentString;
 
@@ -37,13 +36,13 @@ public class CmdEditConfig extends CmdTreeBase
 		}
 
 		@Override
-		public ConfigGroup getGroup(ICommandSender sender) throws CommandException
+		public ConfigGroup getGroup(ICommandSender sender)
 		{
 			return group;
 		}
 
 		@Override
-		public IConfigCallback getCallback(ICommandSender sender) throws CommandException
+		public IConfigCallback getCallback(ICommandSender sender)
 		{
 			return this;
 		}
@@ -60,7 +59,7 @@ public class CmdEditConfig extends CmdTreeBase
 	{
 		super("edit_config");
 
-		for (File file : FileUtils.listAll(CommonUtils.folderConfig))
+		for (File file : FileUtils.listTree(CommonUtils.folderConfig))
 		{
 			if (file.getName().endsWith(".cfg"))
 			{

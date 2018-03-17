@@ -7,13 +7,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -141,63 +135,6 @@ public class StringUtils
 		String[] s1 = new String[s.length - 1];
 		System.arraycopy(s, 1, s1, 0, s1.length);
 		return s1;
-	}
-
-	public static String readString(InputStream stream) throws Exception
-	{
-		return readString(stream, 64);
-	}
-
-	public static String readString(InputStream stream, int bufferSize) throws Exception
-	{
-		final char[] buffer = new char[bufferSize];
-		final StringBuilder out = new StringBuilder();
-		try (Reader in = new InputStreamReader(stream, StandardCharsets.UTF_8))
-		{
-			int read;
-			do
-			{
-				read = in.read(buffer, 0, bufferSize);
-				if (read > 0)
-				{
-					out.append(buffer, 0, read);
-				}
-			}
-			while (read >= 0);
-		}
-		return out.toString();
-	}
-
-	public static List<String> readStringList(Reader reader) throws Exception
-	{
-		List<String> l = new ArrayList<>();
-		BufferedReader breader = new BufferedReader(reader);
-		String s;
-		while ((s = breader.readLine()) != null)
-		{
-			l.add(s);
-		}
-		breader.close();
-		return l;
-	}
-
-	public static List<String> readStringList(InputStream stream) throws Exception
-	{
-		return readStringList(new InputStreamReader(stream, StandardCharsets.UTF_8));
-	}
-
-	public static List<String> toStringList(String s, String regex)
-	{
-		List<String> al = new ArrayList<>();
-		String[] s1 = s.split(regex);
-		if (s1.length > 0)
-		{
-			for (String aS1 : s1)
-			{
-				al.add(aS1.trim());
-			}
-		}
-		return al;
 	}
 
 	public static boolean isASCIIChar(char c)

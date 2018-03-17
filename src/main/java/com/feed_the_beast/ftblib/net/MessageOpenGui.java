@@ -66,7 +66,7 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 	{
 		IGuiProvider guiProvider = FTBLibClient.getGui(m.guiId);
 
-		if (guiProvider != null)
+		if (guiProvider != null && player.world.isBlockLoaded(m.pos))
 		{
 			GuiScreen g = guiProvider.getGui(player, m.pos, m.nbt);
 

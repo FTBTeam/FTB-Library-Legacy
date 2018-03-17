@@ -344,14 +344,18 @@ public class Color4I extends Icon
 		{
 			return;
 		}
-		else if (col.isEmpty())
+		else if (!col.isEmpty())
+		{
+			col = withTint(col);
+
+			if (col.isEmpty())
+			{
+				return;
+			}
+		}
+		else
 		{
 			col = this;
-		}
-
-		if (col.isEmpty())
-		{
-			return;
 		}
 
 		GlStateManager.disableTexture2D();
@@ -366,7 +370,15 @@ public class Color4I extends Icon
 	@Override
 	public Color4I withTint(Color4I col)
 	{
-		if (isEmpty() || col.redi() == 255 && col.greeni() == 255 && col.bluei() == 255)
+		if (isEmpty())
+		{
+			return this;
+		}
+		else if (col.isEmpty())
+		{
+			return EMPTY;
+		}
+		else if (col.redi() == 255 && col.greeni() == 255 && col.bluei() == 255)
 		{
 			return this;
 		}

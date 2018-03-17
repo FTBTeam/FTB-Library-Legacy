@@ -1,8 +1,11 @@
 package com.feed_the_beast.ftblib.lib.util;
 
+import com.feed_the_beast.ftblib.lib.io.DataReader;
+
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.Proxy;
 import java.net.URI;
 import java.net.URL;
 
@@ -23,11 +26,11 @@ public class NetUtils
 		}
 	}
 
-	public static String getPublicAddress()
+	public static String getPublicAddress(Proxy proxy)
 	{
 		try
 		{
-			return StringUtils.emptyIfNull(StringUtils.readString(new URL("https://api.ipify.org").openStream(), 15));
+			return DataReader.get(new URL("https://api.ipify.org"), DataReader.TEXT, proxy).safeString();
 		}
 		catch (Exception e)
 		{
