@@ -344,6 +344,10 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		{
 			return EnumTeamStatus.NONE;
 		}
+		else if (player.isFake())
+		{
+			return fakePlayerStatus.getValue();
+		}
 		else if (isOwner(player))
 		{
 			return EnumTeamStatus.OWNER;
@@ -377,6 +381,10 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		if (player == null || !isValid())
 		{
 			return EnumTeamStatus.NONE;
+		}
+		else if (player.isFake())
+		{
+			return fakePlayerStatus.getValue();
 		}
 
 		EnumTeamStatus status = players.get(player);
@@ -561,7 +569,16 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 	public boolean isMember(@Nullable ForgePlayer player)
 	{
-		return player != null && isValid() && equalsTeam(player.team);
+		if (player == null)
+		{
+			return false;
+		}
+		else if (player.isFake())
+		{
+			return fakePlayerStatus.getValue().isEqualOrGreaterThan(EnumTeamStatus.MEMBER);
+		}
+
+		return isValid() && equalsTeam(player.team);
 	}
 
 	public boolean isAlly(@Nullable ForgePlayer player)
