@@ -79,7 +79,7 @@ public class MessageMyTeamPlayerList extends MessageToClient<MessageMyTeamPlayer
 
 		for (ForgePlayer p : player.team.universe.getPlayers())
 		{
-			if (p != player && !p.isFake())
+			if (p != player)
 			{
 				EnumTeamStatus status = player.team.getHighestStatus(p);
 

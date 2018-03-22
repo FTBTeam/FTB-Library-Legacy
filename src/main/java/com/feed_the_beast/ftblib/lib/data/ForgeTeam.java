@@ -426,7 +426,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 	public boolean setStatus(@Nullable ForgePlayer player, EnumTeamStatus status)
 	{
-		if (player == null || !isValid())
+		if (player == null || !isValid() || player.isFake())
 		{
 			return false;
 		}

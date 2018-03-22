@@ -636,14 +636,20 @@ public class Universe implements IHasCache
 
 	public ForgePlayer getPlayer(ICommandSender sender)
 	{
-		if (sender instanceof FakePlayer)
+		if (sender instanceof EntityPlayerMP)
 		{
-			fakePlayer.entityPlayer = (FakePlayer) sender;
-			fakePlayer.clearCache();
-			return fakePlayer;
+			EntityPlayerMP player = (EntityPlayerMP) sender;
+			if (player.connection == null)
+			{
+				fakePlayer.entityPlayer = player;
+				fakePlayer.clearCache();
+				return fakePlayer;
+			}
+
+			return Objects.requireNonNull(getPlayer(player.getGameProfile()));
 		}
 
-		return Objects.requireNonNull(getPlayer(((EntityPlayerMP) sender).getGameProfile()));
+		throw new IllegalArgumentException("Sender is not a player!");
 	}
 
 	public ForgePlayer getPlayer(ForgePlayer player)
