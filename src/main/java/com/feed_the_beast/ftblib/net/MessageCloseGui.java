@@ -29,7 +29,7 @@ public class MessageCloseGui extends MessageToClient<MessageCloseGui>
 	{
 		if (ClientUtils.MC.currentScreen instanceof IGuiWrapper)
 		{
-			((IGuiWrapper) ClientUtils.MC.currentScreen).getWrappedGui().closeGui();
+			((IGuiWrapper) ClientUtils.MC.currentScreen).getGui().closeGui();
 		}
 		else if (!(ClientUtils.MC.currentScreen instanceof GuiChat))
 		{

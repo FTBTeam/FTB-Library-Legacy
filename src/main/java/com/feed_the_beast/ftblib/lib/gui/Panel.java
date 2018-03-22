@@ -223,7 +223,6 @@ public abstract class Panel extends Widget
 
 	protected void drawOffsetPanelBackground(int ax, int ay)
 	{
-		getIcon().draw(ax, ay, width, height);
 	}
 
 	protected void drawWidget(Widget widget, int index, int ax, int ay, int w, int h)
@@ -246,6 +245,7 @@ public abstract class Panel extends Widget
 			return;
 		}
 
+		pushFontUnicode(hasFlag(UNICODE));
 		setOffset(true);
 
 		for (int i = widgets.size() - 1; i >= 0; i--)
@@ -264,6 +264,7 @@ public abstract class Panel extends Widget
 		}
 
 		setOffset(false);
+		popFontUnicode();
 	}
 
 	@Override

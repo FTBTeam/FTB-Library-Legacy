@@ -163,9 +163,9 @@ public abstract class GuiBase extends Panel
 	@Nullable
 	public GuiScreen getPrevScreen()
 	{
-		if (prevScreen instanceof GuiWrapper && ((GuiWrapper) prevScreen).getWrappedGui() instanceof GuiLoading)
+		if (prevScreen instanceof GuiWrapper && ((GuiWrapper) prevScreen).getGui() instanceof GuiLoading)
 		{
-			return ((GuiWrapper) prevScreen).getWrappedGui().getPrevScreen();
+			return ((GuiWrapper) prevScreen).getGui().getPrevScreen();
 		}
 		else if (prevScreen instanceof GuiChat)
 		{
@@ -266,6 +266,7 @@ public abstract class GuiBase extends Panel
 
 	public void drawBackground()
 	{
+		getTheme().getGui(WidgetType.NORMAL).draw(getAX(), getAY(), width, height);
 	}
 
 	public void drawForeground()
@@ -376,7 +377,7 @@ public abstract class GuiBase extends Panel
 	@Override
 	public Icon getIcon()
 	{
-		return getTheme().getGui(WidgetType.NORMAL);
+		return Icon.EMPTY;
 	}
 
 	@Override

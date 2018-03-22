@@ -31,6 +31,10 @@ public abstract class SimpleTextButton extends Button
 	@Override
 	public void addMouseOverText(List<String> list)
 	{
+		if (getStringWidth(getTitle()) + (getIcon().isEmpty() ? 8 : 28) > width)
+		{
+			list.add(getTitle());
+		}
 	}
 
 	@Override

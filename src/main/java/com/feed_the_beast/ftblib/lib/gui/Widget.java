@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Widget
+public class Widget implements IGuiWrapper
 {
 	protected static final int DARK = 1;
 	protected static final int SHADOW = 2;
@@ -31,6 +31,7 @@ public class Widget
 		parent = p;
 	}
 
+	@Override
 	public GuiBase getGui()
 	{
 		return parent.getGui();

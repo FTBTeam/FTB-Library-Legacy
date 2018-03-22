@@ -108,6 +108,8 @@ public abstract class GuiButtonListBase extends GuiBase
 	@Override
 	public void drawBackground()
 	{
+		super.drawBackground();
+
 		String title = getTitle();
 
 		if (!title.isEmpty())

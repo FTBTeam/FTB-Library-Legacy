@@ -154,7 +154,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	}
 
 	@Override
-	public GuiBase getWrappedGui()
+	public GuiBase getGui()
 	{
 		return wrappedGui;
 	}

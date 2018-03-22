@@ -214,7 +214,7 @@ public class FTBLibClientEventHandler
 			}
 		}
 
-		if (FTBLibClientConfig.general.item_nbt && event.getItemStack().hasTagCompound())
+		if (FTBLibClientConfig.general.item_nbt && event.getItemStack().hasTagCompound() && GuiScreen.isShiftKeyDown())
 		{
 			event.getToolTip().add(TextFormatting.DARK_GRAY.toString() + TextFormatting.getTextWithoutFormattingCodes(event.getItemStack().getTagCompound().toString()));
 		}

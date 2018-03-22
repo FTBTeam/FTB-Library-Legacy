@@ -88,6 +88,11 @@ public class FTBLibAPI
 
 	public static void openGui(ResourceLocation guiId, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data)
 	{
+		if (player.connection == null)
+		{
+			return;
+		}
+
 		IContainerProvider containerProvider = FTBLibCommon.GUI_CONTAINER_PROVIDERS.get(guiId);
 
 		if (containerProvider == null)

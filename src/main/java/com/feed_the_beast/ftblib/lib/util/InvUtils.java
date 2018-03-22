@@ -8,6 +8,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -32,6 +34,7 @@ import java.util.function.Predicate;
  */
 public class InvUtils
 {
+	public static final IInventory EMPTY_INVENTORY = new InventoryBasic("[Null]", true, 0);
 	public static final ItemStack ERROR_ITEM = new ItemStack(Blocks.BARRIER);
 
 	static

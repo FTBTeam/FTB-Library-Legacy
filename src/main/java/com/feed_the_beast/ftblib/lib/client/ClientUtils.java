@@ -1,21 +1,20 @@
 package com.feed_the_beast.ftblib.lib.client;
 
+import com.feed_the_beast.ftblib.lib.gui.GuiBase;
+import com.feed_the_beast.ftblib.lib.gui.IGuiWrapper;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
@@ -23,9 +22,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.client.model.ModelLoader;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -33,7 +32,6 @@ import java.util.function.Function;
 public class ClientUtils
 {
 	public static final Minecraft MC = Minecraft.getMinecraft();
-	private static final Frustum FRUSTUM = new Frustum();
 	public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> MC.getTextureMapBlocks().registerSprite(location);
 	public static final NameMap<EnumBlockRenderType> BLOCK_RENDER_TYPE_NAME_MAP = NameMap.create(EnumBlockRenderType.MODEL, EnumBlockRenderType.values());
 	public static final NameMap<BlockRenderLayer> BLOCK_RENDER_LAYER_NAME_MAP = NameMap.create(BlockRenderLayer.SOLID, BlockRenderLayer.values());
@@ -44,25 +42,14 @@ public class ClientUtils
 
 	public static PlayerHeadIcon localPlayerHead;
 
-	public static void registerModel(Object _item, int meta, String variant)
-	{
-		Item item = _item instanceof Item ? (Item) _item : Item.getItemFromBlock((Block) _item);
-		ModelLoader.setCustomModelResourceLocation(item, meta, variant.indexOf('#') != -1 ? new ModelResourceLocation(variant) : new ModelResourceLocation(item.getRegistryName(), variant));
-	}
-
-	public static void registerModel(Object _item)
-	{
-		registerModel(_item, 0, "inventory");
-	}
-
 	public static int getDim()
 	{
 		return MC.world != null ? MC.world.provider.getDimension() : 0;
 	}
 
-	public static void spawnParticle(Particle e)
+	public static void spawnParticle(Particle particle)
 	{
-		MC.effectRenderer.addEffect(e);
+		MC.effectRenderer.addEffect(particle);
 	}
 
 	public static void pushBrightness(int u, int t)
@@ -82,75 +69,77 @@ public class ClientUtils
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lastBrightnessX, lastBrightnessY);
 	}
 
-	public static void execClientCommand(String s, boolean printChat)
+	public static void execClientCommand(String command, boolean printChat)
 	{
-		Minecraft mc = MC;
-
 		if (printChat)
 		{
-			mc.ingameGUI.getChatGUI().addToSentMessages(s);
+			MC.ingameGUI.getChatGUI().addToSentMessages(command);
 		}
 
-		if (ClientCommandHandler.instance.executeCommand(mc.player, s) == 0)
+		if (ClientCommandHandler.instance.executeCommand(MC.player, command) == 0)
 		{
-			mc.player.sendChatMessage(s);
+			MC.player.sendChatMessage(command);
 		}
 	}
 
-	public static void execClientCommand(String s)
+	public static void execClientCommand(String command)
 	{
-		execClientCommand(s, false);
+		execClientCommand(command, false);
 	}
 
-	public static void renderItem(World w, ItemStack is)
+	public static void renderItem(World world, ItemStack stack)
 	{
 		if (entityItem == null)
 		{
-			entityItem = new EntityItem(w);
+			entityItem = new EntityItem(world);
 		}
 
-		entityItem.setWorld(w);
+		entityItem.setWorld(world);
 		entityItem.hoverStart = 0F;
-		entityItem.setItem(is);
+		entityItem.setItem(stack);
 		MC.getRenderManager().renderEntity(entityItem, 0D, 0D, 0D, 0F, 0F, true);
 	}
 
-	public static void drawOutlinedBoundingBox(AxisAlignedBB bb, Color4I color)
+	public static void drawOutlinedBoundingBox(AxisAlignedBB box, Color4I color)
 	{
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
+		int r = color.redi();
+		int g = color.greeni();
+		int b = color.bluei();
+		int a = color.alphai();
 
-		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-		buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
-		buffer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
-		buffer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
-		buffer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
-		buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
+		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
+		buffer.pos(box.minX, box.minY, box.minZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.maxX, box.minY, box.minZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.maxX, box.minY, box.maxZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.minX, box.minY, box.maxZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.minX, box.minY, box.minZ).color(r, g, b, a).endVertex();
 		tessellator.draw();
 
-		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-		buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
-		buffer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
-		buffer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
-		buffer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
-		buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
+		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
+		buffer.pos(box.minX, box.maxY, box.minZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.maxX, box.maxY, box.minZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.maxX, box.maxY, box.maxZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.minX, box.maxY, box.maxZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.minX, box.maxY, box.minZ).color(r, g, b, a).endVertex();
 		tessellator.draw();
 
-		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION);
-		buffer.pos(bb.minX, bb.minY, bb.minZ).endVertex();
-		buffer.pos(bb.minX, bb.maxY, bb.minZ).endVertex();
-		buffer.pos(bb.maxX, bb.minY, bb.minZ).endVertex();
-		buffer.pos(bb.maxX, bb.maxY, bb.minZ).endVertex();
-		buffer.pos(bb.maxX, bb.minY, bb.maxZ).endVertex();
-		buffer.pos(bb.maxX, bb.maxY, bb.maxZ).endVertex();
-		buffer.pos(bb.minX, bb.minY, bb.maxZ).endVertex();
-		buffer.pos(bb.minX, bb.maxY, bb.maxZ).endVertex();
+		buffer.begin(GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR);
+		buffer.pos(box.minX, box.minY, box.minZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.minX, box.maxY, box.minZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.maxX, box.minY, box.minZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.maxX, box.maxY, box.minZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.maxX, box.minY, box.maxZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.maxX, box.maxY, box.maxZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.minX, box.minY, box.maxZ).color(r, g, b, a).endVertex();
+		buffer.pos(box.minX, box.maxY, box.maxZ).color(r, g, b, a).endVertex();
 		tessellator.draw();
 	}
 
 	public static BlockRenderLayer getStrongest(BlockRenderLayer layer1, BlockRenderLayer layer2)
 	{
-		return BLOCK_RENDER_LAYER_NAME_MAP.get(Math.max(layer1.ordinal(), layer2.ordinal()));
+		return layer1.ordinal() > layer2.ordinal() ? layer1 : layer2;
 	}
 
 	public static void runLater(final Runnable runnable)
@@ -203,14 +192,25 @@ public class ClientUtils
 		return TileEntityRendererDispatcher.staticPlayerZ;
 	}
 
-	public static Frustum getFrustum(double x, double y, double z)
+	@Nullable
+	public static <T> T getGuiAs(GuiScreen gui, Class<T> clazz)
 	{
-		FRUSTUM.setPosition(x, y, z);
-		return FRUSTUM;
+		if (gui instanceof IGuiWrapper)
+		{
+			GuiBase guiBase = ((IGuiWrapper) gui).getGui();
+
+			if (clazz.isAssignableFrom(guiBase.getClass()))
+			{
+				return (T) guiBase;
+			}
+		}
+
+		return clazz.isAssignableFrom(gui.getClass()) ? (T) MC.currentScreen : null;
 	}
 
-	public static Frustum getFrustum()
+	@Nullable
+	public static <T> T getCurrentGuiAs(Class<T> clazz)
 	{
-		return getFrustum(getPlayerX(), getPlayerY(), getPlayerZ());
+		return MC.currentScreen == null ? null : getGuiAs(MC.currentScreen, clazz);
 	}
 }

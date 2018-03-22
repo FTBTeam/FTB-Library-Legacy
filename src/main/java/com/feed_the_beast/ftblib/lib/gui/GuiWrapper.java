@@ -111,7 +111,7 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 	}
 
 	@Override
-	public GuiBase getWrappedGui()
+	public GuiBase getGui()
 	{
 		return wrappedGui;
 	}
