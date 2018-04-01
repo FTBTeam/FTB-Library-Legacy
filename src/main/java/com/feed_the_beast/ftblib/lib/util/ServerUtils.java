@@ -8,6 +8,7 @@ import io.netty.channel.Channel;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -25,7 +26,6 @@ import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.server.FMLServerHandler;
 import net.minecraftforge.server.command.TextComponentHelper;
@@ -93,6 +93,11 @@ public class ServerUtils
 	//Most of this code comes from EnderIO
 	public static boolean teleportEntity(Entity entity, BlockPos pos, int targetDim)
 	{
+		if (entity.getEntityWorld().isRemote || entity.isRiding() || entity.isBeingRidden() || !entity.isEntityAlive())
+		{
+			return false;
+		}
+
 		EntityPlayerMP player = null;
 
 		if (entity instanceof EntityPlayerMP)
@@ -103,7 +108,7 @@ public class ServerUtils
 		int from = entity.dimension;
 		if (from != targetDim)
 		{
-			MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+			MinecraftServer server = player == null ? entity.getServer() : player.mcServer;
 			WorldServer fromDim = server.getWorld(from);
 			WorldServer toDim = server.getWorld(targetDim);
 			Teleporter teleporter = new TeleporterBlank(toDim);
@@ -119,25 +124,21 @@ public class ServerUtils
 			}
 			else
 			{
-				NBTTagCompound tagCompound = new NBTTagCompound();
+				NBTTagCompound tagCompound = entity.serializeNBT();
 				float rotationYaw = entity.rotationYaw;
 				float rotationPitch = entity.rotationPitch;
-				entity.writeToNBT(tagCompound);
-				Class<? extends Entity> entityClass = entity.getClass();
 				fromDim.removeEntity(entity);
+				Entity newEntity = EntityList.createEntityFromNBT(tagCompound, toDim);
 
-				try
+				if (newEntity != null)
 				{
-					Entity newEntity = entityClass.getConstructor(World.class).newInstance(toDim);
-					newEntity.readFromNBT(tagCompound);
 					newEntity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), rotationYaw, rotationPitch);
 					newEntity.forceSpawn = true;
 					toDim.spawnEntity(newEntity);
 					newEntity.forceSpawn = false;
 				}
-				catch (Exception ex)
+				else
 				{
-					FTBLib.LOGGER.error("Error creating an entity to be created in new dimension: " + ex);
 					return false;
 				}
 			}
