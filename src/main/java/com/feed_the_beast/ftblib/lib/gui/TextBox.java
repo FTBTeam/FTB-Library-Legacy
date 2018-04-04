@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -310,25 +309,25 @@ public class TextBox extends Widget
 		{
 			return false;
 		}
-		else if (GuiScreen.isKeyComboCtrlA(keyCode))
+		else if (isKeyComboCtrlA(keyCode))
 		{
 			setCursorPosition(text.length());
 			setSelectionPos(0);
 			return true;
 		}
-		else if (GuiScreen.isKeyComboCtrlC(keyCode))
+		else if (isKeyComboCtrlC(keyCode))
 		{
-			GuiScreen.setClipboardString(getSelectedText());
+			setClipboardString(getSelectedText());
 			return true;
 		}
-		else if (GuiScreen.isKeyComboCtrlV(keyCode))
+		else if (isKeyComboCtrlV(keyCode))
 		{
-			writeText(GuiScreen.getClipboardString());
+			writeText(getClipboardString());
 			return true;
 		}
-		else if (GuiScreen.isKeyComboCtrlX(keyCode))
+		else if (isKeyComboCtrlX(keyCode))
 		{
-			GuiScreen.setClipboardString(getSelectedText());
+			setClipboardString(getSelectedText());
 			writeText("");
 			return true;
 		}
@@ -337,7 +336,7 @@ public class TextBox extends Widget
 			switch (keyCode)
 			{
 				case Keyboard.KEY_BACK:
-					if (GuiScreen.isCtrlKeyDown())
+					if (isCtrlKeyDown())
 					{
 						deleteWords(-1);
 					}
@@ -347,7 +346,7 @@ public class TextBox extends Widget
 					}
 					return true;
 				case Keyboard.KEY_HOME:
-					if (GuiScreen.isShiftKeyDown())
+					if (isShiftKeyDown())
 					{
 						setSelectionPos(0);
 					}
@@ -357,9 +356,9 @@ public class TextBox extends Widget
 					}
 					return true;
 				case Keyboard.KEY_LEFT:
-					if (GuiScreen.isShiftKeyDown())
+					if (isShiftKeyDown())
 					{
-						if (GuiScreen.isCtrlKeyDown())
+						if (isCtrlKeyDown())
 						{
 							setSelectionPos(getNthWordFromPos(-1, selectionEnd));
 						}
@@ -368,7 +367,7 @@ public class TextBox extends Widget
 							setSelectionPos(selectionEnd - 1);
 						}
 					}
-					else if (GuiScreen.isCtrlKeyDown())
+					else if (isCtrlKeyDown())
 					{
 						setCursorPosition(getNthWordFromCursor(-1));
 					}
@@ -378,9 +377,9 @@ public class TextBox extends Widget
 					}
 					return true;
 				case Keyboard.KEY_RIGHT:
-					if (GuiScreen.isShiftKeyDown())
+					if (isShiftKeyDown())
 					{
-						if (GuiScreen.isCtrlKeyDown())
+						if (isCtrlKeyDown())
 						{
 							setSelectionPos(getNthWordFromPos(1, selectionEnd));
 						}
@@ -389,7 +388,7 @@ public class TextBox extends Widget
 							setSelectionPos(selectionEnd + 1);
 						}
 					}
-					else if (GuiScreen.isCtrlKeyDown())
+					else if (isCtrlKeyDown())
 					{
 						setCursorPosition(getNthWordFromCursor(1));
 					}
@@ -399,7 +398,7 @@ public class TextBox extends Widget
 					}
 					return true;
 				case Keyboard.KEY_END:
-					if (GuiScreen.isShiftKeyDown())
+					if (isShiftKeyDown())
 					{
 						setSelectionPos(text.length());
 					}
@@ -409,7 +408,7 @@ public class TextBox extends Widget
 					}
 					return true;
 				case Keyboard.KEY_DELETE:
-					if (GuiScreen.isCtrlKeyDown())
+					if (isCtrlKeyDown())
 					{
 						deleteWords(1);
 					}

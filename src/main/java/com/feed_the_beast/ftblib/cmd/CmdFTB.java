@@ -17,7 +17,6 @@ public class CmdFTB extends CmdTreeBase
 		addSubcommand(new CmdMySettings());
 		addSubcommand(new CmdTeam());
 		addSubcommand(new CmdNotify());
-		addSubcommand(new CmdEditConfig());
 
 		if (CommonUtils.DEV_ENV)
 		{

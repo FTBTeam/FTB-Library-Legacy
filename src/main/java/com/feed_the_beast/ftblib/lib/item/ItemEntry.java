@@ -17,11 +17,21 @@ import java.util.Objects;
  */
 public final class ItemEntry
 {
-	public static final ItemEntry EMPTY = new ItemEntry(ItemStack.EMPTY);
+	public static final ItemEntry EMPTY = new ItemEntry(Items.AIR, 0, null, null);
 
 	public static ItemEntry get(ItemStack stack)
 	{
-		return stack.isEmpty() ? EMPTY : new ItemEntry(stack);
+		if (stack.isEmpty())
+		{
+			return EMPTY;
+		}
+
+		Item item = stack.getItem();
+		int metadata = stack.getMetadata();
+		NBTTagCompound nbt0 = stack.serializeNBT();
+		NBTTagCompound nbt = (NBTTagCompound) nbt0.getTag("tag");
+		NBTTagCompound caps = (NBTTagCompound) nbt0.getTag("ForgeCaps");
+		return new ItemEntry(item, metadata, nbt, caps);
 	}
 
 	public static ItemEntry fromJson(@Nullable JsonElement json0)
@@ -56,7 +66,14 @@ public final class ItemEntry
 				nbt = (NBTTagCompound) JsonUtils.toNBT(json.get("nbt"));
 			}
 
-			return new ItemEntry(item, meta, nbt);
+			NBTTagCompound caps = null;
+
+			if (json.has("caps"))
+			{
+				caps = (NBTTagCompound) JsonUtils.toNBT(json.get("caps"));
+			}
+
+			return new ItemEntry(item, meta, nbt, caps);
 		}
 
 		return EMPTY;
@@ -65,22 +82,16 @@ public final class ItemEntry
 	public final Item item;
 	public final int metadata;
 	public final NBTTagCompound nbt;
+	public final NBTTagCompound caps;
 	private int hashCode;
 	private ItemStack stack = null;
 
-	private ItemEntry(Item i, int m, @Nullable NBTTagCompound n)
+	private ItemEntry(Item i, int m, @Nullable NBTTagCompound n, @Nullable NBTTagCompound c)
 	{
 		item = i;
 		metadata = m;
 		nbt = n;
-	}
-
-	private ItemEntry(ItemStack stack)
-	{
-		item = stack.getItem();
-		metadata = stack.getMetadata();
-		NBTTagCompound nbt0 = stack.getTagCompound();
-		nbt = (nbt0 == null || nbt0.hasNoTags()) ? null : nbt0;
+		caps = c;
 		hashCode = 0;
 	}
 
@@ -91,7 +102,11 @@ public final class ItemEntry
 
 	public int hashCode()
 	{
-		if (hashCode == 0)
+		if (isEmpty())
+		{
+			return 0;
+		}
+		else if (hashCode == 0)
 		{
 			hashCode = Objects.hash(item, metadata, nbt);
 
@@ -111,7 +126,7 @@ public final class ItemEntry
 			return true;
 		}
 
-		return item == entry.item && metadata == entry.metadata && Objects.equals(nbt, entry.nbt);
+		return item == entry.item && metadata == entry.metadata && Objects.equals(nbt, entry.nbt) && Objects.equals(caps, entry.caps);
 	}
 
 	public boolean equals(Object o)
@@ -140,10 +155,16 @@ public final class ItemEntry
 			builder.append(metadata);
 		}
 
-		if (nbt != null)
+		if (nbt != null || caps != null)
 		{
 			builder.append(' ');
 			builder.append(nbt);
+		}
+
+		if (caps != null)
+		{
+			builder.append(' ');
+			builder.append(caps);
 		}
 	}
 
@@ -156,7 +177,7 @@ public final class ItemEntry
 
 		if (stack == null)
 		{
-			stack = new ItemStack(item, 1, metadata);
+			stack = new ItemStack(item, 1, metadata, caps);
 			stack.setTagCompound(nbt);
 		}
 

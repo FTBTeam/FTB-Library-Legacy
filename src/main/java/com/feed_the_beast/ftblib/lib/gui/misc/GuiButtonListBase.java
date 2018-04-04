@@ -29,25 +29,33 @@ public abstract class GuiButtonListBase extends GuiBase
 			@Override
 			public void alignWidgets()
 			{
-				setWidth(0);
+				int size = 0;
 
-				for (Widget w : widgets)
+				if (widgets.isEmpty())
 				{
-					setWidth(Math.max(width, w.width));
+					setWidth(100);
 				}
-
-				for (Widget w : widgets)
+				else
 				{
-					w.setWidth(width);
-				}
+					setWidth(0);
 
-				int size = align(WidgetLayout.VERTICAL);
+					for (Widget w : widgets)
+					{
+						setWidth(Math.max(width, w.width));
+					}
+
+					for (Widget w : widgets)
+					{
+						w.setWidth(width);
+					}
+
+					size = align(WidgetLayout.VERTICAL);
+				}
 
 				setHeight(140);
 
 				scrollBar.setPosAndSize(posX + width + 6, 8, 16, height + 2);
-				scrollBar.setElementSize(size);
-				scrollBar.setSrollStepFromOneElementSize(20);
+				scrollBar.setMaxValue(size);
 
 				getGui().setWidth(scrollBar.posX + scrollBar.width + 8);
 				getGui().setHeight(height + 18);
@@ -63,20 +71,9 @@ public abstract class GuiButtonListBase extends GuiBase
 		panelButtons.setPosAndSize(9, 9, 144, 146);
 		panelButtons.addFlags(Panel.DEFAULTS);
 
-		scrollBar = new PanelScrollBar(this, panelButtons)
-		{
-			@Override
-			public boolean shouldDraw()
-			{
-				return true;
-			}
-
-			@Override
-			public boolean canMouseScroll()
-			{
-				return true;
-			}
-		};
+		scrollBar = new PanelScrollBar(this, panelButtons);
+		scrollBar.setCanAlwaysScroll(true);
+		scrollBar.setScrollStep(20);
 	}
 
 	@Override

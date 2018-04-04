@@ -347,7 +347,7 @@ public abstract class GuiBase extends Panel
 	{
 		if (widget == this)
 		{
-			return true;
+			return isMouseOver(getAX(), getAY(), width, height);
 		}
 		else if (isMouseOver(widget.getAX(), widget.getAY(), widget.width, widget.height))
 		{

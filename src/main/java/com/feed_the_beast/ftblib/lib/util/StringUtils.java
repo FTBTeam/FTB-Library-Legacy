@@ -35,7 +35,8 @@ public class StringUtils
 	public static final Comparator<Object> ID_COMPARATOR = (o1, o2) -> getId(o1, FLAG_ID_FIX).compareToIgnoreCase(getId(o2, FLAG_ID_FIX));
 
 	public static final Map<String, String> TEMP_MAP = new HashMap<>();
-	public static final DecimalFormat SMALL_DOUBLE_FORMATTER = new DecimalFormat("#0.00");
+	public static final DecimalFormat DOUBLE_FORMATTER_00 = new DecimalFormat("#0.00");
+	public static final DecimalFormat DOUBLE_FORMATTER_0 = new DecimalFormat("#0.0");
 	public final static int[] INT_SIZE_TABLE = {9, 99, 999, 9999, 99999, 999999, 9999999, 99999999, 999999999, Integer.MAX_VALUE};
 	public static final NameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = NameMap.create(TextFormatting.RESET, TextFormatting.values());
 
@@ -248,26 +249,83 @@ public class StringUtils
 		return s.isEmpty() ? s : s.replace("^\\s*(.*?)\\s*$", "$1");
 	}
 
-	public static String formatDouble(double d)
+	public static String formatDouble0(double value)
 	{
-		if (d == Double.POSITIVE_INFINITY)
-		{
-			return "+Inf";
-		}
-		else if (d == Double.NEGATIVE_INFINITY)
-		{
-			return "-Inf";
-		}
-		else if (d == Double.NaN)
+		long lvalue = (long) value;
+		return lvalue == value ? Long.toString(lvalue) : DOUBLE_FORMATTER_0.format(value);
+	}
+
+	public static String formatDouble00(double value)
+	{
+		long lvalue = (long) value;
+		return lvalue == value ? Long.toString(lvalue) : DOUBLE_FORMATTER_00.format(value);
+	}
+
+	public static String formatDouble(double value, boolean fancy)
+	{
+		if (Double.isNaN(value))
 		{
 			return "NaN";
 		}
-		else if (d == 0D)
+		else if (value == Double.POSITIVE_INFINITY)
 		{
-			return "0.00";
+			return "+Inf";
+		}
+		else if (value == Double.NEGATIVE_INFINITY)
+		{
+			return "-Inf";
+		}
+		else if (!fancy)
+		{
+			return formatDouble00(value);
+		}
+		else if (value == 0D)
+		{
+			return "0";
+		}
+		else if (value >= 100000000000D)
+		{
+			return value / 1000000000D + "B";
+		}
+		else if (value >= 10000000000D)
+		{
+			return formatDouble0(value / 1000000000D) + "B";
+		}
+		else if (value >= 1000000000D)
+		{
+			return formatDouble00(value / 1000000000D) + "B";
+		}
+		else if (value >= 100000000D)
+		{
+			return value / 1000000D + "M";
+		}
+		else if (value >= 10000000D)
+		{
+			return formatDouble0(value / 1000000D) + "M";
+		}
+		else if (value >= 1000000D)
+		{
+			return formatDouble00(value / 1000000D) + "M";
+		}
+		else if (value >= 100000D)
+		{
+			return value / 1000D + "K";
+		}
+		else if (value >= 10000D)
+		{
+			return formatDouble0(value / 1000D) + "K";
+		}
+		else if (value >= 1000D)
+		{
+			return formatDouble00(value / 1000D) + "K";
 		}
 
-		return SMALL_DOUBLE_FORMATTER.format(d);
+		return formatDouble00(value);
+	}
+
+	public static String formatDouble(double value)
+	{
+		return formatDouble(value, false);
 	}
 
 	public static String getTimeStringTicks(long ticks)

@@ -203,6 +203,11 @@ public class ThreadReloadChunkSelector extends Thread
 			{
 				for (cx = 0; cx < ChunkSelectorMap.TILES_GUI; cx++)
 				{
+					if (world == null)
+					{
+						continue;
+					}
+
 					chunk = world.getChunkProvider().getLoadedChunk(startX + cx, startZ + cz);
 
 					if (chunk != null)
@@ -241,6 +246,11 @@ public class ThreadReloadChunkSelector extends Thread
 			{
 				for (cx = 0; cx < ChunkSelectorMap.TILES_GUI; cx++)
 				{
+					if (world == null)
+					{
+						continue;
+					}
+
 					chunk = world.getChunkProvider().getLoadedChunk(startX + cx, startZ + cz);
 
 					if (chunk != null)

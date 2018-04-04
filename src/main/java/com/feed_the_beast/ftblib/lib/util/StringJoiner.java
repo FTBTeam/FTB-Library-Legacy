@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftblib.lib.util;
 
-import net.minecraft.util.math.MathHelper;
-
 import java.util.Collection;
 
 /**
@@ -149,50 +147,6 @@ public abstract class StringJoiner
 			}
 
 			builder.append(object);
-		}
-
-		return builder.toString();
-	}
-
-	public String joinDoubles(double... values)
-	{
-		StringBuilder builder = new StringBuilder();
-		boolean first = true;
-
-		for (double d : values)
-		{
-			if (first)
-			{
-				first = false;
-			}
-			else
-			{
-				append(builder);
-			}
-
-			builder.append(StringUtils.formatDouble(d));
-		}
-
-		return builder.toString();
-	}
-
-	public String joinFloorDoubles(double... values)
-	{
-		StringBuilder builder = new StringBuilder();
-		boolean first = true;
-
-		for (double d : values)
-		{
-			if (first)
-			{
-				first = false;
-			}
-			else
-			{
-				append(builder);
-			}
-
-			builder.append(MathHelper.lfloor(d));
 		}
 
 		return builder.toString();

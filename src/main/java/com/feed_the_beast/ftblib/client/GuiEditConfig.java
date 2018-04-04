@@ -307,7 +307,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 					w.setPosAndSize(0, 0, width - 16, 16);
 				}
 
-				scroll.setElementSize(align(WidgetLayout.VERTICAL));
+				scroll.setMaxValue(align(WidgetLayout.VERTICAL));
 			}
 		};
 
@@ -345,14 +345,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			}
 		}
 
-		scroll = new PanelScrollBar(this, configPanel)
-		{
-			@Override
-			public boolean shouldDraw()
-			{
-				return true;
-			}
-		};
+		scroll = new PanelScrollBar(this, configPanel);
 
 		buttonAccept = new SimpleButton(this, GuiLang.ACCEPT, GuiIcons.ACCEPT, (widget, button) ->
 		{
@@ -376,7 +369,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				}
 			}
 
-			scroll.setValue(0D);
+			scroll.setValue(0);
 			widget.getGui().refreshWidgets();
 		});
 
@@ -390,7 +383,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				}
 			}
 
-			scroll.setValue(0D);
+			scroll.setValue(0);
 			widget.getGui().refreshWidgets();
 		});
 	}

@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBLib.MOD_ID)
-@Config(modid = FTBLib.MOD_ID, category = "", name = "../local/" + FTBLib.MOD_ID)
+@Config(modid = FTBLib.MOD_ID, category = "")
 @Config.LangKey(FTBLib.MOD_ID)
 public class FTBLibConfig
 {

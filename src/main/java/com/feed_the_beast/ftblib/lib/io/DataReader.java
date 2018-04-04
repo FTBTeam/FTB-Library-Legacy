@@ -55,6 +55,11 @@ public abstract class DataReader
 		return new ResourceDataReader(resource);
 	}
 
+	public static DataReader get(InputStream stream)
+	{
+		return new StreamDataReader(stream);
+	}
+
 	public static DataReader get(URI uri, Proxy proxy)
 	{
 		switch (uri.getScheme())

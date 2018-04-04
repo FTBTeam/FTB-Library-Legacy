@@ -6,92 +6,77 @@ package com.feed_the_beast.ftblib.lib.gui;
 public class PanelScrollBar extends ScrollBar
 {
 	public final Panel panel;
-	private int elementSize = 1;
-	private double scrollStep;
-	private boolean autoSize;
 
-	public PanelScrollBar(GuiBase gui, int ss, Panel p)
+	public PanelScrollBar(Panel parent, Plane plane, Panel p)
 	{
-		super(gui, ss);
+		super(parent, plane, 0);
 		panel = p;
-		autoSize = ss <= 0;
 	}
 
-	public PanelScrollBar(GuiBase gui, Panel p)
+	public PanelScrollBar(Panel parent, Panel panel)
 	{
-		this(gui, 0, p);
+		this(parent, Plane.VERTICAL, panel);
 	}
 
-	public void setElementSize(int s)
+	@Override
+	public void setMinValue(int min)
 	{
-		elementSize = Math.max(1, s);
+	}
 
-		if (panel.widgets.isEmpty())
+	@Override
+	public int getMinValue()
+	{
+		return 0;
+	}
+
+	@Override
+	public void setMaxValue(int max)
+	{
+		super.setMaxValue(max - (plane.isVertical ? panel.height : panel.width));
+	}
+
+	@Override
+	public int getSliderSize()
+	{
+		int max = getMaxValue();
+
+		if (max <= 0)
 		{
-			setScrollStep(0);
+			return 0;
+		}
+
+		int size;
+
+		if (plane.isVertical)
+		{
+			size = (int) (panel.height / (double) (max + panel.height) * height);
 		}
 		else
 		{
-			setSrollStepFromOneElementSize(elementSize / panel.widgets.size());
+			size = (int) (panel.width / (double) (max + panel.width) * width);
 		}
 
-		if (autoSize)
-		{
-			if (getPlane().isVertical())
-			{
-				sliderSize = (int) (height * (double) panel.height / (double) elementSize);
-			}
-			else
-			{
-				sliderSize = (int) (width * (double) panel.width / (double) elementSize);
-			}
-		}
-	}
-
-	public void setScrollStep(double v)
-	{
-		scrollStep = v;
-	}
-
-	public void setSrollStepFromOneElementSize(int s)
-	{
-		setScrollStep(s / (double) (elementSize - (getPlane().isVertical() ? panel.height : panel.width)));
+		return size < 10 ? 10 : size;
 	}
 
 	@Override
 	public boolean canMouseScroll()
 	{
-		return super.canMouseScroll() || panel.isMouseOver();
-	}
-
-	@Override
-	public double getScrollStep()
-	{
-		return scrollStep;
+		return panel.isMouseOver() || super.canMouseScroll();
 	}
 
 	@Override
 	public void onMoved()
 	{
-		if (getPlane().isVertical())
+		int value = getMaxValue() <= 0 ? 0 : getValue();
+
+		if (plane.isVertical)
 		{
-			panel.setScrollY(getValue(), elementSize);
+			panel.setScrollY(value);
 		}
 		else
 		{
-			panel.setScrollX(getValue(), elementSize);
+			panel.setScrollX(value);
 		}
-	}
-
-	@Override
-	public boolean isEnabled()
-	{
-		return elementSize > (getPlane().isVertical() ? panel.height : panel.width);
-	}
-
-	@Override
-	public boolean shouldDraw()
-	{
-		return isEnabled();
 	}
 }

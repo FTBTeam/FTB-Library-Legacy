@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
@@ -333,5 +334,50 @@ public class Widget implements IGuiWrapper
 		}
 
 		return list;
+	}
+
+	public static String getClipboardString()
+	{
+		return GuiScreen.getClipboardString();
+	}
+
+	public static void setClipboardString(String string)
+	{
+		GuiScreen.setClipboardString(string);
+	}
+
+	public static boolean isShiftKeyDown()
+	{
+		return GuiScreen.isShiftKeyDown();
+	}
+
+	public static boolean isCtrlKeyDown()
+	{
+		return GuiScreen.isCtrlKeyDown();
+	}
+
+	public static boolean isAltKeyDown()
+	{
+		return GuiScreen.isAltKeyDown();
+	}
+
+	public static boolean isKeyComboCtrlX(int key)
+	{
+		return GuiScreen.isKeyComboCtrlX(key);
+	}
+
+	public static boolean isKeyComboCtrlV(int key)
+	{
+		return GuiScreen.isKeyComboCtrlV(key);
+	}
+
+	public static boolean isKeyComboCtrlC(int key)
+	{
+		return GuiScreen.isKeyComboCtrlC(key);
+	}
+
+	public static boolean isKeyComboCtrlA(int key)
+	{
+		return GuiScreen.isKeyComboCtrlA(key);
 	}
 }

@@ -98,30 +98,6 @@ public abstract class Panel extends Widget
 		}
 	}
 
-	public void setScrollX(double scroll, int elementsWidth)
-	{
-		if (elementsWidth < width)
-		{
-			setScrollX(0);
-		}
-		else
-		{
-			setScrollX((int) (scroll * (elementsWidth - width)));
-		}
-	}
-
-	public void setScrollY(double scroll, int elementsHeight)
-	{
-		if (elementsHeight < height)
-		{
-			setScrollY(0);
-		}
-		else
-		{
-			setScrollY((int) (scroll * (elementsHeight - height)));
-		}
-	}
-
 	protected final int align(WidgetLayout layout)
 	{
 		return layout.align(this);

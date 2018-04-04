@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.math;
 
 import net.minecraft.block.BlockLog;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -247,15 +248,20 @@ public class MathUtils
 	}
 
 	@Nullable
+	public static RayTraceResult rayTrace(Entity entity, double dist, boolean useLiquids)
+	{
+		Vec3d vec3d = new Vec3d(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
+		double myawr = Math.toRadians(-entity.rotationYaw);
+		double mpitchr = Math.toRadians(-entity.rotationPitch);
+		double f4 = -Math.cos(mpitchr);
+		Vec3d vec3d1 = vec3d.addVector(Math.sin(myawr - Math.PI) * f4 * dist, Math.sin(mpitchr) * dist, Math.cos(myawr - Math.PI) * f4 * dist);
+		return entity.world.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
+	}
+
+	@Nullable
 	public static RayTraceResult rayTrace(EntityPlayer player, boolean useLiquids)
 	{
-		Vec3d vec3d = new Vec3d(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-		double myawr = Math.toRadians(-player.rotationYaw);
-		double mpitchr = Math.toRadians(-player.rotationPitch);
-		double f4 = -Math.cos(mpitchr);
-		double dist = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
-		Vec3d vec3d1 = vec3d.addVector(Math.sin(myawr - Math.PI) * f4 * dist, Math.sin(mpitchr) * dist, Math.cos(myawr - Math.PI) * f4 * dist);
-		return player.world.rayTraceBlocks(vec3d, vec3d1, useLiquids, !useLiquids, false);
+		return rayTrace(player, player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue(), useLiquids);
 	}
 
 	@Nullable

@@ -22,7 +22,7 @@ public class SlotOnlyInsertItem extends Slot
 	@Override
 	public boolean isItemValid(ItemStack stack)
 	{
-		return !stack.isEmpty() && !stack.isStackable();
+		return itemHandler.insertItem(0, stack, true) != stack;
 	}
 
 	@Override

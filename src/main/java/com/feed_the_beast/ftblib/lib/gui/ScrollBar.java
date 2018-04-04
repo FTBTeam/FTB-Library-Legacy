@@ -3,8 +3,8 @@ package com.feed_the_beast.ftblib.lib.gui;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
 
@@ -12,23 +12,80 @@ public class ScrollBar extends Widget
 {
 	public enum Plane
 	{
-		HORIZONTAL,
-		VERTICAL;
+		HORIZONTAL(false),
+		VERTICAL(true);
 
-		public boolean isVertical()
+		public final boolean isVertical;
+
+		Plane(boolean v)
 		{
-			return this == VERTICAL;
+			isVertical = v;
 		}
 	}
 
-	public int sliderSize;
-	private double value;
+	public final Plane plane;
+	private int sliderSize;
+	private int value = 0;
+	private int scrollStep = 20;
 	private int grab = -10000;
+	private int minValue = 0;
+	private int maxValue = 100;
+	private boolean canAlwaysScroll = false;
+	private boolean canAlwaysScrollPlane = true;
 
-	public ScrollBar(GuiBase gui, int ss)
+	public ScrollBar(Panel parent, Plane p, int ss)
 	{
-		super(gui);
-		sliderSize = Math.max(ss, 1);
+		super(parent);
+		plane = p;
+		sliderSize = Math.max(ss, 0);
+	}
+
+	public void setCanAlwaysScroll(boolean v)
+	{
+		canAlwaysScroll = v;
+	}
+
+	public void setCanAlwaysScrollPlane(boolean v)
+	{
+		canAlwaysScrollPlane = v;
+	}
+
+	public void setMinValue(int min)
+	{
+		minValue = min;
+		setValue(getValue());
+	}
+
+	public int getMinValue()
+	{
+		return minValue;
+	}
+
+	public void setMaxValue(int max)
+	{
+		maxValue = max;
+		setValue(getValue());
+	}
+
+	public int getMaxValue()
+	{
+		return maxValue;
+	}
+
+	public void setScrollStep(int s)
+	{
+		scrollStep = Math.max(1, s);
+	}
+
+	public int getSliderSize()
+	{
+		return sliderSize;
+	}
+
+	@Override
+	public boolean isEnabled()
+	{
+		return true;
 	}
 
 	@Override
@@ -36,7 +93,7 @@ public class ScrollBar extends Widget
 	{
 		if (isMouseOver())
 		{
-			grab = (getPlane().isVertical() ? (getMouseY() - (getAY() + getValueI(height))) : (getMouseX() - (getAX() + getValueI(width))));
+			grab = (plane.isVertical ? (getMouseY() - (getAY() + getValueI(height - getSliderSize()))) : (getMouseX() - (getAX() + getValueI(width - getSliderSize()))));
 			return true;
 		}
 
@@ -46,15 +103,23 @@ public class ScrollBar extends Widget
 	@Override
 	public void addMouseOverText(List<String> list)
 	{
-		double min = getDisplayMin();
-		double max = getDisplayMax();
-
-		if (min < max)
+		if (showValueOnMouseOver())
 		{
-			String s = "" + (int) MathUtils.map(0D, 1D, min, max, value);
 			String t = getTitle();
-			list.add(t.isEmpty() ? s : (t + ": " + s));
+			list.add(t.isEmpty() ? Integer.toString(getValue()) : (t + ": " + getValue()));
 		}
+
+		if (GuiBase.renderDebugBoxes)
+		{
+			list.add(TextFormatting.DARK_GRAY + "Size: " + getSliderSize());
+			list.add(TextFormatting.DARK_GRAY + "Max: " + getMaxValue());
+			list.add(TextFormatting.DARK_GRAY + "Value: " + getValue());
+		}
+	}
+
+	public boolean showValueOnMouseOver()
+	{
+		return false;
 	}
 
 	@Override
@@ -62,23 +127,23 @@ public class ScrollBar extends Widget
 	{
 		int ax = getAX();
 		int ay = getAY();
+		int sliderSize = getSliderSize();
 
-		if (isEnabled())
+		if (sliderSize > 0)
 		{
-			double v = getValue();
-			double v0 = v;
+			int v = getValue();
 
 			if (grab != -10000)
 			{
 				if (isMouseButtonDown(MouseButton.LEFT))
 				{
-					if (getPlane().isVertical())
+					if (plane.isVertical)
 					{
-						v = (getMouseY() - (ay + grab)) / (double) (height - sliderSize);
+						v = (int) ((getMouseY() - (ay + grab)) * getMaxValue() / (double) (height - sliderSize));
 					}
 					else
 					{
-						v = (getMouseX() - (ax + grab)) / (double) (width - sliderSize);
+						v = (int) ((getMouseX() - (ax + grab)) * getMaxValue() / (double) (width - sliderSize));
 					}
 				}
 				else
@@ -87,31 +152,27 @@ public class ScrollBar extends Widget
 				}
 			}
 
-			if (getMouseWheel() != 0 && GuiScreen.isShiftKeyDown() != getPlane().isVertical() && canMouseScroll())
+			int mouseWheel = getMouseWheel();
+			if (mouseWheel != 0 && canMouseScrollPlane() && canMouseScroll())
 			{
-				v += (getMouseWheel() < 0) ? getScrollStep() : -getScrollStep();
+				v += (mouseWheel < 0) ? getScrollStep() : -getScrollStep();
 			}
 
-			v = MathHelper.clamp(v, 0D, 1D);
-
-			if (v0 != v)
-			{
-				setValue(v);
-			}
+			setValue(v);
 		}
 
 		getBackground().draw(ax, ay, width, height);
 
-		if (getPlane().isVertical())
+		if (sliderSize > 0)
 		{
-			if (sliderSize < height)
+			if (plane.isVertical)
 			{
-				getIcon().draw(ax, ay + getValueI(height), width, sliderSize);
+				getIcon().draw(ax, ay + getValueI(height - sliderSize), width, sliderSize);
 			}
-		}
-		else if (sliderSize < width)
-		{
-			getIcon().draw(ax + getValueI(width), ay, sliderSize, height);
+			else
+			{
+				getIcon().draw(ax + getValueI(width - sliderSize), ay, sliderSize, height);
+			}
 		}
 	}
 
@@ -123,54 +184,46 @@ public class ScrollBar extends Widget
 	@Override
 	public Icon getIcon()
 	{
-		return getTheme().getScrollBar(WidgetType.mouseOver(grab != -10000), getPlane().isVertical());
+		return getTheme().getScrollBar(WidgetType.mouseOver(grab != -10000), plane.isVertical);
 	}
 
 	public void onMoved()
 	{
 	}
 
-	public boolean canMouseScroll()
+	public boolean canMouseScrollPlane()
 	{
-		return isMouseOver();
+		return canAlwaysScrollPlane || isShiftKeyDown() != plane.isVertical;
 	}
 
-	public void setValue(double v)
+	public boolean canMouseScroll()
 	{
+		return isMouseOver() || (canAlwaysScroll && getGui().isMouseOver());
+	}
+
+	public void setValue(int v)
+	{
+		v = MathHelper.clamp(v, getMinValue(), getMaxValue());
+
 		if (value != v)
 		{
-			value = MathHelper.clamp(v, 0D, 1D);
+			value = v;
 			onMoved();
 		}
 	}
 
-	public double getValue()
+	public int getValue()
 	{
 		return value;
 	}
 
 	public int getValueI(int max)
 	{
-		return (int) (getValue() * (max - sliderSize));
+		return (int) MathUtils.map(getMinValue(), getMaxValue(), 0, max, value);
 	}
 
-	public double getScrollStep()
+	public int getScrollStep()
 	{
-		return 0.1D;
-	}
-
-	public Plane getPlane()
-	{
-		return Plane.VERTICAL;
-	}
-
-	public double getDisplayMin()
-	{
-		return 0;
-	}
-
-	public double getDisplayMax()
-	{
-		return 0;
+		return scrollStep;
 	}
 }

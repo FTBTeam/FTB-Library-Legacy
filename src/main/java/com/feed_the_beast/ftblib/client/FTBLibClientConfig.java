@@ -35,6 +35,8 @@ public class FTBLibClientConfig
 
 		public boolean mirror_commands = true;
 		public boolean replace_vanilla_status_messages = true;
+
+		public boolean debug_helper = true;
 	}
 
 	public static void sync()

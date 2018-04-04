@@ -10,6 +10,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.fml.common.Loader;
@@ -176,5 +177,17 @@ public class CommonUtils
 			nbt.removeTag(oldName);
 			nbt.setTag(newName, tag);
 		}
+	}
+
+	@Nullable
+	public static NBTTagCompound nullIfEmpty(@Nullable NBTTagCompound nbt)
+	{
+		return nbt == null || nbt.hasNoTags() ? null : nbt;
+	}
+
+	@Nullable
+	public static NBTTagList nullIfEmpty(@Nullable NBTTagList nbt)
+	{
+		return nbt == null || nbt.hasNoTags() ? null : nbt;
 	}
 }

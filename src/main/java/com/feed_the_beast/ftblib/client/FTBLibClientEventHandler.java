@@ -36,6 +36,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import java.lang.reflect.Field;
@@ -325,19 +326,14 @@ public class FTBLibClientEventHandler
 		}
 	}
 
-	/*
-	@SubscribeEvent(priority = EventPriority.HIGH)
-	public static void onWorldRender(RenderWorldLastEvent event)
-	{
-	}
-	*/
-
-	/*
 	@SubscribeEvent
-	public static void onBlockHighlightDraw(DrawBlockHighlightEvent event)
+	public static void onDebugInfoEvent(RenderGameOverlayEvent.Text event)
 	{
+		if (FTBLibClientConfig.general.debug_helper && !ClientUtils.MC.gameSettings.showDebugInfo && Keyboard.isKeyDown(Keyboard.KEY_F3))
+		{
+			event.getLeft().add(StringUtils.translate("debug.help.help"));
+		}
 	}
-	*/
 
 	@SubscribeEvent
 	public static void onBeforeTexturesStitched(TextureStitchEvent.Pre event)

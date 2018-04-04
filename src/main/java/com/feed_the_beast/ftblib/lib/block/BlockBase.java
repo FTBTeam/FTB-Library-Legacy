@@ -16,6 +16,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 /**
  * @author LatvianModder
  */
@@ -24,7 +26,7 @@ public class BlockBase extends Block
 	public BlockBase(String mod, String id, Material material, MapColor color)
 	{
 		super(material, color);
-		setRegistryName(mod + ':' + id);
+		setRegistryName(mod, id);
 		setUnlocalizedName(mod + '.' + id);
 		setHardness(1.8F);
 		setCreativeTab(CreativeTabs.MISC);
@@ -78,7 +80,7 @@ public class BlockBase extends Block
 
 				if (!tile.destroyedByCreativePlayer || tile.shouldDrop())
 				{
-					spawnAsEntity(world, pos, createStack(state, ((TileBase) tileEntity)));
+					spawnAsEntity(world, pos, createStack(state, tileEntity));
 				}
 
 				if (tile.updateComparator())
@@ -91,13 +93,13 @@ public class BlockBase extends Block
 		super.breakBlock(world, pos, state);
 	}
 
-	public ItemStack createStack(IBlockState state, TileBase tile)
+	public ItemStack createStack(IBlockState state, @Nullable TileEntity tile)
 	{
 		ItemStack stack = new ItemStack(this);
 
-		if (dropSpecial(state))
+		if (dropSpecial(state) && tile instanceof TileBase)
 		{
-			NBTTagCompound nbt = tile.createItemData();
+			NBTTagCompound nbt = ((TileBase) tile).createItemData();
 
 			if (!nbt.hasNoTags())
 			{
