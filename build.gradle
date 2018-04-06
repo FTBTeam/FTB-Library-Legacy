@@ -53,8 +53,13 @@ jar {
 }
 
 artifacts {
-	archives jar
+	archives deobfJar
 	archives sourceJar
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier = 'deobf'
 }
 
 publishing {
@@ -63,7 +68,7 @@ publishing {
 			groupId = project.group
 			artifactId = project.archivesBaseName
 			version = project.version
-			artifact jar
+			artifact deobfJar
 			artifact sourceJar
 		}
 	}
