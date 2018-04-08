@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class CommandMirror extends CommandBase implements ICommandWithParent
+public class CommandMirror extends CommandBase implements ICommandWithCustomPermission
 {
 	public final ICommand mirrored;
 
@@ -77,18 +77,8 @@ public class CommandMirror extends CommandBase implements ICommandWithParent
 	}
 
 	@Override
-	public void setParent(@Nullable ICommand p)
+	public String getCustomPermissionNode()
 	{
-		if (mirrored instanceof ICommandWithParent)
-		{
-			((ICommandWithParent) mirrored).setParent(p);
-		}
-	}
-
-	@Override
-	@Nullable
-	public ICommand getParent()
-	{
-		return mirrored instanceof ICommandWithParent ? ((ICommandWithParent) mirrored).getParent() : null;
+		return ICommandWithCustomPermission.getPermissionNode(mirrored);
 	}
 }

@@ -16,9 +16,6 @@ public enum EnumRotation implements IStringSerializable
 	UPSIDE_DOWN("upside_down"),
 	FACING_UP("up");
 
-	/**
-	 * @author LatvianModder
-	 */
 	public static final EnumRotation[] VALUES = values();
 
 	private final String name;

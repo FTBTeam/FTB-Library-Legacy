@@ -188,6 +188,11 @@ public abstract class GuiBase extends Panel
 		if (ClientUtils.MC.player != null)
 		{
 			ClientUtils.MC.player.closeScreen();
+
+			if (ClientUtils.MC.currentScreen == null)
+			{
+				ClientUtils.MC.setIngameFocus();
+			}
 		}
 
 		if (openPrevScreen)
@@ -199,9 +204,9 @@ public abstract class GuiBase extends Panel
 		onClosed();
 	}
 
-	public boolean onClosedByKey()
+	public boolean onClosedByKey(int key)
 	{
-		return true;
+		return key == Keyboard.KEY_ESCAPE || ClientUtils.MC.gameSettings.keyBindInventory.isActiveAndMatches(key);
 	}
 
 	public void onClosed()

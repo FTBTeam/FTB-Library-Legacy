@@ -428,9 +428,13 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	}
 
 	@Override
-	public boolean onClosedByKey()
+	public boolean onClosedByKey(int key)
 	{
-		buttonCancel.onClicked(MouseButton.LEFT);
+		if (super.onClosedByKey(key))
+		{
+			buttonCancel.onClicked(MouseButton.LEFT);
+		}
+
 		return false;
 	}
 

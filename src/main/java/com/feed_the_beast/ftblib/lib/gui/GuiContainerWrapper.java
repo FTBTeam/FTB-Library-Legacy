@@ -61,14 +61,9 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 		{
 			return;
 		}
-
-		if (key == Keyboard.KEY_ESCAPE || mc.gameSettings.keyBindInventory.isActiveAndMatches(key))
+		else if (wrappedGui.onClosedByKey(key))
 		{
-			if (wrappedGui.onClosedByKey())
-			{
-				wrappedGui.closeGui();
-			}
-
+			wrappedGui.closeGui();
 			return;
 		}
 

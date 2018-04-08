@@ -52,14 +52,9 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 		{
 			return;
 		}
-
-		if (key == Keyboard.KEY_ESCAPE || (mc.world != null && mc.gameSettings.keyBindInventory.isActiveAndMatches(key)))
+		else if (wrappedGui.onClosedByKey(key))
 		{
-			if (wrappedGui.onClosedByKey())
-			{
-				wrappedGui.closeGui();
-			}
-
+			wrappedGui.closeGui();
 			return;
 		}
 
