@@ -108,7 +108,7 @@ public final class ItemEntry
 		}
 		else if (hashCode == 0)
 		{
-			hashCode = Objects.hash(item, metadata, nbt);
+			hashCode = Objects.hash(item, metadata, nbt, caps);
 
 			if (hashCode == 0)
 			{
@@ -211,6 +211,11 @@ public final class ItemEntry
 		if (nbt != null)
 		{
 			json.add("nbt", JsonUtils.toJson(nbt));
+		}
+
+		if (caps != null)
+		{
+			json.add("caps", JsonUtils.toJson(caps));
 		}
 
 		return json;
