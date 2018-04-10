@@ -69,7 +69,6 @@ public abstract class GuiButtonListBase extends GuiBase
 		};
 
 		panelButtons.setPosAndSize(9, 9, 144, 146);
-		panelButtons.addFlags(Panel.DEFAULTS);
 
 		scrollBar = new PanelScrollBar(this, panelButtons);
 		scrollBar.setCanAlwaysScroll(true);

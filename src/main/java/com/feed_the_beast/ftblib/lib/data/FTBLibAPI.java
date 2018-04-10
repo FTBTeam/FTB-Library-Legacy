@@ -25,6 +25,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.util.FakePlayer;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -68,7 +69,7 @@ public class FTBLibAPI
 				if (!failed.isEmpty())
 				{
 					notification.addLine(StringUtils.color(FTBLibLang.RELOAD_FAILED.textComponent(player), TextFormatting.RED));
-					FTBLib.LOGGER.warn(FTBLibLang.RELOAD_FAILED.translate());
+					FTBLib.LOGGER.warn("These IDs failed to reload:");
 
 					for (ResourceLocation f : failed)
 					{
@@ -88,7 +89,7 @@ public class FTBLibAPI
 
 	public static void openGui(ResourceLocation guiId, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data)
 	{
-		if (player.connection == null)
+		if (player.connection == null || player instanceof FakePlayer)
 		{
 			return;
 		}

@@ -10,14 +10,10 @@ import java.util.List;
 
 public abstract class Panel extends Widget
 {
-	public static final int ONLY_RENDER_WIDGETS_INSIDE = 1;
-	public static final int ONLY_INTERACT_WITH_WIDGETS_INSIDE = 2;
-	public static final int DEFAULTS = ONLY_RENDER_WIDGETS_INSIDE | ONLY_INTERACT_WITH_WIDGETS_INSIDE;
-
 	public final List<Widget> widgets;
 	private int scrollX = 0, scrollY = 0;
 	private int offsetX = 0, offsetY = 0;
-	private int flags = 0;
+	private boolean unicode = false, onlyRenderWidgetsInside = true, onlyInteractWithWidgetsInside = true;
 
 	public Panel(Panel panel)
 	{
@@ -25,14 +21,34 @@ public abstract class Panel extends Widget
 		widgets = new ArrayList<>();
 	}
 
-	public void addFlags(int f)
+	public boolean getUnicode()
 	{
-		flags |= f;
+		return unicode;
 	}
 
-	public boolean hasFlag(int flag)
+	public void setUnicode(boolean value)
 	{
-		return (flags & flag) != 0;
+		unicode = value;
+	}
+
+	public boolean getOnlyRenderWidgetsInside()
+	{
+		return onlyRenderWidgetsInside;
+	}
+
+	public void setOnlyRenderWidgetsInside(boolean value)
+	{
+		onlyRenderWidgetsInside = value;
+	}
+
+	public boolean getOnlyInteractWithWidgetsInside()
+	{
+		return onlyInteractWithWidgetsInside;
+	}
+
+	public void setOnlyInteractWithWidgetsInside(boolean value)
+	{
+		onlyInteractWithWidgetsInside = value;
 	}
 
 	public abstract void addWidgets();
@@ -42,12 +58,7 @@ public abstract class Panel extends Widget
 	public void refreshWidgets()
 	{
 		widgets.clear();
-		boolean unicode = hasFlag(UNICODE);
-
-		if (unicode)
-		{
-			pushFontUnicode(true);
-		}
+		pushFontUnicode(getUnicode());
 
 		try
 		{
@@ -73,11 +84,7 @@ public abstract class Panel extends Widget
 		}
 
 		alignWidgets();
-
-		if (unicode)
-		{
-			popFontUnicode();
-		}
+		popFontUnicode();
 	}
 
 	public void add(Widget widget)
@@ -156,8 +163,8 @@ public abstract class Panel extends Widget
 	@Override
 	public void draw()
 	{
-		boolean renderInside = hasFlag(ONLY_RENDER_WIDGETS_INSIDE);
-		pushFontUnicode(hasFlag(UNICODE));
+		boolean renderInside = getOnlyRenderWidgetsInside();
+		pushFontUnicode(getUnicode());
 
 		int ax = getAX();
 		int ay = getAY();
@@ -216,25 +223,25 @@ public abstract class Panel extends Widget
 	@Override
 	public void addMouseOverText(List<String> list)
 	{
-		if (hasFlag(ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !isMouseOver())
+		if (getOnlyInteractWithWidgetsInside() && !isMouseOver())
 		{
 			return;
 		}
 
-		pushFontUnicode(hasFlag(UNICODE));
+		pushFontUnicode(getUnicode());
 		setOffset(true);
 
 		for (int i = widgets.size() - 1; i >= 0; i--)
 		{
-			Widget w = widgets.get(i);
+			Widget widget = widgets.get(i);
 
-			if (w.shouldAddMouseOverText())
+			if (widget.shouldAddMouseOverText())
 			{
-				w.addMouseOverText(list);
+				widget.addMouseOverText(list);
 
 				if (GuiBase.renderDebugBoxes)
 				{
-					list.add(TextFormatting.DARK_GRAY + w.getClass().getSimpleName() + ": " + w.width + "x" + w.height);
+					list.add(TextFormatting.DARK_GRAY + widget.getClass().getSimpleName() + ": " + widget.width + "x" + widget.height);
 				}
 			}
 		}
@@ -244,9 +251,23 @@ public abstract class Panel extends Widget
 	}
 
 	@Override
+	public void updateMouseOver(int mouseX, int mouseY)
+	{
+		super.updateMouseOver(mouseX, mouseY);
+		setOffset(true);
+
+		for (Widget widget : widgets)
+		{
+			widget.updateMouseOver(mouseX, mouseY);
+		}
+
+		setOffset(false);
+	}
+
+	@Override
 	public boolean mousePressed(MouseButton button)
 	{
-		if (hasFlag(ONLY_INTERACT_WITH_WIDGETS_INSIDE) && !isMouseOver())
+		if (getOnlyInteractWithWidgetsInside() && !isMouseOver())
 		{
 			return false;
 		}
@@ -255,11 +276,11 @@ public abstract class Panel extends Widget
 
 		for (int i = widgets.size() - 1; i >= 0; i--)
 		{
-			Widget w = widgets.get(i);
+			Widget widget = widgets.get(i);
 
-			if (w.isEnabled())
+			if (widget.isEnabled())
 			{
-				if (w.mousePressed(button))
+				if (widget.mousePressed(button))
 				{
 					setOffset(false);
 					return true;
@@ -278,15 +299,38 @@ public abstract class Panel extends Widget
 
 		for (int i = widgets.size() - 1; i >= 0; i--)
 		{
-			Widget w = widgets.get(i);
+			Widget widget = widgets.get(i);
 
-			if (w.isEnabled())
+			if (widget.isEnabled())
 			{
-				w.mouseReleased(button);
+				widget.mouseReleased(button);
 			}
 		}
 
 		setOffset(false);
+	}
+
+	@Override
+	public boolean mouseScrolled(int scroll)
+	{
+		setOffset(true);
+
+		for (int i = widgets.size() - 1; i >= 0; i--)
+		{
+			Widget widget = widgets.get(i);
+
+			if (widget.isEnabled())
+			{
+				if (widget.mouseScrolled(scroll))
+				{
+					setOffset(false);
+					return true;
+				}
+			}
+		}
+
+		setOffset(false);
+		return false;
 	}
 
 	@Override
@@ -296,9 +340,9 @@ public abstract class Panel extends Widget
 
 		for (int i = widgets.size() - 1; i >= 0; i--)
 		{
-			Widget w = widgets.get(i);
+			Widget widget = widgets.get(i);
 
-			if (w.isEnabled() && w.keyPressed(key, keyChar))
+			if (widget.isEnabled() && widget.keyPressed(key, keyChar))
 			{
 				setOffset(false);
 				return true;
@@ -316,11 +360,11 @@ public abstract class Panel extends Widget
 
 		for (int i = widgets.size() - 1; i >= 0; i--)
 		{
-			Widget w = widgets.get(i);
+			Widget widget = widgets.get(i);
 
-			if (w.isEnabled())
+			if (widget.isEnabled())
 			{
-				w.keyReleased(key);
+				widget.keyReleased(key);
 			}
 		}
 

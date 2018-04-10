@@ -23,6 +23,12 @@ import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagByteArray;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
@@ -30,6 +36,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -39,6 +46,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -206,7 +214,7 @@ public class FTBLibClientEventHandler
 
 			if (!ores.isEmpty())
 			{
-				event.getToolTip().add(StringUtils.translate("ftblib_client.general.item_ore_names.item_tooltip"));
+				event.getToolTip().add(I18n.format("ftblib_client.general.item_ore_names.item_tooltip"));
 
 				for (String or : ores)
 				{
@@ -217,7 +225,110 @@ public class FTBLibClientEventHandler
 
 		if (FTBLibClientConfig.general.item_nbt && event.getItemStack().hasTagCompound() && GuiScreen.isShiftKeyDown())
 		{
-			event.getToolTip().add(TextFormatting.DARK_GRAY.toString() + TextFormatting.getTextWithoutFormattingCodes(event.getItemStack().getTagCompound().toString()));
+			event.getToolTip().add(getNBTString(new StringBuilder(), event.getItemStack().getTagCompound(), 0).toString());
+		}
+	}
+
+	private static final TextFormatting[] COLORS = {TextFormatting.BLUE, TextFormatting.DARK_GREEN, TextFormatting.YELLOW, TextFormatting.RED};
+
+	private static StringBuilder getNBTString(StringBuilder builder, @Nullable NBTBase nbt, int level)
+	{
+		if (nbt == null)
+		{
+			return builder.append(TextFormatting.DARK_GRAY).append("null");
+		}
+
+		switch (nbt.getId())
+		{
+			case Constants.NBT.TAG_END:
+				return builder.append(TextFormatting.DARK_GRAY).append("null");
+			case Constants.NBT.TAG_BYTE:
+			case Constants.NBT.TAG_SHORT:
+			case Constants.NBT.TAG_INT:
+			case Constants.NBT.TAG_LONG:
+			case Constants.NBT.TAG_ANY_NUMERIC:
+			case Constants.NBT.TAG_FLOAT:
+			case Constants.NBT.TAG_DOUBLE:
+				return builder.append(TextFormatting.GRAY).append(nbt.toString());
+			case Constants.NBT.TAG_STRING:
+				return builder.append(TextFormatting.GRAY).append(nbt.toString());
+			case Constants.NBT.TAG_LIST:
+			{
+				NBTTagList list = (NBTTagList) nbt;
+				builder.append(COLORS[level % COLORS.length]).append('[');
+
+				for (int i = 0; i < list.tagCount(); i++)
+				{
+					if (i > 0)
+					{
+						builder.append(TextFormatting.DARK_GRAY).append(',').append(' ');
+					}
+
+					getNBTString(builder, list.get(i), level + 1);
+				}
+
+				return builder.append(COLORS[level % COLORS.length]).append(']');
+			}
+			case Constants.NBT.TAG_COMPOUND:
+			{
+				NBTTagCompound map = (NBTTagCompound) nbt;
+				builder.append(COLORS[level % COLORS.length]).append('{');
+
+				boolean first = true;
+
+				for (String key : map.getKeySet())
+				{
+					if (first)
+					{
+						first = false;
+					}
+					else
+					{
+						builder.append(TextFormatting.DARK_GRAY).append(',').append(' ');
+					}
+
+					builder.append(TextFormatting.DARK_GRAY).append(key).append(':').append(' ');
+					getNBTString(builder, map.getTag(key), level + 1);
+				}
+
+				return builder.append(COLORS[level % COLORS.length]).append('}');
+			}
+			case Constants.NBT.TAG_BYTE_ARRAY:
+			{
+				NBTTagByteArray list = (NBTTagByteArray) nbt;
+				builder.append(COLORS[level % COLORS.length]).append('[');
+
+				for (int i = 0; i < list.getByteArray().length; i++)
+				{
+					if (i > 0)
+					{
+						builder.append(TextFormatting.DARK_GRAY).append(',').append(' ');
+					}
+
+					builder.append(TextFormatting.GRAY).append(list.getByteArray()[i]);
+				}
+
+				return builder.append(COLORS[level % COLORS.length]).append(']');
+			}
+			case Constants.NBT.TAG_INT_ARRAY:
+			{
+				NBTTagIntArray list = (NBTTagIntArray) nbt;
+				builder.append(COLORS[level % COLORS.length]).append('[');
+
+				for (int i = 0; i < list.getIntArray().length; i++)
+				{
+					if (i > 0)
+					{
+						builder.append(TextFormatting.DARK_GRAY).append(',').append(' ');
+					}
+
+					builder.append(TextFormatting.GRAY).append(list.getIntArray()[i]);
+				}
+
+				return builder.append(COLORS[level % COLORS.length]).append(']');
+			}
+			default:
+				return builder.append(TextFormatting.GRAY).append(nbt.toString());
 		}
 	}
 
@@ -331,7 +442,7 @@ public class FTBLibClientEventHandler
 	{
 		if (FTBLibClientConfig.general.debug_helper && !ClientUtils.MC.gameSettings.showDebugInfo && Keyboard.isKeyDown(Keyboard.KEY_F3))
 		{
-			event.getLeft().add(StringUtils.translate("debug.help.help"));
+			event.getLeft().add(I18n.format("debug.help.help"));
 		}
 	}
 
@@ -376,7 +487,7 @@ public class FTBLibClientEventHandler
 			buttonX = x;
 			buttonY = y;
 			button = b;
-			title = StringUtils.translate(b.getLangKey());
+			title = I18n.format(b.getLangKey());
 		}
 
 		@Override

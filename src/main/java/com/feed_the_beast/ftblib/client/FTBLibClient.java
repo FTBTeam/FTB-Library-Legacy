@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.cmd.CmdFTBC;
 import com.feed_the_beast.ftblib.events.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftblib.events.player.IGuiProvider;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.client.ParticleColoredDust;
 import com.feed_the_beast.ftblib.lib.cmd.CommandMirror;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
@@ -22,6 +23,7 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.command.ICommand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -261,6 +263,18 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 	public void handleClientMessage(MessageBase<?> message)
 	{
 		ClientUtils.MC.addScheduledTask(new MessageTask(message));
+	}
+
+	@Override
+	public void spawnDust(World world, double x, double y, double z, float r, float g, float b, float a)
+	{
+		ClientUtils.spawnParticle(new ParticleColoredDust(world, x, y, z, r, g, b, a));
+	}
+
+	@Override
+	public long getWorldTime()
+	{
+		return ClientUtils.MC.world == null ? super.getWorldTime() : ClientUtils.MC.world.getTotalWorldTime();
 	}
 
 	@Nullable

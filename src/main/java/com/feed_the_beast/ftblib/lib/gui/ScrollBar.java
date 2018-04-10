@@ -101,6 +101,18 @@ public class ScrollBar extends Widget
 	}
 
 	@Override
+	public boolean mouseScrolled(int scroll)
+	{
+		if (scroll != 0 && canMouseScrollPlane() && canMouseScroll())
+		{
+			setValue(getValue() + ((scroll < 0) ? getScrollStep() : -getScrollStep()));
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
 	public void addMouseOverText(List<String> list)
 	{
 		if (showValueOnMouseOver())
@@ -152,12 +164,6 @@ public class ScrollBar extends Widget
 				}
 			}
 
-			int mouseWheel = getMouseWheel();
-			if (mouseWheel != 0 && canMouseScrollPlane() && canMouseScroll())
-			{
-				v += (mouseWheel < 0) ? getScrollStep() : -getScrollStep();
-			}
-
 			setValue(v);
 		}
 
@@ -198,7 +204,7 @@ public class ScrollBar extends Widget
 
 	public boolean canMouseScroll()
 	{
-		return isMouseOver() || (canAlwaysScroll && getGui().isMouseOver());
+		return canAlwaysScroll || isMouseOver();
 	}
 
 	public void setValue(int v)

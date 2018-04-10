@@ -1,10 +1,12 @@
 package com.feed_the_beast.ftblib.lib.util;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
@@ -18,7 +20,6 @@ public final class LangKey implements IStringSerializable
 
 	private final String key;
 	private final Class[] arguments;
-	private Style defaultStyle;
 
 	public static LangKey of(String key, Class... args)
 	{
@@ -34,7 +35,6 @@ public final class LangKey implements IStringSerializable
 	{
 		key = s;
 		arguments = a;
-		defaultStyle = null;
 
 		for (int i = 0; i < a.length; i++)
 		{
@@ -136,48 +136,17 @@ public final class LangKey implements IStringSerializable
 		return key;
 	}
 
-	public LangKey setDefaultStyle(@Nullable Style style)
-	{
-		defaultStyle = style;
-		return this;
-	}
-
-	public String translate()
-	{
-		checkArguments(CommonUtils.NO_OBJECTS);
-		return StringUtils.translate(key);
-	}
-
+	@SideOnly(Side.CLIENT)
 	public String translate(Object... o)
 	{
 		checkArguments(o);
-		return StringUtils.translate(key, o);
-	}
-
-	public ITextComponent textComponent(@Nullable ICommandSender sender)
-	{
-		checkArguments(CommonUtils.NO_OBJECTS);
-		ITextComponent component = TextComponentHelper.createComponentTranslation(sender, key, CommonUtils.NO_OBJECTS);
-
-		if (defaultStyle != null)
-		{
-			component.setStyle(defaultStyle.createShallowCopy());
-		}
-
-		return component;
+		return I18n.format(key, o);
 	}
 
 	public ITextComponent textComponent(@Nullable ICommandSender sender, Object... with)
 	{
 		checkArguments(with);
-		ITextComponent component = TextComponentHelper.createComponentTranslation(sender, key, with);
-
-		if (defaultStyle != null)
-		{
-			component.setStyle(defaultStyle.createShallowCopy());
-		}
-
-		return component;
+		return TextComponentHelper.createComponentTranslation(sender, key, with);
 	}
 
 	public void sendMessage(ICommandSender sender, Object... with)

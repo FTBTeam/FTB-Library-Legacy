@@ -517,21 +517,6 @@ public class StringUtils
 		return component;
 	}
 
-	public static String translate(String key)
-	{
-		return UtilsCommon.INSTANCE.translate(key);
-	}
-
-	public static String translate(String key, Object... objects)
-	{
-		return UtilsCommon.INSTANCE.translate(key, objects);
-	}
-
-	public static boolean canTranslate(String key)
-	{
-		return UtilsCommon.INSTANCE.canTranslate(key);
-	}
-
 	public static String fixTabs(String string, int tabSize) //FIXME
 	{
 		String with;

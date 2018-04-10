@@ -7,8 +7,8 @@ import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.resources.I18n;
 
 import java.util.List;
 
@@ -28,12 +28,12 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 
 		public ButtonConfigSidebarButton(Panel panel, SidebarButton s)
 		{
-			super(panel, StringUtils.translate(s.getLangKey()), s.getIcon());
+			super(panel, I18n.format(s.getLangKey()), s.getIcon());
 			sidebarButton = s;
 
-			if (StringUtils.canTranslate(s.getTooltipLangKey()))
+			if (I18n.hasKey(s.getTooltipLangKey()))
 			{
-				tooltip = StringUtils.translate(s.getTooltipLangKey());
+				tooltip = I18n.format(s.getTooltipLangKey());
 			}
 		}
 
@@ -64,7 +64,7 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 
 	public GuiSidebarButtonConfig()
 	{
-		setTitle(StringUtils.translate("sidebar_button"));
+		setTitle(I18n.format("sidebar_button"));
 	}
 
 	@Override

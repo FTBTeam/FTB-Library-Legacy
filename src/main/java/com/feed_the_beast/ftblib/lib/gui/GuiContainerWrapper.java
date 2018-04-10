@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 
@@ -41,17 +42,19 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	}
 
 	@Override
-	protected final void mouseClicked(int mx, int my, int b) throws IOException
+	protected final void mouseClicked(int mouseX, int mouseY, int button) throws IOException
 	{
-		wrappedGui.mousePressed(MouseButton.get(b));
-		super.mouseClicked(mx, my, b);
+		wrappedGui.updateMouseOver(mouseX, mouseY);
+		wrappedGui.mousePressed(MouseButton.get(button));
+		super.mouseClicked(mouseX, mouseY, button);
 	}
 
 	@Override
-	protected void mouseReleased(int mx, int my, int b)
+	protected void mouseReleased(int mouseX, int mouseY, int button)
 	{
-		wrappedGui.mouseReleased(MouseButton.get(b));
-		super.mouseReleased(mx, my, b);
+		wrappedGui.updateMouseOver(mouseX, mouseY);
+		wrappedGui.mouseReleased(MouseButton.get(button));
+		super.mouseReleased(mouseX, mouseY, button);
 	}
 
 	@Override
@@ -68,6 +71,18 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 		}
 
 		super.keyTyped(keyChar, key);
+	}
+
+	@Override
+	public void handleMouseInput() throws IOException
+	{
+		super.handleMouseInput();
+
+		int scroll = Mouse.getEventDWheel();
+		if (scroll != 0)
+		{
+			wrappedGui.mouseScrolled(scroll);
+		}
 	}
 
 	@Override
@@ -142,10 +157,10 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	}
 
 	@Override
-	public void drawScreen(int mx, int my, float f)
+	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
-		wrappedGui.updateGui(mx, my, f);
-		super.drawScreen(mx, my, f);
+		wrappedGui.updateGui(mouseX, mouseY);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 
 	@Override

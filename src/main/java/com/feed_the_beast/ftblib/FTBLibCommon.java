@@ -14,17 +14,20 @@ import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.data.ISyncData;
 import com.feed_the_beast.ftblib.lib.data.TeamGuiAction;
+import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.net.MessageBase;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.net.FTBLibNetHandler;
 import com.google.common.base.Preconditions;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.asm.ModAnnotation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.server.FMLServerHandler;
 
 import java.util.Collections;
 import java.util.EnumSet;
@@ -168,5 +171,19 @@ public class FTBLibCommon
 
 	public void handleClientMessage(MessageBase<?> message)
 	{
+	}
+
+	public void spawnDust(World world, double x, double y, double z, float r, float g, float b, float a)
+	{
+	}
+
+	public void spawnDust(World world, double x, double y, double z, Color4I col)
+	{
+		spawnDust(world, x, y, z, col.redf(), col.greenf(), col.bluef(), col.alphaf());
+	}
+
+	public long getWorldTime()
+	{
+		return FMLServerHandler.instance().getServer().getWorld(0).getTotalWorldTime();
 	}
 }

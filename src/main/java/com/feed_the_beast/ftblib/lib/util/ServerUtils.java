@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.mojang.authlib.GameProfile;
-import io.netty.channel.Channel;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -13,6 +12,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -149,7 +149,7 @@ public class ServerUtils
 			entity.world.getChunkFromBlockCoords(pos);
 		}
 
-		if (player != null)
+		if (player != null && player.connection != null)
 		{
 			player.connection.setPlayerLocation(pos.getX() + 0.5D, pos.getY() + 0.1D, pos.getZ() + 0.5D, player.rotationYaw, player.rotationPitch);
 			player.addExperienceLevel(0);
@@ -205,9 +205,8 @@ public class ServerUtils
 	{
 		if (sender instanceof EntityPlayerMP)
 		{
-			EntityPlayerMP playerMP = (EntityPlayerMP) sender;
-			Channel channel = playerMP.connection.netManager.channel();
-			return !channel.attr(NetworkRegistry.FML_MARKER).get();
+			NetHandlerPlayServer connection = ((EntityPlayerMP) sender).connection;
+			return connection != null && !connection.netManager.channel().attr(NetworkRegistry.FML_MARKER).get();
 		}
 
 		return false;

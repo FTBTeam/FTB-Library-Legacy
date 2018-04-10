@@ -26,6 +26,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
@@ -553,9 +554,11 @@ public class Universe implements IHasCache
 		if (!p.hideTeamNotification() && !p.hasTeam())
 		{
 			ITextComponent b1 = FTBLibLang.CLICK_HERE.textComponent(player);
+			b1.getStyle().setColor(TextFormatting.GOLD);
 			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
 			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.MY_TEAM.textComponent(player)));
 			ITextComponent b2 = FTBLibLang.CLICK_HERE.textComponent(player);
+			b2.getStyle().setColor(TextFormatting.GOLD);
 			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings " + FTBLib.MOD_ID + ".hide_team_notification toggle"));
 			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLibLang.TEAM_NOTIFICATION_HIDE.textComponent(player)));
 			FTBLibLang.TEAM_NOTIFICATION.sendMessage(player, b1, b2);
@@ -639,7 +642,7 @@ public class Universe implements IHasCache
 		if (sender instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = (EntityPlayerMP) sender;
-			if (player.connection == null)
+			if (player.connection == null || player instanceof FakePlayer)
 			{
 				fakePlayer.entityPlayer = player;
 				fakePlayer.clearCache();

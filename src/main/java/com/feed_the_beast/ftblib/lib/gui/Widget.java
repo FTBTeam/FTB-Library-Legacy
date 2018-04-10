@@ -21,11 +21,12 @@ public class Widget implements IGuiWrapper
 	protected static final int DARK = 1;
 	protected static final int SHADOW = 2;
 	protected static final int CENTERED = 4;
-	public static final int UNICODE = 8;
+	protected static final int UNICODE = 8;
 	protected static final int MOUSE_OVER = 16;
 
 	public final Panel parent;
 	public int posX, posY, width, height;
+	private boolean isMouseOver;
 
 	public Widget(Panel p)
 	{
@@ -142,7 +143,20 @@ public class Widget implements IGuiWrapper
 
 	public final boolean isMouseOver()
 	{
-		return getGui().isMouseOver(this);
+		return isMouseOver;
+	}
+
+	public void updateMouseOver(int mouseX, int mouseY)
+	{
+		if (parent != null && !parent.isMouseOver())
+		{
+			isMouseOver = false;
+			return;
+		}
+
+		int ax = getAX();
+		int ay = getAY();
+		isMouseOver = mouseX >= ax && mouseY >= ay && mouseX < ax + width && mouseY < ay + height;
 	}
 
 	public boolean shouldAddMouseOverText()
@@ -162,6 +176,11 @@ public class Widget implements IGuiWrapper
 
 	public void mouseReleased(MouseButton button)
 	{
+	}
+
+	public boolean mouseScrolled(int scroll)
+	{
+		return false;
 	}
 
 	public boolean keyPressed(int key, char keyChar)
@@ -186,16 +205,6 @@ public class Widget implements IGuiWrapper
 	public int getMouseY()
 	{
 		return parent.getMouseY();
-	}
-
-	public int getMouseWheel()
-	{
-		return parent.getMouseWheel();
-	}
-
-	public float getPartialTicks()
-	{
-		return parent.getPartialTicks();
 	}
 
 	public final boolean isMouseButtonDown(MouseButton button)

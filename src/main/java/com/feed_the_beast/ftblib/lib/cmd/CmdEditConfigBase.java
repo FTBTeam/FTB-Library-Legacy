@@ -105,7 +105,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 		if (args.length >= 2)
 		{
 			String json = String.valueOf(StringUtils.joinSpaceUntilEnd(1, args));
-			FTBLib.LOGGER.info(FTBLibLang.CONFIG_COMMAND_SETTING.translate(args[0], json));
+			FTBLib.LOGGER.info("Setting " + args[0] + " to " + json);
 
 			try
 			{

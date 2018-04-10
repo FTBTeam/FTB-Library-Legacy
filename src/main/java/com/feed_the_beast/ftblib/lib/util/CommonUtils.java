@@ -163,11 +163,6 @@ public class CommonUtils
 		return getStateFromName(name, CommonUtils.AIR_STATE);
 	}
 
-	public static long getWorldTime()
-	{
-		return UtilsCommon.INSTANCE.getWorldTime();
-	}
-
 	public static void renameTag(NBTTagCompound nbt, String oldName, String newName)
 	{
 		NBTBase tag = nbt.getTag(oldName);

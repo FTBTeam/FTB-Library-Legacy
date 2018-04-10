@@ -23,11 +23,11 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.MutableColor4I;
 import com.feed_the_beast.ftblib.lib.io.Bits;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
@@ -102,9 +102,9 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				text.append(".info");
 				String infoKey = text.toString();
 
-				if (StringUtils.canTranslate(infoKey))
+				if (I18n.hasKey(infoKey))
 				{
-					info = StringUtils.translate(infoKey);
+					info = I18n.format(infoKey);
 				}
 			}
 
@@ -165,8 +165,8 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			info = i;
 			value = e;
 			String keyLang = GuiEditConfig.this.group.getNameKey(info);
-			keyText = StringUtils.translate(keyLang);
-			String infoText = StringUtils.canTranslate(keyLang + ".tooltip") ? StringUtils.translate(keyLang + ".tooltip") : "";
+			keyText = I18n.format(keyLang);
+			String infoText = I18n.hasKey(keyLang + ".tooltip") ? I18n.format(keyLang + ".tooltip") : "";
 
 			if (!infoText.isEmpty())
 			{
@@ -311,8 +311,6 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			}
 		};
 
-		configPanel.addFlags(Panel.DEFAULTS);
-
 		List<ConfigValueInstance> list = new ArrayList<>();
 
 		for (ConfigValueInstance instance : group.getMap().values())
@@ -328,7 +326,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			list.sort((o1, o2) ->
 			{
 				int i = o1.info.group.compareToIgnoreCase(o2.info.group);
-				return i == 0 ? StringUtils.translate(group.getNameKey(o1.info)).compareToIgnoreCase(StringUtils.translate(group.getNameKey(o2.info))) : i;
+				return i == 0 ? I18n.format(group.getNameKey(o1.info)).compareToIgnoreCase(I18n.format(group.getNameKey(o2.info))) : i;
 			});
 
 			ButtonConfigGroup group = null;

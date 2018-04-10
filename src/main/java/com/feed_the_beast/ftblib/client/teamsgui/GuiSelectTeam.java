@@ -9,8 +9,8 @@ import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -99,7 +99,7 @@ public class GuiSelectTeam extends GuiButtonListBase
 
 			if (team.type == PublicTeamData.Type.REQUESTING_INVITE)
 			{
-				list.add(TextFormatting.GRAY + StringUtils.translate("ftblib.lang.team_status.requesting_invite"));
+				list.add(TextFormatting.GRAY + I18n.format("ftblib.lang.team_status.requesting_invite"));
 			}
 			else if (team.type == PublicTeamData.Type.ENEMY)
 			{

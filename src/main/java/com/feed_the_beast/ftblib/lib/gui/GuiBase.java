@@ -50,8 +50,7 @@ public abstract class GuiBase extends Panel
 	}
 
 	private final FontRenderer font;
-	private int mouseX, mouseY, mouseWheel;
-	private float partialTicks;
+	private int mouseX, mouseY;
 	private boolean refreshWidgets;
 	private ScaledResolution screen;
 	public boolean fixUnicode;
@@ -65,6 +64,8 @@ public abstract class GuiBase extends Panel
 		//noinspection ConstantConditions
 		super(null);
 		setSize(176, 166);
+		setOnlyRenderWidgetsInside(false);
+		setOnlyInteractWithWidgetsInside(false);
 		font = createFont();
 		prevScreen = ClientUtils.MC.currentScreen;
 		fontUnicode = new BooleanArrayList();
@@ -235,12 +236,10 @@ public abstract class GuiBase extends Panel
 		refreshWidgets = true;
 	}
 
-	public final void updateGui(int mx, int my, float pt)
+	public final void updateGui(int mx, int my)
 	{
-		partialTicks = pt;
 		mouseX = mx;
 		mouseY = my;
-		mouseWheel = Mouse.getDWheel();
 
 		if (refreshWidgets)
 		{
@@ -250,6 +249,8 @@ public abstract class GuiBase extends Panel
 
 		posX = getAX();
 		posY = getAY();
+
+		updateMouseOver(mouseX, mouseY);
 	}
 
 	@Override
@@ -329,18 +330,6 @@ public abstract class GuiBase extends Panel
 	public final int getMouseY()
 	{
 		return mouseY;
-	}
-
-	@Override
-	public final int getMouseWheel()
-	{
-		return mouseWheel;
-	}
-
-	@Override
-	public final float getPartialTicks()
-	{
-		return partialTicks;
 	}
 
 	public boolean isMouseOver(int x, int y, int w, int h)

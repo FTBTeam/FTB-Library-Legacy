@@ -10,9 +10,9 @@ import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.config.GuiConfig;
@@ -58,7 +58,7 @@ public class GuiClientConfig extends GuiButtonListBase
 						if (requiresMcRestart)
 						{
 							flag = false;
-							mc.displayGuiScreen(new GuiMessageDialog(parentScreen, "fml.configgui.gameRestartTitle", new TextComponentString(StringUtils.translate("fml.configgui.gameRestartRequired")), "fml.configgui.confirmRestartMessage"));
+							mc.displayGuiScreen(new GuiMessageDialog(parentScreen, "fml.configgui.gameRestartTitle", new TextComponentString(I18n.format("fml.configgui.gameRestartRequired")), "fml.configgui.confirmRestartMessage"));
 						}
 
 						if (parentScreen instanceof GuiConfig)
@@ -104,7 +104,7 @@ public class GuiClientConfig extends GuiButtonListBase
 
 	public GuiClientConfig()
 	{
-		setTitle(StringUtils.translate("sidebar_button.ftblib.settings"));
+		setTitle(I18n.format("sidebar_button.ftblib.settings"));
 	}
 
 	@Override
@@ -119,7 +119,7 @@ public class GuiClientConfig extends GuiButtonListBase
 
 		buttons.sort((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
 
-		buttons.add(0, new SimpleTextButton(panel, StringUtils.translate("sidebar_button"), Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/teams.png"))
+		buttons.add(0, new SimpleTextButton(panel, I18n.format("sidebar_button"), Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/teams.png"))
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -131,7 +131,7 @@ public class GuiClientConfig extends GuiButtonListBase
 
 		if (FTBLibClient.isModLoadedOnServer(FTBLib.MOD_ID))
 		{
-			buttons.add(0, new SimpleTextButton(panel, StringUtils.translate("player_config"), GuiIcons.SETTINGS_RED)
+			buttons.add(0, new SimpleTextButton(panel, I18n.format("player_config"), GuiIcons.SETTINGS_RED)
 			{
 				@Override
 				public void onClicked(MouseButton button)

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.util.misc;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.ICustomName;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -19,7 +18,7 @@ public enum EnumIO implements IStringSerializable, ICustomName
 	NONE("none");
 
 	public static final NameMap<EnumIO> NAME_MAP = NameMap.create(IO, values());
-	public static final LangKey ENUM_LANG_KEY = FTBLibLang.get("io");
+	public static final LangKey ENUM_LANG_KEY = LangKey.of("ftblib.io");
 
 	private final String name;
 	private final LangKey langKey;
@@ -27,7 +26,7 @@ public enum EnumIO implements IStringSerializable, ICustomName
 	EnumIO(String n)
 	{
 		name = n;
-		langKey = FTBLibLang.get("io." + name);
+		langKey = LangKey.of("ftblib.io." + name);
 	}
 
 	@Override

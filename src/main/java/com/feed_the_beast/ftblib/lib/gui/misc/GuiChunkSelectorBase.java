@@ -199,7 +199,7 @@ public class GuiChunkSelectorBase extends GuiBase
 		//GlStateManager.color(1F, 1F, 1F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.7F);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 
-		if (!Keyboard.isKeyDown(Keyboard.KEY_TAB))
+		if (!isKeyDown(Keyboard.KEY_TAB))
 		{
 			drawArea(tessellator, buffer);
 		}
