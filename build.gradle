@@ -29,11 +29,6 @@ minecraft {
 	replaceIn "${mod_reference}"
 }
 
-repositories {
-	mavenLocal()
-}
-
-
 processResources {
 	inputs.property "version", project.version
 	inputs.property "mcversion", project.minecraft.version
