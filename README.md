@@ -11,11 +11,11 @@
 
 ```groovy
 repositories {
-	maven { url "http://maven.latmod.com/" }
+	maven { url "https://maven.latmod.com/" }
 }
 
 dependencies {
-	deobfCompile "com.feed_the_beast.ftblib:FTBLib:${ftblib_version}"
+	deobfCompile "com.feed_the_beast.mods:FTBLib:${ftblib_version}"
 }
 ```
 
