@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.math;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockLog;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,6 +28,8 @@ public class MathUtils
 
 	public static final int ROTATION_X[] = {90, 270, 0, 0, 0, 0};
 	public static final int ROTATION_Y[] = {0, 0, 180, 0, 90, 270};
+
+	private static final AxisAlignedBB[] FULL_BLOCK_AABB_ROTATED_BOXES = {Block.FULL_BLOCK_AABB, Block.FULL_BLOCK_AABB, Block.FULL_BLOCK_AABB, Block.FULL_BLOCK_AABB, Block.FULL_BLOCK_AABB, Block.FULL_BLOCK_AABB};
 
 	public static boolean isNumberBetween(int num, int num1, int num2)
 	{
@@ -351,6 +354,11 @@ public class MathUtils
 
 	public static AxisAlignedBB[] getRotatedBoxes(AxisAlignedBB box)
 	{
+		if (box.equals(Block.FULL_BLOCK_AABB))
+		{
+			return FULL_BLOCK_AABB_ROTATED_BOXES;
+		}
+
 		AxisAlignedBB[] boxes = new AxisAlignedBB[6];
 
 		for (EnumFacing f : EnumFacing.VALUES)

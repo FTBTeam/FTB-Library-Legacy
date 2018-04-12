@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -108,5 +109,19 @@ public class BlockBase extends Block
 		}
 
 		return stack;
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
+	{
+		if (world.isRemote && stack.hasTagCompound() && hasTileEntity(state) && stack.getTagCompound().hasKey("BlockEntityTag"))
+		{
+			TileEntity tileEntity = world.getTileEntity(pos);
+
+			if (tileEntity != null)
+			{
+				tileEntity.handleUpdateTag(stack.getTagCompound().getCompoundTag("BlockEntityTag"));
+			}
+		}
 	}
 }
