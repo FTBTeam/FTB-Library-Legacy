@@ -25,20 +25,40 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 {
 	public enum Level
 	{
-		ALL(0),
-		OP(2);
+		ALL()
+				{
+					@Override
+					public boolean checkPermission(MinecraftServer server, ICommandSender sender, ICommand command)
+					{
+						return true;
+					}
+				},
+		OP_OR_SP()
+				{
+					@Override
+					public boolean checkPermission(MinecraftServer server, ICommandSender sender, ICommand command)
+					{
+						return !server.isDedicatedServer() || sender.canUseCommand(2, command.getName());
+					}
+				},
+		OP()
+				{
+					@Override
+					public boolean checkPermission(MinecraftServer server, ICommandSender sender, ICommand command)
+					{
+						return sender.canUseCommand(2, command.getName());
+					}
+				},
+		SERVER()
+				{
+					@Override
+					public boolean checkPermission(MinecraftServer server, ICommandSender sender, ICommand command)
+					{
+						return sender instanceof MinecraftServer;
+					}
+				};
 
-		public final int level;
-
-		Level(int l)
-		{
-			level = l;
-		}
-
-		public boolean checkPermission(ICommandSender sender, ICommand command)
-		{
-			return level <= 0 || sender.canUseCommand(level, command.getName());
-		}
+		public abstract boolean checkPermission(MinecraftServer server, ICommandSender sender, ICommand command);
 	}
 
 	protected static final List<String> LIST_TRUE_FALSE = Collections.unmodifiableList(Arrays.asList("true", "false"));
@@ -70,7 +90,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 	@Override
 	public final int getRequiredPermissionLevel()
 	{
-		return level.level;
+		return 2;
 	}
 
 	@Override
@@ -82,7 +102,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 	@Override
 	public boolean checkPermission(MinecraftServer server, ICommandSender sender)
 	{
-		return level.checkPermission(sender, this);
+		return level.checkPermission(server, sender, this);
 	}
 
 	@Override
