@@ -285,12 +285,15 @@ public abstract class GuiBase extends Panel
 	@Override
 	public boolean keyPressed(int key, char keyChar)
 	{
-		if (FTBLibConfig.debugging.gui_widget_bounds && key == Keyboard.KEY_B)
+		boolean b = super.keyPressed(key, keyChar);
+
+		if (!b && FTBLibConfig.debugging.gui_widget_bounds && key == Keyboard.KEY_B)
 		{
 			renderDebugBoxes = !renderDebugBoxes;
+			b = true;
 		}
 
-		return super.keyPressed(key, keyChar);
+		return b;
 	}
 
 	@Override
