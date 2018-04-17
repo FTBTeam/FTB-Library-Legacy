@@ -74,10 +74,7 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 		{
 			for (SidebarButton button : group.getButtons())
 			{
-				if (button.getDefaultConfig() != null)
-				{
-					panel.add(new ButtonConfigSidebarButton(panel, button));
-				}
+				panel.add(new ButtonConfigSidebarButton(panel, button));
 			}
 		}
 	}

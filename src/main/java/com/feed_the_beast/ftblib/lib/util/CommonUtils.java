@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.OtherMods;
+import com.feed_the_beast.ftblib.lib.block.BlockFlags;
 import com.google.common.base.Optional;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
@@ -12,6 +13,8 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.fml.common.Loader;
 
@@ -184,5 +187,16 @@ public class CommonUtils
 	public static NBTTagList nullIfEmpty(@Nullable NBTTagList nbt)
 	{
 		return nbt == null || nbt.hasNoTags() ? null : nbt;
+	}
+
+	public static IBlockState notifyBlockUpdate(World world, BlockPos pos, @Nullable IBlockState state)
+	{
+		if (state == null)
+		{
+			state = world.getBlockState(pos);
+		}
+
+		world.notifyBlockUpdate(pos, state, state, BlockFlags.DEFAULT | BlockFlags.RERENDER_MAIN_THREAD);
+		return state;
 	}
 }

@@ -199,21 +199,18 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 
 								group.getButtons().add(button);
 
-								if (button.getDefaultConfig() != null)
+								if (sidebarButtonConfig.has(button.id.getResourceDomain()))
 								{
-									if (sidebarButtonConfig.has(button.id.getResourceDomain()))
-									{
-										JsonElement e = sidebarButtonConfig.get(button.id.getResourceDomain());
+									JsonElement e = sidebarButtonConfig.get(button.id.getResourceDomain());
 
-										if (e.isJsonObject() && e.getAsJsonObject().has(button.id.getResourcePath()))
-										{
-											button.setConfig(e.getAsJsonObject().get(button.id.getResourcePath()).getAsBoolean());
-										}
-									}
-									else if (sidebarButtonConfig.has(button.id.toString()))
+									if (e.isJsonObject() && e.getAsJsonObject().has(button.id.getResourcePath()))
 									{
-										button.setConfig(sidebarButtonConfig.get(button.id.toString()).getAsBoolean());
+										button.setConfig(e.getAsJsonObject().get(button.id.getResourcePath()).getAsBoolean());
 									}
+								}
+								else if (sidebarButtonConfig.has(button.id.toString()))
+								{
+									button.setConfig(sidebarButtonConfig.get(button.id.toString()).getAsBoolean());
 								}
 							}
 						}
@@ -291,18 +288,15 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 		{
 			for (SidebarButton button : group.getButtons())
 			{
-				if (button.getDefaultConfig() != null)
+				JsonObject o1 = o.getAsJsonObject(button.id.getResourceDomain());
+
+				if (o1 == null)
 				{
-					JsonObject o1 = o.getAsJsonObject(button.id.getResourceDomain());
-
-					if (o1 == null)
-					{
-						o1 = new JsonObject();
-						o.add(button.id.getResourceDomain(), o1);
-					}
-
-					o1.addProperty(button.id.getResourcePath(), button.getConfig());
+					o1 = new JsonObject();
+					o.add(button.id.getResourceDomain(), o1);
 				}
+
+				o1.addProperty(button.id.getResourcePath(), button.getConfig());
 			}
 		}
 

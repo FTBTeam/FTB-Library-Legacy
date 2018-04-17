@@ -11,7 +11,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +23,7 @@ public class SidebarButton implements Comparable<SidebarButton>
 	public final SidebarButtonGroup group;
 	private Icon icon = Icon.EMPTY;
 	private int x = 0;
-	private Boolean defaultConfig = null;
+	private boolean defaultConfig = true;
 	private boolean configValue = true;
 	private final List<String> requiredServerMods = new ArrayList<>();
 	private final List<String> clickEvents = new ArrayList<>();
@@ -134,8 +133,7 @@ public class SidebarButton implements Comparable<SidebarButton>
 		return x;
 	}
 
-	@Nullable
-	public Boolean getDefaultConfig()
+	public boolean getDefaultConfig()
 	{
 		return defaultConfig;
 	}

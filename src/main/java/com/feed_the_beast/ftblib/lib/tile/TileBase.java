@@ -163,7 +163,7 @@ public abstract class TileBase extends TileEntity implements IWorldNameable
 
 			if (notifyBlock())
 			{
-				world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 255);
+				CommonUtils.notifyBlockUpdate(world, pos, getBlockState());
 			}
 
 			if (updateComparator() && getBlockType() != Blocks.AIR)
