@@ -148,15 +148,20 @@ public class Widget implements IGuiWrapper
 
 	public void updateMouseOver(int mouseX, int mouseY)
 	{
-		if (parent != null && !parent.isMouseOver())
+		if (parent == null)
+		{
+			isMouseOver = true;
+		}
+		else if (parent != null && !parent.isMouseOver())
 		{
 			isMouseOver = false;
-			return;
 		}
-
-		int ax = getAX();
-		int ay = getAY();
-		isMouseOver = mouseX >= ax && mouseY >= ay && mouseX < ax + width && mouseY < ay + height;
+		else
+		{
+			int ax = getAX();
+			int ay = getAY();
+			isMouseOver = mouseX >= ax && mouseY >= ay && mouseX < ax + width && mouseY < ay + height;
+		}
 	}
 
 	public boolean shouldAddMouseOverText()
