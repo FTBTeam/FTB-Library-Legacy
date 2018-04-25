@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib;
 
+import com.feed_the_beast.ftblib.events.RegisterAdminPanelActionsEvent;
 import com.feed_the_beast.ftblib.events.RegisterConfigValueProvidersEvent;
 import com.feed_the_beast.ftblib.events.RegisterContainerProvidersEvent;
 import com.feed_the_beast.ftblib.events.RegisterRankConfigEvent;
@@ -12,27 +13,30 @@ import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
+import com.feed_the_beast.ftblib.lib.data.Action;
 import com.feed_the_beast.ftblib.lib.data.ISyncData;
-import com.feed_the_beast.ftblib.lib.data.TeamGuiAction;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.net.MessageBase;
+import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftblib.net.FTBLibNetHandler;
 import com.google.common.base.Preconditions;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.discovery.ASMDataTable;
 import net.minecraftforge.fml.common.discovery.asm.ModAnnotation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.server.FMLServerHandler;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -47,10 +51,11 @@ public class FTBLibCommon
 	public static final Map<UUID, EditingConfig> TEMP_SERVER_CONFIG = new HashMap<>();
 	public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
 	public static final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
-	private static final Map<String, RankConfigValueInfo> RANK_CONFIGS = new HashMap<>();
-	public static final Map<String, RankConfigValueInfo> RANK_CONFIGS_MIRROR = Collections.unmodifiableMap(RANK_CONFIGS);
+	private static final Map<Node, RankConfigValueInfo> RANK_CONFIGS = new HashMap<>();
+	public static final Map<Node, RankConfigValueInfo> RANK_CONFIGS_MIRROR = Collections.unmodifiableMap(RANK_CONFIGS);
 	public static final HashSet<ResourceLocation> RELOAD_IDS = new HashSet<>();
-	public static final Map<ResourceLocation, TeamGuiAction> TEAM_GUI_ACTIONS = new HashMap<>();
+	public static final Map<ResourceLocation, Action> TEAM_GUI_ACTIONS = new LinkedHashMap<>();
+	public static final Map<ResourceLocation, Action> ADMIN_PANEL_ACTIONS = new LinkedHashMap<>();
 
 	public static class EditingConfig
 	{
@@ -153,6 +158,21 @@ public class FTBLibCommon
 		}).post();
 		new ServerReloadEvent.RegisterIds(RELOAD_IDS::add).post();
 		new RegisterTeamGuiActionsEvent(action -> TEAM_GUI_ACTIONS.put(action.getId(), action)).post();
+		new RegisterAdminPanelActionsEvent(action -> ADMIN_PANEL_ACTIONS.put(action.getId(), action)).post();
+		sortActionMap(TEAM_GUI_ACTIONS);
+		sortActionMap(ADMIN_PANEL_ACTIONS);
+	}
+
+	private void sortActionMap(Map<ResourceLocation, Action> map)
+	{
+		List<Action> actionList = new ArrayList<>(map.values());
+		actionList.sort(null);
+		map.clear();
+
+		for (Action action : actionList)
+		{
+			map.put(action.getId(), action);
+		}
 	}
 
 	public void postInit()
@@ -169,7 +189,7 @@ public class FTBLibCommon
 		}
 	}*/
 
-	public void handleClientMessage(MessageBase<?> message)
+	public void handleClientMessage(MessageToClient<?> message)
 	{
 	}
 
@@ -184,6 +204,6 @@ public class FTBLibCommon
 
 	public long getWorldTime()
 	{
-		return FMLServerHandler.instance().getServer().getWorld(0).getTotalWorldTime();
+		return FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0).getTotalWorldTime();
 	}
 }

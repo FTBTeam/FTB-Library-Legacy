@@ -7,7 +7,8 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
@@ -48,8 +49,9 @@ public class MessageEditConfig extends MessageToClient<MessageEditConfig>
 	}
 
 	@Override
-	public void onMessage(final MessageEditConfig m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		new GuiEditConfig(m.group, RX_CONFIG_TREE).openGuiLater();
+		new GuiEditConfig(group, RX_CONFIG_TREE).openGui();
 	}
 }

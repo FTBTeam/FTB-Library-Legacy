@@ -52,6 +52,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	public EntityPlayerMP entityPlayer;
 	public NBTTagCompound cachedPlayerNBT;
 	private ConfigGroup cachedConfig;
+	private GameProfile cachedProfile;
 	public long lastTimeSeen;
 	public final IConfigCallback configCallback;
 	public boolean needsSaving;
@@ -113,6 +114,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	public void clearCache()
 	{
 		cachedPlayerNBT = null;
+		cachedProfile = null;
 		dataStorage.clearCache();
 	}
 
@@ -138,7 +140,12 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 			return entityPlayer.getGameProfile();
 		}
 
-		return new GameProfile(playerId, playerName);
+		if (cachedProfile == null)
+		{
+			cachedProfile = new GameProfile(playerId, playerName);
+		}
+
+		return cachedProfile;
 	}
 
 	public final UUID getId()

@@ -470,28 +470,6 @@ public class StringUtils
 		return map;
 	}
 
-	public static boolean nodesMatch(String[] node, String[] with)
-	{
-		if (with.length > node.length)
-		{
-			return false;
-		}
-
-		for (int i = 0; i < with.length; i++)
-		{
-			if (with[i].equals("*"))
-			{
-				return true;
-			}
-			else if (!with[i].equals(node[i]))
-			{
-				return false;
-			}
-		}
-
-		return false;
-	}
-
 	@SuppressWarnings("ConstantConditions")
 	public static ITextComponent color(ITextComponent component, @Nullable TextFormatting color)
 	{

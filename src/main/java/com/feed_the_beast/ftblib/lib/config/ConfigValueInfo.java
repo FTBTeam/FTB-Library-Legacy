@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 
 /**
  * @author LatvianModder
@@ -17,7 +18,7 @@ public class ConfigValueInfo
 	public static final int CANT_EDIT = 16;
 	public static final int USE_SCROLL_BAR = 32;
 
-	public final String id;
+	public final Node id;
 	public String group;
 	public ConfigValue defaultValue;
 	public String displayName;
@@ -42,7 +43,7 @@ public class ConfigValueInfo
 	 */
 	public boolean useScrollBar;
 
-	public ConfigValueInfo(String _id)
+	public ConfigValueInfo(Node _id)
 	{
 		id = _id;
 		setDefaults();
@@ -50,7 +51,7 @@ public class ConfigValueInfo
 
 	public ConfigValueInfo(String _group, String _id, ConfigValue _defaultValue)
 	{
-		id = _group.isEmpty() ? _id : (_group + "." + _id);
+		id = Node.get(_group.isEmpty() ? _id : (_group + "." + _id));
 		setDefaults();
 		group = _group;
 		defaultValue = _defaultValue.copy();

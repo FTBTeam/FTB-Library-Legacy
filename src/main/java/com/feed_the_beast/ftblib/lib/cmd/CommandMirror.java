@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.cmd;
 
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -77,7 +78,7 @@ public class CommandMirror extends CommandBase implements ICommandWithCustomPerm
 	}
 
 	@Override
-	public String getCustomPermissionNode()
+	public Node getCustomPermissionNode()
 	{
 		return ICommandWithCustomPermission.getPermissionNode(mirrored);
 	}

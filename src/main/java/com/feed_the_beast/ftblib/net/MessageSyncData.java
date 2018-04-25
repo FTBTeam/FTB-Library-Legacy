@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.client.FTBLibClient;
 import com.feed_the_beast.ftblib.events.SyncGamerulesEvent;
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ISyncData;
 import com.feed_the_beast.ftblib.lib.io.Bits;
@@ -13,9 +14,10 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -83,28 +85,29 @@ public class MessageSyncData extends MessageToClient<MessageSyncData>
 	}
 
 	@Override
-	public void onMessage(MessageSyncData m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		FTBLibClient.UNIVERSE_UUID = m.universeId;
+		FTBLibClient.UNIVERSE_UUID = universeId;
 		FTBLibClient.OPTIONAL_SERVER_MODS_CLIENT.clear();
-		FTBLibClient.OPTIONAL_SERVER_MODS_CLIENT.addAll(m.optionalServerMods);
+		FTBLibClient.OPTIONAL_SERVER_MODS_CLIENT.addAll(optionalServerMods);
 
-		for (String key : m.syncData.getKeySet())
+		for (String key : syncData.getKeySet())
 		{
 			ISyncData nbt = FTBLibCommon.SYNCED_DATA.get(key);
 
 			if (nbt != null)
 			{
-				nbt.readSyncData(m.syncData.getCompoundTag(key));
+				nbt.readSyncData(syncData.getCompoundTag(key));
 			}
 		}
 
-		for (Map.Entry<String, String> entry : m.gamerules.entrySet())
+		for (Map.Entry<String, String> entry : gamerules.entrySet())
 		{
-			player.world.getGameRules().setOrCreateGameRule(entry.getKey(), entry.getValue());
+			ClientUtils.MC.world.getGameRules().setOrCreateGameRule(entry.getKey(), entry.getValue());
 		}
 
-		if (FTBLibConfig.debugging.print_more_info && Bits.getFlag(m.flags, LOGIN))
+		if (FTBLibConfig.debugging.print_more_info && Bits.getFlag(flags, LOGIN))
 		{
 			FTBLib.LOGGER.info("Synced data from universe " + StringUtils.fromUUID(FTBLibClient.UNIVERSE_UUID));
 		}

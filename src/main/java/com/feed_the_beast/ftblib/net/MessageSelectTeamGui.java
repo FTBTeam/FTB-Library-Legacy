@@ -9,7 +9,8 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -74,8 +75,9 @@ public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
 	}
 
 	@Override
-	public void onMessage(MessageSelectTeamGui m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		new GuiSelectTeam(m.teams, m.canCreate).openGuiLater();
+		new GuiSelectTeam(teams, canCreate).openGui();
 	}
 }

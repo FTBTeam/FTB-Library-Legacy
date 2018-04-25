@@ -14,7 +14,6 @@ import javax.annotation.Nullable;
 public class CmdTreeBase extends CommandTreeBase implements ICommandWithParent
 {
 	private final String name;
-	private int level = 4;
 	private ICommand parent;
 
 	public CmdTreeBase(String n)
@@ -31,11 +30,6 @@ public class CmdTreeBase extends CommandTreeBase implements ICommandWithParent
 		{
 			((ICommandWithParent) command).setParent(this);
 		}
-
-		if (command instanceof CommandBase)
-		{
-			level = Math.min(level, ((CommandBase) command).getRequiredPermissionLevel());
-		}
 	}
 
 	@Override
@@ -47,6 +41,16 @@ public class CmdTreeBase extends CommandTreeBase implements ICommandWithParent
 	@Override
 	public final int getRequiredPermissionLevel()
 	{
+		int level = 0;
+
+		for (ICommand command : getSubCommands())
+		{
+			if (command instanceof CommandBase)
+			{
+				level = Math.max(level, ((CommandBase) command).getRequiredPermissionLevel());
+			}
+		}
+
 		return level;
 	}
 
@@ -59,7 +63,15 @@ public class CmdTreeBase extends CommandTreeBase implements ICommandWithParent
 	@Override
 	public final boolean checkPermission(MinecraftServer server, ICommandSender sender)
 	{
-		return level <= 0 || sender.canUseCommand(level, getName());
+		for (ICommand command : getSubCommands())
+		{
+			if (command.checkPermission(server, sender))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override

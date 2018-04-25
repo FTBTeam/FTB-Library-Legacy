@@ -21,7 +21,7 @@ public class FTBLibTeamGuiActions
 	private static final Predicate<EnumTeamStatus> ALLIES_PREDICATE = MEMBERS_PREDICATE.negate().and(NO_ENEMIES_PREDICATE);
 	private static final Predicate<EnumTeamStatus> ENEMIES_PREDICATE = status -> status == EnumTeamStatus.ENEMY || status == EnumTeamStatus.NONE;
 
-	public static final TeamGuiAction CONFIG = new TeamGuiAction(new ResourceLocation(FTBLib.MOD_ID, "config"), GuiLang.SETTINGS.textComponent(null), GuiIcons.SETTINGS, -100)
+	public static final Action CONFIG = new Action(new ResourceLocation(FTBLib.MOD_ID, "config"), GuiLang.SETTINGS.textComponent(null), GuiIcons.SETTINGS, -100)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -36,7 +36,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction INFO = new TeamGuiAction(new ResourceLocation(FTBLib.MOD_ID, "info"), GuiLang.INFO.textComponent(null), GuiIcons.INFO, 0)
+	public static final Action INFO = new Action(new ResourceLocation(FTBLib.MOD_ID, "info"), GuiLang.INFO.textComponent(null), GuiIcons.INFO, 0)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -51,7 +51,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction MEMBERS = new TeamGuiAction(new ResourceLocation(FTBLib.MOD_ID, "members"), FTBLibLang.TEAM_GUI_MEMBERS.textComponent(null), GuiIcons.FRIENDS, 30)
+	public static final Action MEMBERS = new Action(new ResourceLocation(FTBLib.MOD_ID, "members"), FTBLibLang.TEAM_GUI_MEMBERS.textComponent(null), GuiIcons.FRIENDS, 30)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -123,7 +123,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction ALLIES = new TeamGuiAction(new ResourceLocation(FTBLib.MOD_ID, "allies"), FTBLibLang.TEAM_GUI_ALLIES.textComponent(null), GuiIcons.STAR, 40)
+	public static final Action ALLIES = new Action(new ResourceLocation(FTBLib.MOD_ID, "allies"), FTBLibLang.TEAM_GUI_ALLIES.textComponent(null), GuiIcons.STAR, 40)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -148,7 +148,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction MODERATORS = new TeamGuiAction(new ResourceLocation(FTBLib.MOD_ID, "moderators"), FTBLibLang.TEAM_GUI_MODS.textComponent(null), GuiIcons.SHIELD, 50)
+	public static final Action MODERATORS = new Action(new ResourceLocation(FTBLib.MOD_ID, "moderators"), FTBLibLang.TEAM_GUI_MODS.textComponent(null), GuiIcons.SHIELD, 50)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -174,7 +174,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction ENEMIES = new TeamGuiAction(new ResourceLocation(FTBLib.MOD_ID, "enemies"), FTBLibLang.TEAM_GUI_ENEMIES.textComponent(null), GuiIcons.CLOSE, 60)
+	public static final Action ENEMIES = new Action(new ResourceLocation(FTBLib.MOD_ID, "enemies"), FTBLibLang.TEAM_GUI_ENEMIES.textComponent(null), GuiIcons.CLOSE, 60)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -199,7 +199,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final TeamGuiAction LEAVE = new TeamGuiAction(new ResourceLocation(FTBLib.MOD_ID, "leave"), FTBLibLang.TEAM_GUI_LEAVE.textComponent(null), GuiIcons.REMOVE, 10000)
+	public static final Action LEAVE = new Action(new ResourceLocation(FTBLib.MOD_ID, "leave"), FTBLibLang.TEAM_GUI_LEAVE.textComponent(null), GuiIcons.REMOVE, 10000)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -215,7 +215,7 @@ public class FTBLibTeamGuiActions
 		}
 	}.setRequiresConfirm();
 
-	public static final TeamGuiAction TRANSFER_OWNERSHIP = new TeamGuiAction(new ResourceLocation(FTBLib.MOD_ID, "transfer_ownership"), FTBLibLang.TEAM_GUI_TRANSFER_OWNERSHIP.textComponent(null), GuiIcons.RIGHT, 10000)
+	public static final Action TRANSFER_OWNERSHIP = new Action(new ResourceLocation(FTBLib.MOD_ID, "transfer_ownership"), FTBLibLang.TEAM_GUI_TRANSFER_OWNERSHIP.textComponent(null), GuiIcons.RIGHT, 10000)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)

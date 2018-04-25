@@ -8,7 +8,6 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -62,18 +61,18 @@ public class MessageOpenGui extends MessageToClient<MessageOpenGui>
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void onMessage(MessageOpenGui m, EntityPlayer player)
+	public void onMessage()
 	{
-		IGuiProvider guiProvider = FTBLibClient.getGui(m.guiId);
+		IGuiProvider guiProvider = FTBLibClient.getGui(guiId);
 
-		if (guiProvider != null && player.world.isBlockLoaded(m.pos))
+		if (guiProvider != null && ClientUtils.MC.world.isBlockLoaded(pos))
 		{
-			GuiScreen g = guiProvider.getGui(player, m.pos, m.nbt);
+			GuiScreen g = guiProvider.getGui(ClientUtils.MC.player, pos, nbt);
 
 			if (g != null)
 			{
 				ClientUtils.MC.displayGuiScreen(g);
-				player.openContainer.windowId = m.windowId;
+				ClientUtils.MC.player.openContainer.windowId = windowId;
 			}
 		}
 	}

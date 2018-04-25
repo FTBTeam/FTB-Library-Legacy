@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.client.teamsgui;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.data.Action;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
@@ -8,7 +9,6 @@ import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.net.MessageMyTeamAction;
-import com.feed_the_beast.ftblib.net.MessageMyTeamGui;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -22,9 +22,9 @@ public class GuiMyTeam extends GuiButtonListBase
 {
 	private static class TeamActionButton extends SimpleTextButton
 	{
-		private final MessageMyTeamGui.Action action;
+		private final Action.Inst action;
 
-		private TeamActionButton(Panel panel, MessageMyTeamGui.Action a)
+		private TeamActionButton(Panel panel, Action.Inst a)
 		{
 			super(panel, a.title.getFormattedText(), a.icon);
 			action = a;
@@ -66,9 +66,9 @@ public class GuiMyTeam extends GuiButtonListBase
 		}
 	}
 
-	private Collection<MessageMyTeamGui.Action> actions;
+	private Collection<Action.Inst> actions;
 
-	public GuiMyTeam(ITextComponent t, Collection<MessageMyTeamGui.Action> l)
+	public GuiMyTeam(ITextComponent t, Collection<Action.Inst> l)
 	{
 		setTitle(t.getFormattedText());
 		actions = l;
@@ -77,7 +77,7 @@ public class GuiMyTeam extends GuiButtonListBase
 	@Override
 	public void addButtons(Panel panel)
 	{
-		for (MessageMyTeamGui.Action action : actions)
+		for (Action.Inst action : actions)
 		{
 			panel.add(new TeamActionButton(panel, action));
 		}

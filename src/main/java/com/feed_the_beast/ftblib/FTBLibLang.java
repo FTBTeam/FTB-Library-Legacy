@@ -12,6 +12,7 @@ public interface FTBLibLang
 	LangKey EXAMPLE = LangKey.of("example");
 	LangKey CLICK_HERE = LangKey.of("click_here");
 	LangKey FEATURE_DISABLED = LangKey.of("feature_disabled");
+	LangKey FEATURE_DISABLED_SERVER = LangKey.of("feature_disabled_server");
 	LangKey ERROR = LangKey.of("error", String.class);
 	LangKey OWNER = LangKey.of("owner", String.class);
 	LangKey DELETE_ITEM = LangKey.of("delete_item", String.class);

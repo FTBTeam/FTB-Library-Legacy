@@ -12,7 +12,7 @@ import com.feed_the_beast.ftblib.lib.cmd.CommandMirror;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
-import com.feed_the_beast.ftblib.lib.net.MessageBase;
+import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
@@ -37,7 +37,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 /**
  * @author LatvianModder
@@ -49,30 +48,6 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 	public static final Map<String, ClientConfig> CLIENT_CONFIG_MAP = new HashMap<>();
 	public static final Collection<String> OPTIONAL_SERVER_MODS_CLIENT = new HashSet<>();
 	public static UUID UNIVERSE_UUID = null;
-
-	private static class MessageTask implements Callable<Object>
-	{
-		private final MessageBase<?> message;
-
-		private MessageTask(MessageBase<?> m)
-		{
-			message = m;
-		}
-
-		@Override
-		@Nullable
-		public Object call()
-		{
-			message.onMessage(CommonUtils.cast(message), ClientUtils.MC.player);
-
-			if (FTBLibConfig.debugging.log_network)
-			{
-				FTBLib.LOGGER.info("Net RX: " + message.getClass().getName());
-			}
-
-			return null;
-		}
-	}
 
 	@Override
 	public void preInit(FMLPreInitializationEvent event)
@@ -257,9 +232,14 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 	}
 
 	@Override
-	public void handleClientMessage(MessageBase<?> message)
+	public void handleClientMessage(MessageToClient<?> message)
 	{
-		ClientUtils.MC.addScheduledTask(new MessageTask(message));
+		if (FTBLibConfig.debugging.log_network)
+		{
+			FTBLib.LOGGER.info("Net RX: " + message.getClass().getName());
+		}
+
+		message.onMessage();
 	}
 
 	@Override

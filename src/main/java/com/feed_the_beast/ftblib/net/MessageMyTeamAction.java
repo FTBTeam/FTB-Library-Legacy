@@ -1,14 +1,14 @@
 package com.feed_the_beast.ftblib.net;
 
 import com.feed_the_beast.ftblib.FTBLibCommon;
+import com.feed_the_beast.ftblib.lib.data.Action;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.TeamGuiAction;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
@@ -51,17 +51,17 @@ public class MessageMyTeamAction extends MessageToServer<MessageMyTeamAction>
 	}
 
 	@Override
-	public void onMessage(MessageMyTeamAction m, EntityPlayer player)
+	public void onMessage(EntityPlayerMP player)
 	{
-		TeamGuiAction action = FTBLibCommon.TEAM_GUI_ACTIONS.get(m.action);
+		Action a = FTBLibCommon.TEAM_GUI_ACTIONS.get(action);
 
-		if (action != null)
+		if (a != null)
 		{
 			ForgePlayer p = Universe.get().getPlayer(player);
 
-			if (p.hasTeam() && action.getType(p, m.nbt) == TeamGuiAction.Type.ENABLED)
+			if (p.hasTeam() && a.getType(p, nbt).isEnabled())
 			{
-				action.onAction(p, m.nbt);
+				a.onAction(p, nbt);
 			}
 		}
 	}

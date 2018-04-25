@@ -12,5 +12,11 @@
 		"icon": "ftblib:icons/settings",
 		"x": 100,
 		"click": "command:/ftbc client_config"
+	},
+	"admin_panel": {
+		"group": "ftblib:info",
+		"icon": "ftblib:icons/settings_red",
+		"x": 110,
+		"click": "command:/ftb admin_panel"
 	}
 }

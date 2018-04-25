@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.cmd;
 
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import net.minecraft.command.ICommand;
 
 /**
@@ -7,15 +8,15 @@ import net.minecraft.command.ICommand;
  */
 public interface ICommandWithCustomPermission extends ICommand
 {
-	String getCustomPermissionNode();
+	Node getCustomPermissionNode();
 
-	static String getPermissionNode(ICommand command)
+	static Node getPermissionNode(ICommand command)
 	{
 		if (command instanceof ICommandWithCustomPermission)
 		{
 			return ((ICommandWithCustomPermission) command).getCustomPermissionNode();
 		}
 
-		return "command." + ICommandWithParent.getFullPath(command);
+		return Node.COMMAND.append(ICommandWithParent.getFullPath(command));
 	}
 }

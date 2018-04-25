@@ -26,8 +26,8 @@ import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.server.FMLServerHandler;
 import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
@@ -212,15 +212,19 @@ public class ServerUtils
 		return false;
 	}
 
-	public static boolean isOP(@Nullable MinecraftServer server, GameProfile p)
+	public static boolean isOP(@Nullable MinecraftServer server, GameProfile profile)
 	{
 		if (server == null)
 		{
-			//Does this even work?
-			server = FMLServerHandler.instance().getServer();
+			server = FMLCommonHandler.instance().getMinecraftServerInstance();
+
+			if (server == null)
+			{
+				return false;
+			}
 		}
 
-		return server.getPlayerList().canSendCommands(p);
+		return server.getPlayerList().canSendCommands(profile);
 	}
 
 	public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)

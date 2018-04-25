@@ -6,7 +6,7 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 /**
  * @author LatvianModder
@@ -43,14 +43,14 @@ public class MessageEditConfigResponse extends MessageToServer<MessageEditConfig
 	}
 
 	@Override
-	public void onMessage(MessageEditConfigResponse m, EntityPlayer player)
+	public void onMessage(EntityPlayerMP player)
 	{
 		FTBLibCommon.EditingConfig c = FTBLibCommon.TEMP_SERVER_CONFIG.get(player.getGameProfile().getId());
 		//TODO: Logger
 
 		if (c != null)
 		{
-			c.callback.saveConfig(c.group, player, m.groupData);
+			c.callback.saveConfig(c.group, player, groupData);
 			FTBLibCommon.TEMP_SERVER_CONFIG.remove(player.getUniqueID());
 		}
 	}

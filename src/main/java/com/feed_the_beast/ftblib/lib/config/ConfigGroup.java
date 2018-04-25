@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.IJsonSerializable;
@@ -22,7 +23,7 @@ public final class ConfigGroup implements IJsonSerializable
 {
 	private ITextComponent title;
 	private String supergroup = "";
-	private final Map<String, ConfigValueInstance> map;
+	private final Map<Node, ConfigValueInstance> map;
 	private final Map<String, ITextComponent> groupNames;
 	public Consumer<ConfigGroup> readCallback = null;
 
@@ -69,7 +70,7 @@ public final class ConfigGroup implements IJsonSerializable
 
 	public String getNameKey(ConfigValueInfo info)
 	{
-		return info.displayName.isEmpty() ? (supergroup.isEmpty() ? info.id : (supergroup + "." + info.id)) : info.displayName;
+		return info.displayName.isEmpty() ? (supergroup.isEmpty() ? info.id.toString() : (supergroup + "." + info.id)) : info.displayName;
 	}
 
 	public ConfigValueInfo add(ConfigValueInfo info, ConfigValue value)
@@ -104,7 +105,7 @@ public final class ConfigGroup implements IJsonSerializable
 		return map.isEmpty();
 	}
 
-	public final Map<String, ConfigValueInstance> getMap()
+	public final Map<Node, ConfigValueInstance> getMap()
 	{
 		return map;
 	}
@@ -130,7 +131,7 @@ public final class ConfigGroup implements IJsonSerializable
 
 		for (ConfigValueInstance instance : map.values())
 		{
-			net.writeString(instance.info.id);
+			net.writeString(instance.info.id.toString());
 			instance.info.writeData(net);
 			net.writeString(instance.value.getName());
 			instance.value.writeData(net);
@@ -155,7 +156,7 @@ public final class ConfigGroup implements IJsonSerializable
 
 		while (--s >= 0)
 		{
-			ConfigValueInfo info = new ConfigValueInfo(net.readString());
+			ConfigValueInfo info = new ConfigValueInfo(Node.get(net.readString()));
 			info.readData(net);
 			ConfigValue value = FTBLibAPI.getConfigValueFromId(net.readString());
 			value.readData(net);
@@ -181,7 +182,7 @@ public final class ConfigGroup implements IJsonSerializable
 		{
 			if (!instance.info.excluded)
 			{
-				JsonElement e = o.get(instance.info.id);
+				JsonElement e = o.get(instance.info.id.toString());
 
 				if (e != null)
 				{
@@ -200,7 +201,7 @@ public final class ConfigGroup implements IJsonSerializable
 		{
 			if (!instance.info.excluded)
 			{
-				o.add(instance.info.id, instance.value.getSerializableElement());
+				o.add(instance.info.id.toString(), instance.value.getSerializableElement());
 			}
 		}
 

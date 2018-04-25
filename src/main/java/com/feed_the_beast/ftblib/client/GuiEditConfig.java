@@ -24,6 +24,7 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.MutableColor4I;
 import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
@@ -437,9 +438,9 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	}
 
 	@Override
-	public void onChanged(String key, JsonElement val)
+	public void onChanged(Node key, JsonElement val)
 	{
-		modifiedConfig.add(key, val);
+		modifiedConfig.add(key.toString(), val);
 	}
 
 	@Override

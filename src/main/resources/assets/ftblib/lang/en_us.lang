@@ -56,6 +56,7 @@ deprecated=This method is deprecated, please use %s
 example=Example:
 click_here=[Click Here]
 feature_disabled=This feature is disabled!
+feature_disabled_server=This feature is disabled on server!
 error=Error: %s
 owner=Owner: %s
 delete_item=Do you want to delete '%s'?
@@ -182,6 +183,7 @@ sidebar_button.ftblib.my_team.tooltip=Opens a GUI where you can manage your team
 sidebar_button.ftblib.settings=Client Settings
 sidebar_button.ftblib.settings.tooltip=Edit client-side-only settings
 sidebar_button.ftblib.notifications=Notifications
+sidebar_button.ftblib.admin_panel=Admin Panel
 
 # Privacy Level
 ftblib.privacy=Privacy

@@ -377,11 +377,40 @@ public class MathUtils
 		return ax1 < bx2 && ax2 > bx1 && ay1 < by2 && ay2 > by1;
 	}
 
+	private static final int CACHED_SPIRAL_POINTS_SIZE = 9 * 9;
+	private static ChunkPos[] CACHED_SPIRAL_POINTS = null;
+
 	public static ChunkPos getSpiralPoint(int index)
 	{
-		int x = 0, z = 0, p = 1, ringIndex = 0;
+		if (index < 0)
+		{
+			index = 0;
+		}
 
-		int s = (int) (Math.ceil(Math.sqrt(index)) + ((Math.ceil(Math.sqrt(index)) % 2 + 1) % 2));
+		if (index < CACHED_SPIRAL_POINTS_SIZE)
+		{
+			if (CACHED_SPIRAL_POINTS == null)
+			{
+				CACHED_SPIRAL_POINTS = new ChunkPos[CACHED_SPIRAL_POINTS_SIZE];
+
+				for (int i = 0; i < CACHED_SPIRAL_POINTS_SIZE; i++)
+				{
+					CACHED_SPIRAL_POINTS[i] = getSpiralPoint0(i);
+				}
+			}
+
+			return CACHED_SPIRAL_POINTS[index];
+		}
+
+		return getSpiralPoint0(index);
+	}
+
+	public static ChunkPos getSpiralPoint0(int index)
+	{
+		int x = 0, z = 0, p = 1, ringIndex = 0;
+		double sqrtceil = Math.ceil(Math.sqrt(index));
+		int s = (int) (sqrtceil + ((sqrtceil % 2 + 1) % 2));
+
 		if (s > 1)
 		{
 			ringIndex = index - (s - 2) * (s - 2);

@@ -12,8 +12,9 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,7 +26,7 @@ import java.util.function.Predicate;
  */
 public class MessageMyTeamPlayerList extends MessageToClient<MessageMyTeamPlayerList>
 {
-	public static class Entry
+	public static class Entry implements Comparable<Entry>
 	{
 		private static final DataOut.Serializer<Entry> SERIALIZER = (data, object) -> object.writeData(data);
 		private static final DataIn.Deserializer<Entry> DESERIALIZER = Entry::new;
@@ -62,6 +63,14 @@ public class MessageMyTeamPlayerList extends MessageToClient<MessageMyTeamPlayer
 		public int getSortIndex()
 		{
 			return requestingInvite ? 1000 : Math.max(status.getStatus(), status == EnumTeamStatus.ENEMY ? 1 : 0);
+		}
+
+		@Override
+		public int compareTo(Entry o)
+		{
+			int o1s = getSortIndex();
+			int o2s = o.getSortIndex();
+			return o1s == o2s ? name.compareToIgnoreCase(o.name) : o2s - o1s;
 		}
 	}
 
@@ -112,27 +121,28 @@ public class MessageMyTeamPlayerList extends MessageToClient<MessageMyTeamPlayer
 	}
 
 	@Override
-	public void onMessage(MessageMyTeamPlayerList m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
-		if (m.id.equals(FTBLibTeamGuiActions.MEMBERS.getId()))
+		if (id.equals(FTBLibTeamGuiActions.MEMBERS.getId()))
 		{
-			new GuiManageMembers(m.entries).openGuiLater();
+			new GuiManageMembers(entries).openGui();
 		}
-		else if (m.id.equals(FTBLibTeamGuiActions.ALLIES.getId()))
+		else if (id.equals(FTBLibTeamGuiActions.ALLIES.getId()))
 		{
-			new GuiManageAllies(m.entries).openGuiLater();
+			new GuiManageAllies(entries).openGui();
 		}
-		else if (m.id.equals(FTBLibTeamGuiActions.MODERATORS.getId()))
+		else if (id.equals(FTBLibTeamGuiActions.MODERATORS.getId()))
 		{
-			new GuiManageModerators(m.entries).openGuiLater();
+			new GuiManageModerators(entries).openGui();
 		}
-		else if (m.id.equals(FTBLibTeamGuiActions.ENEMIES.getId()))
+		else if (id.equals(FTBLibTeamGuiActions.ENEMIES.getId()))
 		{
-			new GuiManageEnemies(m.entries).openGuiLater();
+			new GuiManageEnemies(entries).openGui();
 		}
-		else if (m.id.equals(FTBLibTeamGuiActions.TRANSFER_OWNERSHIP.getId()))
+		else if (id.equals(FTBLibTeamGuiActions.TRANSFER_OWNERSHIP.getId()))
 		{
-			new GuiTransferOwnership(m.entries).openGuiLater();
+			new GuiTransferOwnership(entries).openGui();
 		}
 	}
 }

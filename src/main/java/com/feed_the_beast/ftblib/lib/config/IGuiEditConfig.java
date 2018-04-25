@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.config;
 
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.google.gson.JsonElement;
 
 /**
@@ -7,7 +8,7 @@ import com.google.gson.JsonElement;
  */
 public interface IGuiEditConfig
 {
-	void onChanged(String key, JsonElement json);
+	void onChanged(Node key, JsonElement json);
 
 	void openGui();
 }

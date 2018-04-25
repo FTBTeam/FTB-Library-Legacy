@@ -11,7 +11,6 @@ import com.feed_the_beast.ftblib.net.MessageMyTeamPlayerList;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.function.BiFunction;
 
@@ -20,13 +19,6 @@ import java.util.function.BiFunction;
  */
 public class GuiManagePlayersBase extends GuiButtonListBase
 {
-	static final Comparator<MessageMyTeamPlayerList.Entry> COMPARATOR = (o1, o2) ->
-	{
-		int o1s = o1.getSortIndex();
-		int o2s = o2.getSortIndex();
-		return o1s == o2s ? o1.name.compareToIgnoreCase(o2.name) : o2s - o1s;
-	};
-
 	static class ButtonPlayerBase extends SimpleTextButton
 	{
 		final MessageMyTeamPlayerList.Entry entry;
@@ -79,7 +71,7 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 	@Override
 	public void addButtons(Panel panel)
 	{
-		entries.sort(COMPARATOR);
+		entries.sort(null);
 
 		for (MessageMyTeamPlayerList.Entry m : entries)
 		{

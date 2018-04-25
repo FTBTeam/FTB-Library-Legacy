@@ -28,7 +28,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -676,7 +675,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	{
 		for (ForgePlayer player : getPlayersWithStatus(status))
 		{
-			if (PermissionAPI.hasPermission(player.getProfile(), permission, null))
+			if (player.hasPermission(permission))
 			{
 				return true;
 			}

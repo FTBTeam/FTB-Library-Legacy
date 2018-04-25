@@ -5,7 +5,8 @@ import com.feed_the_beast.ftblib.lib.gui.IGuiWrapper;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import net.minecraft.client.gui.GuiChat;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
@@ -25,7 +26,8 @@ public class MessageCloseGui extends MessageToClient<MessageCloseGui>
 	}
 
 	@Override
-	public void onMessage(MessageCloseGui m, EntityPlayer player)
+	@SideOnly(Side.CLIENT)
+	public void onMessage()
 	{
 		if (ClientUtils.MC.currentScreen instanceof IGuiWrapper)
 		{
