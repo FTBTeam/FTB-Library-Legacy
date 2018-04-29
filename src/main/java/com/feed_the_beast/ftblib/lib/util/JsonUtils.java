@@ -52,10 +52,17 @@ import java.util.Map;
 public class JsonUtils
 {
 	public static final JsonParser PARSER = new JsonParser();
+	public static final JsonPrimitive JSON_TRUE = new JsonPrimitive(true);
+	public static final JsonPrimitive JSON_FALSE = new JsonPrimitive(false);
 
 	public static boolean isNull(@Nullable JsonElement element)
 	{
 		return element == null || element == JsonNull.INSTANCE || element.isJsonNull();
+	}
+
+	public static JsonElement nonnull(@Nullable JsonElement json)
+	{
+		return isNull(json) ? JsonNull.INSTANCE : json;
 	}
 
 	public static void toJson(Writer writer, @Nullable JsonElement element, boolean prettyPrinting)

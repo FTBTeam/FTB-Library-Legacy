@@ -93,6 +93,7 @@ ftblib.teams.autocreate_sp=Autocreate on Singleplayer
 ftblib.teams.autocreate_mp=Autocreate on Multiplayer
 
 ftblib.debugging=Debugging
+ftblib.debugging.special_commands=Special Commands
 ftblib.debugging.print_more_info=Print More Info
 ftblib.debugging.print_more_errors=Print More Errors
 ftblib.debugging.log_network=Log Network IO

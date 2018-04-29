@@ -1,11 +1,11 @@
-package com.feed_the_beast.ftblib.cmd.team;
+package com.feed_the_beast.ftblib.commands.team;
 
 import com.feed_the_beast.ftblib.FTBLibGameRules;
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.net.MessageMyTeamGui;
+import com.feed_the_beast.ftblib.net.MessageMyTeamGuiResponse;
 import com.feed_the_beast.ftblib.net.MessageSelectTeamGui;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -30,11 +30,11 @@ public class CmdGui extends CmdBase
 		if (!FTBLibGameRules.canCreateTeam(world) && !FTBLibGameRules.canJoinTeam(world))
 		{
 			FTBLibAPI.sendCloseGuiPacket(getCommandSenderAsPlayer(sender));
-			throw FTBLibLang.FEATURE_DISABLED.commandError();
+			throw FTBLibLang.FEATURE_DISABLED_SERVER.commandError();
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 		ForgePlayer p = getForgePlayer(player);
-		(p.hasTeam() ? new MessageMyTeamGui(p) : new MessageSelectTeamGui(p, FTBLibGameRules.canCreateTeam(world))).sendTo(player);
+		(p.hasTeam() ? new MessageMyTeamGuiResponse(p) : new MessageSelectTeamGui(p, FTBLibGameRules.canCreateTeam(world))).sendTo(player);
 	}
 }

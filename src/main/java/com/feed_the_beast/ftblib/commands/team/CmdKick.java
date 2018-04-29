@@ -1,7 +1,6 @@
-package com.feed_the_beast.ftblib.cmd.team;
+package com.feed_the_beast.ftblib.commands.team;
 
 import com.feed_the_beast.ftblib.FTBLibLang;
-import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import net.minecraft.command.CommandException;
@@ -11,11 +10,11 @@ import net.minecraft.server.MinecraftServer;
 /**
  * @author LatvianModder
  */
-public class CmdTransferOwnership extends CmdBase
+public class CmdKick extends CmdBase
 {
-	public CmdTransferOwnership()
+	public CmdKick()
 	{
-		super("transfer_ownership", Level.ALL);
+		super("kick", Level.ALL);
 	}
 
 	@Override
@@ -33,20 +32,26 @@ public class CmdTransferOwnership extends CmdBase
 		{
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
-		else if (!p.team.isOwner(p))
+		else if (!p.team.isModerator(p))
 		{
-			throw FTBLibLang.TEAM_NOT_OWNER.commandError();
+			throw FTBLibLang.COMMAND_PERMISSION.commandError();
 		}
 
 		checkArgs(sender, args, 1);
 
 		ForgePlayer p1 = getForgePlayer(sender, args[0]);
 
-		if (!p.team.equalsTeam(p1.team))
+		if (!p.team.isMember(p1))
 		{
 			throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p1.getName());
 		}
-
-		p.team.setStatus(p1, EnumTeamStatus.OWNER);
+		else if (!p1.equalsPlayer(p))
+		{
+			p.team.removeMember(p1);
+		}
+		else
+		{
+			throw FTBLibLang.TEAM_MUST_TRANSFER_OWNERSHIP.commandError();
+		}
 	}
 }

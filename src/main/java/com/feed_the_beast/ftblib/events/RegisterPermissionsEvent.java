@@ -6,7 +6,7 @@ import net.minecraftforge.server.permission.PermissionAPI;
 /**
  * @author LatvianModder
  */
-public class PermissionRegistryEvent extends FTBLibEvent
+public class RegisterPermissionsEvent extends FTBLibEvent
 {
 	public void registerNode(String node, DefaultPermissionLevel level, String description)
 	{

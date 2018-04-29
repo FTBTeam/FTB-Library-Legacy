@@ -8,14 +8,18 @@ import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
+import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
+import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.EnumPrivacyLevel;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -189,6 +193,11 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		return player == this || (player != null && getId().equals(player.getId()));
 	}
 
+	public boolean equalsPlayer(@Nullable ICommandSender player)
+	{
+		return player == entityPlayer || (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).getUniqueID().equals(getId()));
+	}
+
 	@Override
 	public final int compareTo(ForgePlayer o)
 	{
@@ -338,6 +347,11 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	public boolean hasPermission(String node)
 	{
 		return isOnline() ? PermissionAPI.hasPermission(getPlayer(), node) : PermissionAPI.hasPermission(getProfile(), node, null);
+	}
+
+	public ConfigValue getRankConfig(Node node)
+	{
+		return isOnline() ? RankConfigAPI.get(getPlayer(), node) : RankConfigAPI.get(team.universe.server, getProfile(), node, null);
 	}
 
 	public boolean isFirstLogin(ResourceLocation id)

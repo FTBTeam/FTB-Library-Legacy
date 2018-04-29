@@ -1,5 +1,6 @@
-package com.feed_the_beast.ftblib.events;
+package com.feed_the_beast.ftblib.events.client;
 
+import com.feed_the_beast.ftblib.events.FTBLibEvent;
 import com.feed_the_beast.ftblib.events.player.IGuiProvider;
 import net.minecraft.util.ResourceLocation;
 

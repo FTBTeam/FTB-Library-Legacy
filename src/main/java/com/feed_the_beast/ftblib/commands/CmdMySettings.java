@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftblib.cmd;
+package com.feed_the_beast.ftblib.commands;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;

@@ -1,7 +1,6 @@
-package com.feed_the_beast.ftblib.cmd;
+package com.feed_the_beast.ftblib.commands.client;
 
-import com.feed_the_beast.ftblib.cmd.client.CmdClientConfig;
-import com.feed_the_beast.ftblib.events.RegisterFTBClientCommandsEvent;
+import com.feed_the_beast.ftblib.events.client.RegisterFTBClientCommandsEvent;
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
 
 /**

@@ -3,9 +3,9 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 
 import javax.annotation.Nullable;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ import java.util.function.Consumer;
  */
 public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 {
-	private static final List<String> VARIANTS = Arrays.asList("true", "false");
+	public static final List<String> VARIANTS = Arrays.asList("true", "false");
 	public static final String ID = "bool";
 	public static final Color4I COLOR_TRUE = Color4I.rgb(0x33AA33);
 	public static final Color4I COLOR_FALSE = Color4I.rgb(0xD52834);
@@ -142,7 +142,7 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 	@Override
 	public JsonElement getSerializableElement()
 	{
-		return new JsonPrimitive(getBoolean());
+		return getBoolean() ? JsonUtils.JSON_TRUE : JsonUtils.JSON_FALSE;
 	}
 
 	@Override

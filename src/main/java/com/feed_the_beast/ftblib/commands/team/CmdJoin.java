@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftblib.cmd.team;
+package com.feed_the_beast.ftblib.commands.team;
 
 import com.feed_the_beast.ftblib.FTBLibGameRules;
 import com.feed_the_beast.ftblib.FTBLibLang;
@@ -72,7 +72,7 @@ public class CmdJoin extends CmdBase
 	{
 		if (!FTBLibGameRules.canJoinTeam(server.getWorld(0)))
 		{
-			throw FTBLibLang.FEATURE_DISABLED.commandError();
+			throw FTBLibLang.FEATURE_DISABLED_SERVER.commandError();
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftblib;
 
-import com.feed_the_beast.ftblib.cmd.CmdFTB;
-import com.feed_the_beast.ftblib.events.PermissionRegistryEvent;
+import com.feed_the_beast.ftblib.commands.CmdFTB;
+import com.feed_the_beast.ftblib.events.RegisterPermissionsEvent;
 import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.cmd.CommandMirror;
 import net.minecraft.command.ICommand;
@@ -50,7 +50,7 @@ public class FTBLib
 	@Mod.EventHandler
 	public void onInit(FMLInitializationEvent event)
 	{
-		new PermissionRegistryEvent().post();
+		new RegisterPermissionsEvent().post();
 	}
 
 	@Mod.EventHandler

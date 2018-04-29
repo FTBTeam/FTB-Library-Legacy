@@ -1,5 +1,6 @@
-package com.feed_the_beast.ftblib.events;
+package com.feed_the_beast.ftblib.events.client;
 
+import com.feed_the_beast.ftblib.events.FTBLibEvent;
 import net.minecraft.command.ICommand;
 import net.minecraftforge.server.command.CommandTreeBase;
 

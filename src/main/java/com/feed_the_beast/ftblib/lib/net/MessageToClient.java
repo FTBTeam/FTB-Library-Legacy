@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftblib.lib.net;
 
 import io.netty.channel.ChannelFutureListener;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
 import net.minecraftforge.fml.common.network.FMLOutboundHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -14,8 +15,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class MessageToClient<E extends MessageToClient<E>> extends MessageBase<E>
 {
-	public final void sendTo(EntityPlayer player)
+	public final void sendTo(EntityPlayerMP player)
 	{
+		if (player.connection == null || player instanceof FakePlayer)
+		{
+			return;
+		}
+
 		FMLEmbeddedChannel channel = getWrapper().getChannel(Side.SERVER);
 		channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.PLAYER);
 		channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(player);

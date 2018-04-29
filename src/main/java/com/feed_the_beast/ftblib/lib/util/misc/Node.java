@@ -20,44 +20,42 @@ public final class Node implements Comparable<Node>
 		@Override
 		public Node load(String string)
 		{
-			while (string.indexOf('.') == 0)
-			{
-				string = string.substring(1);
-			}
-
-			while (string.lastIndexOf('.') == string.length() - 1)
-			{
-				string = string.substring(0, string.length() - 1);
-			}
-
-			if (string.isEmpty() || string.charAt(0) == '*')
-			{
-				return ALL;
-			}
-
 			ArrayList<String> list = new ArrayList<>();
 
-			for (String s : string.toLowerCase().split("\\."))
+			for (String s : string.split("\\."))
 			{
 				s = s.trim();
 
 				if (!s.isEmpty())
 				{
-					list.add(s);
+					list.add(s.toLowerCase());
 				}
 			}
 
-			while (!list.isEmpty() && list.get(list.size() - 1).equals("*"))
+			int size = list.size();
+
+			if (size == 0 || list.get(0).charAt(0) == '*')
 			{
-				list.remove(list.size() - 1);
+				return ALL;
 			}
 
-			return new Node(list.toArray(new String[0]));
+			while (size > 0 && list.get(size - 1).charAt(0) == '*')
+			{
+				list.remove(size - 1);
+				size--;
+			}
+
+			return list.isEmpty() ? ALL : new Node(list.toArray(new String[size]));
 		}
 	});
 
 	public static Node get(String string)
 	{
+		if (string.isEmpty() || string.charAt(0) == '*')
+		{
+			return ALL;
+		}
+
 		try
 		{
 			return CACHE.get(string);

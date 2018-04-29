@@ -3,22 +3,30 @@ package com.feed_the_beast.ftblib.events;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.feed_the_beast.ftblib.lib.util.misc.TriFunction;
+
+import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
  */
 public class RegisterRankConfigEvent extends FTBLibEvent
 {
-	private final TriFunction<RankConfigValueInfo, Node, ConfigValue, ConfigValue> callback;
+	private final Consumer<RankConfigValueInfo> callback;
 
-	public RegisterRankConfigEvent(TriFunction<RankConfigValueInfo, Node, ConfigValue, ConfigValue> c)
+	public RegisterRankConfigEvent(Consumer<RankConfigValueInfo> c)
 	{
 		callback = c;
 	}
 
+	public void register(RankConfigValueInfo info)
+	{
+		callback.accept(info);
+	}
+
 	public RankConfigValueInfo register(Node id, ConfigValue defPlayer, ConfigValue defOP)
 	{
-		return callback.apply(id, defPlayer, defOP);
+		RankConfigValueInfo info = new RankConfigValueInfo(id, defPlayer, defOP);
+		register(info);
+		return info;
 	}
 }

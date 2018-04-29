@@ -52,6 +52,9 @@ public class FTBLibConfig
 
 	public static class Debugging
 	{
+		@Config.Comment("Enables special debug commands.")
+		public boolean special_commands = false;
+
 		@Config.Comment("Print more info.")
 		public boolean print_more_info = false;
 

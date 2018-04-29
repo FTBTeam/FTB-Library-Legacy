@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
+import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -110,16 +111,24 @@ public class GuiClientConfig extends GuiButtonListBase
 	@Override
 	public void addButtons(Panel panel)
 	{
-		List<Button> buttons = new ArrayList<>();
-
-		for (ClientConfig config : FTBLibClient.CLIENT_CONFIG_MAP.values())
+		panel.add(new SimpleTextButton(panel, I18n.format("player_config"), GuiIcons.SETTINGS_RED)
 		{
-			buttons.add(new ButtonClientConfig(panel, config));
-		}
+			@Override
+			public void onClicked(MouseButton button)
+			{
+				GuiHelper.playClickSound();
+				new GuiLoading().openGui();
+				ClientUtils.execClientCommand("/ftb my_settings");
+			}
 
-		buttons.sort((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
+			@Override
+			public WidgetType getWidgetType()
+			{
+				return FTBLibClient.isModLoadedOnServer(FTBLib.MOD_ID) ? super.getWidgetType() : WidgetType.DISABLED;
+			}
+		});
 
-		buttons.add(0, new SimpleTextButton(panel, I18n.format("sidebar_button"), Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/teams.png"))
+		panel.add(new SimpleTextButton(panel, I18n.format("sidebar_button"), Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/teams.png"))
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -129,20 +138,14 @@ public class GuiClientConfig extends GuiButtonListBase
 			}
 		});
 
-		if (FTBLibClient.isModLoadedOnServer(FTBLib.MOD_ID))
+		List<Button> buttons = new ArrayList<>();
+
+		for (ClientConfig config : FTBLibClient.CLIENT_CONFIG_MAP.values())
 		{
-			buttons.add(0, new SimpleTextButton(panel, I18n.format("player_config"), GuiIcons.SETTINGS_RED)
-			{
-				@Override
-				public void onClicked(MouseButton button)
-				{
-					GuiHelper.playClickSound();
-					new GuiLoading().openGui();
-					ClientUtils.execClientCommand("/ftb my_settings");
-				}
-			});
+			buttons.add(new ButtonClientConfig(panel, config));
 		}
 
+		buttons.sort((o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle()));
 		panel.addAll(buttons);
 	}
 

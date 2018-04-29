@@ -327,7 +327,7 @@ public class DataIn
 			case 3:
 				return new JsonPrimitive(readString());
 			case 4:
-				return new JsonPrimitive(readBoolean());
+				return readBoolean() ? JsonUtils.JSON_TRUE : JsonUtils.JSON_FALSE;
 			case 5:
 				return new JsonPrimitive(readByte());
 			case 6:

@@ -11,6 +11,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.ModelRotation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -36,6 +37,7 @@ public class ClientUtils
 	public static final NameMap<EnumBlockRenderType> BLOCK_RENDER_TYPE_NAME_MAP = NameMap.create(EnumBlockRenderType.MODEL, EnumBlockRenderType.values());
 	public static final NameMap<BlockRenderLayer> BLOCK_RENDER_LAYER_NAME_MAP = NameMap.create(BlockRenderLayer.SOLID, BlockRenderLayer.values());
 	public static final Map<ResourceLocation, TextureAtlasSprite> SPRITE_MAP = new HashMap<>();
+	public static final ModelRotation[] FACE_ROTATIONS = {ModelRotation.X0_Y0, ModelRotation.X180_Y0, ModelRotation.X90_Y180, ModelRotation.X90_Y0, ModelRotation.X90_Y90, ModelRotation.X90_Y270};
 
 	private static float lastBrightnessX, lastBrightnessY;
 	private static EntityItem entityItem;

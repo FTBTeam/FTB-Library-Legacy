@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftblib.cmd.team;
+package com.feed_the_beast.ftblib.commands.team;
 
 import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
@@ -10,17 +10,11 @@ import net.minecraft.server.MinecraftServer;
 /**
  * @author LatvianModder
  */
-public class CmdKick extends CmdBase
+public class CmdLeave extends CmdBase
 {
-	public CmdKick()
+	public CmdLeave()
 	{
-		super("kick", Level.ALL);
-	}
-
-	@Override
-	public boolean isUsernameIndex(String[] args, int i)
-	{
-		return i == 0;
+		super("leave", Level.ALL);
 	}
 
 	@Override
@@ -32,24 +26,7 @@ public class CmdKick extends CmdBase
 		{
 			throw FTBLibLang.TEAM_NO_TEAM.commandError();
 		}
-		else if (!p.team.isModerator(p))
-		{
-			throw FTBLibLang.COMMAND_PERMISSION.commandError();
-		}
-
-		checkArgs(sender, args, 1);
-
-		ForgePlayer p1 = getForgePlayer(sender, args[0]);
-
-		if (!p.team.isMember(p1))
-		{
-			throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p1.getName());
-		}
-		else if (!p1.equalsPlayer(p))
-		{
-			p.team.removeMember(p1);
-		}
-		else
+		else if (!p.team.removeMember(p))
 		{
 			throw FTBLibLang.TEAM_MUST_TRANSFER_OWNERSHIP.commandError();
 		}

@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftblib.cmd.team;
+package com.feed_the_beast.ftblib.commands.team;
 
 import com.feed_the_beast.ftblib.FTBLibGameRules;
 import com.feed_the_beast.ftblib.FTBLibLang;
@@ -9,7 +9,7 @@ import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.TeamType;
-import com.feed_the_beast.ftblib.net.MessageMyTeamGui;
+import com.feed_the_beast.ftblib.net.MessageMyTeamGuiResponse;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -53,7 +53,7 @@ public class CmdCreate extends CmdBase
 	{
 		if (!FTBLibGameRules.canCreateTeam(server.getWorld(0)))
 		{
-			throw FTBLibLang.FEATURE_DISABLED.commandError();
+			throw FTBLibLang.FEATURE_DISABLED_SERVER.commandError();
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
@@ -89,7 +89,7 @@ public class CmdCreate extends CmdBase
 		new ForgeTeamCreatedEvent(team).post();
 		new ForgeTeamPlayerJoinedEvent(p).post();
 		FTBLibLang.TEAM_CREATED.sendMessage(sender, team.getName());
-		new MessageMyTeamGui(p).sendTo(player);
+		new MessageMyTeamGuiResponse(p).sendTo(player);
 		team.markDirty();
 		p.markDirty();
 	}

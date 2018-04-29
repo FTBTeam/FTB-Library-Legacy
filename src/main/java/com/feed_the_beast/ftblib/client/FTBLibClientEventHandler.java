@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftblib.client;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.CustomSidebarButtonTextEvent;
+import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.lib.ClientATHelper;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
@@ -13,6 +15,8 @@ import com.feed_the_beast.ftblib.lib.icon.IconPresets;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
+import com.feed_the_beast.ftblib.net.MessageAdminPanelGui;
+import com.feed_the_beast.ftblib.net.MessageMyTeamGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -472,6 +476,28 @@ public class FTBLibClientEventHandler
 			{
 				ex.printStackTrace();
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onCustomClick(CustomClickEvent event)
+	{
+		if (event.getID().getResourceDomain().equals(FTBLib.MOD_ID))
+		{
+			switch (event.getID().getResourcePath())
+			{
+				case "client_config_gui":
+					new GuiClientConfig().openGui();
+					break;
+				case "my_team_gui":
+					new MessageMyTeamGui().sendToServer();
+					break;
+				case "admin_panel_gui":
+					new MessageAdminPanelGui().sendToServer();
+					break;
+			}
+
+			event.setCanceled(true);
 		}
 	}
 

@@ -14,16 +14,20 @@ public class FTBLibNetHandler
 
 	public static void init()
 	{
-		GENERAL.register(1, new MessageSyncData());
-		GENERAL.register(2, new MessageOpenGui());
-		GENERAL.register(3, new MessageCloseGui());
+		GENERAL.register(new MessageSyncData());
+		GENERAL.register(new MessageOpenGui());
+		GENERAL.register(new MessageCloseGui());
+		GENERAL.register(new MessageAdminPanelGui());
+		GENERAL.register(new MessageAdminPanelGuiResponse());
+		GENERAL.register(new MessageAdminPanelAction());
 
-		EDIT_CONFIG.register(1, new MessageEditConfig());
-		EDIT_CONFIG.register(2, new MessageEditConfigResponse());
+		EDIT_CONFIG.register(new MessageEditConfig());
+		EDIT_CONFIG.register(new MessageEditConfigResponse());
 
-		MY_TEAM.register(1, new MessageSelectTeamGui());
-		MY_TEAM.register(2, new MessageMyTeamGui());
-		MY_TEAM.register(3, new MessageMyTeamAction());
-		MY_TEAM.register(4, new MessageMyTeamPlayerList());
+		MY_TEAM.register(new MessageSelectTeamGui());
+		MY_TEAM.register(new MessageMyTeamGui());
+		MY_TEAM.register(new MessageMyTeamGuiResponse());
+		MY_TEAM.register(new MessageMyTeamAction());
+		MY_TEAM.register(new MessageMyTeamPlayerList());
 	}
 }

@@ -9,7 +9,7 @@ import com.feed_the_beast.ftblib.lib.util.misc.Node;
 /**
  * @author LatvianModder
  */
-public class ConfigValueInfo
+public class ConfigValueInfo implements Comparable<ConfigValueInfo>
 {
 	public static final int DISPLAY_NAME = 1;
 	public static final int GROUP = 2;
@@ -49,12 +49,16 @@ public class ConfigValueInfo
 		setDefaults();
 	}
 
+	public ConfigValueInfo(Node id, ConfigValue _defaultValue)
+	{
+		this(id);
+		defaultValue = _defaultValue;
+	}
+
 	public ConfigValueInfo(String _group, String _id, ConfigValue _defaultValue)
 	{
-		id = Node.get(_group.isEmpty() ? _id : (_group + "." + _id));
-		setDefaults();
+		this(Node.get(_group.isEmpty() ? _id : (_group + "." + _id)), _defaultValue.copy());
 		group = _group;
-		defaultValue = _defaultValue.copy();
 	}
 
 	public void setDefaults()
@@ -135,5 +139,26 @@ public class ConfigValueInfo
 	{
 		displayName = key;
 		return this;
+	}
+
+	public String toString()
+	{
+		return id.toString();
+	}
+
+	public int hashCode()
+	{
+		return id.hashCode();
+	}
+
+	public boolean equals(Object o)
+	{
+		return o == this || o instanceof ConfigValueInfo && id.equals(((ConfigValueInfo) o).id);
+	}
+
+	@Override
+	public int compareTo(ConfigValueInfo o)
+	{
+		return id.compareTo(o.id);
 	}
 }

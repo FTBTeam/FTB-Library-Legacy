@@ -3,7 +3,7 @@
 		"group": "ftblib:info",
 		"icon": "ftblib:textures/gui/teams.png",
 		"x": 0,
-		"click": "command:/ftb team gui",
+		"click": "custom:ftblib:my_team_gui",
 		"required_server_mods": ["ftblib"],
 		"loading_screen": true
 	},
@@ -11,12 +11,12 @@
 		"group": "ftblib:info",
 		"icon": "ftblib:icons/settings",
 		"x": 100,
-		"click": "command:/ftbc client_config"
+		"click": "custom:ftblib:client_config_gui"
 	},
 	"admin_panel": {
 		"group": "ftblib:info",
 		"icon": "ftblib:icons/settings_red",
 		"x": 110,
-		"click": "command:/ftb admin_panel"
+		"click": "custom:ftblib:admin_panel_gui"
 	}
 }
