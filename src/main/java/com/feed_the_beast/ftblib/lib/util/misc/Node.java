@@ -101,7 +101,15 @@ public final class Node implements Comparable<Node>
 
 	public Node append(Node node)
 	{
-		return get(string + '.' + node.string);
+		if (node == ALL)
+		{
+			return this;
+		}
+
+		String[] nparts = new String[parts.length + node.parts.length];
+		System.arraycopy(parts, 0, nparts, 0, parts.length);
+		System.arraycopy(node.parts, 0, nparts, parts.length, node.parts.length);
+		return new Node(nparts);
 	}
 
 	public boolean equals(Object o)
@@ -130,7 +138,7 @@ public final class Node implements Comparable<Node>
 			return true;
 		}
 
-		return string.equals(String.valueOf(o));
+		return false;
 	}
 
 	public int hashCode()
