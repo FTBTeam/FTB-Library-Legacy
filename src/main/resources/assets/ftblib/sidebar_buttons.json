@@ -17,6 +17,8 @@
 		"group": "ftblib:info",
 		"icon": "ftblib:icons/settings_red",
 		"x": 110,
-		"click": "custom:ftblib:admin_panel_gui"
+		"click": "custom:ftblib:admin_panel_gui",
+		"requires_op": true,
+		"loading_screen": true
 	}
 }

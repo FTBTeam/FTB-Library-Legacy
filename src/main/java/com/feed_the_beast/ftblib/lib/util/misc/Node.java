@@ -167,14 +167,6 @@ public final class Node implements Comparable<Node>
 		return array;
 	}
 
-	//a.b     - this
-	//a.b.c.d - node
-	//        = true
-
-	//a.b.c.d - this
-	//a.b     - node
-	//        = false
-
 	public boolean matches(Node node)
 	{
 		if (this == ALL)
