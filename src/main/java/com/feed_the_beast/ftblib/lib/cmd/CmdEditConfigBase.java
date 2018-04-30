@@ -10,6 +10,8 @@ import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.command.CommandException;
@@ -113,8 +115,8 @@ public abstract class CmdEditConfigBase extends CmdBase
 				JsonObject json1 = new JsonObject();
 				json1.add(args[0], value);
 				getCallback(sender).saveConfig(group, sender, json1);
-				ConfigValueInstance instance = group.getMap().get(args[0]);
-				FTBLibLang.CONFIG_COMMAND_SET.sendMessage(sender, new TextComponentTranslation(group.getNameKey(instance.info)), group.get(args[0]).toString());
+				ConfigValueInstance instance = group.getMap().get(Node.get(args[0]));
+				Notification.of(Notification.VANILLA_STATUS, FTBLibLang.CONFIG_COMMAND_SET.textComponent(sender, new TextComponentTranslation(group.getNameKey(instance.info)), group.get(args[0]).toString())).send(server, getCommandSenderAsPlayer(sender));
 				return;
 			}
 			catch (Exception ex)

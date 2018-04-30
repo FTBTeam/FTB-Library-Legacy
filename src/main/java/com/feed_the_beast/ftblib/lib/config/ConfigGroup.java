@@ -96,7 +96,7 @@ public final class ConfigGroup implements IJsonSerializable
 
 	public ConfigValue get(String key)
 	{
-		ConfigValueInstance v = map.get(key);
+		ConfigValueInstance v = map.get(Node.get(key));
 		return (v == null) ? ConfigNull.INSTANCE : v.value;
 	}
 
