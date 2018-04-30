@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -166,6 +167,7 @@ public class CommonUtils
 		return getStateFromName(name, CommonUtils.AIR_STATE);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public static void renameTag(NBTTagCompound nbt, String oldName, String newName)
 	{
 		NBTBase tag = nbt.getTag(oldName);
@@ -178,13 +180,13 @@ public class CommonUtils
 	}
 
 	@Nullable
-	public static NBTTagCompound nullIfEmpty(@Nullable NBTTagCompound nbt)
+	public static NBTTagCompound nonnull(@Nullable NBTTagCompound nbt)
 	{
 		return nbt == null || nbt.hasNoTags() ? null : nbt;
 	}
 
 	@Nullable
-	public static NBTTagList nullIfEmpty(@Nullable NBTTagList nbt)
+	public static NBTTagList nonnull(@Nullable NBTTagList nbt)
 	{
 		return nbt == null || nbt.hasNoTags() ? null : nbt;
 	}
@@ -198,5 +200,17 @@ public class CommonUtils
 
 		world.notifyBlockUpdate(pos, state, state, BlockFlags.DEFAULT | BlockFlags.RERENDER_MAIN_THREAD);
 		return state;
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	public static boolean hasBlockData(ItemStack stack)
+	{
+		return stack.hasTagCompound() && stack.getTagCompound().hasKey("BlockEntityTag");
+	}
+
+	@SuppressWarnings("ConstantConditions")
+	public static NBTTagCompound getBlockData(ItemStack stack)
+	{
+		return stack.hasTagCompound() ? stack.getTagCompound().getCompoundTag("BlockEntityTag") : new NBTTagCompound();
 	}
 }

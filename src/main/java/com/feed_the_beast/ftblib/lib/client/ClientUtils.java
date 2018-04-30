@@ -195,6 +195,7 @@ public class ClientUtils
 	}
 
 	@Nullable
+	@SuppressWarnings("unchecked")
 	public static <T> T getGuiAs(GuiScreen gui, Class<T> clazz)
 	{
 		if (gui instanceof IGuiWrapper)

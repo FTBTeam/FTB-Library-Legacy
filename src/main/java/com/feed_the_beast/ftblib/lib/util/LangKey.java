@@ -53,6 +53,7 @@ public final class LangKey implements IStringSerializable
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static boolean canAssign(@Nullable Object o, @Nullable Class c)
 	{
 		if (o == null && c == null)

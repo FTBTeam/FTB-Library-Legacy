@@ -39,6 +39,7 @@ public class NetworkWrapper // SimpleNetworkWrapper
 		return s.isServer() ? serverChannels : clientChannels;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void register(@Nullable MessageToClient m)
 	{
 		if (m != null)
@@ -53,6 +54,7 @@ public class NetworkWrapper // SimpleNetworkWrapper
 		nextDiscriminator++;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void register(@Nullable MessageToServer m)
 	{
 		if (m != null)
