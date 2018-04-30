@@ -10,7 +10,6 @@ public class CmdTeam extends CmdTreeBase
 	public CmdTeam()
 	{
 		super("team");
-		addSubcommand(new CmdGui());
 		addSubcommand(new CmdTeamConfig());
 		addSubcommand(new CmdCreate());
 		addSubcommand(new CmdLeave());
