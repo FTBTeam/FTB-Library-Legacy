@@ -18,6 +18,11 @@ public abstract class Action implements Comparable<Action>
 		DISABLED,
 		INVISIBLE;
 
+		public static Type fromBoolean(boolean value)
+		{
+			return value ? ENABLED : DISABLED;
+		}
+
 		public boolean isEnabled()
 		{
 			return this == ENABLED;

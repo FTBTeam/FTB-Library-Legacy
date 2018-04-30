@@ -232,7 +232,7 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 	}
 
 	@Override
-	public void handleClientMessage(MessageToClient<?> message)
+	public void handleClientMessage(MessageToClient message)
 	{
 		if (FTBLibConfig.debugging.log_network)
 		{

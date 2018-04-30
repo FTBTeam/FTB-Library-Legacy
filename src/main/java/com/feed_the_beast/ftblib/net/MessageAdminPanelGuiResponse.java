@@ -14,7 +14,7 @@ import java.util.Collection;
 /**
  * @author LatvianModder
  */
-public class MessageAdminPanelGuiResponse extends MessageToClient<MessageAdminPanelGuiResponse>
+public class MessageAdminPanelGuiResponse extends MessageToClient
 {
 	private Collection<Action.Inst> actions;
 

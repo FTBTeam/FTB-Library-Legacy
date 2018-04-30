@@ -177,7 +177,7 @@ public class FTBLibCommon
 		}
 	}*/
 
-	public void handleClientMessage(MessageToClient<?> message)
+	public void handleClientMessage(MessageToClient message)
 	{
 	}
 

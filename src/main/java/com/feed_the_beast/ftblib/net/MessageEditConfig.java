@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class MessageEditConfig extends MessageToClient<MessageEditConfig>
+public class MessageEditConfig extends MessageToClient
 {
 	private static final IConfigCallback RX_CONFIG_TREE = (group, sender, json) -> new MessageEditConfigResponse(json.getAsJsonObject()).sendToServer();
 

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public abstract class MessageToClient<E extends MessageToClient<E>> extends MessageBase<E>
+public abstract class MessageToClient extends MessageBase
 {
 	public final void sendTo(EntityPlayerMP player)
 	{

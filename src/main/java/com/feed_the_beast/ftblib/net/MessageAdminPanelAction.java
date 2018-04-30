@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * @author LatvianModder
  */
-public class MessageAdminPanelAction extends MessageToServer<MessageAdminPanelAction>
+public class MessageAdminPanelAction extends MessageToServer
 {
 	private ResourceLocation action;
 

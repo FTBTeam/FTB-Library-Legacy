@@ -11,7 +11,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 /**
  * @author LatvianModder
  */
-public class MessageEditConfigResponse extends MessageToServer<MessageEditConfigResponse>
+public class MessageEditConfigResponse extends MessageToServer
 {
 	private JsonObject groupData;
 

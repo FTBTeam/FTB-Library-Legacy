@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 /**
  * @author LatvianModder
  */
-public class MessageMyTeamPlayerList extends MessageToClient<MessageMyTeamPlayerList>
+public class MessageMyTeamPlayerList extends MessageToClient
 {
 	public static class Entry implements Comparable<Entry>
 	{

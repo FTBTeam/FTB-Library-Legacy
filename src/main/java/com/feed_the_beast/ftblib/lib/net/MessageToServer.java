@@ -9,7 +9,7 @@ import net.minecraftforge.fml.relauncher.Side;
 /**
  * @author LatvianModder
  */
-public abstract class MessageToServer<E extends MessageToServer<E>> extends MessageBase<E>
+public abstract class MessageToServer extends MessageBase
 {
 	public final void sendToServer()
 	{

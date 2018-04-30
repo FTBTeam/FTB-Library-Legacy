@@ -39,7 +39,7 @@ public class NetworkWrapper // SimpleNetworkWrapper
 		return s.isServer() ? serverChannels : clientChannels;
 	}
 
-	public void register(@Nullable MessageToClient<?> m)
+	public void register(@Nullable MessageToClient m)
 	{
 		if (m != null)
 		{
@@ -53,7 +53,7 @@ public class NetworkWrapper // SimpleNetworkWrapper
 		nextDiscriminator++;
 	}
 
-	public void register(@Nullable MessageToServer<?> m)
+	public void register(@Nullable MessageToServer m)
 	{
 		if (m != null)
 		{

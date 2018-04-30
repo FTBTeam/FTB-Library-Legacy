@@ -16,7 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
-public class MessageOpenGui extends MessageToClient<MessageOpenGui>
+public class MessageOpenGui extends MessageToClient
 {
 	private ResourceLocation guiId;
 	private BlockPos pos;

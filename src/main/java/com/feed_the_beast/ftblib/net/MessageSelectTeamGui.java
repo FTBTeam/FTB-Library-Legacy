@@ -18,7 +18,7 @@ import java.util.Collection;
 /**
  * @author LatvianModder
  */
-public class MessageSelectTeamGui extends MessageToClient<MessageSelectTeamGui>
+public class MessageSelectTeamGui extends MessageToClient
 {
 	private Collection<PublicTeamData> teams;
 	private boolean canCreate;

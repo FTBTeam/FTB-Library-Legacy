@@ -15,7 +15,7 @@ import net.minecraft.util.ResourceLocation;
 /**
  * @author LatvianModder
  */
-public class MessageMyTeamAction extends MessageToServer<MessageMyTeamAction>
+public class MessageMyTeamAction extends MessageToServer
 {
 	private ResourceLocation action;
 	private NBTTagCompound nbt;

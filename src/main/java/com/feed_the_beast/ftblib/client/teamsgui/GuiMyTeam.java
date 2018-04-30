@@ -11,6 +11,7 @@ import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.net.MessageMyTeamAction;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.Collection;
@@ -20,11 +21,11 @@ import java.util.Collection;
  */
 public class GuiMyTeam extends GuiButtonListBase
 {
-	private static class TeamActionButton extends SimpleTextButton
+	public static class ActionButton extends SimpleTextButton
 	{
 		private final Action.Inst action;
 
-		private TeamActionButton(Panel panel, Action.Inst a)
+		public ActionButton(Panel panel, Action.Inst a)
 		{
 			super(panel, a.title.getFormattedText(), a.icon);
 			action = a;
@@ -43,14 +44,19 @@ public class GuiMyTeam extends GuiButtonListBase
 
 					if (result)
 					{
-						new MessageMyTeamAction(action.id, new NBTTagCompound()).sendToServer();
+						sendAction(action.id);
 					}
 				}, action.title.getFormattedText() + "?", "", 0)); //LANG
 			}
 			else
 			{
-				new MessageMyTeamAction(action.id, new NBTTagCompound()).sendToServer();
+				sendAction(action.id);
 			}
+		}
+
+		public void sendAction(ResourceLocation id)
+		{
+			new MessageMyTeamAction(id, new NBTTagCompound()).sendToServer();
 		}
 
 		@Override
@@ -79,7 +85,7 @@ public class GuiMyTeam extends GuiButtonListBase
 	{
 		for (Action.Inst action : actions)
 		{
-			panel.add(new TeamActionButton(panel, action));
+			panel.add(new ActionButton(panel, action));
 		}
 	}
 }

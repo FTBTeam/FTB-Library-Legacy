@@ -8,12 +8,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 /**
  * @author LatvianModder
  */
-public class MessageMyTeamGui extends MessageToServer<MessageMyTeamGui>
+public class MessageMyTeamGui extends MessageToServer
 {
 	@Override
 	public NetworkWrapper getWrapper()
 	{
-		return FTBLibNetHandler.GENERAL;
+		return FTBLibNetHandler.MY_TEAM;
 	}
 
 	@Override

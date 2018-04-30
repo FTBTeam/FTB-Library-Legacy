@@ -19,7 +19,7 @@ import java.util.Collection;
 /**
  * @author LatvianModder
  */
-public class MessageMyTeamGuiResponse extends MessageToClient<MessageMyTeamGuiResponse>
+public class MessageMyTeamGuiResponse extends MessageToClient
 {
 	private ITextComponent title;
 	private Collection<Action.Inst> actions;

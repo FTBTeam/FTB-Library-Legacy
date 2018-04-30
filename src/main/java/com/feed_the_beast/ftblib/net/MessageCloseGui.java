@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class MessageCloseGui extends MessageToClient<MessageCloseGui>
+public class MessageCloseGui extends MessageToClient
 {
 	@Override
 	public NetworkWrapper getWrapper()

@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class MessageAdminPanelGui extends MessageToServer<MessageAdminPanelGui>
+public class MessageAdminPanelGui extends MessageToServer
 {
 	@Override
 	public NetworkWrapper getWrapper()

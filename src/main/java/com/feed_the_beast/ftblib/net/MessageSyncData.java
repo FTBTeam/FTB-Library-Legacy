@@ -27,7 +27,7 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class MessageSyncData extends MessageToClient<MessageSyncData>
+public class MessageSyncData extends MessageToClient
 {
 	private static final int LOGIN = 1;
 

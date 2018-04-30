@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftblib.client;
 
+import com.feed_the_beast.ftblib.client.teamsgui.GuiMyTeam;
 import com.feed_the_beast.ftblib.lib.data.Action;
-import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
-import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
-import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import com.feed_the_beast.ftblib.net.MessageAdminPanelAction;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.Collection;
 
@@ -28,20 +28,14 @@ public class GuiAdminPanel extends GuiButtonListBase
 	{
 		for (Action.Inst a : actions)
 		{
-			panel.add(new SimpleTextButton(panel, a.title.getFormattedText(), a.icon)
+			panel.add(new GuiMyTeam.ActionButton(panel, a)
 			{
 				@Override
-				public void onClicked(MouseButton button)
+				public void sendAction(ResourceLocation id)
 				{
-					GuiHelper.playClickSound();
+					new MessageAdminPanelAction(id).sendToServer();
 				}
 			});
 		}
-	}
-
-	@Override
-	public void onClosed()
-	{
-		FTBLibClient.saveSidebarButtonConfig();
 	}
 }

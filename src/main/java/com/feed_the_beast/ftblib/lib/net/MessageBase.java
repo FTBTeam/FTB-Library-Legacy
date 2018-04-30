@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import io.netty.buffer.ByteBuf;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
-public abstract class MessageBase<E extends MessageBase<E>> implements IMessage
+public abstract class MessageBase implements IMessage
 {
 	MessageBase()
 	{

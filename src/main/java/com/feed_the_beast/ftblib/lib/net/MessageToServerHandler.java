@@ -10,12 +10,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * @author LatvianModder
  */
-enum MessageToServerHandler implements IMessageHandler<MessageToServer<?>, IMessage>
+enum MessageToServerHandler implements IMessageHandler<MessageToServer, IMessage>
 {
 	INSTANCE;
 
 	@Override
-	public IMessage onMessage(MessageToServer<?> message, MessageContext context)
+	public IMessage onMessage(MessageToServer message, MessageContext context)
 	{
 		FMLCommonHandler.instance().getWorldThread(context.netHandler).addScheduledTask(() ->
 		{
