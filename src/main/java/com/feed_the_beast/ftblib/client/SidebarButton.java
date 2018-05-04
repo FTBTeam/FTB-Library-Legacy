@@ -9,6 +9,7 @@ import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -142,7 +143,7 @@ public class SidebarButton implements Comparable<SidebarButton>
 	{
 		if (loadingScreen)
 		{
-			new GuiLoading().openGui();
+			new GuiLoading(I18n.format(getLangKey())).openGui();
 		}
 
 		for (String event : (shift ? shiftClickEvents : clickEvents))

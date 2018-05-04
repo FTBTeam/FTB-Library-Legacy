@@ -1,9 +1,7 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -11,7 +9,7 @@ import java.util.List;
  */
 public class TextField extends Widget
 {
-	public List<String> text = Collections.emptyList();
+	public String[] text = StringUtils.EMPTY_ARRAY;
 	public int textFlags = 0;
 	public boolean autoSizeWidth = true, autoSizeHeight = true;
 
@@ -33,12 +31,12 @@ public class TextField extends Widget
 
 		if (!txt.isEmpty())
 		{
-			text = new ArrayList<>(autoSizeWidth ? CommonUtils.asList(txt.split("\n")) : listFormattedStringToWidth(txt, width));
+			text = autoSizeWidth ? txt.split("\n") : listFormattedStringToWidth(txt, width).toArray(StringUtils.EMPTY_ARRAY);
 		}
 
-		if (text == null || text.isEmpty())
+		if (text == null || text.length == 0)
 		{
-			text = Collections.emptyList();
+			text = StringUtils.EMPTY_ARRAY;
 		}
 
 		if (autoSizeWidth)
@@ -53,8 +51,7 @@ public class TextField extends Widget
 
 		if (autoSizeHeight)
 		{
-			int h1 = getFontHeight() + 1;
-			setHeight(text.isEmpty() ? h1 : h1 * text.size());
+			setHeight(Math.max(text.length, 1) * (getFontHeight() + 1));
 		}
 
 		return this;
@@ -73,14 +70,14 @@ public class TextField extends Widget
 
 		getIcon().draw(ax, ay, width, height);
 
-		if (text.isEmpty())
+		if (text.length == 0)
 		{
 			return;
 		}
 
-		for (int i = 0; i < text.size(); i++)
+		for (int i = 0; i < text.length; i++)
 		{
-			drawString(text.get(i), ax, ay + i * 10 + 1, textFlags);
+			drawString(text[i], ax, ay + i * 10 + 1, textFlags);
 		}
 	}
 }

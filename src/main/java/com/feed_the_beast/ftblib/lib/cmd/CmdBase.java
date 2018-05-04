@@ -147,7 +147,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 
 		if (p.isFake())
 		{
-			throw FTBLibLang.PLAYER_NOT_FOUND.commandError(sender.getDisplayName());
+			throw FTBLibLang.PLAYER_NOT_FOUND.commandError(sender.getName());
 		}
 
 		return p;

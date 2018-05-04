@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftblib.net;
 
 import com.feed_the_beast.ftblib.FTBLibCommon;
-import com.feed_the_beast.ftblib.client.teamsgui.GuiMyTeam;
 import com.feed_the_beast.ftblib.lib.data.Action;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.gui.misc.GuiActionList;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
@@ -69,6 +69,6 @@ public class MessageMyTeamGuiResponse extends MessageToClient
 	@SideOnly(Side.CLIENT)
 	public void onMessage()
 	{
-		new GuiMyTeam(title, actions).openGui();
+		new GuiActionList(title.getFormattedText(), actions, id -> new MessageMyTeamAction(id, new NBTTagCompound()).sendToServer()).openGui();
 	}
 }

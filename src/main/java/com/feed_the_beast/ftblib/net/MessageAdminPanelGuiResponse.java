@@ -1,11 +1,12 @@
 package com.feed_the_beast.ftblib.net;
 
-import com.feed_the_beast.ftblib.client.GuiAdminPanel;
 import com.feed_the_beast.ftblib.lib.data.Action;
+import com.feed_the_beast.ftblib.lib.gui.misc.GuiActionList;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -49,6 +50,6 @@ public class MessageAdminPanelGuiResponse extends MessageToClient
 	@SideOnly(Side.CLIENT)
 	public void onMessage()
 	{
-		new GuiAdminPanel(actions).openGui();
+		new GuiActionList(I18n.format("sidebar_button.ftblib.admin_panel"), actions, id -> new MessageAdminPanelAction(id).sendToServer()).openGui();
 	}
 }

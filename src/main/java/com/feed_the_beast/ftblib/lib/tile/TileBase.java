@@ -11,9 +11,11 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IWorldNameable;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -178,6 +180,13 @@ public abstract class TileBase extends TileEntity implements IWorldNameable
 	{
 		super.updateContainingBlockInfo();
 		currentState = null;
+	}
+
+	@Override
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate)
+	{
+		updateContainingBlockInfo();
+		return oldState.getBlock() != newSate.getBlock();
 	}
 
 	public IBlockState createState(IBlockState state)

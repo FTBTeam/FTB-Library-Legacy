@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftblib.client.teamsgui;
+package com.feed_the_beast.ftblib.lib.gui.misc;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.data.Action;
@@ -6,26 +6,24 @@ import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
-import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import com.feed_the_beast.ftblib.net.MessageMyTeamAction;
 import net.minecraft.client.gui.GuiYesNo;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
  */
-public class GuiMyTeam extends GuiButtonListBase
+public class GuiActionList extends GuiButtonListBase
 {
-	public static class ActionButton extends SimpleTextButton
+	private class ActionButton extends SimpleTextButton
 	{
 		private final Action.Inst action;
 
-		public ActionButton(Panel panel, Action.Inst a)
+		private ActionButton(Panel panel, Action.Inst a)
 		{
 			super(panel, a.title.getFormattedText(), a.icon);
 			action = a;
@@ -44,19 +42,14 @@ public class GuiMyTeam extends GuiButtonListBase
 
 					if (result)
 					{
-						sendAction(action.id);
+						callback.accept(action.id);
 					}
 				}, action.title.getFormattedText() + "?", "", 0)); //LANG
 			}
 			else
 			{
-				sendAction(action.id);
+				callback.accept(action.id);
 			}
-		}
-
-		public void sendAction(ResourceLocation id)
-		{
-			new MessageMyTeamAction(id, new NBTTagCompound()).sendToServer();
 		}
 
 		@Override
@@ -72,20 +65,23 @@ public class GuiMyTeam extends GuiButtonListBase
 		}
 	}
 
-	private Collection<Action.Inst> actions;
+	private final ArrayList<Action.Inst> actions;
+	private final Consumer<ResourceLocation> callback;
 
-	public GuiMyTeam(ITextComponent t, Collection<Action.Inst> l)
+	public GuiActionList(String title, Collection<Action.Inst> a, Consumer<ResourceLocation> c)
 	{
-		setTitle(t.getFormattedText());
-		actions = l;
+		setTitle(title);
+		actions = new ArrayList<>(a);
+		actions.sort(null);
+		callback = c;
 	}
 
 	@Override
 	public void addButtons(Panel panel)
 	{
-		for (Action.Inst action : actions)
+		for (Action.Inst a : actions)
 		{
-			panel.add(new ActionButton(panel, action));
+			panel.add(new ActionButton(panel, a));
 		}
 	}
 }

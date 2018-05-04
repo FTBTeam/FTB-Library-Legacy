@@ -23,17 +23,16 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
+import net.minecraftforge.client.model.ModelLoader;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 public class ClientUtils
 {
 	public static final Minecraft MC = Minecraft.getMinecraft();
-	public static final Function<ResourceLocation, TextureAtlasSprite> DEFAULT_TEXTURE_GETTER = location -> MC.getTextureMapBlocks().registerSprite(location);
 	public static final NameMap<EnumBlockRenderType> BLOCK_RENDER_TYPE_NAME_MAP = NameMap.create(EnumBlockRenderType.MODEL, EnumBlockRenderType.values());
 	public static final NameMap<BlockRenderLayer> BLOCK_RENDER_LAYER_NAME_MAP = NameMap.create(BlockRenderLayer.SOLID, BlockRenderLayer.values());
 	public static final Map<ResourceLocation, TextureAtlasSprite> SPRITE_MAP = new HashMap<>();
@@ -151,7 +150,7 @@ public class ClientUtils
 
 	public static TextureAtlasSprite getAtlasSprite(ResourceLocation name)
 	{
-		return SPRITE_MAP.computeIfAbsent(name, DEFAULT_TEXTURE_GETTER);
+		return SPRITE_MAP.computeIfAbsent(name, ModelLoader.defaultTextureGetter());
 	}
 
 	public static boolean isClientOP()

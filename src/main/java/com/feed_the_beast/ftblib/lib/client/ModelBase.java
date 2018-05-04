@@ -52,7 +52,7 @@ public class ModelBase implements IBakedModel
 
 	private final TextureAtlasSprite particle;
 
-	public ModelBase(TextureAtlasSprite p)
+	public ModelBase(@Nullable TextureAtlasSprite p)
 	{
 		particle = p;
 	}

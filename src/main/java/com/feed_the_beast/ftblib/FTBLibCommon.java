@@ -28,11 +28,9 @@ import net.minecraftforge.fml.common.discovery.asm.ModAnnotation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -48,8 +46,8 @@ public class FTBLibCommon
 	public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
 	public static final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
 	public static final HashSet<ResourceLocation> RELOAD_IDS = new HashSet<>();
-	public static final Map<ResourceLocation, Action> TEAM_GUI_ACTIONS = new LinkedHashMap<>();
-	public static final Map<ResourceLocation, Action> ADMIN_PANEL_ACTIONS = new LinkedHashMap<>();
+	public static final Map<ResourceLocation, Action> TEAM_GUI_ACTIONS = new HashMap<>();
+	public static final Map<ResourceLocation, Action> ADMIN_PANEL_ACTIONS = new HashMap<>();
 
 	public static class EditingConfig
 	{
@@ -147,20 +145,6 @@ public class FTBLibCommon
 		new ServerReloadEvent.RegisterIds(RELOAD_IDS::add).post();
 		new RegisterTeamGuiActionsEvent(action -> TEAM_GUI_ACTIONS.put(action.getId(), action)).post();
 		new RegisterAdminPanelActionsEvent(action -> ADMIN_PANEL_ACTIONS.put(action.getId(), action)).post();
-		sortActionMap(TEAM_GUI_ACTIONS);
-		sortActionMap(ADMIN_PANEL_ACTIONS);
-	}
-
-	private void sortActionMap(Map<ResourceLocation, Action> map)
-	{
-		List<Action> actionList = new ArrayList<>(map.values());
-		actionList.sort(null);
-		map.clear();
-
-		for (Action action : actionList)
-		{
-			map.put(action.getId(), action);
-		}
 	}
 
 	public void postInit()

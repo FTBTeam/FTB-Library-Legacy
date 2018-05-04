@@ -23,12 +23,7 @@ public class RankConfigAPI
 	private static void setHandler(IRankConfigHandler h)
 	{
 		Preconditions.checkNotNull(h, "Permission handler can't be null!");
-
-		if (handler != null)
-		{
-			FTBLib.LOGGER.warn("Replacing " + handler.getClass().getName() + " with " + h.getClass().getName());
-		}
-
+		FTBLib.LOGGER.warn("Replacing " + handler.getClass().getName() + " with " + h.getClass().getName());
 		handler = h;
 	}
 
@@ -36,13 +31,8 @@ public class RankConfigAPI
 	{
 		if (handler == null)
 		{
+			handler = DefaultRankConfigHandler.INSTANCE;
 			new RegisterRankConfigHandlerEvent(RankConfigAPI::setHandler).post();
-
-			if (handler == null)
-			{
-				handler = DefaultRankConfigHandler.INSTANCE;
-			}
-
 			new RegisterRankConfigEvent(handler::registerRankConfig).post();
 		}
 

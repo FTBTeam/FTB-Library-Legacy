@@ -13,6 +13,15 @@ public class GuiLoading extends GuiBase
 	private boolean isLoading = true;
 	private String title = "";
 
+	public GuiLoading()
+	{
+	}
+
+	public GuiLoading(String t)
+	{
+		title = t;
+	}
+
 	@Override
 	public void addWidgets()
 	{

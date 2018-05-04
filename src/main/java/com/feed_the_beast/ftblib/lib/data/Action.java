@@ -5,12 +5,13 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
 /**
  * @author LatvianModder
  */
-public abstract class Action implements Comparable<Action>
+public abstract class Action
 {
 	public enum Type
 	{
@@ -34,7 +35,7 @@ public abstract class Action implements Comparable<Action>
 		}
 	}
 
-	public static class Inst
+	public static class Inst implements Comparable<Inst>
 	{
 		public static final DataOut.Serializer<Inst> SERIALIZER = (data, object) -> object.writeData(data);
 		public static final DataIn.Deserializer<Inst> DESERIALIZER = Inst::new;
@@ -44,6 +45,7 @@ public abstract class Action implements Comparable<Action>
 		public final boolean requiresConfirm;
 		public final Icon icon;
 		public boolean enabled;
+		public short order;
 
 		private Inst(DataIn data)
 		{
@@ -52,6 +54,7 @@ public abstract class Action implements Comparable<Action>
 			requiresConfirm = data.readBoolean();
 			icon = data.readIcon();
 			enabled = data.readBoolean();
+			order = data.readShort();
 		}
 
 		public Inst(Action action, Action.Type t)
@@ -61,6 +64,7 @@ public abstract class Action implements Comparable<Action>
 			requiresConfirm = action.getRequireConfirm();
 			icon = action.getIcon();
 			enabled = t.isEnabled();
+			order = (short) action.getOrder();
 		}
 
 		private void writeData(DataOut data)
@@ -70,6 +74,14 @@ public abstract class Action implements Comparable<Action>
 			data.writeBoolean(requiresConfirm);
 			data.writeIcon(icon);
 			data.writeBoolean(enabled);
+			data.writeShort(order);
+		}
+
+		@Override
+		public int compareTo(Inst o)
+		{
+			int i = Short.compare(order, o.order);
+			return i == 0 ? title.getUnformattedText().compareToIgnoreCase(o.title.getUnformattedText()) : i;
 		}
 	}
 
@@ -132,7 +144,7 @@ public abstract class Action implements Comparable<Action>
 
 	public Action setOrder(int o)
 	{
-		order = o;
+		order = MathHelper.clamp(o, Short.MIN_VALUE, Short.MAX_VALUE);
 		return this;
 	}
 
@@ -154,11 +166,5 @@ public abstract class Action implements Comparable<Action>
 	public final String toString()
 	{
 		return id.toString();
-	}
-
-	@Override
-	public int compareTo(Action o)
-	{
-		return Integer.compare(getOrder(), o.getOrder());
 	}
 }
