@@ -71,6 +71,7 @@ dimension.overworld=Overworld
 dimension.nether=Nether
 dimension.end=The End
 
+ftblib.lang.reload_server_button=Reload Server
 ftblib.lang.reload_server=FTBLib: Server reloaded in %s
 ftblib.lang.reload_client=You can press %s to reload client
 ftblib.lang.reload_failed=These IDs failed to reload:

@@ -20,7 +20,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -62,7 +61,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 			}
 			else if (args.length == 2)
 			{
-				ConfigValue entry = group.get(args[0]);
+				ConfigValue entry = group.get(Node.get(args[0]));
 
 				if (!entry.isNull())
 				{
@@ -95,28 +94,28 @@ public abstract class CmdEditConfigBase extends CmdBase
 		}
 
 		checkArgs(sender, args, 1);
-
+		Node node = Node.get(args[0]);
 		ConfigGroup group = getGroup(sender);
-		ConfigValue entry = group.get(args[0]);
+		ConfigValue entry = group.get(node);
 
 		if (entry.isNull())
 		{
-			throw FTBLibLang.CONFIG_COMMAND_INVALID_KEY.commandError(args[0]);
+			throw FTBLibLang.CONFIG_COMMAND_INVALID_KEY.commandError(node.toString());
 		}
 
 		if (args.length >= 2)
 		{
 			String json = String.valueOf(StringUtils.joinSpaceUntilEnd(1, args));
-			FTBLib.LOGGER.info("Setting " + args[0] + " to " + json);
+			FTBLib.LOGGER.info("Setting " + node + " to " + json);
 
 			try
 			{
 				JsonElement value = DataReader.get(JsonUtils.fixJsonString(json)).json();
 				JsonObject json1 = new JsonObject();
-				json1.add(args[0], value);
+				json1.add(node.toString(), value);
 				getCallback(sender).saveConfig(group, sender, json1);
-				ConfigValueInstance instance = group.getMap().get(Node.get(args[0]));
-				Notification.of(Notification.VANILLA_STATUS, FTBLibLang.CONFIG_COMMAND_SET.textComponent(sender, new TextComponentTranslation(group.getNameKey(instance.info)), group.get(args[0]).toString())).send(server, getCommandSenderAsPlayer(sender));
+				ConfigValueInstance instance = group.getMap().get(node);
+				Notification.of(Notification.VANILLA_STATUS, FTBLibLang.CONFIG_COMMAND_SET.textComponent(sender, group.getDisplayName(instance.info), group.get(node).toString())).send(server, getCommandSenderAsPlayer(sender));
 				return;
 			}
 			catch (Exception ex)

@@ -30,6 +30,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -165,9 +166,9 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			group = g;
 			info = i;
 			value = e;
-			String keyLang = GuiEditConfig.this.group.getNameKey(info);
-			keyText = I18n.format(keyLang);
-			String infoText = I18n.hasKey(keyLang + ".tooltip") ? I18n.format(keyLang + ".tooltip") : "";
+			ITextComponent keyLang = GuiEditConfig.this.group.getDisplayName(info);
+			keyText = keyLang.getFormattedText();
+			String infoText = keyLang instanceof TextComponentTranslation && I18n.hasKey(((TextComponentTranslation) keyLang).getKey() + ".tooltip") ? I18n.format(((TextComponentTranslation) keyLang).getKey() + ".tooltip") : "";
 
 			if (!infoText.isEmpty())
 			{
@@ -327,7 +328,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			list.sort((o1, o2) ->
 			{
 				int i = o1.info.group.compareToIgnoreCase(o2.info.group);
-				return i == 0 ? I18n.format(group.getNameKey(o1.info)).compareToIgnoreCase(I18n.format(group.getNameKey(o2.info))) : i;
+				return i == 0 ? group.getDisplayName(o1.info).getUnformattedText().compareToIgnoreCase(group.getDisplayName(o2.info).getUnformattedText()) : i;
 			});
 
 			ButtonConfigGroup group = null;

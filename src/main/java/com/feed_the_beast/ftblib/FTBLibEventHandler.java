@@ -1,9 +1,11 @@
 package com.feed_the_beast.ftblib;
 
+import com.feed_the_beast.ftblib.events.RegisterAdminPanelActionsEvent;
 import com.feed_the_beast.ftblib.events.RegisterConfigValueProvidersEvent;
 import com.feed_the_beast.ftblib.events.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
+import com.feed_the_beast.ftblib.lib.EnumReloadType;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigBlockState;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
@@ -18,8 +20,14 @@ import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigStringEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigTextComponent;
 import com.feed_the_beast.ftblib.lib.config.ConfigTristate;
+import com.feed_the_beast.ftblib.lib.data.Action;
+import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.data.FTBLibTeamGuiActions;
+import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -64,6 +72,25 @@ public class FTBLibEventHandler
 		event.register(FTBLibTeamGuiActions.ENEMIES);
 		event.register(FTBLibTeamGuiActions.LEAVE);
 		event.register(FTBLibTeamGuiActions.TRANSFER_OWNERSHIP);
+	}
+
+	@SubscribeEvent
+	public static void registerAdminPanelActions(RegisterAdminPanelActionsEvent event)
+	{
+		event.register(new Action(new ResourceLocation(FTBLib.MOD_ID + ":reload"), new TextComponentTranslation("ftblib.lang.reload_server_button"), GuiIcons.REFRESH, -1000)
+		{
+			@Override
+			public Type getType(ForgePlayer player, NBTTagCompound data)
+			{
+				return Type.fromBoolean(player.isOP());
+			}
+
+			@Override
+			public void onAction(ForgePlayer player, NBTTagCompound data)
+			{
+				FTBLibAPI.reloadServer(player.team.universe, player.getPlayer(), EnumReloadType.RELOAD_COMMAND, ServerReloadEvent.ALL);
+			}
+		});
 	}
 
 	@SubscribeEvent

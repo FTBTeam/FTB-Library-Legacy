@@ -542,4 +542,32 @@ public class StringUtils
 		builder.append(number);
 		return builder.toString();
 	}
+
+	public static String camelCaseToWords(String key)
+	{
+		StringBuilder builder = new StringBuilder();
+		boolean pu = false;
+
+		for (int i = 0; i < key.length(); i++)
+		{
+			char c = key.charAt(i);
+			boolean u = Character.isUpperCase(c);
+
+			if (!pu && u)
+			{
+				builder.append(' ');
+			}
+
+			pu = u;
+
+			if (i == 0)
+			{
+				c = Character.toUpperCase(c);
+			}
+
+			builder.append(c);
+		}
+
+		return builder.toString();
+	}
 }

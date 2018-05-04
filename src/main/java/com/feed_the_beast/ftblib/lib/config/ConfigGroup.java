@@ -68,9 +68,9 @@ public final class ConfigGroup implements IJsonSerializable
 		return name == null ? new TextComponentTranslation(supergroup.isEmpty() ? key : (supergroup + "." + key)) : name;
 	}
 
-	public String getNameKey(ConfigValueInfo info)
+	public ITextComponent getDisplayName(ConfigValueInfo info)
 	{
-		return info.displayName.isEmpty() ? (supergroup.isEmpty() ? info.id.toString() : (supergroup + "." + info.id)) : info.displayName;
+		return info.displayName == null ? new TextComponentTranslation(supergroup.isEmpty() ? info.id.toString() : (supergroup + "." + info.id)) : info.displayName;
 	}
 
 	public ConfigValueInfo add(ConfigValueInfo info, ConfigValue value)
@@ -84,19 +84,19 @@ public final class ConfigGroup implements IJsonSerializable
 		return add(new ConfigValueInfo(group, id, value), value);
 	}
 
-	public boolean has(String key)
+	public boolean has(Node key)
 	{
 		return map.containsKey(key);
 	}
 
-	public void remove(String key)
+	public void remove(Node key)
 	{
 		map.remove(key);
 	}
 
-	public ConfigValue get(String key)
+	public ConfigValue get(Node key)
 	{
-		ConfigValueInstance v = map.get(Node.get(key));
+		ConfigValueInstance v = map.get(key);
 		return (v == null) ? ConfigNull.INSTANCE : v.value;
 	}
 

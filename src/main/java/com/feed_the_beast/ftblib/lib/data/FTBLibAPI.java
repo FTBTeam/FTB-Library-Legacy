@@ -84,6 +84,7 @@ public class FTBLibAPI
 			}
 		}
 
+		universe.server.reload();
 		FTBLib.LOGGER.info("Reloaded server in " + millis);
 	}
 

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import net.minecraft.util.text.ITextComponent;
 
 /**
  * @author LatvianModder
@@ -21,7 +22,7 @@ public class ConfigValueInfo implements Comparable<ConfigValueInfo>
 	public final Node id;
 	public String group;
 	public ConfigValue defaultValue;
-	public String displayName;
+	public ITextComponent displayName;
 
 	/**
 	 * Will be excluded from writing / reading from files
@@ -64,7 +65,7 @@ public class ConfigValueInfo implements Comparable<ConfigValueInfo>
 	public void setDefaults()
 	{
 		group = "";
-		displayName = "";
+		displayName = null;
 		defaultValue = ConfigNull.INSTANCE;
 		excluded = false;
 		hidden = false;
@@ -76,7 +77,7 @@ public class ConfigValueInfo implements Comparable<ConfigValueInfo>
 	{
 		int flags = 0;
 
-		flags = Bits.setFlag(flags, DISPLAY_NAME, !displayName.isEmpty());
+		flags = Bits.setFlag(flags, DISPLAY_NAME, displayName != null);
 		flags = Bits.setFlag(flags, GROUP, !group.isEmpty());
 		flags = Bits.setFlag(flags, EXCLUDED, excluded);
 		flags = Bits.setFlag(flags, HIDDEN, hidden);
@@ -85,9 +86,9 @@ public class ConfigValueInfo implements Comparable<ConfigValueInfo>
 
 		net.writeByte(flags);
 
-		if (!displayName.isEmpty())
+		if (displayName != null)
 		{
-			net.writeString(displayName);
+			net.writeTextComponent(displayName);
 		}
 
 		if (!group.isEmpty())
@@ -110,7 +111,7 @@ public class ConfigValueInfo implements Comparable<ConfigValueInfo>
 
 		if (Bits.getFlag(flags, DISPLAY_NAME))
 		{
-			displayName = net.readString();
+			displayName = net.readTextComponent();
 		}
 
 		if (Bits.getFlag(flags, GROUP))
@@ -127,7 +128,7 @@ public class ConfigValueInfo implements Comparable<ConfigValueInfo>
 		ConfigValueInfo info = new ConfigValueInfo(id);
 		info.defaultValue = defaultValue.copy();
 		info.group = group;
-		info.displayName = displayName;
+		info.displayName = displayName == null ? null : displayName.createCopy();
 		info.excluded = excluded;
 		info.hidden = hidden;
 		info.cantEdit = cantEdit;
@@ -135,9 +136,9 @@ public class ConfigValueInfo implements Comparable<ConfigValueInfo>
 		return info;
 	}
 
-	public ConfigValueInfo setNameLangKey(String key)
+	public ConfigValueInfo setDisplayName(ITextComponent name)
 	{
-		displayName = key;
+		displayName = name;
 		return this;
 	}
 
