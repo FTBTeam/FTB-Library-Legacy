@@ -85,11 +85,16 @@ public class BlockBase extends Block
 				if (!tile.destroyedByCreativePlayer || tile.shouldDrop())
 				{
 					ItemStack stack = createStack(state, tileEntity);
-					NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-					NBTTagList nbttaglist = new NBTTagList();
-					nbttaglist.appendTag(new NBTTagString("(+NBT)"));
-					nbttagcompound1.setTag("Lore", nbttaglist);
-					stack.setTagInfo("display", nbttagcompound1);
+
+					if (CommonUtils.hasBlockData(stack))
+					{
+						NBTTagCompound displayTag = new NBTTagCompound();
+						NBTTagList loreList = new NBTTagList();
+						loreList.appendTag(new NBTTagString("(+NBT)"));
+						displayTag.setTag("Lore", loreList);
+						stack.setTagInfo("display", displayTag);
+					}
+
 					spawnAsEntity(world, pos, stack);
 				}
 
