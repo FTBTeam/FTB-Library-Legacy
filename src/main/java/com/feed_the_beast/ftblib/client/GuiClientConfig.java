@@ -128,7 +128,7 @@ public class GuiClientConfig extends GuiButtonListBase
 			}
 		});
 
-		panel.add(new SimpleTextButton(panel, I18n.format("sidebar_button"), Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/teams.png"))
+		panel.add(new SimpleTextButton(panel, I18n.format("sidebar_button"), Icon.getIcon("ftblib:textures/gui/teams.png"))
 		{
 			@Override
 			public void onClicked(MouseButton button)

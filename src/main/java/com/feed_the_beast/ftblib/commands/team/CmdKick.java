@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.commands.team;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import net.minecraft.command.CommandException;
@@ -30,11 +29,11 @@ public class CmdKick extends CmdBase
 
 		if (!p.hasTeam())
 		{
-			throw FTBLibLang.TEAM_NO_TEAM.commandError();
+			throw new CommandException("ftblib.lang.team.error.no_team");
 		}
 		else if (!p.team.isModerator(p))
 		{
-			throw FTBLibLang.COMMAND_PERMISSION.commandError();
+			throw new CommandException("commands.generic.permission");
 		}
 
 		checkArgs(sender, args, 1);
@@ -43,7 +42,7 @@ public class CmdKick extends CmdBase
 
 		if (!p.team.isMember(p1))
 		{
-			throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p1.getName());
+			throw new CommandException("ftblib.lang.team.error.not_member", p1.getName());
 		}
 		else if (!p1.equalsPlayer(p))
 		{
@@ -51,7 +50,7 @@ public class CmdKick extends CmdBase
 		}
 		else
 		{
-			throw FTBLibLang.TEAM_MUST_TRANSFER_OWNERSHIP.commandError();
+			throw new CommandException("ftblib.lang.team.error.must_transfer_ownership");
 		}
 	}
 }

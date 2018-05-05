@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.commands.team;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdEditConfigBase;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
@@ -29,12 +28,12 @@ public class CmdTeamConfig extends CmdEditConfigBase
 		if (!p.hasTeam())
 		{
 			FTBLibAPI.sendCloseGuiPacket(player);
-			throw FTBLibLang.TEAM_NO_TEAM.commandError();
+			throw new CommandException("ftblib.lang.team.error.no_team");
 		}
 		else if (!p.team.isModerator(p))
 		{
 			FTBLibAPI.sendCloseGuiPacket(player);
-			throw FTBLibLang.COMMAND_PERMISSION.commandError();
+			throw new CommandException("commands.generic.permission");
 		}
 
 		return p.team.getSettings();

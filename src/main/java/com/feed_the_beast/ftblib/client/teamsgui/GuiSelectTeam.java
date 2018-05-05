@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.client.teamsgui;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -28,7 +27,7 @@ public class GuiSelectTeam extends GuiButtonListBase
 
 		private ButtonCreateTeam(Panel panel, boolean c)
 		{
-			super(panel, FTBLibLang.TEAM_GUI_CREATE_TEAM.translate(), GuiIcons.ADD);
+			super(panel, I18n.format("ftblib.lang.team.gui.create_team"), GuiIcons.ADD);
 			canCreate = c;
 		}
 
@@ -103,11 +102,11 @@ public class GuiSelectTeam extends GuiButtonListBase
 			}
 			else if (team.type == PublicTeamData.Type.ENEMY)
 			{
-				list.add(TextFormatting.GRAY + EnumTeamStatus.ENEMY.getLangKey().translate());
+				list.add(TextFormatting.GRAY + I18n.format(EnumTeamStatus.ENEMY.getLangKey()));
 			}
 			else
 			{
-				list.add(TextFormatting.GRAY + (team.type == PublicTeamData.Type.CAN_JOIN ? FTBLibLang.TEAM_GUI_JOIN_TEAM : FTBLibLang.TEAM_GUI_REQUEST_INVITE).translate(team.color.getTextFormatting() + team.getName() + TextFormatting.GRAY));
+				list.add(TextFormatting.GRAY + I18n.format(team.type == PublicTeamData.Type.CAN_JOIN ? "ftblib.lang.team.gui.join_team" : "ftblib.lang.team.gui.request_invite", team.color.getTextFormatting() + team.getName() + TextFormatting.GRAY));
 			}
 		}
 
@@ -123,7 +122,7 @@ public class GuiSelectTeam extends GuiButtonListBase
 
 	public GuiSelectTeam(Collection<PublicTeamData> teams0, boolean c)
 	{
-		setTitle(FTBLibLang.TEAM_GUI_SELECT_TEAM.translate());
+		setTitle(I18n.format("ftblib.lang.team.gui.select_team"));
 		teams = new ArrayList<>(teams0);
 		teams.sort(null);
 		canCreate = c;

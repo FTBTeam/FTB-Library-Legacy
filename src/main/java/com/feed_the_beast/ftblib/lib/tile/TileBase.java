@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -237,6 +238,13 @@ public abstract class TileBase extends TileEntity implements IWorldNameable
 
 		if (!nbt1.hasNoTags())
 		{
+			ResourceLocation resourcelocation = getKey(getClass());
+
+			if (resourcelocation != null)
+			{
+				nbt1.setString("id", resourcelocation.toString());
+			}
+
 			nbt.setTag("BlockEntityTag", nbt1);
 		}
 

@@ -3,9 +3,9 @@ package com.feed_the_beast.ftblib.lib.util.misc;
 import com.feed_the_beast.ftblib.lib.ICustomName;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.util.LangKey;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * @author LatvianModder
@@ -19,18 +19,18 @@ public enum EnumRedstoneMode implements IStringSerializable, ICustomName
 
 	public static final NameMap<EnumRedstoneMode> NAME_MAP = NameMap.create(DISABLED, DISABLED, ACTIVE_HIGH, ACTIVE_LOW);
 	public static final NameMap<EnumRedstoneMode> NAME_MAP_WITH_PULSE = NameMap.create(DISABLED, DISABLED, ACTIVE_HIGH, ACTIVE_LOW, PULSE);
-	public static final LangKey ENUM_LANG_KEY = LangKey.of("ftblib.redstonemode");
+	public static final String ENUM_LANG_KEY = "ftblib.redstonemode";
 
-	private final LangKey langKey;
+	private final String langKey;
 	private final String name;
 
 	EnumRedstoneMode(String n)
 	{
 		name = n;
-		langKey = LangKey.of("ftblib.redstonemode." + name);
+		langKey = "ftblib.redstonemode." + name;
 	}
 
-	public LangKey getLangKey()
+	public String getLangKey()
 	{
 		return langKey;
 	}
@@ -44,7 +44,7 @@ public enum EnumRedstoneMode implements IStringSerializable, ICustomName
 	@Override
 	public ITextComponent getCustomDisplayName()
 	{
-		return langKey.textComponent(null);
+		return new TextComponentTranslation(langKey);
 	}
 
 	public boolean isActive(boolean prevValue, boolean value)

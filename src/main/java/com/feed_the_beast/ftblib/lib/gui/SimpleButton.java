@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.util.LangKey;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 
 /**
@@ -20,11 +19,6 @@ public class SimpleButton extends Button
 	{
 		super(panel, text, icon);
 		consumer = c;
-	}
-
-	public SimpleButton(Panel panel, LangKey text, Icon icon, Callback c)
-	{
-		this(panel, text.translate(), icon, c);
 	}
 
 	@Override

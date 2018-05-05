@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.commands.team;
 
 import com.feed_the_beast.ftblib.FTBLibGameRules;
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
@@ -14,6 +13,7 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 /**
  * @author LatvianModder
@@ -53,7 +53,7 @@ public class CmdCreate extends CmdBase
 	{
 		if (!FTBLibGameRules.canCreateTeam(server.getWorld(0)))
 		{
-			throw FTBLibLang.FEATURE_DISABLED_SERVER.commandError();
+			throw new CommandException("feature_disabled_server");
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
@@ -61,19 +61,19 @@ public class CmdCreate extends CmdBase
 
 		if (p.hasTeam())
 		{
-			throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
+			throw new CommandException("ftblib.lang.team.error.must_leave");
 		}
 
 		checkArgs(sender, args, 1);
 
 		if (!isValidTeamID(args[0]))
 		{
-			throw FTBLibLang.TEAM_ID_INVALID.commandError();
+			throw new CommandException("ftblib.lang.team.id_invalid");
 		}
 
 		if (p.team.universe.getTeam(args[0]).isValid())
 		{
-			throw FTBLibLang.TEAM_ID_ALREADY_EXISTS.commandError();
+			throw new CommandException("ftblib.lang.team.id_already_exists");
 		}
 
 		ForgeTeam team = new ForgeTeam(p.team.universe, args[0], TeamType.PLAYER);
@@ -88,7 +88,7 @@ public class CmdCreate extends CmdBase
 		team.universe.teams.put(team.getName(), team);
 		new ForgeTeamCreatedEvent(team).post();
 		new ForgeTeamPlayerJoinedEvent(p).post();
-		FTBLibLang.TEAM_CREATED.sendMessage(sender, team.getName());
+		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftblib.lang.team.created", team.getName()));
 		new MessageMyTeamGuiResponse(p).sendTo(player);
 		team.markDirty();
 		p.markDirty();

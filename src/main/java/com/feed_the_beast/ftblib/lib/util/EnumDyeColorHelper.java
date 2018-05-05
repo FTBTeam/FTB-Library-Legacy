@@ -22,13 +22,13 @@ public class EnumDyeColorHelper // ItemDye
 	}
 
 	private final EnumDyeColor dye;
-	private final LangKey langKey;
+	private final String langKey;
 	private final String oreName;
 
 	private EnumDyeColorHelper(EnumDyeColor col)
 	{
 		dye = col;
-		langKey = LangKey.of("item.fireworksCharge." + col.getUnlocalizedName());
+		langKey = "item.fireworksCharge." + col.getUnlocalizedName();
 		oreName = StringUtils.firstUppercase(col.getUnlocalizedName());
 	}
 
@@ -59,7 +59,7 @@ public class EnumDyeColorHelper // ItemDye
 		return dye;
 	}
 
-	public LangKey getLangKey()
+	public String getLangKey()
 	{
 		return langKey;
 	}

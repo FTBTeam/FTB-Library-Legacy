@@ -14,7 +14,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
@@ -26,6 +25,7 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -640,17 +640,17 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	{
 		if (cachedConfig == null)
 		{
-			cachedConfig = new ConfigGroup(GuiLang.SETTINGS.textComponent(null));
+			cachedConfig = new ConfigGroup(new TextComponentTranslation("gui.settings"));
 			cachedConfig.setSupergroup("team_config");
 			ForgeTeamConfigEvent event = new ForgeTeamConfigEvent(this, cachedConfig);
 			event.post();
 
 			event.getConfig().setGroupName(FTBLib.MOD_ID, new TextComponentString(FTBLib.MOD_NAME));
 			event.getConfig().add(FTBLib.MOD_ID, "free_to_join", freeToJoin);
-			event.getConfig().add(FTBLib.MOD_ID + ".display", "color", color);
-			event.getConfig().add(FTBLib.MOD_ID + ".display", "fake_player_status", fakePlayerStatus);
-			event.getConfig().add(FTBLib.MOD_ID + ".display", "title", title);
-			event.getConfig().add(FTBLib.MOD_ID + ".display", "desc", desc);
+			event.getConfig().add("ftblib.display", "color", color);
+			event.getConfig().add("ftblib.display", "fake_player_status", fakePlayerStatus);
+			event.getConfig().add("ftblib.display", "title", title);
+			event.getConfig().add("ftblib.display", "desc", desc);
 		}
 
 		return cachedConfig;

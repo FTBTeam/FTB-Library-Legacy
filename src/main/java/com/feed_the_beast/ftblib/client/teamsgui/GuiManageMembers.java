@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.client.teamsgui;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.data.FTBLibTeamGuiActions;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -9,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.net.MessageMyTeamAction;
 import com.feed_the_beast.ftblib.net.MessageMyTeamPlayerList;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
@@ -56,34 +56,34 @@ public class GuiManageMembers extends GuiManagePlayersBase
 		{
 			if (!entry.status.isNone())
 			{
-				list.add(entry.status.getLangKey().translate());
+				list.add(I18n.format(entry.status.getLangKey()));
 			}
 			else if (entry.requestingInvite)
 			{
-				list.add(FTBLibLang.TEAM_GUI_REQUESTING_INVITE.translate());
+				list.add(I18n.format("ftblib.lang.team_status.requesting_invite"));
 			}
 
 			if (entry.requestingInvite)
 			{
-				list.add(FTBLibLang.TEAM_GUI_MEMBERS_REQUESTING_INVITE.translate());
+				list.add(I18n.format("ftblib.lang.team.gui.members.requesting_invite"));
 			}
 			else if (entry.status.isEqualOrGreaterThan(EnumTeamStatus.MEMBER))
 			{
-				list.add(FTBLibLang.TEAM_GUI_MEMBERS_KICK.translate());
+				list.add(I18n.format("ftblib.lang.team.gui.members.kick"));
 			}
 			else if (entry.status == EnumTeamStatus.INVITED)
 			{
-				list.add(FTBLibLang.TEAM_GUI_MEMBERS_CANCEL_INVITE.translate());
+				list.add(I18n.format("ftblib.lang.team.gui.members.cancel_invite"));
 			}
 
 			if (entry.status == EnumTeamStatus.NONE || entry.requestingInvite)
 			{
-				list.add(FTBLibLang.TEAM_GUI_MEMBERS_INVITE.translate());
+				list.add(I18n.format("ftblib.lang.team.gui.members.invite"));
 			}
 
 			if (entry.requestingInvite)
 			{
-				list.add(FTBLibLang.TEAM_GUI_MEMBERS_DENY_REQUEST.translate());
+				list.add(I18n.format("ftblib.lang.team.gui.members.deny_request"));
 			}
 		}
 
@@ -146,6 +146,6 @@ public class GuiManageMembers extends GuiManagePlayersBase
 
 	public GuiManageMembers(Collection<MessageMyTeamPlayerList.Entry> m)
 	{
-		super(FTBLibLang.TEAM_GUI_MEMBERS.translate(), m, ButtonPlayer::new);
+		super(I18n.format("ftblib.lang.team.gui.members"), m, ButtonPlayer::new);
 	}
 }

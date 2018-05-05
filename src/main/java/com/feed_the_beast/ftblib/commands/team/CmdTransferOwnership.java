@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.commands.team;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
@@ -31,11 +30,11 @@ public class CmdTransferOwnership extends CmdBase
 
 		if (!p.hasTeam())
 		{
-			throw FTBLibLang.TEAM_NO_TEAM.commandError();
+			throw new CommandException("ftblib.lang.team.error.no_team");
 		}
 		else if (!p.team.isOwner(p))
 		{
-			throw FTBLibLang.TEAM_NOT_OWNER.commandError();
+			throw new CommandException("ftblib.lang.team.error.not_owner");
 		}
 
 		checkArgs(sender, args, 1);
@@ -44,7 +43,7 @@ public class CmdTransferOwnership extends CmdBase
 
 		if (!p.team.equalsTeam(p1.team))
 		{
-			throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p1.getName());
+			throw new CommandException("ftblib.lang.team.error.not_member", p1.getName());
 		}
 
 		p.team.setStatus(p1, EnumTeamStatus.OWNER);

@@ -2,7 +2,6 @@ package com.feed_the_beast.ftblib.lib.data;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
@@ -28,6 +27,7 @@ import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -177,7 +177,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		if (!isOnline())
 		{
-			throw FTBLibLang.PLAYER_NOT_FOUND.commandError(getName());
+			throw new CommandException("commands.generic.player.notFound", getName());
 		}
 
 		return getPlayer();
@@ -290,7 +290,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		if (cachedConfig == null)
 		{
-			cachedConfig = new ConfigGroup(FTBLibLang.MY_SERVER_SETTINGS.textComponent(null));
+			cachedConfig = new ConfigGroup(new TextComponentTranslation("player_config"));
 			cachedConfig.setSupergroup("player_config");
 			ForgePlayerConfigEvent event = new ForgePlayerConfigEvent(this, cachedConfig);
 			event.post();

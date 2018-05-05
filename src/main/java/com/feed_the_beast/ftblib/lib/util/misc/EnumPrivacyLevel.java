@@ -1,32 +1,29 @@
 package com.feed_the_beast.ftblib.lib.util.misc;
 
-import com.feed_the_beast.ftblib.lib.ICustomName;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.util.LangKey;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.ITextComponent;
 
 /**
  * @author LatvianModder
  */
-public enum EnumPrivacyLevel implements IStringSerializable, ICustomName
+public enum EnumPrivacyLevel implements IStringSerializable
 {
 	PUBLIC("public"),
 	PRIVATE("private"),
 	TEAM("team");
 
 	public static final EnumPrivacyLevel[] VALUES = values();
-	public static final LangKey ENUM_LANG_KEY = LangKey.of("ftblib.privacy");
+	public static final String ENUM_LANG_KEY = "ftblib.privacy";
 	public static final NameMap<EnumPrivacyLevel> NAME_MAP = NameMap.create(PUBLIC, VALUES);
 
 	private final String name;
-	private final LangKey langKey;
+	private final String langKey;
 
 	EnumPrivacyLevel(String n)
 	{
 		name = n;
-		langKey = LangKey.of("ftblib.privacy." + name);
+		langKey = "ftblib.privacy." + name;
 	}
 
 	@Override
@@ -35,13 +32,7 @@ public enum EnumPrivacyLevel implements IStringSerializable, ICustomName
 		return name;
 	}
 
-	@Override
-	public ITextComponent getCustomDisplayName()
-	{
-		return langKey.textComponent(null);
-	}
-
-	public LangKey getLangKey()
+	public String getLangKey()
 	{
 		return langKey;
 	}

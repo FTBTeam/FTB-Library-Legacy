@@ -3,9 +3,9 @@ package com.feed_the_beast.ftblib.lib.util.misc;
 import com.feed_the_beast.ftblib.lib.ICustomName;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.util.LangKey;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * @author LatvianModder
@@ -18,15 +18,15 @@ public enum EnumIO implements IStringSerializable, ICustomName
 	NONE("none");
 
 	public static final NameMap<EnumIO> NAME_MAP = NameMap.create(IO, values());
-	public static final LangKey ENUM_LANG_KEY = LangKey.of("ftblib.io");
+	public static final String ENUM_LANG_KEY = "ftblib.io";
 
 	private final String name;
-	private final LangKey langKey;
+	private final String langKey;
 
 	EnumIO(String n)
 	{
 		name = n;
-		langKey = LangKey.of("ftblib.io." + name);
+		langKey = "ftblib.io." + name;
 	}
 
 	@Override
@@ -38,10 +38,10 @@ public enum EnumIO implements IStringSerializable, ICustomName
 	@Override
 	public ITextComponent getCustomDisplayName()
 	{
-		return langKey.textComponent(null);
+		return new TextComponentTranslation(langKey);
 	}
 
-	public LangKey getLangKey()
+	public String getLangKey()
 	{
 		return langKey;
 	}

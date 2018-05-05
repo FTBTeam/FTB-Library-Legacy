@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.client.teamsgui;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.data.FTBLibTeamGuiActions;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -9,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.net.MessageMyTeamAction;
 import com.feed_the_beast.ftblib.net.MessageMyTeamPlayerList;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
@@ -36,7 +36,7 @@ public class GuiManageEnemies extends GuiManagePlayersBase
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			list.add((entry.status == EnumTeamStatus.ENEMY ? EnumTeamStatus.ENEMY : EnumTeamStatus.NONE).getLangKey().translate());
+			list.add(I18n.format((entry.status == EnumTeamStatus.ENEMY ? EnumTeamStatus.ENEMY : EnumTeamStatus.NONE).getLangKey()));
 		}
 
 		@Override
@@ -64,6 +64,6 @@ public class GuiManageEnemies extends GuiManagePlayersBase
 
 	public GuiManageEnemies(Collection<MessageMyTeamPlayerList.Entry> m)
 	{
-		super(FTBLibLang.TEAM_GUI_ENEMIES.translate(), m, ButtonPlayer::new);
+		super(I18n.format("ftblib.lang.team.gui.enemies"), m, ButtonPlayer::new);
 	}
 }

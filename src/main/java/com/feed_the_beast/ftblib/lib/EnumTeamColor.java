@@ -2,11 +2,11 @@ package com.feed_the_beast.ftblib.lib;
 
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.util.EnumDyeColorHelper;
-import com.feed_the_beast.ftblib.lib.util.LangKey;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 /**
@@ -31,7 +31,7 @@ public enum EnumTeamColor implements IStringSerializable, ICustomName, ICustomCo
 	private final EnumDyeColor dyeColor;
 	private final TextFormatting textFormatting;
 	private final Color4I color;
-	private final LangKey langKey;
+	private final String langKey;
 
 	EnumTeamColor(String n, EnumDyeColor d, TextFormatting t, int c)
 	{
@@ -51,7 +51,7 @@ public enum EnumTeamColor implements IStringSerializable, ICustomName, ICustomCo
 	@Override
 	public ITextComponent getCustomDisplayName()
 	{
-		return langKey.textComponent(null);
+		return new TextComponentTranslation(langKey);
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public enum EnumTeamColor implements IStringSerializable, ICustomName, ICustomCo
 		return dyeColor;
 	}
 
-	public LangKey getLangKey()
+	public String getLangKey()
 	{
 		return langKey;
 	}

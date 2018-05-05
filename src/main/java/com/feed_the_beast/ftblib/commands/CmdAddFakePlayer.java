@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.commands;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -8,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 import java.util.UUID;
 
@@ -36,17 +36,16 @@ public class CmdAddFakePlayer extends CmdBase
 
 		if (id == null)
 		{
-			throw FTBLibLang.CONFIG_ADD_FAKE_PLAYER_INVALID_UUID.commandError();
+			throw new CommandException("ftblib.lang.add_fake_player.invalid_uuid");
 		}
 
 		if (Universe.get().getPlayer(id) != null || Universe.get().getPlayer(args[1]) != null)
 		{
-			throw FTBLibLang.CONFIG_ADD_FAKE_PLAYER_PLAYER_EXISTS.commandError();
+			throw new CommandException("ftblib.lang.add_fake_player.player_exists");
 		}
 
 		ForgePlayer p = new ForgePlayer(Universe.get(), id, args[1]);
 		p.team.universe.players.put(p.getId(), p);
-
-		FTBLibLang.CONFIG_ADD_FAKE_PLAYER_ADDED.sendMessage(sender, args[1]);
+		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftblib.lang.add_fake_player.added", p.getName()));
 	}
 }

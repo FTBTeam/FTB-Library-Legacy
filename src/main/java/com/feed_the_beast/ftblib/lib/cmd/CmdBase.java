@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.cmd;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -147,7 +146,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 
 		if (p.isFake())
 		{
-			throw FTBLibLang.PLAYER_NOT_FOUND.commandError(sender.getName());
+			throw new CommandException("commands.generic.player.notFound", sender.getName());
 		}
 
 		return p;
@@ -202,7 +201,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 
 		if (p == null || p.isFake())
 		{
-			throw FTBLibLang.PLAYER_NOT_FOUND.commandError(name);
+			throw new CommandException("commands.generic.player.notFound", name);
 		}
 
 		return p;
@@ -217,7 +216,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 			return team;
 		}
 
-		throw FTBLibLang.TEAM_NOT_FOUND.commandError();
+		throw new CommandException("ftblib.lang.team.error.not_found", s);
 	}
 
 	public static EntityPlayerMP getSelfOrOther(ICommandSender sender, String[] args, int index) throws CommandException
@@ -233,7 +232,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 		}
 		else if (!specialPerm.isEmpty() && sender instanceof EntityPlayerMP && !PermissionAPI.hasPermission((EntityPlayerMP) sender, specialPerm))
 		{
-			throw FTBLibLang.COMMAND_PERMISSION.commandError();
+			throw new CommandException("commands.generic.permission");
 		}
 
 		return getForgePlayer(sender, args[index]).getCommandPlayer();

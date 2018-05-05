@@ -11,7 +11,6 @@ import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.SimpleButton;
@@ -347,19 +346,19 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 		scroll = new PanelScrollBar(this, configPanel);
 
-		buttonAccept = new SimpleButton(this, GuiLang.ACCEPT, GuiIcons.ACCEPT, (widget, button) ->
+		buttonAccept = new SimpleButton(this, I18n.format("gui.accept"), GuiIcons.ACCEPT, (widget, button) ->
 		{
 			shouldClose = 1;
 			widget.getGui().closeGui();
 		});
 
-		buttonCancel = new SimpleButton(this, GuiLang.CANCEL, GuiIcons.CANCEL, (widget, button) ->
+		buttonCancel = new SimpleButton(this, I18n.format("gui.cancel"), GuiIcons.CANCEL, (widget, button) ->
 		{
 			shouldClose = 2;
 			widget.getGui().closeGui();
 		});
 
-		buttonExpandAll = new SimpleButton(this, GuiLang.EXPAND_ALL, GuiIcons.ADD, (widget, button) ->
+		buttonExpandAll = new SimpleButton(this, I18n.format("gui.expand_all"), GuiIcons.ADD, (widget, button) ->
 		{
 			for (Widget w : configEntryButtons)
 			{
@@ -373,7 +372,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			widget.getGui().refreshWidgets();
 		});
 
-		buttonCollapseAll = new SimpleButton(this, GuiLang.COLLAPSE_ALL, GuiIcons.REMOVE, (widget, button) ->
+		buttonCollapseAll = new SimpleButton(this, I18n.format("gui.collapse_all"), GuiIcons.REMOVE, (widget, button) ->
 		{
 			for (Widget w : configEntryButtons)
 			{

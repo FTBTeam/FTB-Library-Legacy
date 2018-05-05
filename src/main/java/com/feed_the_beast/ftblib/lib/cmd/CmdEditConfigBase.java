@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.cmd;
 
 import com.feed_the_beast.ftblib.FTBLib;
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueInstance;
@@ -20,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -100,7 +100,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 
 		if (entry.isNull())
 		{
-			throw FTBLibLang.CONFIG_COMMAND_INVALID_KEY.commandError(node.toString());
+			throw new CommandException("ftblib.lang.config_command.invalid_key", node.toString());
 		}
 
 		if (args.length >= 2)
@@ -115,13 +115,13 @@ public abstract class CmdEditConfigBase extends CmdBase
 				json1.add(node.toString(), value);
 				getCallback(sender).saveConfig(group, sender, json1);
 				ConfigValueInstance instance = group.getMap().get(node);
-				Notification.of(Notification.VANILLA_STATUS, FTBLibLang.CONFIG_COMMAND_SET.textComponent(sender, group.getDisplayName(instance.info), group.get(node).toString())).send(server, getCommandSenderAsPlayer(sender));
+				Notification.of(Notification.VANILLA_STATUS, TextComponentHelper.createComponentTranslation(sender, "ftblib.lang.config_command.set", group.getDisplayName(instance.info), group.get(node).toString())).send(server, getCommandSenderAsPlayer(sender));
 				return;
 			}
 			catch (Exception ex)
 			{
 				ex.printStackTrace();
-				throw FTBLibLang.ERROR.commandError(ex.toString());
+				throw new CommandException("error", ex.toString());
 			}
 		}
 

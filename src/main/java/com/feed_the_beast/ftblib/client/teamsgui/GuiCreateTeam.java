@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.TextBox;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
@@ -13,6 +12,7 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class GuiCreateTeam extends GuiBase
 		color = EnumTeamColor.NAME_MAP.getRandom(MathUtils.RAND);
 
 		int bwidth = width / 2 - 10;
-		buttonAccept = new SimpleTextButton(this, GuiLang.ACCEPT.translate(), Icon.EMPTY)
+		buttonAccept = new SimpleTextButton(this, I18n.format("gui.accept"), Icon.EMPTY)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -57,7 +57,7 @@ public class GuiCreateTeam extends GuiBase
 
 		buttonAccept.setPosAndSize(width - bwidth - 9, height - 24, bwidth, 16);
 
-		buttonCancel = new SimpleTextButton(this, GuiLang.CANCEL.translate(), Icon.EMPTY)
+		buttonCancel = new SimpleTextButton(this, I18n.format("gui.cancel"), Icon.EMPTY)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -113,7 +113,7 @@ public class GuiCreateTeam extends GuiBase
 			};
 
 			b.setPosAndSize(8 + (i % 5) * 30, 32 + (i / 5) * 30, 25, 25);
-			b.setTitle(col.getTextFormatting() + col.getLangKey().translate());
+			b.setTitle(col.getTextFormatting() + I18n.format(col.getLangKey()));
 			colorButtons.add(b);
 			i++;
 		}

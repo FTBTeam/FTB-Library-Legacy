@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.client;
 
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
@@ -40,7 +39,7 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			list.add((sidebarButton.getConfig() ? GuiLang.ENABLED : GuiLang.DISABLED).translate());
+			list.add(sidebarButton.getConfig() ? I18n.format("addServer.resourcePack.enabled") : I18n.format("addServer.resourcePack.disabled"));
 
 			if (!tooltip.isEmpty())
 			{

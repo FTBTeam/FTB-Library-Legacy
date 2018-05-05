@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.client.teamsgui;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.data.FTBLibTeamGuiActions;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -9,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.net.MessageMyTeamAction;
 import com.feed_the_beast.ftblib.net.MessageMyTeamPlayerList;
 import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
@@ -46,12 +46,12 @@ public class GuiTransferOwnership extends GuiManagePlayersBase
 				}
 
 				getGui().closeGui(!result);
-			}, FTBLibLang.TEAM_GUI_TRANSFER_OWNERSHIP.translate() + "?", ClientUtils.MC.getSession().getUsername() + " => " + entry.name, 0));
+			}, I18n.format("ftblib.lang.team.gui.transfer_ownership") + "?", ClientUtils.MC.getSession().getUsername() + " => " + entry.name, 0));
 		}
 	}
 
 	public GuiTransferOwnership(Collection<MessageMyTeamPlayerList.Entry> m)
 	{
-		super(FTBLibLang.TEAM_GUI_TRANSFER_OWNERSHIP.translate(), m, ButtonPlayer::new);
+		super(I18n.format("ftblib.lang.team.gui.transfer_ownership"), m, ButtonPlayer::new);
 	}
 }

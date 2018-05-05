@@ -77,7 +77,7 @@ public class FTBLibEventHandler
 	@SubscribeEvent
 	public static void registerAdminPanelActions(RegisterAdminPanelActionsEvent event)
 	{
-		event.register(new Action(new ResourceLocation(FTBLib.MOD_ID + ":reload"), new TextComponentTranslation("ftblib.lang.reload_server_button"), GuiIcons.REFRESH, -1000)
+		event.register(new Action(new ResourceLocation("ftblib:reload"), new TextComponentTranslation("ftblib.lang.reload_server_button"), GuiIcons.REFRESH, -1000)
 		{
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)

@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.commands.team;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
@@ -42,16 +41,16 @@ public class CmdRequestInvite extends CmdBase
 
 		if (p.hasTeam())
 		{
-			throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
+			throw new CommandException("ftblib.lang.team.error.must_leave");
 		}
 
 		checkArgs(sender, args, 1);
 
 		ForgeTeam team = Universe.get().getTeam(args[0]);
 
-		if (team == null)
+		if (!team.isValid())
 		{
-			throw FTBLibLang.ERROR.commandError(args[0]);
+			throw new CommandException("error", args[0]);
 		}
 
 		team.setRequestingInvite(p, true);

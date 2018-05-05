@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.commands.team;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import net.minecraft.command.CommandException;
@@ -24,11 +23,11 @@ public class CmdLeave extends CmdBase
 
 		if (!p.hasTeam())
 		{
-			throw FTBLibLang.TEAM_NO_TEAM.commandError();
+			throw new CommandException("ftblib.lang.team.error.no_team");
 		}
 		else if (!p.team.removeMember(p))
 		{
-			throw FTBLibLang.TEAM_MUST_TRANSFER_OWNERSHIP.commandError();
+			throw new CommandException("ftblib.lang.team.error.must_transfer_ownership");
 		}
 	}
 }

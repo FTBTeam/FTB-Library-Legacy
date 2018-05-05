@@ -4,12 +4,12 @@ import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.TextBox;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 public class GuiConfigValueField extends GuiBase
 {
@@ -28,7 +28,7 @@ public class GuiConfigValueField extends GuiBase
 
 		int bsize = width / 2 - 10;
 
-		buttonCancel = new SimpleTextButton(this, GuiLang.CANCEL.translate(), Icon.EMPTY)
+		buttonCancel = new SimpleTextButton(this, I18n.format("gui.cancel"), Icon.EMPTY)
 		{
 			@Override
 			public void onClicked(MouseButton button)
@@ -46,7 +46,7 @@ public class GuiConfigValueField extends GuiBase
 
 		buttonCancel.setPosAndSize(8, height - 24, bsize, 16);
 
-		buttonAccept = new SimpleTextButton(this, GuiLang.ACCEPT.translate(), Icon.EMPTY)
+		buttonAccept = new SimpleTextButton(this, I18n.format("gui.accept"), Icon.EMPTY)
 		{
 			@Override
 			public void onClicked(MouseButton button)

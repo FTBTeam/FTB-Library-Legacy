@@ -9,8 +9,8 @@ import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 public class FTBLibNetHandler
 {
 	static final NetworkWrapper GENERAL = NetworkWrapper.newWrapper(FTBLib.MOD_ID);
-	static final NetworkWrapper EDIT_CONFIG = NetworkWrapper.newWrapper(FTBLib.MOD_ID + "_edit_config");
-	static final NetworkWrapper MY_TEAM = NetworkWrapper.newWrapper(FTBLib.MOD_ID + "_my_team");
+	static final NetworkWrapper EDIT_CONFIG = NetworkWrapper.newWrapper("ftblib_edit_config");
+	static final NetworkWrapper MY_TEAM = NetworkWrapper.newWrapper("ftblib_my_team");
 
 	public static void init()
 	{

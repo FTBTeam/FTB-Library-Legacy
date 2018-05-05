@@ -6,9 +6,7 @@ gui.added=Added
 gui.remove=Remove
 gui.removed=Removed
 gui.close=Close
-gui.save=Save
 gui.saved=Saved
-gui.load=Load
 gui.loaded=Loaded
 gui.info=Info
 gui.collapse_all=Collapse All
@@ -31,23 +29,19 @@ gui.blacklist=Blacklist
 gui.color=Color
 gui.downloading=Downloading...
 gui.infinite=Infinite
-gui.width=Width
-gui.height=Height
 
 ## Sides
-facing.down=Down
-facing.up=Up
 facing.north=North
 facing.south=South
 facing.west=West
 facing.east=East
 
-ftblib.dside.bottom=Bottom
-ftblib.dside.top=Top
-ftblib.dside.back=Back
-ftblib.dside.front=Front
-ftblib.dside.left=Left
-ftblib.dside.right=Right
+relative_facing.bottom=Bottom
+relative_facing.top=Top
+relative_facing.back=Back
+relative_facing.front=Front
+relative_facing.left=Left
+relative_facing.right=Right
 
 # FTBLib Lang
 ftblib=FTBLib
@@ -64,12 +58,7 @@ server_forced=Server overrides to '%s'
 commands=Commands
 my_permissions=My Permissions
 all_permissions=All Permissions
-difficulty=Difficulty: %s
 key.categories.ftbmods=FTB Mods
-
-dimension.overworld=Overworld
-dimension.nether=Nether
-dimension.end=The End
 
 ftblib.lang.reload_server_button=Reload Server
 ftblib.lang.reload_server=FTBLib: Server reloaded in %s
@@ -84,7 +73,6 @@ ftblib.lang.add_fake_player.player_exists=Player already exists!
 ftblib.lang.add_fake_player.added=Fake player %s added!
 
 # Config
-ftblib.general=General
 ftblib.general.clientless_mode=Clientless Mode
 ftblib.general.mirror_ftb_commands=Mirror /ftb Commands
 ftblib.general.merge_offline_mode_players=Merge Offline Mode Players

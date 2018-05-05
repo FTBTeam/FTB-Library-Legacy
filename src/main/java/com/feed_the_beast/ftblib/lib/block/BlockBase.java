@@ -12,6 +12,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -82,7 +84,13 @@ public class BlockBase extends Block
 
 				if (!tile.destroyedByCreativePlayer || tile.shouldDrop())
 				{
-					spawnAsEntity(world, pos, createStack(state, tileEntity));
+					ItemStack stack = createStack(state, tileEntity);
+					NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+					NBTTagList nbttaglist = new NBTTagList();
+					nbttaglist.appendTag(new NBTTagString("(+NBT)"));
+					nbttagcompound1.setTag("Lore", nbttaglist);
+					stack.setTagInfo("display", nbttagcompound1);
+					spawnAsEntity(world, pos, stack);
 				}
 
 				if (tile.updateComparator())

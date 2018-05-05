@@ -191,11 +191,11 @@ public class ServerUtils
 		switch (dim)
 		{
 			case 0:
-				return TextComponentHelper.createComponentTranslation(sender, "dimension.overworld");
+				return TextComponentHelper.createComponentTranslation(sender, "createWorld.customize.preset.overworld");
 			case -1:
-				return TextComponentHelper.createComponentTranslation(sender, "dimension.nether");
+				return TextComponentHelper.createComponentTranslation(sender, "advancements.nether.root.title");
 			case 1:
-				return TextComponentHelper.createComponentTranslation(sender, "dimension.end");
+				return TextComponentHelper.createComponentTranslation(sender, "advancements.end.root.title");
 			default:
 				return new TextComponentString("DIM_" + dim);
 		}

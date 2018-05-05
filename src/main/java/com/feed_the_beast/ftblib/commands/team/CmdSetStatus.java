@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.commands.team;
 
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
@@ -46,11 +45,11 @@ public class CmdSetStatus extends CmdBase
 
 		if (!p.hasTeam())
 		{
-			throw FTBLibLang.TEAM_NO_TEAM.commandError();
+			throw new CommandException("ftblib.lang.team.error.no_team");
 		}
 		else if (!p.team.isModerator(p))
 		{
-			throw FTBLibLang.COMMAND_PERMISSION.commandError();
+			throw new CommandException("commands.generic.permission");
 		}
 
 		checkArgs(sender, args, 2);
@@ -58,11 +57,11 @@ public class CmdSetStatus extends CmdBase
 
 		if (p.team.isOwner(p1))
 		{
-			throw FTBLibLang.TEAM_PERMISSION_OWNER.commandError();
+			throw new CommandException("ftblib.lang.team.permission.owner");
 		}
 		else if (!p.team.isModerator(p))
 		{
-			throw FTBLibLang.COMMAND_PERMISSION.commandError();
+			throw new CommandException("commands.generic.permission");
 		}
 
 		EnumTeamStatus status = EnumTeamStatus.NAME_MAP.get(args[1].toLowerCase());

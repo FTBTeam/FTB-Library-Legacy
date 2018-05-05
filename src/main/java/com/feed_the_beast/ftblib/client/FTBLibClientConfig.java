@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.client;
 
 import com.feed_the_beast.ftblib.FTBLib;
-import com.feed_the_beast.ftblib.lib.gui.GuiLang;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -13,10 +12,10 @@ import net.minecraftforge.fml.relauncher.Side;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBLib.MOD_ID, value = Side.CLIENT)
-@Config(modid = FTBLib.MOD_ID + "_client", category = "", name = "../local/client/" + FTBLib.MOD_ID)
+@Config(modid = "ftblib_client", category = "", name = "../local/client/ftblib")
 public class FTBLibClientConfig
 {
-	@Config.LangKey(GuiLang.LANG_GENERAL)
+	@Config.LangKey("stat.generalButton")
 	public static final General general = new General();
 
 	public static class General
@@ -41,13 +40,13 @@ public class FTBLibClientConfig
 
 	public static void sync()
 	{
-		ConfigManager.sync(FTBLib.MOD_ID + "_client", Config.Type.INSTANCE);
+		ConfigManager.sync("ftblib_client", Config.Type.INSTANCE);
 	}
 
 	@SubscribeEvent
 	public static void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event)
 	{
-		if (event.getModID().equals(FTBLib.MOD_ID + "_client"))
+		if (event.getModID().equals("ftblib_client"))
 		{
 			sync();
 		}

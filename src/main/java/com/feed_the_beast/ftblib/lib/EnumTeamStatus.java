@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftblib.lib;
 
-import com.feed_the_beast.ftblib.lib.util.LangKey;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.Collection;
@@ -42,7 +42,7 @@ public enum EnumTeamStatus implements IStringSerializable, ICustomName
 	private final String name;
 	private final int status;
 	private final TextFormatting color;
-	private final LangKey langKey;
+	private final String langKey;
 	private final boolean canBeSet;
 
 	EnumTeamStatus(int s, String n, TextFormatting c, boolean cs)
@@ -50,7 +50,7 @@ public enum EnumTeamStatus implements IStringSerializable, ICustomName
 		name = n;
 		status = s;
 		color = c;
-		langKey = LangKey.of("ftblib.lang.team_status." + name);
+		langKey = "ftblib.lang.team_status." + name;
 		canBeSet = cs;
 	}
 
@@ -63,7 +63,7 @@ public enum EnumTeamStatus implements IStringSerializable, ICustomName
 	@Override
 	public ITextComponent getCustomDisplayName()
 	{
-		return StringUtils.color(langKey.textComponent(null), color);
+		return StringUtils.color(new TextComponentTranslation(langKey), color);
 	}
 
 	public int getStatus()
@@ -76,7 +76,7 @@ public enum EnumTeamStatus implements IStringSerializable, ICustomName
 		return color;
 	}
 
-	public LangKey getLangKey()
+	public String getLangKey()
 	{
 		return langKey;
 	}

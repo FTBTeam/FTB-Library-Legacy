@@ -7,8 +7,8 @@ import net.minecraft.world.World;
  */
 public interface FTBLibGameRules
 {
-	String DISABLE_TEAM_CREATION = FTBLib.MOD_ID + ":disable_team_creation";
-	String DISABLE_TEAM_JOINING = FTBLib.MOD_ID + ":disable_team_joining";
+	String DISABLE_TEAM_CREATION = "ftblib:disable_team_creation";
+	String DISABLE_TEAM_JOINING = "ftblib:disable_team_joining";
 
 	static boolean canCreateTeam(World world)
 	{

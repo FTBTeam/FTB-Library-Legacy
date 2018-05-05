@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.commands.team;
 
 import com.feed_the_beast.ftblib.FTBLibGameRules;
-import com.feed_the_beast.ftblib.FTBLibLang;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
@@ -72,7 +71,7 @@ public class CmdJoin extends CmdBase
 	{
 		if (!FTBLibGameRules.canJoinTeam(server.getWorld(0)))
 		{
-			throw FTBLibLang.FEATURE_DISABLED_SERVER.commandError();
+			throw new CommandException("feature_disabled_server");
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
@@ -80,7 +79,7 @@ public class CmdJoin extends CmdBase
 
 		if (p.hasTeam())
 		{
-			throw FTBLibLang.TEAM_MUST_LEAVE.commandError();
+			throw new CommandException("ftblib.lang.team.error.must_leave");
 		}
 
 		checkArgs(sender, args, 1);
@@ -89,7 +88,7 @@ public class CmdJoin extends CmdBase
 
 		if (!team.addMember(p, false))
 		{
-			throw FTBLibLang.TEAM_NOT_MEMBER.commandError(p.getName());
+			throw new CommandException("ftblib.lang.team.error.not_member", p.getName());
 		}
 	}
 }
