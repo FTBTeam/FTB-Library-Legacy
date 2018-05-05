@@ -20,8 +20,10 @@ public class FTBLibClientConfig
 
 	public static class General
 	{
+		@Config.Comment("Show item Ore Dictionary names in inventory")
 		public boolean item_ore_names = false;
 
+		@Config.Comment("Show item NBT in inventory")
 		public boolean item_nbt = false;
 
 		@Config.Comment({
@@ -32,9 +34,13 @@ public class FTBLibClientConfig
 		})
 		public EnumSidebarButtonPlacement action_buttons = EnumSidebarButtonPlacement.AUTO;
 
+		@Config.Comment("Mirror /ftbc commands")
 		public boolean mirror_commands = true;
+
+		@Config.Comment("Replace vanilla status message with Notifications, which support colors and timers")
 		public boolean replace_vanilla_status_messages = true;
 
+		@Config.Comment("Show help text while holding F3")
 		public boolean debug_helper = true;
 	}
 
