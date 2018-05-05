@@ -100,6 +100,11 @@ public abstract class Action
 		order = o;
 	}
 
+	public Action(String id, ITextComponent title, Icon icon, int order)
+	{
+		this(new ResourceLocation(id), title, icon, order);
+	}
+
 	public final ResourceLocation getId()
 	{
 		return id;

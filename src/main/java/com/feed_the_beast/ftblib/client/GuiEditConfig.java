@@ -57,7 +57,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		@Override
 		public Icon getScrollBar(WidgetType type, boolean vertical)
 		{
-			return getContentColor(type).withAlpha(100).withBorder(1);
+			return getContentColor(WidgetType.NORMAL).withAlpha(100).withOutline(Color4I.GRAY.withAlpha(100), false);
 		}
 	};
 
@@ -447,6 +447,10 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	public void drawBackground()
 	{
 		COLOR_BACKGROUND.draw(0, 0, width, 20);
+		drawString(getTitle(), 6 - 1, 6, Color4I.DARK_GRAY, 0);
+		drawString(getTitle(), 6 + 1, 6, Color4I.DARK_GRAY, 0);
+		drawString(getTitle(), 6, 6 - 1, Color4I.DARK_GRAY, 0);
+		drawString(getTitle(), 6, 6 + 1, Color4I.DARK_GRAY, 0);
 		drawString(getTitle(), 6, 6);
 	}
 
