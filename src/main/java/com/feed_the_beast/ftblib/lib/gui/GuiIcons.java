@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
-import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 
 public interface GuiIcons
@@ -78,9 +77,10 @@ public interface GuiIcons
 	Icon TOGGLE_NIGHT = get("toggle_night");
 	Icon LOCK = get("lock");
 	Icon LOCK_OPEN = get("lock_open");
+	Icon SIGN = Icon.getIcon("minecraft:items/sign");
 
 	static Icon get(String id)
 	{
-		return Icon.getIcon(FTBLib.MOD_ID + ":icons/" + id);
+		return Icon.getIcon("ftblib:icons/" + id);
 	}
 }

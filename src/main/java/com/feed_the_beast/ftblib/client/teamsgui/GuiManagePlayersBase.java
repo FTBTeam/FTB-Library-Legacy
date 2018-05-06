@@ -64,6 +64,7 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 	public GuiManagePlayersBase(String title, Collection<MessageMyTeamPlayerList.Entry> m, BiFunction<Panel, MessageMyTeamPlayerList.Entry, ButtonPlayerBase> b)
 	{
 		setTitle(title);
+		setHasSearchBox(true);
 		entries = new ArrayList<>(m);
 		buttonFunction = b;
 	}

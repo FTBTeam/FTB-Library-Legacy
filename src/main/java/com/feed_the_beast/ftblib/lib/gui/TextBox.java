@@ -25,9 +25,9 @@ public class TextBox extends Widget
 	private int selectionEnd;
 	private boolean validText;
 
-	public TextBox(GuiBase gui)
+	public TextBox(Panel panel)
 	{
-		super(gui);
+		super(panel);
 	}
 
 	public final boolean isFocused()
