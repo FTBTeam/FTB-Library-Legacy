@@ -11,11 +11,13 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.minecraftforge.fml.common.network.NetworkCheckHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author LatvianModder
@@ -24,7 +26,6 @@ import java.util.Locale;
 		modid = FTBLib.MOD_ID,
 		name = FTBLib.MOD_NAME,
 		version = FTBLib.VERSION,
-		acceptableRemoteVersions = "*",
 		acceptedMinecraftVersions = "[1.12,)",
 		dependencies = "required-after:forge@[14.23.0.2517,);after:" + OtherMods.BAUBLES + ";after:" + OtherMods.JEI + ";after:" + OtherMods.NEI + ";after:" + OtherMods.MC_MULTIPART + ";after:" + OtherMods.CHISELS_AND_BITS + ";after:" + OtherMods.ICHUN_UTIL
 )
@@ -77,8 +78,14 @@ public class FTBLib
 		}
 	}
 
-	@Mod.EventHandler
-	public void onServerStopped(FMLServerStoppedEvent event)
+	@NetworkCheckHandler
+	public boolean acceptModVersions(Map<String, String> map, Side side)
 	{
+		if (side.isServer())
+		{
+			PROXY.putAllServerMods(map);
+		}
+
+		return true;
 	}
 }

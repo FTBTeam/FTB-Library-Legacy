@@ -178,4 +178,8 @@ public class FTBLibCommon
 	{
 		return FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0).getTotalWorldTime();
 	}
+
+	public void putAllServerMods(Map<String, String> map)
+	{
+	}
 }

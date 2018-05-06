@@ -2,7 +2,6 @@ package com.feed_the_beast.ftblib;
 
 import com.feed_the_beast.ftblib.events.RegisterAdminPanelActionsEvent;
 import com.feed_the_beast.ftblib.events.RegisterConfigValueProvidersEvent;
-import com.feed_the_beast.ftblib.events.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
@@ -37,12 +36,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class FTBLibEventHandler
 {
 	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation(FTBLib.MOD_ID, "config");
-
-	@SubscribeEvent
-	public static void registerOptionalServerMods(RegisterOptionalServerModsEvent event)
-	{
-		event.register(FTBLib.MOD_ID);
-	}
 
 	@SubscribeEvent
 	public static void registerConfigValueProviders(RegisterConfigValueProvidersEvent event)

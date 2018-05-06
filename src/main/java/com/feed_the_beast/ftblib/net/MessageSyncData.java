@@ -19,7 +19,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -34,7 +33,6 @@ public class MessageSyncData extends MessageToClient
 	private int flags;
 	private UUID universeId;
 	private NBTTagCompound syncData;
-	private Collection<String> optionalServerMods;
 	private Map<String, String> gamerules;
 
 	public MessageSyncData()
@@ -54,8 +52,6 @@ public class MessageSyncData extends MessageToClient
 
 		gamerules = new HashMap<>();
 		new SyncGamerulesEvent(gamerule -> gamerules.put(gamerule, player.world.getGameRules().getString(gamerule))).post();
-
-		optionalServerMods = forgePlayer.team.universe.optionalServerMods;
 	}
 
 	@Override
@@ -70,7 +66,6 @@ public class MessageSyncData extends MessageToClient
 		data.writeByte(flags);
 		data.writeUUID(universeId);
 		data.writeNBT(syncData);
-		data.writeCollection(optionalServerMods, DataOut.STRING);
 		data.writeMap(gamerules, DataOut.STRING, DataOut.STRING);
 	}
 
@@ -80,7 +75,6 @@ public class MessageSyncData extends MessageToClient
 		flags = data.readByte();
 		universeId = data.readUUID();
 		syncData = data.readNBT();
-		optionalServerMods = data.readCollection(DataIn.STRING);
 		gamerules = data.readMap(DataIn.STRING, DataIn.STRING);
 	}
 
@@ -89,8 +83,6 @@ public class MessageSyncData extends MessageToClient
 	public void onMessage()
 	{
 		FTBLibClient.UNIVERSE_UUID = universeId;
-		FTBLibClient.OPTIONAL_SERVER_MODS_CLIENT.clear();
-		FTBLibClient.OPTIONAL_SERVER_MODS_CLIENT.addAll(optionalServerMods);
 
 		for (String key : syncData.getKeySet())
 		{

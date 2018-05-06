@@ -2,7 +2,6 @@ package com.feed_the_beast.ftblib.lib.data;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.events.RegisterOptionalServerModsEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
@@ -136,7 +135,6 @@ public class Universe implements IHasCache
 	public final Map<String, ForgeTeam> teams;
 	private final ForgeTeam noneTeam;
 	private UUID uuid;
-	public final Collection<String> optionalServerMods;
 	public boolean needsSaving;
 	public boolean checkSaving;
 	public ForgeTeam fakePlayerTeam;
@@ -151,7 +149,6 @@ public class Universe implements IHasCache
 		teams = new HashMap<>();
 		noneTeam = new ForgeTeam(this, "", TeamType.NONE);
 		uuid = null;
-		optionalServerMods = new HashSet<>();
 		needsSaving = false;
 		checkSaving = true;
 	}
@@ -207,8 +204,6 @@ public class Universe implements IHasCache
 
 		NBTTagCompound data = universeData.getCompoundTag("Data");
 
-		optionalServerMods.clear();
-		new RegisterOptionalServerModsEvent(optionalServerMods::add).post();
 		new UniverseLoadedEvent.Pre(this, world, data).post();
 
 		Map<UUID, NBTTagCompound> playerNBT = new HashMap<>();
