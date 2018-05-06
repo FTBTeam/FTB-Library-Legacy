@@ -16,7 +16,12 @@ public abstract class GuiButtonListBase extends GuiBase
 	private final PanelScrollBar scrollBar;
 	private String title = "";
 
-	public GuiButtonListBase()
+
+	public GuiButtonListBase() {
+	    this(0);
+    }
+
+	public GuiButtonListBase(int extraHeight)
 	{
 		panelButtons = new Panel(this)
 		{
@@ -58,7 +63,7 @@ public abstract class GuiButtonListBase extends GuiBase
 				scrollBar.setMaxValue(size);
 
 				getGui().setWidth(scrollBar.posX + scrollBar.width + 8);
-				getGui().setHeight(height + 18);
+				getGui().setHeight(height + 18 + extraHeight);
 			}
 
 			@Override

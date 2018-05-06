@@ -18,6 +18,15 @@ import java.util.function.BiFunction;
  */
 public class GuiManagePlayersBase extends GuiButtonListBase
 {
+	class TextBoxUsernameFilter extends TextBox {
+		TextBoxUsernameFilter() {
+			super(GuiManagePlayersBase.this);
+		}
+		@Override
+		public void onTextChanged() {
+			setFilter(this.getText());
+		}
+	}
 	static class ButtonPlayerBase extends SimpleTextButton
 	{
 		final MessageMyTeamPlayerList.Entry entry;
@@ -57,12 +66,17 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 		}
 	}
 
+	private final Widget filterInput;
 	private final List<MessageMyTeamPlayerList.Entry> entries;
 	private final BiFunction<Panel, MessageMyTeamPlayerList.Entry, ButtonPlayerBase> buttonFunction;
 	private String usernameFilter = "";
 
 	public GuiManagePlayersBase(String title, Collection<MessageMyTeamPlayerList.Entry> m, BiFunction<Panel, MessageMyTeamPlayerList.Entry, ButtonPlayerBase> b)
 	{
+		super(18);
+		filterInput = new TextBoxUsernameFilter();
+
+
 		setTitle(title);
 		entries = new ArrayList<>(m);
 		buttonFunction = b;
@@ -70,6 +84,7 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 
 	public void setFilter (String username) {
 		this.usernameFilter = username;
+		refreshWidgets();
 	}
 
 	private List<MessageMyTeamPlayerList.Entry> applyFilter (Collection<MessageMyTeamPlayerList.Entry> list) {
@@ -88,5 +103,17 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 		{
 			panel.add(buttonFunction.apply(panel, m));
 		}
+	}
+
+	@Override
+	public void alignWidgets() {
+		super.alignWidgets();
+		filterInput.setPosAndSize(8,155,width - 16,16);
+	}
+
+	@Override
+	public void addWidgets() {
+		super.addWidgets();
+		add(filterInput);
 	}
 }
