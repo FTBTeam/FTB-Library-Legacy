@@ -217,9 +217,10 @@ public class Color4I extends Icon
 		alpha = a;
 	}
 
+	@Override
 	public Color4I copy()
 	{
-		return rgba(redi(), greeni(), bluei(), alphai());
+		return this;
 	}
 
 	public boolean isMutable()

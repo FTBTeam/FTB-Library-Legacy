@@ -1,16 +1,13 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.feed_the_beast.ftblib.lib.ICustomColor;
-import com.feed_the_beast.ftblib.lib.ICustomName;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nonnull;
@@ -85,7 +82,7 @@ public class ConfigEnum<E> extends ConfigValue
 
 	public String toString()
 	{
-		return getString();
+		return getNameMap().getDisplayName(getValue()).getFormattedText();
 	}
 
 	@Override
@@ -109,15 +106,14 @@ public class ConfigEnum<E> extends ConfigValue
 	@Override
 	public Color4I getColor()
 	{
-		Color4I col = getValue() instanceof ICustomColor ? ((ICustomColor) getValue()).getCustomColor() : Icon.EMPTY;
+		Color4I col = getNameMap().getColor(getValue());
 		return col.isEmpty() ? COLOR : col;
 	}
 
 	@Override
 	public void addInfo(ConfigValueInfo info, List<String> list)
 	{
-		ITextComponent component = info.defaultValue.getValue() instanceof ICustomName && ((ICustomName) info.defaultValue.getValue()).hasCustomName() ? ((ICustomName) info.defaultValue.getValue()).getCustomDisplayName() : null;
-		list.add(TextFormatting.AQUA + "Def: " + (component == null ? info.defaultValue.getString() : component.getFormattedText()));
+		list.add(TextFormatting.AQUA + "Def: " + getNameMap().getDisplayName(CommonUtils.cast(info.defaultValue.getValue())).getFormattedText());
 	}
 
 	@Override
@@ -141,16 +137,18 @@ public class ConfigEnum<E> extends ConfigValue
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeShort(getNameMap().values.size());
+		NameMap<E> nameMap = getNameMap();
 
-		for (Map.Entry<String, E> entry : getNameMap().map.entrySet())
+		data.writeShort(nameMap.size());
+
+		for (Map.Entry<String, E> entry : nameMap.map.entrySet())
 		{
 			data.writeString(entry.getKey());
-			data.writeTextComponent(entry.getValue() instanceof ICustomName && ((ICustomName) entry.getValue()).hasCustomName() ? ((ICustomName) entry.getValue()).getCustomDisplayName() : null);
-			data.writeJson((entry.getValue() instanceof ICustomColor ? ((ICustomColor) entry.getValue()).getCustomColor() : Icon.EMPTY).getJson());
+			data.writeTextComponent(nameMap.getDisplayName(entry.getValue()));
+			data.writeIcon(nameMap.getColor(entry.getValue()));
 		}
 
-		data.writeShort(getNameMap().getIndex(getValue()));
+		data.writeShort(nameMap.getIndex(getValue()));
 	}
 
 	@Override

@@ -65,23 +65,10 @@ public class ConfigStringEnum extends ConfigValue
 		return value;
 	}
 
-	@Override
-	public boolean hasCustomName()
+	public String toString()
 	{
-		return customNames.containsKey(getString());
-	}
-
-	@Override
-	public ITextComponent getCustomDisplayName()
-	{
-		return customNames.get(getString());
-	}
-
-	@Override
-	public Color4I getCustomColor()
-	{
-		Color4I col = customColors.get(getString());
-		return col == null ? Icon.EMPTY : col;
+		ITextComponent textComponent = customNames.get(getString());
+		return textComponent == null ? getString() : textComponent.getFormattedText();
 	}
 
 	public void setCustomName(String key, @Nullable ITextComponent component)
@@ -141,7 +128,8 @@ public class ConfigStringEnum extends ConfigValue
 	@Override
 	public Color4I getColor()
 	{
-		return ConfigEnum.COLOR;
+		Color4I color4I = customColors.get(getString());
+		return color4I == null || color4I.isEmpty() ? ConfigEnum.COLOR : color4I;
 	}
 
 	@Override

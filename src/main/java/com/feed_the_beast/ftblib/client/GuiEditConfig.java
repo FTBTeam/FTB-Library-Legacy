@@ -201,8 +201,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			drawString(keyText, ax + 4, ay + 4, Bits.setFlag(0, SHADOW, mouseOver));
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
-			String s = value.hasCustomName() ? value.getCustomDisplayName().getFormattedText() : value.getString();
-
+			String s = value.toString();
 			int slen = getStringWidth(s);
 
 			if (slen > 150)
@@ -211,14 +210,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				slen = 152;
 			}
 
-			Color4I col = value.getCustomColor();
-
-			if (col.isEmpty())
-			{
-				col = value.getColor();
-			}
-
-			MutableColor4I textCol = col.mutable();
+			MutableColor4I textCol = value.getColor().mutable();
 			textCol.setAlpha(255);
 
 			if (mouseOver)

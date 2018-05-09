@@ -1,12 +1,17 @@
 package com.feed_the_beast.ftblib.lib.util.misc;
 
+import com.feed_the_beast.ftblib.lib.icon.Color4I;
+import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
+import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.google.common.base.Preconditions;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -24,10 +29,82 @@ import java.util.function.Function;
  */
 public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, DataOut.Serializer<E>
 {
-	private static final Function<Object, String> DEFAULT_OBJECT_TO_NAME = value -> StringUtils.getId(value, StringUtils.FLAG_ID_ONLY_LOWERCASE | StringUtils.FLAG_ID_FIX);
+	public static class ObjectProperties<T>
+	{
+		public static final ObjectProperties<Object> DEFAULT = new ObjectProperties<>();
+
+		public String getName(T object)
+		{
+			return StringUtils.getId(object, StringUtils.FLAG_ID_ONLY_LOWERCASE | StringUtils.FLAG_ID_FIX);
+		}
+
+		public ITextComponent getDisplayName(T object)
+		{
+			return new TextComponentString(getName(object));
+		}
+
+		public Color4I getColor(T object)
+		{
+			return Icon.EMPTY;
+		}
+
+		public static <Y> ObjectProperties<Y> withComponentName(Function<Y, ITextComponent> nameGetter)
+		{
+			return new ObjectProperties<Y>()
+			{
+				@Override
+				public ITextComponent getDisplayName(Y object)
+				{
+					return nameGetter.apply(object);
+				}
+			};
+		}
+
+		public static <Y> ObjectProperties<Y> withTranslatedName(Function<Y, String> nameGetter)
+		{
+			return new ObjectProperties<Y>()
+			{
+				@Override
+				public ITextComponent getDisplayName(Y object)
+				{
+					return new TextComponentTranslation(nameGetter.apply(object));
+				}
+			};
+		}
+
+		public static <Y> ObjectProperties<Y> withColor(Function<Y, Color4I> colorGetter)
+		{
+			return new ObjectProperties<Y>()
+			{
+				@Override
+				public Color4I getColor(Y object)
+				{
+					return colorGetter.apply(object);
+				}
+			};
+		}
+
+		public static <Y> ObjectProperties<Y> withTranslatedNameAndColor(Function<Y, String> nameGetter, Function<Y, Color4I> colorGetter)
+		{
+			return new ObjectProperties<Y>()
+			{
+				@Override
+				public ITextComponent getDisplayName(Y object)
+				{
+					return new TextComponentTranslation(nameGetter.apply(object));
+				}
+
+				@Override
+				public Color4I getColor(Y object)
+				{
+					return colorGetter.apply(object);
+				}
+			};
+		}
+	}
 
 	@SafeVarargs
-	public static <T> NameMap<T> create(T defaultValue, Function<Object, String> objectToName, T... values)
+	public static <T> NameMap<T> create(T defaultValue, ObjectProperties<T> objectProperties, T... values)
 	{
 		List<T> list = new ArrayList<>(values.length);
 
@@ -39,28 +116,32 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 			}
 		}
 
-		Preconditions.checkState(!list.isEmpty());
-		return new NameMap<>(defaultValue, objectToName, list);
+		if (list.isEmpty())
+		{
+			throw new IllegalStateException("Value list can't be empty!");
+		}
+
+		return new NameMap<>(defaultValue, objectProperties, list);
 	}
 
 	@SafeVarargs
 	public static <T> NameMap<T> create(T defaultValue, T... values)
 	{
-		return create(defaultValue, DEFAULT_OBJECT_TO_NAME, values);
+		return create(defaultValue, CommonUtils.cast(ObjectProperties.DEFAULT), values);
 	}
 
-	private final Function<Object, String> objectToName;
+	private final ObjectProperties<E> objectProperties;
 	public final E defaultValue;
 	public final Map<String, E> map;
 	public final List<String> keys;
 	public final List<E> values;
 
-	private NameMap(E def, Function<Object, String> o2n, List<E> v)
+	private NameMap(E def, ObjectProperties<E> ng, List<E> v)
 	{
-		objectToName = o2n;
+		objectProperties = ng;
 		values = v;
 
-		Map<String, E> map0 = new LinkedHashMap<>(values.size());
+		Map<String, E> map0 = new LinkedHashMap<>(size());
 
 		for (E value : values)
 		{
@@ -74,16 +155,26 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 
 	private NameMap(E def, NameMap<E> n)
 	{
-		objectToName = n.objectToName;
+		objectProperties = n.objectProperties;
 		map = n.map;
 		keys = n.keys;
 		values = n.values;
 		defaultValue = get(getName(def));
 	}
 
-	public String getName(Object value)
+	public String getName(E value)
 	{
-		return objectToName.apply(value);
+		return objectProperties.getName(value);
+	}
+
+	public ITextComponent getDisplayName(E value)
+	{
+		return objectProperties.getDisplayName(value);
+	}
+
+	public Color4I getColor(E value)
+	{
+		return objectProperties.getColor(value);
 	}
 
 	public NameMap<E> withDefault(E def)
@@ -94,6 +185,11 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 		}
 
 		return new NameMap<>(def, this);
+	}
+
+	public int size()
+	{
+		return values.size();
 	}
 
 	public E get(@Nullable String s)
@@ -111,12 +207,12 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 
 	public E get(int index)
 	{
-		return index < 0 || index >= values.size() ? defaultValue : values.get(index);
+		return index < 0 || index >= size() ? defaultValue : values.get(index);
 	}
 
 	public E offset(E value, int index)
 	{
-		return get(MathUtils.mod(getIndex(value) + index, values.size()));
+		return get(MathUtils.mod(getIndex(value) + index, size()));
 	}
 
 	public E getNext(E value)
@@ -155,7 +251,7 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 				return;
 			}
 
-			if (values.size() >= 128)
+			if (size() >= 128)
 			{
 				nbt.setShort(name, (short) index);
 			}
@@ -182,7 +278,7 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 
 	public E getRandom(Random rand)
 	{
-		return values.get(rand.nextInt(values.size()));
+		return values.get(rand.nextInt(size()));
 	}
 
 	@Override
@@ -196,7 +292,7 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 	{
 		int index = getIndex(object);
 
-		if (values.size() >= 256)
+		if (size() >= 256)
 		{
 			data.writeShort(index);
 		}
@@ -209,6 +305,6 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 	@Override
 	public E read(DataIn data)
 	{
-		return get(values.size() >= 256 ? data.readUnsignedShort() : data.readUnsignedByte());
+		return get(size() >= 256 ? data.readUnsignedShort() : data.readUnsignedByte());
 	}
 }

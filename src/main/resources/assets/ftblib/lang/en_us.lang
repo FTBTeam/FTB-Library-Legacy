@@ -177,24 +177,24 @@ sidebar_button.ftblib.notifications=Notifications
 sidebar_button.ftblib.admin_panel=Admin Panel
 
 # Privacy Level
-ftblib.privacy=Privacy
-ftblib.privacy.public=Public
-ftblib.privacy.private=Private
-ftblib.privacy.team=Team
+privacy=Privacy
+privacy.public=Public
+privacy.private=Private
+privacy.team=Team
 
 # Redstone Mode
-ftblib.redstonemode=Redstone Mode
-ftblib.redstonemode.disabled=Disabled
-ftblib.redstonemode.active_high=Active High
-ftblib.redstonemode.active_low=Active Low
-ftblib.redstonemode.pulse=Pulse
+redstone_mode=Redstone Mode
+redstone_mode.disabled=Disabled
+redstone_mode.active_high=Active High
+redstone_mode.active_low=Active Low
+redstone_mode.pulse=Pulse
 
 # IO Mode
-ftblib.io=IO Mode
-ftblib.io.io=IO
-ftblib.io.in=Input Only
-ftblib.io.out=Output Only
-ftblib.io.none=Disabled
+io_mode=IO Mode
+io_mode.io=IO
+io_mode.in=Input Only
+io_mode.out=Output Only
+io_mode.none=Disabled
 
 # Click Actions
 click_action.cmd=Command

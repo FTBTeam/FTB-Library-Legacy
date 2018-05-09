@@ -190,6 +190,11 @@ public abstract class Icon
 	{
 	}
 
+	public Icon copy()
+	{
+		return this;
+	}
+
 	@SideOnly(Side.CLIENT)
 	public abstract void draw(int x, int y, int w, int h, Color4I col);
 

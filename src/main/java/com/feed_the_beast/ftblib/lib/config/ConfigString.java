@@ -7,7 +7,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -54,7 +53,6 @@ public class ConfigString extends ConfigValue
 		value = v;
 	}
 
-	@Nullable
 	@Override
 	public Object getValue()
 	{
@@ -83,6 +81,11 @@ public class ConfigString extends ConfigValue
 	public Color4I getColor()
 	{
 		return COLOR;
+	}
+
+	public String toString()
+	{
+		return '"' + getString() + '"';
 	}
 
 	@Override

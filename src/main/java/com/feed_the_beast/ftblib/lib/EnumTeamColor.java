@@ -5,14 +5,12 @@ import com.feed_the_beast.ftblib.lib.util.EnumDyeColorHelper;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 /**
  * @author LatvianModder
  */
-public enum EnumTeamColor implements IStringSerializable, ICustomName, ICustomColor
+public enum EnumTeamColor implements IStringSerializable
 {
 	BLUE("blue", EnumDyeColor.BLUE, TextFormatting.BLUE, 0x0094FF),
 	CYAN("cyan", EnumDyeColor.CYAN, TextFormatting.AQUA, 0x00DDFF),
@@ -25,7 +23,7 @@ public enum EnumTeamColor implements IStringSerializable, ICustomName, ICustomCo
 	PURPLE("purple", EnumDyeColor.PURPLE, TextFormatting.DARK_PURPLE, 0xB342FF),
 	GRAY("gray", EnumDyeColor.GRAY, TextFormatting.GRAY, 0xC0C0C0);
 
-	public static final NameMap<EnumTeamColor> NAME_MAP = NameMap.create(BLUE, values());
+	public static final NameMap<EnumTeamColor> NAME_MAP = NameMap.create(BLUE, NameMap.ObjectProperties.withTranslatedNameAndColor(EnumTeamColor::getLangKey, EnumTeamColor::getColor), values());
 
 	private final String name;
 	private final EnumDyeColor dyeColor;
@@ -46,18 +44,6 @@ public enum EnumTeamColor implements IStringSerializable, ICustomName, ICustomCo
 	public String getName()
 	{
 		return name;
-	}
-
-	@Override
-	public ITextComponent getCustomDisplayName()
-	{
-		return new TextComponentTranslation(langKey);
-	}
-
-	@Override
-	public Color4I getCustomColor()
-	{
-		return color;
 	}
 
 	public TextFormatting getTextFormatting()

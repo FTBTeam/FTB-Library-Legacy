@@ -3,7 +3,6 @@ package com.feed_the_beast.ftblib.lib;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
@@ -13,7 +12,7 @@ import java.util.LinkedHashSet;
 /**
  * @author LatvianModder
  */
-public enum EnumTeamStatus implements IStringSerializable, ICustomName
+public enum EnumTeamStatus implements IStringSerializable
 {
 	ENEMY(-10, "enemy", TextFormatting.RED, true),
 	NONE(0, "none", TextFormatting.WHITE, true),
@@ -24,8 +23,9 @@ public enum EnumTeamStatus implements IStringSerializable, ICustomName
 	OWNER(100, "owner", TextFormatting.GOLD, false);
 
 	public static final EnumTeamStatus[] VALUES = values();
-	public static final NameMap<EnumTeamStatus> NAME_MAP = NameMap.create(NONE, VALUES);
-	public static final NameMap<EnumTeamStatus> NAME_MAP_PERMS = NameMap.create(ALLY, NONE, ALLY, MEMBER);
+	public static final NameMap.ObjectProperties<EnumTeamStatus> OBJECT_PROPERTIES = NameMap.ObjectProperties.withComponentName(object -> StringUtils.color(new TextComponentTranslation(object.langKey), object.color));
+	public static final NameMap<EnumTeamStatus> NAME_MAP = NameMap.create(NONE, OBJECT_PROPERTIES, VALUES);
+	public static final NameMap<EnumTeamStatus> NAME_MAP_PERMS = NameMap.create(ALLY, OBJECT_PROPERTIES, NONE, ALLY, MEMBER);
 	public static final Collection<EnumTeamStatus> VALID_VALUES = new LinkedHashSet<>();
 
 	static
@@ -58,12 +58,6 @@ public enum EnumTeamStatus implements IStringSerializable, ICustomName
 	public String getName()
 	{
 		return name;
-	}
-
-	@Override
-	public ITextComponent getCustomDisplayName()
-	{
-		return StringUtils.color(new TextComponentTranslation(langKey), color);
 	}
 
 	public int getStatus()
