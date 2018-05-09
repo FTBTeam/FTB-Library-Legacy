@@ -7,11 +7,11 @@ import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.lib.ClientATHelper;
 import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
-import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.AtlasSpriteIcon;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.IconPresets;
+import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
@@ -64,6 +64,7 @@ import java.util.List;
 public class FTBLibClientEventHandler
 {
 	private static Temp currentNotification;
+	private static double sidebarButtonScale = 0D;
 
 	private static final IChatListener CHAT_LISTENER = (type, component) ->
 	{
@@ -202,7 +203,6 @@ public class FTBLibClientEventHandler
 	public static void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event)
 	{
 		FTBLibClient.UNIVERSE_UUID = null;
-		FTBLibClient.OPTIONAL_SERVER_MODS_CLIENT.clear();
 		currentNotification = null;
 		Temp.MAP.clear();
 		ClientATHelper.getChatListeners().get(ChatType.GAME_INFO).clear();
@@ -339,52 +339,11 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onGuiInit(final GuiScreenEvent.InitGuiEvent.Post event)
 	{
-		if (!(event.getGui() instanceof InventoryEffectRenderer))
+		//sidebarButtonScale = 0D;
+
+		if (FTBLibClientConfig.general.action_buttons != EnumSidebarButtonPlacement.DISABLED && event.getGui() instanceof InventoryEffectRenderer && !FTBLibClient.SIDEBAR_BUTTON_GROUPS.isEmpty())
 		{
-			return;
-		}
-
-		if (!FTBLibClient.SIDEBAR_BUTTON_GROUPS.isEmpty())
-		{
-			GuiButtonSidebarGroup renderer = new GuiButtonSidebarGroup();
-			event.getButtonList().add(renderer);
-			int x, y = 0;
-			boolean addedAny;
-
-			for (SidebarButtonGroup group : FTBLibClient.SIDEBAR_BUTTON_GROUPS)
-			{
-				x = 0;
-				addedAny = false;
-
-				for (SidebarButton button : group.getButtons())
-				{
-					if (button.isVisible())
-					{
-						GuiButtonSidebar b = new GuiButtonSidebar(x, y, button);
-						event.getButtonList().add(b);
-						renderer.buttons.add(b);
-						x++;
-						addedAny = true;
-					}
-				}
-
-				if (addedAny)
-				{
-					y++;
-				}
-			}
-
-			renderer.updateButtonPositions();
-		}
-	}
-
-	@SubscribeEvent
-	public static void onGuiAction(GuiScreenEvent.ActionPerformedEvent.Post event)
-	{
-		if (event.getButton() instanceof GuiButtonSidebar)
-		{
-			GuiHelper.playClickSound();
-			(((GuiButtonSidebar) event.getButton()).button).onClicked(GuiScreen.isShiftKeyDown());
+			event.getButtonList().add(new GuiButtonSidebarGroup((InventoryEffectRenderer) event.getGui()));
 		}
 	}
 
@@ -501,88 +460,158 @@ public class FTBLibClientEventHandler
 		}
 	}
 
-	private static class GuiButtonSidebar extends GuiButton
+	private static class GuiButtonSidebar
 	{
 		public final int buttonX, buttonY;
 		public final SidebarButton button;
-		public final String title;
+		public int x, y;
 
 		public GuiButtonSidebar(int x, int y, SidebarButton b)
 		{
-			super(495830 + x + y * 16, -16, -16, 16, 16, "");
 			buttonX = x;
 			buttonY = y;
 			button = b;
-			title = I18n.format(b.getLangKey());
-		}
-
-		@Override
-		public void drawButton(Minecraft mc, int mx, int my, float partialTicks)
-		{
 		}
 	}
 
 	private static class GuiButtonSidebarGroup extends GuiButton
 	{
+		private final InventoryEffectRenderer gui;
 		public final List<GuiButtonSidebar> buttons;
-		private int prevGuiLeft = -1, prevGuiTop = -1;
+		private GuiButtonSidebar mouseOver;
 
-		public GuiButtonSidebarGroup()
+		public GuiButtonSidebarGroup(InventoryEffectRenderer g)
 		{
-			super(495829, -1000, -1000, 0, 0, "");
+			super(495829, 0, 0, 0, 0, "");
+			gui = g;
 			buttons = new ArrayList<>();
-		}
-
-		public void updateButtonPositions()
-		{
-			if (!(ClientUtils.MC.currentScreen instanceof InventoryEffectRenderer))
-			{
-				return;
-			}
-
-			InventoryEffectRenderer gui = (InventoryEffectRenderer) ClientUtils.MC.currentScreen;
-			int guiLeft = gui.getGuiLeft();
-			int guiTop = gui.getGuiTop();
-
-			if (prevGuiLeft != guiLeft || prevGuiTop != guiTop)
-			{
-				prevGuiLeft = guiLeft;
-				prevGuiTop = guiTop;
-			}
-
-			boolean hasPotions = !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).func_194310_f().isVisible());
-
-			if (hasPotions || FTBLibClientConfig.general.action_buttons.top())
-			{
-				for (GuiButtonSidebar button : buttons)
-				{
-					button.x = 2 + button.buttonX * 17;
-					button.y = 2 + button.buttonY * 17;
-				}
-			}
-			else
-			{
-				int buttonX = -17;
-				int buttonY = 8;
-
-				if (gui instanceof GuiContainerCreative)
-				{
-					buttonY = 6;
-				}
-
-				for (int index = 0; index < buttons.size(); index++)
-				{
-					GuiButtonSidebar button = buttons.get(index);
-					button.x = guiLeft + buttonX - (index / 8) * 17;
-					button.y = guiTop + buttonY + (index % 8) * 17;
-				}
-			}
 		}
 
 		@Override
 		public void drawButton(Minecraft mc, int mx, int my, float partialTicks)
 		{
-			updateButtonPositions();
+			buttons.clear();
+			mouseOver = null;
+			int rx, ry = 0;
+			boolean addedAny;
+			boolean top = FTBLibClientConfig.general.action_buttons.top() || !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).func_194310_f().isVisible());
+
+			for (SidebarButtonGroup group : FTBLibClient.SIDEBAR_BUTTON_GROUPS)
+			{
+				rx = 0;
+				addedAny = false;
+
+				for (SidebarButton button : group.getButtons())
+				{
+					if (button.isVisible())
+					{
+						buttons.add(new GuiButtonSidebar(rx, ry, button));
+						rx++;
+						addedAny = true;
+					}
+				}
+
+				if (addedAny)
+				{
+					ry++;
+				}
+			}
+
+			int guiLeft = gui.getGuiLeft();
+			int guiTop = gui.getGuiTop();
+
+			if (top)
+			{
+				for (GuiButtonSidebar button : buttons)
+				{
+					if (FTBLibClientConfig.general.collapse_sidebar_buttons)
+					{
+						button.x = 4 + button.buttonX * 17;
+						button.y = 4 + button.buttonY * 17;
+					}
+					else
+					{
+						button.x = 1 + button.buttonX * 17;
+						button.y = 1 + button.buttonY * 17;
+					}
+				}
+			}
+			else
+			{
+				int offsetY = 8;
+
+				if (gui instanceof GuiContainerCreative)
+				{
+					offsetY = 6;
+				}
+
+				for (GuiButtonSidebar button : buttons)
+				{
+					button.x = guiLeft - 18 - button.buttonY * 17;
+					button.y = guiTop + offsetY + button.buttonX * 17;
+				}
+			}
+
+			x = Integer.MAX_VALUE;
+			y = Integer.MAX_VALUE;
+			int maxX = Integer.MIN_VALUE;
+			int maxY = Integer.MIN_VALUE;
+
+			for (GuiButtonSidebar b : buttons)
+			{
+				if (b.x >= 0 && b.y >= 0)
+				{
+					x = Math.min(x, b.x);
+					y = Math.min(y, b.y);
+					maxX = Math.max(maxX, b.x + 16);
+					maxY = Math.max(maxY, b.y + 16);
+				}
+
+				if (mx >= b.x && my >= b.y && mx < b.x + 16 && my < b.y + 16)
+				{
+					mouseOver = b;
+				}
+			}
+
+			x -= 2;
+			y -= 2;
+			maxX += 2;
+			maxY += 2;
+
+			width = maxX - x;
+			height = maxY - y;
+
+			if (sidebarButtonScale <= 0D)
+			{
+				if (mx >= x && my >= y && mx < x + 16 && my < y + 16)
+				{
+					sidebarButtonScale = 0.01D;
+				}
+			}
+
+			if (mx < x || my < y || mx >= x + width || my >= y + height)
+			{
+				sidebarButtonScale -= partialTicks * 0.3D * FTBLibClientConfig.general.sidebar_button_collapse_speed;
+
+				if (sidebarButtonScale < 0D)
+				{
+					sidebarButtonScale = 0D;
+				}
+			}
+			else if (sidebarButtonScale > 0D)
+			{
+				sidebarButtonScale += partialTicks * 0.3D * FTBLibClientConfig.general.sidebar_button_collapse_speed;
+
+				if (sidebarButtonScale > 1D)
+				{
+					sidebarButtonScale = 1D;
+				}
+			}
+
+			if (!FTBLibClientConfig.general.collapse_sidebar_buttons)
+			{
+				sidebarButtonScale = 1D;
+			}
 
 			zLevel = 0F;
 
@@ -595,19 +624,33 @@ public class FTBLibClientEventHandler
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
-			GuiButtonSidebar mouseOver = null;
+			GlStateManager.pushMatrix();
+
+			if (sidebarButtonScale < 1D)
+			{
+				double scale = Math.min(16D / MathUtils.lerp(width, 16D, sidebarButtonScale), 16D / MathUtils.lerp(height, 16D, sidebarButtonScale));
+				GlStateManager.scale(scale, scale, 1D);
+			}
+
+			if (FTBLibClientConfig.general.collapse_sidebar_buttons)
+			{
+				int alpha = (int) MathUtils.lerp(50D, 100D, sidebarButtonScale);
+				Color4I.GRAY.withAlpha(alpha).draw(x, y, width, height);
+				Color4I.DARK_GRAY.withAlpha(alpha).draw(x + 1, y + 1, width - 2, height - 2);
+			}
+
+			int alpha255 = (int) MathUtils.lerp(80D, 255D, sidebarButtonScale);
 
 			for (GuiButtonSidebar b : buttons)
 			{
-				b.button.getIcon().draw(b.x, b.y, b.width, b.height);
+				b.button.getIcon().draw(b.x, b.y, 16, 16, Color4I.WHITE.withAlpha(alpha255));
 
-				if (mx >= b.x && my >= b.y && mx < b.x + b.width && my < b.y + b.height)
+				if (sidebarButtonScale >= 1D && b == mouseOver)
 				{
-					mouseOver = b;
-					Color4I.WHITE.withAlpha(33).draw(b.x, b.y, b.width, b.height);
+					Color4I.WHITE.withAlpha(33).draw(b.x, b.y, 16, 16);
 				}
 
-				if (b.button.hasCustomText())
+				if (sidebarButtonScale >= 1D && b.button.hasCustomText())
 				{
 					CustomSidebarButtonTextEvent event = new CustomSidebarButtonTextEvent(b.button);
 					event.post();
@@ -623,12 +666,14 @@ public class FTBLibClientEventHandler
 				}
 			}
 
-			if (mouseOver != null)
+			if (mouseOver != null && sidebarButtonScale >= 1D)
 			{
 				int mx1 = mx - 4;
 				int my1 = my - 12;
 
-				int tw = font.getStringWidth(mouseOver.title);
+				String title = I18n.format(mouseOver.button.getLangKey());
+
+				int tw = font.getStringWidth(title);
 
 				if (!FTBLibClientConfig.general.action_buttons.top())
 				{
@@ -650,14 +695,36 @@ public class FTBLibClientEventHandler
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				Color4I.DARK_GRAY.draw(mx1 - 3, my1 - 2, tw + 6, 12);
-				font.drawString(mouseOver.title, mx1, my1, 0xFFFFFFFF);
+				font.drawString(title, mx1, my1, 0xFFFFFFFF);
 				GlStateManager.color(1F, 1F, 1F, 1F);
 				GlStateManager.popMatrix();
 			}
 
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			GlStateManager.popMatrix();
+			GlStateManager.popMatrix();
 			zLevel = 0F;
+		}
+
+		@Override
+		public boolean mousePressed(Minecraft mc, int mx, int my)
+		{
+			if (super.mousePressed(mc, mx, my))
+			{
+				if (sidebarButtonScale >= 1D && mouseOver != null)
+				{
+					mouseOver.button.onClicked(GuiScreen.isShiftKeyDown());
+
+					if (!(ClientUtils.MC.currentScreen instanceof InventoryEffectRenderer))
+					{
+						sidebarButtonScale = 0D;
+					}
+				}
+
+				return true;
+			}
+
+			return false;
 		}
 	}
 }

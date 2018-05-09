@@ -20,28 +20,36 @@ public class FTBLibClientConfig
 
 	public static class General
 	{
-		@Config.Comment("Show item Ore Dictionary names in inventory")
+		@Config.Comment("Show item Ore Dictionary names in inventory.")
 		public boolean item_ore_names = false;
 
-		@Config.Comment("Show item NBT in inventory")
+		@Config.Comment("Show item NBT in inventory.")
 		public boolean item_nbt = false;
 
 		@Config.Comment({
-				"DISABLED: Buttons are hidden",
-				"TOP_LEFT: Buttons are placed on top-left corner, where NEI has it's buttons",
-				"INVENTORY_SIDE: Buttons are placed on the side or top of your inventory, depending on potion effects and crafting book",
-				"AUTO: When NEI is installed, INVENTORY_SIDE, else TOP_LEFT"
+				"DISABLED: Buttons are hidden;",
+				"TOP_LEFT: Buttons are placed on top-left corner, where NEI has it's buttons;",
+				"INVENTORY_SIDE: Buttons are placed on the side or top of your inventory, depending on potion effects and crafting book;",
+				"AUTO: When NEI is installed, INVENTORY_SIDE, else TOP_LEFT."
 		})
+		@Config.LangKey("sidebar_button")
 		public EnumSidebarButtonPlacement action_buttons = EnumSidebarButtonPlacement.AUTO;
 
-		@Config.Comment("Mirror /ftbc commands")
+		@Config.Comment("Mirror /ftbc commands.")
 		public boolean mirror_commands = true;
 
-		@Config.Comment("Replace vanilla status message with Notifications, which support colors and timers")
+		@Config.Comment("Replace vanilla status message with Notifications, which support colors and timers.")
 		public boolean replace_vanilla_status_messages = true;
 
-		@Config.Comment("Show help text while holding F3")
+		@Config.Comment("Show help text while holding F3.")
 		public boolean debug_helper = true;
+
+		@Config.Comment("Collapses sidebar buttons when you don't have mouse over them.")
+		public boolean collapse_sidebar_buttons = false;
+
+		@Config.Comment("How fast buttons collapse and expand.")
+		@Config.RangeDouble(min = 0.1D, max = 10D)
+		public double sidebar_button_collapse_speed = 1D;
 	}
 
 	public static void sync()
