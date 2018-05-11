@@ -6,12 +6,20 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 
+import javax.annotation.Nullable;
+
 /**
  * @author LatvianModder
  */
 public final class BlockDimPos
 {
 	public final int posX, posY, posZ, dim;
+
+	@Nullable
+	public static BlockDimPos fromIntArray(@Nullable int[] ai)
+	{
+		return ai == null || ai.length < 3 ? null : new BlockDimPos(ai[0], ai[1], ai[2], ai.length > 3 ? ai[3] : 0);
+	}
 
 	public BlockDimPos(int x, int y, int z, int d)
 	{
@@ -29,11 +37,6 @@ public final class BlockDimPos
 	public BlockDimPos(Vec3i p, int d)
 	{
 		this(p.getX(), p.getY(), p.getZ(), d);
-	}
-
-	public BlockDimPos(int[] ai)
-	{
-		this(ai[0], ai[1], ai[2], ai[3]);
 	}
 
 	public BlockDimPos(Entity entity)
