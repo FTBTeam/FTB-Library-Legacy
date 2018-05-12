@@ -58,7 +58,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	public final Map<ForgePlayer, EnumTeamStatus> players;
 	private ConfigGroup cachedConfig;
 	private ITextComponent cachedTitle;
-	public IConfigCallback configCallback;
+	private IConfigCallback cachedConfigCallback;
 	private Icon cachedIcon;
 	public boolean needsSaving;
 
@@ -78,12 +78,6 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		dataStorage = new NBTDataStorage();
 		new ForgeTeamDataEvent(this, dataStorage::add).post();
 		clearCache();
-		configCallback = (group, sender, json) ->
-		{
-			group.fromJson(json);
-			clearCache();
-			markDirty();
-		};
 		cachedIcon = null;
 		needsSaving = false;
 	}
@@ -199,6 +193,8 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	{
 		cachedTitle = null;
 		cachedIcon = null;
+		cachedConfig = null;
+		cachedConfigCallback = null;
 		dataStorage.clearCache();
 	}
 
@@ -654,6 +650,21 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		}
 
 		return cachedConfig;
+	}
+
+	public IConfigCallback getConfigCallback()
+	{
+		if (cachedConfigCallback == null)
+		{
+			cachedConfigCallback = (group, sender, json) ->
+			{
+				group.fromJson(json);
+				clearCache();
+				markDirty();
+			};
+		}
+
+		return cachedConfigCallback;
 	}
 
 	public boolean isValid()

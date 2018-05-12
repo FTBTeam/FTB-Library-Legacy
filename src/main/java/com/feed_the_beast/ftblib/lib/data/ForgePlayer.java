@@ -58,7 +58,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	private ConfigGroup cachedConfig;
 	private GameProfile cachedProfile;
 	public long lastTimeSeen;
-	public final IConfigCallback configCallback;
+	private IConfigCallback cachedConfigCallback;
 	public boolean needsSaving;
 
 	public ForgePlayer(Universe u, UUID id, String name)
@@ -71,12 +71,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		hideTeamNotification = new ConfigBoolean();
 		new ForgePlayerDataEvent(this, dataStorage::add).post();
 		clearCache();
-		configCallback = (group, sender, json) ->
-		{
-			group.fromJson(json);
-			clearCache();
-			markDirty();
-		};
 		needsSaving = false;
 	}
 
@@ -119,6 +113,8 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		cachedPlayerNBT = null;
 		cachedProfile = null;
+		cachedConfig = null;
+		cachedConfigCallback = null;
 		dataStorage.clearCache();
 	}
 
@@ -299,6 +295,21 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		}
 
 		return cachedConfig;
+	}
+
+	public IConfigCallback getConfigCallback()
+	{
+		if (cachedConfigCallback == null)
+		{
+			cachedConfigCallback = (group, sender, json) ->
+			{
+				group.fromJson(json);
+				clearCache();
+				markDirty();
+			};
+		}
+
+		return cachedConfigCallback;
 	}
 
 	public NBTTagCompound getPlayerNBT()

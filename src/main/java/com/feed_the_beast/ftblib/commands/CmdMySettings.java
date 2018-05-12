@@ -25,6 +25,6 @@ public class CmdMySettings extends CmdEditConfigBase
 	@Override
 	public IConfigCallback getCallback(ICommandSender sender) throws CommandException
 	{
-		return getForgePlayer(sender).configCallback;
+		return getForgePlayer(sender).getConfigCallback();
 	}
 }

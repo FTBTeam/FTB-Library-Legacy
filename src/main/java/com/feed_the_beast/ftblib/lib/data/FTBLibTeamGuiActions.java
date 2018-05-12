@@ -29,7 +29,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public void onAction(ForgePlayer player, NBTTagCompound data)
 		{
-			FTBLibAPI.editServerConfig(player.getPlayer(), player.team.getSettings(), player.team.configCallback);
+			FTBLibAPI.editServerConfig(player.getPlayer(), player.team.getSettings(), player.team.getConfigCallback());
 		}
 	};
 

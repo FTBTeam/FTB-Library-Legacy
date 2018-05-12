@@ -42,6 +42,6 @@ public class CmdTeamConfig extends CmdEditConfigBase
 	@Override
 	public IConfigCallback getCallback(ICommandSender sender) throws CommandException
 	{
-		return getForgePlayer(sender).team.configCallback;
+		return getForgePlayer(sender).team.getConfigCallback();
 	}
 }
