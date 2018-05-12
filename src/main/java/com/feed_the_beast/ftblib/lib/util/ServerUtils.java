@@ -16,16 +16,15 @@ import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.EnumSkyBlock;
-import net.minecraft.world.Teleporter;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.server.command.TextComponentHelper;
@@ -47,51 +46,27 @@ public class ServerUtils
 		ONLY_AT_NIGHT
 	}
 
-	private static class TeleporterBlank extends Teleporter
+	public static final ITeleporter BLANK_TELEPORTER = (world, entity, yaw) -> {
+		entity.setLocationAndAngles(entity.posX, entity.posY, entity.posZ, entity.rotationPitch, entity.rotationYaw);
+		entity.motionX = 0D;
+		entity.motionY = 0D;
+		entity.motionZ = 0D;
+		entity.fallDistance = 0F;
+	};
+
+	public static boolean teleportEntity(MinecraftServer server, Entity entity, BlockDimPos pos)
 	{
-		private TeleporterBlank(WorldServer world)
-		{
-			super(world);
-		}
-
-		@Override
-		public boolean makePortal(Entity entity)
-		{
-			return true;
-		}
-
-		@Override
-		public boolean placeInExistingPortal(Entity entity, float rotationYaw)
-		{
-			return true;
-		}
-
-		@Override
-		public void placeInPortal(Entity entity, float rotationYaw)
-		{
-			int x = MathHelper.floor(entity.posX);
-			int y = MathHelper.floor(entity.posY) - 1;
-			int z = MathHelper.floor(entity.posZ);
-			entity.setLocationAndAngles(x, y, z, entity.rotationPitch, entity.rotationYaw);
-			entity.motionX = 0D;
-			entity.motionY = 0D;
-			entity.motionZ = 0D;
-			entity.fallDistance = 0F;
-		}
-
-		@Override
-		public void removeStalePortalLocations(long worldTime)
-		{
-		}
-	}
-
-	public static boolean teleportEntity(Entity entity, BlockDimPos pos)
-	{
-		return teleportEntity(entity, pos.getBlockPos(), pos.dim);
+		return teleportEntity(server, entity, pos.getBlockPos(), pos.dim);
 	}
 
 	//Most of this code comes from EnderIO
-	public static boolean teleportEntity(Entity entity, BlockPos pos, int targetDim)
+	public static boolean teleportEntity(MinecraftServer server, Entity entity, BlockPos pos, int targetDim)
+	{
+		return teleportEntity(server, entity, pos.getX() + 0.5D, pos.getY() + 0.1D, pos.getZ() + 0.5D, targetDim);
+	}
+
+	//Most of this code comes from EnderIO
+	public static boolean teleportEntity(MinecraftServer server, Entity entity, double x, double y, double z, int targetDim)
 	{
 		if (entity.getEntityWorld().isRemote || entity.isRiding() || entity.isBeingRidden() || !entity.isEntityAlive())
 		{
@@ -108,14 +83,12 @@ public class ServerUtils
 		int from = entity.dimension;
 		if (from != targetDim)
 		{
-			MinecraftServer server = player == null ? entity.getServer() : player.mcServer;
-			WorldServer fromDim = server.getWorld(from);
 			WorldServer toDim = server.getWorld(targetDim);
-			Teleporter teleporter = new TeleporterBlank(toDim);
 
 			if (player != null)
 			{
-				server.getPlayerList().transferPlayerToDimension(player, targetDim, teleporter);
+				server.getPlayerList().transferPlayerToDimension(player, targetDim, BLANK_TELEPORTER);
+
 				if (from == 1 && entity.isEntityAlive())
 				{
 					toDim.spawnEntity(entity);
@@ -124,6 +97,7 @@ public class ServerUtils
 			}
 			else
 			{
+				WorldServer fromDim = server.getWorld(from);
 				NBTTagCompound tagCompound = entity.serializeNBT();
 				float rotationYaw = entity.rotationYaw;
 				float rotationPitch = entity.rotationPitch;
@@ -132,7 +106,7 @@ public class ServerUtils
 
 				if (newEntity != null)
 				{
-					newEntity.setLocationAndAngles(pos.getX(), pos.getY(), pos.getZ(), rotationYaw, rotationPitch);
+					newEntity.setLocationAndAngles(x, y, z, rotationYaw, rotationPitch);
 					newEntity.forceSpawn = true;
 					toDim.spawnEntity(newEntity);
 					newEntity.forceSpawn = false;
@@ -144,6 +118,8 @@ public class ServerUtils
 			}
 		}
 
+		BlockPos pos = new BlockPos(x, y, z);
+
 		if (!entity.world.isBlockLoaded(pos))
 		{
 			entity.world.getChunkFromBlockCoords(pos);
@@ -151,19 +127,19 @@ public class ServerUtils
 
 		if (player != null && player.connection != null)
 		{
-			player.connection.setPlayerLocation(pos.getX() + 0.5D, pos.getY() + 0.1D, pos.getZ() + 0.5D, player.rotationYaw, player.rotationPitch);
+			player.connection.setPlayerLocation(x, y, z, player.rotationYaw, player.rotationPitch);
 			player.addExperienceLevel(0);
 		}
 		else
 		{
-			entity.setPositionAndUpdate(pos.getX() + 0.5D, pos.getY() + 0.1D, pos.getZ() + 0.5D);
+			entity.setPositionAndUpdate(x, y, z);
 		}
 
 		entity.fallDistance = 0;
 
 		if (FTBLibConfig.debugging.log_teleport)
 		{
-			FTBLib.LOGGER.info("'" + entity.getName() + "' teleported to [" + pos.getX() + ',' + pos.getY() + ',' + pos.getZ() + "] in " + ServerUtils.getDimensionName(entity, targetDim).getUnformattedText());
+			FTBLib.LOGGER.info("'" + entity.getName() + "' teleported to [" + x + ',' + y + ',' + z + "] in " + ServerUtils.getDimensionName(entity, targetDim).getUnformattedText());
 		}
 
 		return true;
