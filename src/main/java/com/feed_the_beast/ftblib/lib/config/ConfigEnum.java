@@ -74,6 +74,11 @@ public class ConfigEnum<E> extends ConfigValue
 		value = e;
 	}
 
+	public void setValue(String value)
+	{
+		setValue(getNameMap().get(value));
+	}
+
 	@Override
 	public String getString()
 	{
@@ -125,7 +130,7 @@ public class ConfigEnum<E> extends ConfigValue
 	@Override
 	public void fromJson(JsonElement json)
 	{
-		setValue(getNameMap().get(json.getAsString()));
+		setValue(json.getAsString());
 	}
 
 	@Override

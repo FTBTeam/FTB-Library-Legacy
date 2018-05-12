@@ -18,6 +18,7 @@ gui.updated=Updated
 gui.active=Active
 gui.inactive=Inactive
 gui.settings=Settings
+gui.rename=Rename
 
 ## Labels
 gui.other=Other

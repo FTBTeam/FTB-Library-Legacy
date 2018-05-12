@@ -134,10 +134,10 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 		title.setString(nbt.getString("Title"));
 		desc.setString(nbt.getString("Desc"));
-		color.setValueFromString(nbt.getString("Color"), false);
+		color.setValue(nbt.getString("Color"));
 		icon.setString(nbt.getString("Icon"));
 		freeToJoin.setBoolean(nbt.getBoolean("FreeToJoin"));
-		fakePlayerStatus.setValueFromString(nbt.getString("FakePlayerStatus"), false);
+		fakePlayerStatus.setValue(nbt.getString("FakePlayerStatus"));
 
 		players.clear();
 

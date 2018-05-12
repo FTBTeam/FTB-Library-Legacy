@@ -89,6 +89,12 @@ public class ConfigString extends ConfigValue
 	}
 
 	@Override
+	public String getGuiText()
+	{
+		return getString();
+	}
+
+	@Override
 	public boolean setValueFromString(String text, boolean simulate)
 	{
 		setString(text);

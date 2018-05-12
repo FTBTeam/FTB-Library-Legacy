@@ -11,11 +11,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufInputStream;
+import io.netty.handler.codec.EncoderException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -26,6 +30,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -240,13 +245,31 @@ public class DataIn
 
 	public ItemStack readItemStack()
 	{
-		return ByteBufUtils.readItemStack(byteBuf);
+		NBTTagCompound nbt = readNBT();
+		return nbt == null ? ItemStack.EMPTY : new ItemStack(nbt);
 	}
 
 	@Nullable
 	public NBTTagCompound readNBT()
 	{
-		return ByteBufUtils.readTag(byteBuf);
+		int i = byteBuf.readerIndex();
+		byte b0 = byteBuf.readByte();
+
+		if (b0 == 0)
+		{
+			return null;
+		}
+
+		byteBuf.readerIndex(i);
+
+		try
+		{
+			return CompressedStreamTools.read(new ByteBufInputStream(byteBuf), NBTSizeTracker.INFINITE);
+		}
+		catch (IOException ex)
+		{
+			throw new EncoderException(ex);
+		}
 	}
 
 	public <T extends IForgeRegistryEntry<T>> T readRegistryEntry(IForgeRegistry<T> registry)

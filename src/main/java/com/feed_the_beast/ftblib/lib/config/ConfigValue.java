@@ -103,6 +103,11 @@ public abstract class ConfigValue implements IStringSerializable, IJsonSerializa
 		return getString();
 	}
 
+	public String getGuiText()
+	{
+		return toString();
+	}
+
 	public abstract void writeData(DataOut data);
 
 	public abstract void readData(DataIn data);

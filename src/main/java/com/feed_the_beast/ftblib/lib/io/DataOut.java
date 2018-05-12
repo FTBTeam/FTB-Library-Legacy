@@ -9,10 +9,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufOutputStream;
+import io.netty.handler.codec.EncoderException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +25,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -204,12 +208,26 @@ public class DataOut
 
 	public void writeItemStack(ItemStack stack)
 	{
-		ByteBufUtils.writeItemStack(byteBuf, stack);
+		writeNBT(stack.isEmpty() ? null : stack.serializeNBT());
 	}
 
 	public void writeNBT(@Nullable NBTTagCompound nbt)
 	{
-		ByteBufUtils.writeTag(byteBuf, nbt);
+		if (nbt == null)
+		{
+			this.writeByte(0);
+		}
+		else
+		{
+			try
+			{
+				CompressedStreamTools.write(nbt, new ByteBufOutputStream(byteBuf));
+			}
+			catch (IOException ex)
+			{
+				throw new EncoderException(ex);
+			}
+		}
 	}
 
 	public void writeResourceLocation(ResourceLocation r)
