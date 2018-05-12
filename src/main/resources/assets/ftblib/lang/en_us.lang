@@ -59,6 +59,11 @@ commands=Commands
 my_permissions=My Permissions
 all_permissions=All Permissions
 key.categories.ftbmods=FTB Mods
+stand_still=Please, stand still for %d seconds.
+teleporting=Teleporting...
+cooldown=Cooldown
+cant_use_now=Can't use that right now!
+cant_use_now_cooldown=Can't use that right now! Cooldown: %s
 
 ftblib.lang.reload_server_button=Reload Server
 ftblib.lang.reload_server=FTBLib: Server reloaded in %s

@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
+import com.feed_the_beast.ftblib.events.universe.PersistentScheduledTaskEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseClosedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseLoadedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
@@ -22,7 +23,9 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -30,6 +33,7 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.ThreadedFileIOBase;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -58,15 +62,29 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = FTBLib.MOD_ID)
 public class Universe implements IHasCache
 {
-	private static class ScheduledRunnable
+	private static class ScheduledTask
 	{
-		private int ticks;
+		private final long time;
 		private final Runnable runnable;
 
-		public ScheduledRunnable(int t, Runnable r)
+		public ScheduledTask(long t, Runnable r)
 		{
-			ticks = t;
+			time = t;
 			runnable = r;
+		}
+	}
+
+	private static class PersistentScheduledTask
+	{
+		private final ResourceLocation id;
+		private final long time;
+		private final NBTTagCompound data;
+
+		public PersistentScheduledTask(ResourceLocation i, long t, NBTTagCompound d)
+		{
+			id = i;
+			time = t;
+			data = d;
 		}
 	}
 
@@ -147,17 +165,32 @@ public class Universe implements IHasCache
 	{
 		if (loaded() && event.phase == TickEvent.Phase.END && !event.world.isRemote && event.world.provider.getDimension() == 0)
 		{
-			Iterator<ScheduledRunnable> iterator = get().scheduledRunnables.iterator();
+			long now = event.world.getTotalWorldTime();
+			Universe universe = get();
+
+			Iterator<ScheduledTask> iterator = universe.scheduledTasks.iterator();
 
 			while (iterator.hasNext())
 			{
-				ScheduledRunnable runnable = iterator.next();
-				runnable.ticks--;
+				ScheduledTask task = iterator.next();
 
-				if (runnable.ticks <= 0)
+				if (now >= task.time)
 				{
-					runnable.runnable.run();
+					task.runnable.run();
 					iterator.remove();
+				}
+			}
+
+			Iterator<PersistentScheduledTask> piterator = universe.persistentScheduledTasks.iterator();
+
+			while (piterator.hasNext())
+			{
+				PersistentScheduledTask task = piterator.next();
+
+				if (now >= task.time)
+				{
+					new PersistentScheduledTaskEvent(universe, task.id, task.data).post();
+					piterator.remove();
 				}
 			}
 		}
@@ -176,7 +209,8 @@ public class Universe implements IHasCache
 	public boolean checkSaving;
 	public ForgeTeam fakePlayerTeam;
 	public ForgePlayer fakePlayer;
-	private final List<ScheduledRunnable> scheduledRunnables;
+	private final List<ScheduledTask> scheduledTasks;
+	private final List<PersistentScheduledTask> persistentScheduledTasks;
 
 	@SuppressWarnings("ConstantConditions")
 	public Universe(WorldServer w)
@@ -189,7 +223,8 @@ public class Universe implements IHasCache
 		uuid = null;
 		needsSaving = false;
 		checkSaving = true;
-		scheduledRunnables = new ArrayList<>();
+		scheduledTasks = new ArrayList<>();
+		persistentScheduledTasks = new ArrayList<>();
 	}
 
 	public void markDirty()
@@ -209,16 +244,15 @@ public class Universe implements IHasCache
 		return uuid;
 	}
 
-	public void scheduleTask(int ticks, Runnable runnable)
+	public void scheduleTask(long time, Runnable runnable)
 	{
-		if (ticks <= 0)
-		{
-			runnable.run();
-		}
-		else
-		{
-			scheduledRunnables.add(new ScheduledRunnable(ticks, runnable));
-		}
+		scheduledTasks.add(new ScheduledTask(time, runnable));
+	}
+
+	public void scheduleTask(ResourceLocation id, long time, NBTTagCompound data)
+	{
+		persistentScheduledTasks.add(new PersistentScheduledTask(id, time, data));
+		markDirty();
 	}
 
 	private void load()
@@ -251,6 +285,14 @@ public class Universe implements IHasCache
 		if (uuid != null && uuid.getLeastSignificantBits() == 0L && uuid.getMostSignificantBits() == 0L)
 		{
 			uuid = null;
+		}
+
+		NBTTagList taskTag = universeData.getTagList("PersistentScheduledTasks", Constants.NBT.TAG_COMPOUND);
+
+		for (int i = 0; i < taskTag.tagCount(); i++)
+		{
+			NBTTagCompound taskData = taskTag.getCompoundTagAt(i);
+			persistentScheduledTasks.add(new PersistentScheduledTask(new ResourceLocation(taskData.getString("ID")), taskData.getLong("Time"), taskData.getCompoundTag("Data")));
 		}
 
 		NBTTagCompound data = universeData.getCompoundTag("Data");
@@ -418,6 +460,19 @@ public class Universe implements IHasCache
 			new UniverseSavedEvent(this, data).post();
 			universeData.setTag("Data", data);
 			universeData.setString("UUID", StringUtils.fromUUID(getUUID()));
+
+			NBTTagList taskTag = new NBTTagList();
+
+			for (PersistentScheduledTask task : persistentScheduledTasks)
+			{
+				NBTTagCompound taskData = new NBTTagCompound();
+				taskData.setString("ID", task.id.toString());
+				taskData.setLong("Time", task.time);
+				taskData.setTag("Data", task.data);
+				taskTag.appendTag(taskData);
+			}
+
+			universeData.setTag("PersistentScheduledTasks", taskTag);
 			universeData.setTag("FakePlayer", fakePlayer.serializeNBT());
 			universeData.setTag("FakeTeam", fakePlayerTeam.serializeNBT());
 			needsSaving = false;
