@@ -35,15 +35,19 @@ import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -54,6 +58,18 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = FTBLib.MOD_ID)
 public class Universe implements IHasCache
 {
+	private static class ScheduledRunnable
+	{
+		private int ticks;
+		private final Runnable runnable;
+
+		public ScheduledRunnable(int t, Runnable r)
+		{
+			ticks = t;
+			runnable = r;
+		}
+	}
+
 	private static Universe INSTANCE = null;
 
 	public static boolean loaded()
@@ -126,6 +142,27 @@ public class Universe implements IHasCache
 		}
 	}
 
+	@SubscribeEvent
+	public static void onTickEvent(TickEvent.WorldTickEvent event)
+	{
+		if (loaded() && event.phase == TickEvent.Phase.END && !event.world.isRemote && event.world.provider.getDimension() == 0)
+		{
+			Iterator<ScheduledRunnable> iterator = get().scheduledRunnables.iterator();
+
+			while (iterator.hasNext())
+			{
+				ScheduledRunnable runnable = iterator.next();
+				runnable.ticks--;
+
+				if (runnable.ticks <= 0)
+				{
+					runnable.runnable.run();
+					iterator.remove();
+				}
+			}
+		}
+	}
+
 	// Event handler end //
 
 	@Nonnull
@@ -139,6 +176,7 @@ public class Universe implements IHasCache
 	public boolean checkSaving;
 	public ForgeTeam fakePlayerTeam;
 	public ForgePlayer fakePlayer;
+	private final List<ScheduledRunnable> scheduledRunnables;
 
 	@SuppressWarnings("ConstantConditions")
 	public Universe(WorldServer w)
@@ -151,6 +189,7 @@ public class Universe implements IHasCache
 		uuid = null;
 		needsSaving = false;
 		checkSaving = true;
+		scheduledRunnables = new ArrayList<>();
 	}
 
 	public void markDirty()
@@ -168,6 +207,18 @@ public class Universe implements IHasCache
 		}
 
 		return uuid;
+	}
+
+	public void scheduleTask(int ticks, Runnable runnable)
+	{
+		if (ticks <= 0)
+		{
+			runnable.run();
+		}
+		else
+		{
+			scheduledRunnables.add(new ScheduledRunnable(ticks, runnable));
+		}
 	}
 
 	private void load()

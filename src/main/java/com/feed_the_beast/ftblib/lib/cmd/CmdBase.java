@@ -120,7 +120,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 	}
 
 	@Override
-	public boolean isUsernameIndex(String[] args, int i)
+	public boolean isUsernameIndex(String[] args, int index)
 	{
 		return false;
 	}
