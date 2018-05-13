@@ -47,7 +47,7 @@ public class MessageMyTeamPlayerList extends MessageToClient
 		public Entry(ForgePlayer player, EnumTeamStatus s, boolean i)
 		{
 			uuid = player.getId();
-			name = player.getName();
+			name = player.getDisplayName();
 			status = s;
 			requestingInvite = i;
 		}

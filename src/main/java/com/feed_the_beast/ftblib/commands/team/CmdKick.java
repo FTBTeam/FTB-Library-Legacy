@@ -42,7 +42,7 @@ public class CmdKick extends CmdBase
 
 		if (!p.team.isMember(p1))
 		{
-			throw new CommandException("ftblib.lang.team.error.not_member", p1.getName());
+			throw new CommandException("ftblib.lang.team.error.not_member", p1.getDisplayName());
 		}
 		else if (!p1.equalsPlayer(p))
 		{

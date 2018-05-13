@@ -223,7 +223,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 		if (title.isEmpty())
 		{
-			cachedTitle = new TextComponentString(hasOwner() ? (owner.getName() + "'s Team") : "Unnamed");
+			cachedTitle = new TextComponentString(hasOwner() ? (owner.getDisplayName() + "'s Team") : "Unnamed");
 		}
 		else
 		{

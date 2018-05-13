@@ -169,11 +169,16 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		}
 	}
 
+	public final String getDisplayName()
+	{
+		return isOnline() ? getPlayer().getDisplayNameString() : getName();
+	}
+
 	public EntityPlayerMP getCommandPlayer() throws CommandException
 	{
 		if (!isOnline())
 		{
-			throw new CommandException("commands.generic.player.notFound", getName());
+			throw new CommandException("commands.generic.player.notFound", getDisplayName());
 		}
 
 		return getPlayer();
@@ -197,12 +202,12 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	@Override
 	public final int compareTo(ForgePlayer o)
 	{
-		return StringUtils.IGNORE_CASE_COMPARATOR.compare(getName(), o.getName());
+		return StringUtils.IGNORE_CASE_COMPARATOR.compare(getDisplayName(), o.getDisplayName());
 	}
 
 	public final String toString()
 	{
-		return getName();
+		return getDisplayName();
 	}
 
 	public final int hashCode()

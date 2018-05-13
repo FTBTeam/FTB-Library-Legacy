@@ -88,7 +88,7 @@ public class CmdJoin extends CmdBase
 
 		if (!team.addMember(p, false))
 		{
-			throw new CommandException("ftblib.lang.team.error.not_member", p.getName());
+			throw new CommandException("ftblib.lang.team.error.not_member", p.getDisplayName());
 		}
 	}
 }

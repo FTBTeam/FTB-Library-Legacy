@@ -43,7 +43,7 @@ public class CmdTransferOwnership extends CmdBase
 
 		if (!p.team.equalsTeam(p1.team))
 		{
-			throw new CommandException("ftblib.lang.team.error.not_member", p1.getName());
+			throw new CommandException("ftblib.lang.team.error.not_member", p1.getDisplayName());
 		}
 
 		p.team.setStatus(p1, EnumTeamStatus.OWNER);
