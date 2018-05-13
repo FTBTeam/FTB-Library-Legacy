@@ -6,6 +6,10 @@ import com.google.gson.JsonElement;
 
 import javax.annotation.Nullable;
 import javax.imageio.ImageIO;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.awt.image.BufferedImage;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -87,6 +91,39 @@ public class HttpDataReader extends DataReader
 	private HttpURLConnection getConnection() throws Exception
 	{
 		HttpURLConnection connection = (HttpURLConnection) url.openConnection(proxy);
+
+		if (connection instanceof HttpsURLConnection)
+		{
+			TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager()
+			{
+				@Override
+				public java.security.cert.X509Certificate[] getAcceptedIssuers()
+				{
+					return null;
+				}
+
+				@Override
+				public void checkClientTrusted(java.security.cert.X509Certificate[] certs, String authType)
+				{
+				}
+
+				@Override
+				public void checkServerTrusted(java.security.cert.X509Certificate[] certs, String authType)
+				{
+				}
+			}};
+
+			try
+			{
+				SSLContext sc = SSLContext.getInstance("SSL");
+				sc.init(null, trustAllCerts, new java.security.SecureRandom());
+				((HttpsURLConnection) connection).setSSLSocketFactory(sc.getSocketFactory());
+			}
+			catch (Exception e)
+			{
+			}
+		}
+
 		connection.setRequestMethod(requestMethod.name());
 		connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 6.0; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3");
 

@@ -167,6 +167,10 @@ public class Universe implements IHasCache
 		{
 			long now = event.world.getTotalWorldTime();
 			Universe universe = get();
+			universe.scheduledTasks.addAll(universe.scheduledTaskQueue);
+			universe.scheduledTaskQueue.clear();
+			universe.persistentScheduledTasks.addAll(universe.persistentScheduledTaskQueue);
+			universe.persistentScheduledTaskQueue.clear();
 
 			Iterator<ScheduledTask> iterator = universe.scheduledTasks.iterator();
 
@@ -211,6 +215,8 @@ public class Universe implements IHasCache
 	public ForgePlayer fakePlayer;
 	private final List<ScheduledTask> scheduledTasks;
 	private final List<PersistentScheduledTask> persistentScheduledTasks;
+	private final List<ScheduledTask> scheduledTaskQueue;
+	private final List<PersistentScheduledTask> persistentScheduledTaskQueue;
 
 	@SuppressWarnings("ConstantConditions")
 	public Universe(WorldServer w)
@@ -225,6 +231,8 @@ public class Universe implements IHasCache
 		checkSaving = true;
 		scheduledTasks = new ArrayList<>();
 		persistentScheduledTasks = new ArrayList<>();
+		scheduledTaskQueue = new ArrayList<>();
+		persistentScheduledTaskQueue = new ArrayList<>();
 	}
 
 	public void markDirty()
@@ -246,12 +254,12 @@ public class Universe implements IHasCache
 
 	public void scheduleTask(long time, Runnable runnable)
 	{
-		scheduledTasks.add(new ScheduledTask(time, runnable));
+		scheduledTaskQueue.add(new ScheduledTask(time, runnable));
 	}
 
 	public void scheduleTask(ResourceLocation id, long time, NBTTagCompound data)
 	{
-		persistentScheduledTasks.add(new PersistentScheduledTask(id, time, data));
+		persistentScheduledTaskQueue.add(new PersistentScheduledTask(id, time, data));
 		markDirty();
 	}
 
