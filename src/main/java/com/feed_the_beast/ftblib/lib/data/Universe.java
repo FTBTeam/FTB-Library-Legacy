@@ -16,6 +16,7 @@ import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.net.MessageSyncData;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -65,12 +66,12 @@ public class Universe implements IHasCache
 	private static class ScheduledTask
 	{
 		private final long time;
-		private final Runnable runnable;
+		private final IScheduledTask task;
 
-		public ScheduledTask(long t, Runnable r)
+		public ScheduledTask(long t, IScheduledTask tk)
 		{
 			time = t;
-			runnable = r;
+			task = tk;
 		}
 	}
 
@@ -178,9 +179,9 @@ public class Universe implements IHasCache
 			{
 				ScheduledTask task = iterator.next();
 
-				if (now >= task.time)
+				if (task.task.isComplete(now, task.time))
 				{
-					task.runnable.run();
+					task.task.execute(universe);
 					iterator.remove();
 				}
 			}
@@ -252,9 +253,9 @@ public class Universe implements IHasCache
 		return uuid;
 	}
 
-	public void scheduleTask(long time, Runnable runnable)
+	public void scheduleTask(long time, IScheduledTask task)
 	{
-		scheduledTaskQueue.add(new ScheduledTask(time, runnable));
+		scheduledTaskQueue.add(new ScheduledTask(time, task));
 	}
 
 	public void scheduleTask(ResourceLocation id, long time, NBTTagCompound data)
@@ -586,6 +587,7 @@ public class Universe implements IHasCache
 		{
 			p = new ForgePlayer(this, player.getUniqueID(), player.getName());
 			players.put(p.getId(), p);
+			p.clearCache();
 		}
 		else if (!p.getName().equals(player.getName()))
 		{

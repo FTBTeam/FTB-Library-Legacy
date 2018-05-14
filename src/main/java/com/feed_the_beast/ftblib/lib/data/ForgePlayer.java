@@ -70,7 +70,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		team = u.getTeam("");
 		hideTeamNotification = new ConfigBoolean();
 		new ForgePlayerDataEvent(this, dataStorage::add).post();
-		clearCache();
 		needsSaving = false;
 	}
 

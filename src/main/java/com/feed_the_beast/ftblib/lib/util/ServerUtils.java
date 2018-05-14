@@ -18,6 +18,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
@@ -27,7 +28,6 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ITeleporter;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -139,7 +139,7 @@ public class ServerUtils
 
 		if (FTBLibConfig.debugging.log_teleport)
 		{
-			FTBLib.LOGGER.info("'" + entity.getName() + "' teleported to [" + x + ',' + y + ',' + z + "] in " + ServerUtils.getDimensionName(entity, targetDim).getUnformattedText());
+			FTBLib.LOGGER.info("'" + entity.getName() + "' teleported to [" + x + ',' + y + ',' + z + "] in " + getDimensionName(targetDim).getUnformattedText());
 		}
 
 		return true;
@@ -162,16 +162,16 @@ public class ServerUtils
 		}
 	}
 
-	public static ITextComponent getDimensionName(@Nullable ICommandSender sender, int dim)
+	public static ITextComponent getDimensionName(int dim)
 	{
 		switch (dim)
 		{
 			case 0:
-				return TextComponentHelper.createComponentTranslation(sender, "createWorld.customize.preset.overworld");
+				return new TextComponentTranslation("createWorld.customize.preset.overworld");
 			case -1:
-				return TextComponentHelper.createComponentTranslation(sender, "advancements.nether.root.title");
+				return new TextComponentTranslation("advancements.nether.root.title");
 			case 1:
-				return TextComponentHelper.createComponentTranslation(sender, "advancements.end.root.title");
+				return new TextComponentTranslation("advancements.end.root.title");
 			default:
 				return new TextComponentString("DIM_" + dim);
 		}
@@ -242,9 +242,9 @@ public class ServerUtils
 	}
 
 	@Nullable
-	public static Entity getEntityByUUID(World worldObj, UUID uuid)
+	public static Entity getEntityByUUID(World world, UUID uuid)
 	{
-		for (Entity e : worldObj.loadedEntityList)
+		for (Entity e : world.loadedEntityList)
 		{
 			if (e.getUniqueID().equals(uuid))
 			{

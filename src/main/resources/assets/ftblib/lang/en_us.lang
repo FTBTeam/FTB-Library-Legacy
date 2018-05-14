@@ -61,6 +61,7 @@ my_permissions=My Permissions
 all_permissions=All Permissions
 key.categories.ftbmods=FTB Mods
 stand_still=Please, stand still for %d seconds.
+stand_still_failed=You moved! Teleport cancelled.
 teleporting=Teleporting...
 cooldown=Cooldown
 cant_use_now=Can't use that right now!
