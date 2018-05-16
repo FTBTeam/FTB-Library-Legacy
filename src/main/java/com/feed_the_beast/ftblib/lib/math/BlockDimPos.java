@@ -106,4 +106,9 @@ public final class BlockDimPos
 	{
 		return x == 0 && y == 0 && z == 0 ? this : new BlockDimPos(posX + x, posY + y, posZ + z, dim);
 	}
+
+	public TeleporterDimPos teleporter()
+	{
+		return TeleporterDimPos.of(posX + 0.5D, posY + 0.1D, posZ + 0.5D, dim);
+	}
 }
