@@ -192,6 +192,11 @@ public class Color4I extends Icon
 		return rgba(r, g, b, 255);
 	}
 
+	public static Color4I hsb(float h, float s, float b)
+	{
+		return rgb(java.awt.Color.HSBtoRGB(h, s, b));
+	}
+
 	public static Color4I rgba(int col)
 	{
 		return rgba(col >> 16, col >> 8, col, col >> 24);

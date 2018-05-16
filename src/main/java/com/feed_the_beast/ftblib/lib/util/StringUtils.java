@@ -335,16 +335,21 @@ public class StringUtils
 
 	public static String getTimeString(long millis)
 	{
-		return getTimeString(millis, true);
-	}
-
-	public static String getTimeString(long millis, boolean days)
-	{
 		boolean neg = false;
 		if (millis <= 0L)
 		{
 			neg = true;
-			millis = -millis + 999;
+			millis = -millis;
+		}
+
+		if (millis < 1000L)
+		{
+			return (neg ? "-" : "") + millis + "ms";
+		}
+
+		if (neg)
+		{
+			millis += 1000L;
 		}
 
 		long secs = millis / 1000L;
@@ -359,20 +364,24 @@ public class StringUtils
 		long m = (secs / 60L) % 60L;
 		long s = secs % 60L;
 
-		if (days && secs >= DAY24)
+		if (secs >= DAY24)
 		{
 			sb.append(secs / DAY24);
-			//sb.append("d ");
+			sb.append('d');
+			sb.append(' ');
+		}
+
+		if (h > 0 || secs >= DAY24)
+		{
+			if (h < 10)
+			{
+				sb.append('0');
+			}
+			sb.append(h);
+			//sb.append("h ");
 			sb.append(':');
 		}
 
-		if (h < 10)
-		{
-			sb.append('0');
-		}
-		sb.append(h);
-		//sb.append("h ");
-		sb.append(':');
 		if (m < 10)
 		{
 			sb.append('0');
