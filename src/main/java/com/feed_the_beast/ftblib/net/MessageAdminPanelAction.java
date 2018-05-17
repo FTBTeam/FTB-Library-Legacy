@@ -56,7 +56,7 @@ public class MessageAdminPanelAction extends MessageToServer
 			ForgePlayer p = Universe.get().getPlayer(player);
 			NBTTagCompound data = new NBTTagCompound();
 
-			if (p.hasTeam() && a.getType(p, data).isEnabled())
+			if (a.getType(p, data).isEnabled())
 			{
 				a.onAction(p, data);
 			}
