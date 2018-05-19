@@ -27,7 +27,7 @@ import java.util.Map;
 		name = FTBLib.MOD_NAME,
 		version = FTBLib.VERSION,
 		acceptedMinecraftVersions = "[1.12,)",
-		dependencies = "required-after:forge@[14.23.0.2517,);after:" + OtherMods.BAUBLES + ";after:" + OtherMods.JEI + ";after:" + OtherMods.NEI + ";after:" + OtherMods.MC_MULTIPART + ";after:" + OtherMods.CHISELS_AND_BITS + ";after:" + OtherMods.ICHUN_UTIL
+		dependencies = "required-after:forge@[14.23.3.2697,);after:" + OtherMods.BAUBLES + ";after:" + OtherMods.JEI + ";after:" + OtherMods.NEI + ";after:" + OtherMods.MC_MULTIPART + ";after:" + OtherMods.CHISELS_AND_BITS + ";after:" + OtherMods.ICHUN_UTIL
 )
 public class FTBLib
 {
@@ -79,11 +79,14 @@ public class FTBLib
 	}
 
 	@NetworkCheckHandler
-	public boolean acceptModVersions(Map<String, String> map, Side side)
+	public boolean checkModLists(Map<String, String> map, Side side)
 	{
-		if (side.isServer())
+		if (side == Side.SERVER)
 		{
-			PROXY.putAllServerMods(map);
+			if (PROXY != null)
+			{
+				PROXY.putAllServerMods(map);
+			}
 		}
 
 		return true;
