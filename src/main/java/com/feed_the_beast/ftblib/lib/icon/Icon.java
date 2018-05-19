@@ -55,8 +55,6 @@ public abstract class Icon
 			{
 				switch (o.get("id").getAsString())
 				{
-					case "loading":
-						return LoadingIcon.INSTANCE;
 					case "color":
 					{
 						Color4I color = Color4I.fromJson(o.get("color"));
@@ -146,10 +144,6 @@ public abstract class Icon
 		else if (id.charAt(0) == '#')
 		{
 			return Color4I.fromJson(new JsonPrimitive(id));
-		}
-		else if (id.equals("loading"))
-		{
-			return LoadingIcon.INSTANCE;
 		}
 		String[] ida = id.split(":", 2);
 

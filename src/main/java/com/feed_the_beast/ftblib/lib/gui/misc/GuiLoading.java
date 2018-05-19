@@ -1,8 +1,9 @@
 package com.feed_the_beast.ftblib.lib.gui.misc;
 
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
+import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
+import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.icon.LoadingIcon;
 
 /**
  * @author LatvianModder
@@ -11,26 +12,22 @@ public class GuiLoading extends GuiBase
 {
 	private boolean startedLoading = false;
 	private boolean isLoading = true;
-	private String title = "";
+	private String title;
 
 	public GuiLoading()
 	{
+		this("");
 	}
 
 	public GuiLoading(String t)
 	{
+		setSize(128, 128);
 		title = t;
 	}
 
 	@Override
 	public void addWidgets()
 	{
-	}
-
-	@Override
-	public void alignWidgets()
-	{
-		setSize(128, 128);
 	}
 
 	@Override
@@ -46,7 +43,10 @@ public class GuiLoading extends GuiBase
 		{
 			int ax = getAX();
 			int ay = getAY();
-			LoadingIcon.INSTANCE.draw(ax, ay, width, height);
+			//LoadingIcon.INSTANCE.draw(ax + width / 2 - 16, ay + height / 2 - 16, 32, 32);
+
+			GuiHelper.drawHollowRect(ax + width / 2 - 48, ay + height / 2 - 8, 96, 16, Color4I.WHITE, true);
+
 			String s = getTitle();
 
 			if (!s.isEmpty())
