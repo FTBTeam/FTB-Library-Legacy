@@ -19,6 +19,7 @@
 		"x": 110,
 		"click": "custom:ftblib:admin_panel_gui",
 		"requires_op": true,
+		"required_server_mods": ["ftblib"],
 		"loading_screen": true
 	}
 }

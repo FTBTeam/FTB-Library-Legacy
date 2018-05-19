@@ -13,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.IconPresets;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
+import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftblib.net.MessageAdminPanelGui;
@@ -202,7 +203,7 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onConnected(FMLNetworkEvent.ClientConnectedToServerEvent event)
 	{
-		FTBLibClient.UNIVERSE_UUID = null;
+		SidedUtils.UNIVERSE_UUID_CLIENT = null;
 		currentNotification = null;
 		Temp.MAP.clear();
 		ClientATHelper.getChatListeners().get(ChatType.GAME_INFO).clear();

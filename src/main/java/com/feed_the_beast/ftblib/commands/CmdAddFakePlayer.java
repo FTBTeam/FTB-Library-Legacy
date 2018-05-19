@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.commands;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -7,7 +8,6 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import java.util.UUID;
 
@@ -47,6 +47,6 @@ public class CmdAddFakePlayer extends CmdBase
 		ForgePlayer p = new ForgePlayer(Universe.get(), id, args[1]);
 		p.team.universe.players.put(p.getId(), p);
 		p.clearCache();
-		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftblib.lang.add_fake_player.added", p.getDisplayName()));
+		sender.sendMessage(FTBLib.lang(sender, "ftblib.lang.add_fake_player.added", p.getDisplayName()));
 	}
 }

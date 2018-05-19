@@ -64,6 +64,6 @@ public class GuiManageModerators extends GuiManagePlayersBase
 
 	public GuiManageModerators(Collection<MessageMyTeamPlayerList.Entry> m)
 	{
-		super(I18n.format("ftblib.lang.team.gui.mods"), m, ButtonPlayer::new);
+		super(I18n.format("team_action.ftblib.moderators"), m, ButtonPlayer::new);
 	}
 }

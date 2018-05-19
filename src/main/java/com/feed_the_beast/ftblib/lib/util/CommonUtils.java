@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.util;
 
-import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.block.BlockFlags;
 import com.google.common.base.Optional;
 import com.mojang.authlib.GameProfile;
@@ -17,7 +16,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.crafting.JsonContext;
-import net.minecraftforge.fml.common.Loader;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -32,7 +30,6 @@ public class CommonUtils
 	public static final boolean DEV_ENV = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 	public static final GameProfile FAKE_PLAYER_PROFILE = new GameProfile(StringUtils.fromString("069be1413c1b45c3b3b160d3f9fcd236"), "FakeForgePlayer");
 
-	public static boolean isNEILoaded = false;
 	public static File folderConfig, folderMinecraft, folderLocal;
 
 	private static final Predicate<Object> PREDICATE_ALWAYS_TRUE = object -> true;
@@ -58,11 +55,6 @@ public class CommonUtils
 		return cast(PREDICATE_ALWAYS_TRUE);
 	}
 
-	public static boolean isNEILoaded()
-	{
-		return isNEILoaded;
-	}
-
 	public static void init(File configFolder)
 	{
 		folderConfig = configFolder;
@@ -73,8 +65,6 @@ public class CommonUtils
 		{
 			folderLocal.mkdirs();
 		}
-
-		isNEILoaded = Loader.isModLoaded(OtherMods.NEI);
 	}
 
 	public static String getNameFromState(IBlockState state)

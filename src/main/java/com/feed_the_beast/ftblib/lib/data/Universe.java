@@ -28,7 +28,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
@@ -41,7 +40,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -665,15 +663,15 @@ public class Universe implements IHasCache
 
 		if (!p.hideTeamNotification() && !p.hasTeam())
 		{
-			ITextComponent b1 = TextComponentHelper.createComponentTranslation(player, "click_here");
+			ITextComponent b1 = FTBLib.lang(player, "click_here");
 			b1.getStyle().setColor(TextFormatting.GOLD);
 			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
-			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(player, "sidebar_button.ftblib.my_team")));
-			ITextComponent b2 = TextComponentHelper.createComponentTranslation(player, "click_here");
+			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLib.lang(player, "sidebar_button.ftblib.my_team")));
+			ITextComponent b2 = FTBLib.lang(player, "click_here");
 			b2.getStyle().setColor(TextFormatting.GOLD);
 			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings " + FTBLib.MOD_ID + ".hide_team_notification toggle"));
-			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponentHelper.createComponentTranslation(player, "ftblib.lang.team.notification.hide")));
-			player.sendMessage(new TextComponentTranslation("ftblib.lang.team.notification", b1, b2));
+			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLib.lang(player, "ftblib.lang.team.notification.hide")));
+			player.sendMessage(FTBLib.lang(player, "ftblib.lang.team.notification", b1, b2));
 		}
 
 		p.markDirty();

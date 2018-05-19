@@ -25,7 +25,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.HashSet;
@@ -59,16 +58,16 @@ public class FTBLibAPI
 			for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
 			{
 				Notification notification = Notification.of(FTBLibNotifications.RELOAD_SERVER);
-				notification.addLine(TextComponentHelper.createComponentTranslation(player, "ftblib.lang.reload_server", millis));
+				notification.addLine(FTBLib.lang(player, "ftblib.lang.reload_server", millis));
 
 				if (event.isClientReloadRequired())
 				{
-					notification.addLine(TextComponentHelper.createComponentTranslation(player, "ftblib.lang.reload_client", StringUtils.color(new TextComponentString("F3 + T"), TextFormatting.GOLD)));
+					notification.addLine(FTBLib.lang(player, "ftblib.lang.reload_client", StringUtils.color(new TextComponentString("F3 + T"), TextFormatting.GOLD)));
 				}
 
 				if (!failed.isEmpty())
 				{
-					notification.addLine(StringUtils.color(TextComponentHelper.createComponentTranslation(player, "ftblib.lang.reload_failed"), TextFormatting.RED));
+					notification.addLine(StringUtils.color(FTBLib.lang(player, "ftblib.lang.reload_failed"), TextFormatting.RED));
 					FTBLib.LOGGER.warn("These IDs failed to reload:");
 
 					for (ResourceLocation f : failed)

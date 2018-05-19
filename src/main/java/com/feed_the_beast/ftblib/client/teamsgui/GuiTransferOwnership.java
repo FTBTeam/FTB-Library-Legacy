@@ -46,12 +46,12 @@ public class GuiTransferOwnership extends GuiManagePlayersBase
 				}
 
 				getGui().closeGui(!result);
-			}, I18n.format("ftblib.lang.team.gui.transfer_ownership") + "?", ClientUtils.MC.getSession().getUsername() + " => " + entry.name, 0));
+			}, I18n.format("team_action.ftblib.transfer_ownership") + "?", ClientUtils.MC.getSession().getUsername() + " => " + entry.name, 0));
 		}
 	}
 
 	public GuiTransferOwnership(Collection<MessageMyTeamPlayerList.Entry> m)
 	{
-		super(I18n.format("ftblib.lang.team.gui.transfer_ownership"), m, ButtonPlayer::new);
+		super(I18n.format("team_action.ftblib.transfer_ownership"), m, ButtonPlayer::new);
 	}
 }

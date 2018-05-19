@@ -149,21 +149,22 @@ ftblib.lang.team.notification=You haven't joined or created a team yet! %s to op
 ftblib.lang.team.notification.hide=Hide this Message
 ftblib.lang.team.chat_message=[Team %s] %s
 
-ftblib.lang.team.gui.select_team=Select Team to Join
-ftblib.lang.team.gui.create_team=Create a New Team
+team_action.ftblib.select_team=Select Team to Join
+team_action.ftblib.create_team=Create a New Team
+team_action.ftblib.members=Members
+team_action.ftblib.allies=Allies
+team_action.ftblib.moderators=Moderators
+team_action.ftblib.enemies=Enemies
+team_action.ftblib.leave=Exit Team
+team_action.ftblib.transfer_ownership=Transfer Ownership
+
 ftblib.lang.team.gui.join_team=Click to join '%s'
 ftblib.lang.team.gui.request_invite=Click to request invite to '%s'
-ftblib.lang.team.gui.members=Members
 ftblib.lang.team.gui.members.invite=Click to invite to your team
 ftblib.lang.team.gui.members.requesting_invite=This player is requesting invite
 ftblib.lang.team.gui.members.deny_request=Right-click to deny request
 ftblib.lang.team.gui.members.cancel_invite=Right-click to cancel invite
 ftblib.lang.team.gui.members.kick=Right-click to kick member
-ftblib.lang.team.gui.allies=Allies
-ftblib.lang.team.gui.mods=Moderators
-ftblib.lang.team.gui.enemies=Enemies
-ftblib.lang.team.gui.leave=Exit Team
-ftblib.lang.team.gui.transfer_ownership=Transfer Ownership
 
 ftblib.lang.team_status.enemy=Enemy
 ftblib.lang.team_status.none=None

@@ -19,7 +19,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -115,7 +114,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 				json1.add(node.toString(), value);
 				getCallback(sender).saveConfig(group, sender, json1);
 				ConfigValueInstance instance = group.getMap().get(node);
-				Notification.of(Notification.VANILLA_STATUS, TextComponentHelper.createComponentTranslation(sender, "ftblib.lang.config_command.set", group.getDisplayName(instance.info), group.get(node).toString())).send(server, getCommandSenderAsPlayer(sender));
+				Notification.of(Notification.VANILLA_STATUS, FTBLib.lang(sender, "ftblib.lang.config_command.set", group.getDisplayName(instance.info), group.get(node).toString())).send(server, getCommandSenderAsPlayer(sender));
 				return;
 			}
 			catch (Exception ex)

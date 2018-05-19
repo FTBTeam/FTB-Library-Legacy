@@ -12,8 +12,9 @@ import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
-import com.feed_the_beast.ftblib.lib.data.Action;
+import com.feed_the_beast.ftblib.lib.data.AdminPanelAction;
 import com.feed_the_beast.ftblib.lib.data.ISyncData;
+import com.feed_the_beast.ftblib.lib.data.TeamAction;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
@@ -46,8 +47,8 @@ public class FTBLibCommon
 	public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
 	public static final Map<String, ISyncData> SYNCED_DATA = new HashMap<>();
 	public static final HashSet<ResourceLocation> RELOAD_IDS = new HashSet<>();
-	public static final Map<ResourceLocation, Action> TEAM_GUI_ACTIONS = new HashMap<>();
-	public static final Map<ResourceLocation, Action> ADMIN_PANEL_ACTIONS = new HashMap<>();
+	public static final Map<ResourceLocation, TeamAction> TEAM_GUI_ACTIONS = new HashMap<>();
+	public static final Map<ResourceLocation, AdminPanelAction> ADMIN_PANEL_ACTIONS = new HashMap<>();
 
 	public static class EditingConfig
 	{
@@ -177,9 +178,5 @@ public class FTBLibCommon
 	public long getWorldTime()
 	{
 		return FMLCommonHandler.instance().getMinecraftServerInstance().getWorld(0).getTotalWorldTime();
-	}
-
-	public void putAllServerMods(Map<String, String> map)
-	{
 	}
 }

@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.commands.team;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibGameRules;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
@@ -13,7 +14,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.command.TextComponentHelper;
 
 /**
  * @author LatvianModder
@@ -88,7 +88,7 @@ public class CmdCreate extends CmdBase
 		team.universe.teams.put(team.getName(), team);
 		new ForgeTeamCreatedEvent(team).post();
 		new ForgeTeamPlayerJoinedEvent(p).post();
-		sender.sendMessage(TextComponentHelper.createComponentTranslation(sender, "ftblib.lang.team.created", team.getName()));
+		sender.sendMessage(FTBLib.lang(sender, "ftblib.lang.team.created", team.getName()));
 		new MessageMyTeamGuiResponse(p).sendTo(player);
 		team.markDirty();
 		p.markDirty();

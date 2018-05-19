@@ -19,7 +19,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigStringEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigTextComponent;
 import com.feed_the_beast.ftblib.lib.config.ConfigTristate;
-import com.feed_the_beast.ftblib.lib.data.Action;
+import com.feed_the_beast.ftblib.lib.data.AdminPanelAction;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.data.FTBLibTeamGuiActions;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
@@ -70,7 +70,7 @@ public class FTBLibEventHandler
 	@SubscribeEvent
 	public static void registerAdminPanelActions(RegisterAdminPanelActionsEvent event)
 	{
-		event.register(new Action("ftblib:reload", new TextComponentTranslation("ftblib.lang.reload_server_button"), GuiIcons.REFRESH, -1000)
+		event.register(new AdminPanelAction(FTBLib.MOD_ID, "reload", GuiIcons.REFRESH, -1000)
 		{
 			@Override
 			public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -83,7 +83,7 @@ public class FTBLibEventHandler
 			{
 				FTBLibAPI.reloadServer(player.team.universe, player.getPlayer(), EnumReloadType.RELOAD_COMMAND, ServerReloadEvent.ALL);
 			}
-		});
+		}.setTitle(new TextComponentTranslation("ftblib.lang.reload_server_button")));
 	}
 
 	@SubscribeEvent

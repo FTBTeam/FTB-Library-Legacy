@@ -64,6 +64,6 @@ public class GuiManageEnemies extends GuiManagePlayersBase
 
 	public GuiManageEnemies(Collection<MessageMyTeamPlayerList.Entry> m)
 	{
-		super(I18n.format("ftblib.lang.team.gui.enemies"), m, ButtonPlayer::new);
+		super(I18n.format("team_action.ftblib.enemies"), m, ButtonPlayer::new);
 	}
 }

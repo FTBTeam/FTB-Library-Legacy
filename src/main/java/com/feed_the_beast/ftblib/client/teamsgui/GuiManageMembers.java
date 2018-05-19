@@ -146,6 +146,6 @@ public class GuiManageMembers extends GuiManagePlayersBase
 
 	public GuiManageMembers(Collection<MessageMyTeamPlayerList.Entry> m)
 	{
-		super(I18n.format("ftblib.lang.team.gui.members"), m, ButtonPlayer::new);
+		super(I18n.format("team_action.ftblib.members"), m, ButtonPlayer::new);
 	}
 }

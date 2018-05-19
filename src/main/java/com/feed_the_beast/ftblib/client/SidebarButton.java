@@ -1,16 +1,18 @@
 package com.feed_the_beast.ftblib.client;
 
+import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,7 +161,7 @@ public class SidebarButton implements Comparable<SidebarButton>
 
 	public boolean isAvailable()
 	{
-		return (!hideWithNEI || !CommonUtils.isNEILoaded()) && (!requiresOp || ClientUtils.isClientOP()) && FTBLibClient.areAllModsLoadedOnServer(requiredServerMods);
+		return (!hideWithNEI || !Loader.isModLoaded(OtherMods.NEI)) && (!requiresOp || ClientUtils.isClientOP()) && SidedUtils.areAllModsLoadedOnServer(requiredServerMods);
 	}
 
 	public boolean hasCustomText()

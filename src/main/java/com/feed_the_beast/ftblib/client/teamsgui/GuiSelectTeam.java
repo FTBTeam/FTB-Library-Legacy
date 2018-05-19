@@ -27,7 +27,7 @@ public class GuiSelectTeam extends GuiButtonListBase
 
 		private ButtonCreateTeam(Panel panel, boolean c)
 		{
-			super(panel, I18n.format("ftblib.lang.team.gui.create_team"), GuiIcons.ADD);
+			super(panel, I18n.format("team_action.ftblib.create_team"), GuiIcons.ADD);
 			canCreate = c;
 		}
 
@@ -122,7 +122,7 @@ public class GuiSelectTeam extends GuiButtonListBase
 
 	public GuiSelectTeam(Collection<PublicTeamData> teams0, boolean c)
 	{
-		setTitle(I18n.format("ftblib.lang.team.gui.select_team"));
+		setTitle(I18n.format("team_action.ftblib.select_team"));
 		teams = new ArrayList<>(teams0);
 		teams.sort(null);
 		canCreate = c;

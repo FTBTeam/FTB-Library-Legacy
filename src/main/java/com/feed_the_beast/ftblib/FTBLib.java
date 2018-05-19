@@ -4,7 +4,10 @@ import com.feed_the_beast.ftblib.commands.CmdFTB;
 import com.feed_the_beast.ftblib.events.RegisterPermissionsEvent;
 import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.cmd.CommandMirror;
+import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -16,6 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nullable;
 import java.util.Locale;
 import java.util.Map;
 
@@ -39,6 +43,11 @@ public class FTBLib
 
 	@SidedProxy(serverSide = "com.feed_the_beast.ftblib.FTBLibCommon", clientSide = "com.feed_the_beast.ftblib.client.FTBLibClient")
 	public static FTBLibCommon PROXY;
+
+	public static ITextComponent lang(@Nullable ICommandSender sender, String key, Object... args)
+	{
+		return SidedUtils.lang(sender, MOD_ID, key, args);
+	}
 
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)
@@ -81,14 +90,7 @@ public class FTBLib
 	@NetworkCheckHandler
 	public boolean checkModLists(Map<String, String> map, Side side)
 	{
-		if (side == Side.SERVER)
-		{
-			if (PROXY != null)
-			{
-				PROXY.putAllServerMods(map);
-			}
-		}
-
+		SidedUtils.checkModLists(side, map);
 		return true;
 	}
 }

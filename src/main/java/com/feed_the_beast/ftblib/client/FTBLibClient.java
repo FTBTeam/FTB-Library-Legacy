@@ -31,12 +31,9 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author LatvianModder
@@ -46,9 +43,6 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 	public static final List<SidebarButtonGroup> SIDEBAR_BUTTON_GROUPS = new ArrayList<>();
 	private static final Map<ResourceLocation, IGuiProvider> GUI_PROVIDERS = new HashMap<>();
 	public static final Map<String, ClientConfig> CLIENT_CONFIG_MAP = new HashMap<>();
-	private static final Map<String, String> SERVER_MODS_0 = new HashMap<>();
-	public static final Map<String, String> SERVER_MODS = Collections.unmodifiableMap(SERVER_MODS_0);
-	public static UUID UNIVERSE_UUID = null;
 
 	@Override
 	public void preInit(FMLPreInitializationEvent event)
@@ -255,13 +249,6 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 		return ClientUtils.MC.world == null ? super.getWorldTime() : ClientUtils.MC.world.getTotalWorldTime();
 	}
 
-	@Override
-	public void putAllServerMods(Map<String, String> map)
-	{
-		SERVER_MODS_0.clear();
-		SERVER_MODS_0.putAll(map);
-	}
-
 	@Nullable
 	public static IGuiProvider getGui(ResourceLocation id)
 	{
@@ -289,26 +276,5 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 		}
 
 		JsonUtils.toJsonSafe(new File(CommonUtils.folderLocal, "client/sidebar_buttons.json"), o);
-	}
-
-	public static boolean isModLoadedOnServer(String modid)
-	{
-		return !modid.isEmpty() && SERVER_MODS_0.containsKey(modid);
-	}
-
-	public static boolean areAllModsLoadedOnServer(Collection<String> modids)
-	{
-		if (!modids.isEmpty())
-		{
-			for (String modid : modids)
-			{
-				if (!isModLoadedOnServer(modid))
-				{
-					return false;
-				}
-			}
-		}
-
-		return true;
 	}
 }

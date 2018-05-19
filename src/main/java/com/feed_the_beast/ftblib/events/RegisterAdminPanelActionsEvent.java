@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.events;
 
-import com.feed_the_beast.ftblib.lib.data.Action;
+import com.feed_the_beast.ftblib.lib.data.AdminPanelAction;
 
 import java.util.function.Consumer;
 
@@ -9,14 +9,14 @@ import java.util.function.Consumer;
  */
 public class RegisterAdminPanelActionsEvent extends FTBLibEvent
 {
-	private Consumer<Action> callback;
+	private Consumer<AdminPanelAction> callback;
 
-	public RegisterAdminPanelActionsEvent(Consumer<Action> c)
+	public RegisterAdminPanelActionsEvent(Consumer<AdminPanelAction> c)
 	{
 		callback = c;
 	}
 
-	public void register(Action action)
+	public void register(AdminPanelAction action)
 	{
 		callback.accept(action);
 	}

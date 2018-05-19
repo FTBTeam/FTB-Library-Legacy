@@ -64,6 +64,6 @@ public class GuiManageAllies extends GuiManagePlayersBase
 
 	public GuiManageAllies(Collection<MessageMyTeamPlayerList.Entry> m)
 	{
-		super(I18n.format("ftblib.lang.team.gui.allies"), m, ButtonPlayer::new);
+		super(I18n.format("team_action.ftblib.allies"), m, ButtonPlayer::new);
 	}
 }

@@ -3,7 +3,6 @@ package com.feed_the_beast.ftblib.net;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.client.FTBLibClient;
 import com.feed_the_beast.ftblib.events.SyncGamerulesEvent;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
@@ -13,6 +12,7 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
+import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -82,7 +82,7 @@ public class MessageSyncData extends MessageToClient
 	@SideOnly(Side.CLIENT)
 	public void onMessage()
 	{
-		FTBLibClient.UNIVERSE_UUID = universeId;
+		SidedUtils.UNIVERSE_UUID_CLIENT = universeId;
 
 		for (String key : syncData.getKeySet())
 		{
@@ -101,7 +101,7 @@ public class MessageSyncData extends MessageToClient
 
 		if (FTBLibConfig.debugging.print_more_info && Bits.getFlag(flags, LOGIN))
 		{
-			FTBLib.LOGGER.info("Synced data from universe " + StringUtils.fromUUID(FTBLibClient.UNIVERSE_UUID));
+			FTBLib.LOGGER.info("Synced data from universe " + StringUtils.fromUUID(SidedUtils.UNIVERSE_UUID_CLIENT));
 		}
 	}
 }

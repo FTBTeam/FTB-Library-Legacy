@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.client;
 
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.OtherMods;
+import net.minecraftforge.fml.common.Loader;
 
 /**
  * @author LatvianModder
@@ -19,7 +20,7 @@ public enum EnumSidebarButtonPlacement
 			case TOP_LEFT:
 				return true;
 			case AUTO:
-				return !CommonUtils.isNEILoaded();
+				return !Loader.isModLoaded(OtherMods.NEI);
 			default:
 				return false;
 		}

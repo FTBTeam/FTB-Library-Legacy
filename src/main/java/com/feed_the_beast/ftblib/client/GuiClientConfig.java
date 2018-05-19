@@ -11,6 +11,7 @@ import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
+import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -124,7 +125,7 @@ public class GuiClientConfig extends GuiButtonListBase
 			@Override
 			public WidgetType getWidgetType()
 			{
-				return FTBLibClient.isModLoadedOnServer(FTBLib.MOD_ID) ? super.getWidgetType() : WidgetType.DISABLED;
+				return SidedUtils.isModLoadedOnServer(FTBLib.MOD_ID) ? super.getWidgetType() : WidgetType.DISABLED;
 			}
 		});
 

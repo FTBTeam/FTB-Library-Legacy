@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftblib.events.team;
 
 import com.feed_the_beast.ftblib.events.FTBLibEvent;
-import com.feed_the_beast.ftblib.lib.data.Action;
+import com.feed_the_beast.ftblib.lib.data.TeamAction;
 
 import java.util.function.Consumer;
 
@@ -10,14 +10,14 @@ import java.util.function.Consumer;
  */
 public class RegisterTeamGuiActionsEvent extends FTBLibEvent
 {
-	private Consumer<Action> callback;
+	private Consumer<TeamAction> callback;
 
-	public RegisterTeamGuiActionsEvent(Consumer<Action> c)
+	public RegisterTeamGuiActionsEvent(Consumer<TeamAction> c)
 	{
 		callback = c;
 	}
 
-	public void register(Action action)
+	public void register(TeamAction action)
 	{
 		callback.accept(action);
 	}

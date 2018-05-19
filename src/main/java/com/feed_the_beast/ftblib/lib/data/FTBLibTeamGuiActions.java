@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.data;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.net.MessageMyTeamPlayerList;
@@ -18,7 +19,7 @@ public class FTBLibTeamGuiActions
 	private static final Predicate<EnumTeamStatus> ALLIES_PREDICATE = MEMBERS_PREDICATE.negate().and(NO_ENEMIES_PREDICATE);
 	private static final Predicate<EnumTeamStatus> ENEMIES_PREDICATE = status -> status == EnumTeamStatus.ENEMY || status == EnumTeamStatus.NONE;
 
-	public static final Action CONFIG = new Action("ftblib:config", new TextComponentTranslation("gui.settings"), GuiIcons.SETTINGS, -100)
+	public static final TeamAction CONFIG = new TeamAction(FTBLib.MOD_ID, "config", GuiIcons.SETTINGS, -100)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -31,9 +32,9 @@ public class FTBLibTeamGuiActions
 		{
 			FTBLibAPI.editServerConfig(player.getPlayer(), player.team.getSettings(), player.team.getConfigCallback());
 		}
-	};
+	}.setTitle(new TextComponentTranslation("gui.settings"));
 
-	public static final Action INFO = new Action("ftblib:info", new TextComponentTranslation("gui.info"), GuiIcons.INFO, 0)
+	public static final TeamAction INFO = new TeamAction(FTBLib.MOD_ID, "info", GuiIcons.INFO, 0)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -46,9 +47,9 @@ public class FTBLibTeamGuiActions
 		{
 			//TODO: Open info gui
 		}
-	};
+	}.setTitle(new TextComponentTranslation("gui.info"));
 
-	public static final Action MEMBERS = new Action("ftblib:members", new TextComponentTranslation("ftblib.lang.team.gui.members"), GuiIcons.FRIENDS, 30)
+	public static final TeamAction MEMBERS = new TeamAction(FTBLib.MOD_ID, "members", GuiIcons.FRIENDS, 30)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -120,7 +121,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final Action ALLIES = new Action("ftblib:allies", new TextComponentTranslation("ftblib.lang.team.gui.allies"), GuiIcons.STAR, 40)
+	public static final TeamAction ALLIES = new TeamAction(FTBLib.MOD_ID, "allies", GuiIcons.STAR, 40)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -145,7 +146,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final Action MODERATORS = new Action("ftblib:moderators", new TextComponentTranslation("ftblib.lang.team.gui.mods"), GuiIcons.SHIELD, 50)
+	public static final TeamAction MODERATORS = new TeamAction(FTBLib.MOD_ID, "moderators", GuiIcons.SHIELD, 50)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -171,7 +172,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final Action ENEMIES = new Action("ftblib:enemies", new TextComponentTranslation("ftblib.lang.team.gui.enemies"), GuiIcons.CLOSE, 60)
+	public static final TeamAction ENEMIES = new TeamAction(FTBLib.MOD_ID, "enemies", GuiIcons.CLOSE, 60)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -196,7 +197,7 @@ public class FTBLibTeamGuiActions
 		}
 	};
 
-	public static final Action LEAVE = new Action("ftblib:leave", new TextComponentTranslation("ftblib.lang.team.gui.leave"), GuiIcons.REMOVE, 10000)
+	public static final TeamAction LEAVE = new TeamAction(FTBLib.MOD_ID, "leave", GuiIcons.REMOVE, 10000)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
@@ -212,7 +213,7 @@ public class FTBLibTeamGuiActions
 		}
 	}.setRequiresConfirm();
 
-	public static final Action TRANSFER_OWNERSHIP = new Action("ftblib:transfer_ownership", new TextComponentTranslation("ftblib.lang.team.gui.transfer_ownership"), GuiIcons.RIGHT, 10000)
+	public static final TeamAction TRANSFER_OWNERSHIP = new TeamAction(FTBLib.MOD_ID, "transfer_ownership", GuiIcons.RIGHT, 10000)
 	{
 		@Override
 		public Type getType(ForgePlayer player, NBTTagCompound data)
