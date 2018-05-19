@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.math;
 
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -41,7 +42,12 @@ public final class BlockDimPos
 
 	public BlockDimPos(Entity entity)
 	{
-		this(entity.posX, entity.posY, entity.posZ, entity.dimension);
+		this(entity.posX, entity.posY + 0.1D, entity.posZ, entity.dimension);
+	}
+
+	public BlockDimPos(ICommandSender sender)
+	{
+		this(sender.getPosition(), sender.getEntityWorld().provider.getDimension());
 	}
 
 	public int[] toIntArray()
