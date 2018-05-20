@@ -66,6 +66,7 @@ teleporting=Teleporting...
 cooldown=Cooldown
 cant_use_now=Can't use that right now!
 cant_use_now_cooldown=Can't use that right now! Cooldown: %s
+action_bar=Action Bar
 
 ftblib.lang.reload_server_button=Reload Server
 ftblib.lang.reload_server=FTBLib: Server reloaded in %s
@@ -210,9 +211,6 @@ click_action.show_cmd=Show Command
 click_action.url=Open URL
 click_action.file=Open File
 click_action.gui=Open Gui
-
-# Guide
-ftblib.guide=FTBLib
 
 # Commands
 commands.ftb.usage=/ftb
