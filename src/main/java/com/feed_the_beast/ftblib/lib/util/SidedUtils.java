@@ -27,12 +27,16 @@ public class SidedUtils
 		return TextComponentHelper.createComponentTranslation(sender, key, args);
 	}
 
-	public static void checkModLists(Side side, Map<String, String> map)
+	public static void checkModLists(@Nullable Side side, @Nullable Map<String, String> map)
 	{
 		if (side == Side.SERVER)
 		{
 			SERVER_MODS_0.clear();
-			SERVER_MODS_0.putAll(map);
+
+			if (map != null && !map.isEmpty())
+			{
+				SERVER_MODS_0.putAll(map);
+			}
 		}
 		else if (side == Side.CLIENT)
 		{

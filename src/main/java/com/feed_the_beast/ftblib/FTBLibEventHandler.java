@@ -18,6 +18,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigStringEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigTextComponent;
+import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
 import com.feed_the_beast.ftblib.lib.config.ConfigTristate;
 import com.feed_the_beast.ftblib.lib.data.AdminPanelAction;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
@@ -52,6 +53,7 @@ public class FTBLibEventHandler
 		event.register(ConfigBlockState.ID, ConfigBlockState::new);
 		event.register(ConfigItemStack.ID, ConfigItemStack::new);
 		event.register(ConfigTextComponent.ID, ConfigTextComponent::new);
+		event.register(ConfigTimer.ID, ConfigTimer::new);
 	}
 
 	@SubscribeEvent

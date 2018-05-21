@@ -33,6 +33,11 @@ public abstract class ConfigValue implements IStringSerializable, IJsonSerializa
 		return getInt();
 	}
 
+	public long getLong()
+	{
+		return getInt();
+	}
+
 	public abstract ConfigValue copy();
 
 	public boolean equalsValue(ConfigValue value)

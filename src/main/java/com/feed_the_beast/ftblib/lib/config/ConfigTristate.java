@@ -9,8 +9,6 @@ import com.google.gson.JsonPrimitive;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * @author LatvianModder
@@ -18,24 +16,6 @@ import java.util.function.Supplier;
 public class ConfigTristate extends ConfigValue
 {
 	public static final String ID = "tristate";
-
-	public static ConfigTristate create(EnumTristate defValue, Supplier<EnumTristate> getter, Consumer<EnumTristate> setter)
-	{
-		return new ConfigTristate(defValue)
-		{
-			@Override
-			public EnumTristate get()
-			{
-				return getter.get();
-			}
-
-			@Override
-			public void set(EnumTristate v)
-			{
-				setter.accept(v);
-			}
-		};
-	}
 
 	private EnumTristate value;
 

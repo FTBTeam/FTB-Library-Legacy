@@ -11,7 +11,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
@@ -22,24 +21,6 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 	public static final String ID = "bool";
 	public static final Color4I COLOR_TRUE = Color4I.rgb(0x33AA33);
 	public static final Color4I COLOR_FALSE = Color4I.rgb(0xD52834);
-
-	public static ConfigBoolean create(boolean defValue, BooleanSupplier getter, Consumer<Boolean> setter)
-	{
-		return new ConfigBoolean(defValue)
-		{
-			@Override
-			public boolean getBoolean()
-			{
-				return getter.getAsBoolean();
-			}
-
-			@Override
-			public void setBoolean(boolean v)
-			{
-				setter.accept(v);
-			}
-		};
-	}
 
 	private boolean value;
 

@@ -9,7 +9,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 
@@ -57,7 +56,6 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 		value = v;
 	}
 
-	@Nullable
 	@Override
 	public Object getValue()
 	{

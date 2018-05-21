@@ -36,10 +36,6 @@ public class CommonUtils
 	public static final Object[] NO_OBJECTS = { };
 	public static final JsonContext MINECRAFT_JSON_CONTEXT = new JsonContext("minecraft");
 
-	public static final long TICKS_SECOND = 20L;
-	public static final long TICKS_MINUTE = TICKS_SECOND * 60L;
-	public static final long TICKS_HOUR = TICKS_MINUTE * 60L;
-
 	public static final char[] HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
 	public static final IBlockState AIR_STATE = Blocks.AIR.getDefaultState();

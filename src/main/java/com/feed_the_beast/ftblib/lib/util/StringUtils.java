@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.io.Bits;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
@@ -330,7 +331,7 @@ public class StringUtils
 
 	public static String getTimeStringTicks(long ticks)
 	{
-		return getTimeString(ticks * 1000L / CommonUtils.TICKS_SECOND);
+		return getTimeString(Ticks.ts(ticks) * 1000L);
 	}
 
 	public static String getTimeString(long millis)
