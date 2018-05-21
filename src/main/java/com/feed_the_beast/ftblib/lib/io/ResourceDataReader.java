@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
@@ -43,9 +44,12 @@ public class ResourceDataReader extends DataReader
 	}
 
 	@Override
-	public JsonElement json()
+	public JsonElement json() throws Exception
 	{
-		return JsonUtils.PARSER.parse(new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8));
+		try (Reader reader = new InputStreamReader(resource.getInputStream(), StandardCharsets.UTF_8))
+		{
+			return JsonUtils.parse(reader);
+		}
 	}
 
 	@Override

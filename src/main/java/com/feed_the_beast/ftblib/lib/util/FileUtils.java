@@ -261,11 +261,14 @@ public class FileUtils
 			else
 			{
 				dst = newFile(dst);
-				FileChannel srcC = new FileInputStream(src).getChannel();
-				FileChannel dstC = new FileOutputStream(dst).getChannel();
-				dstC.transferFrom(srcC, 0L, srcC.size());
-				srcC.close();
-				dstC.close();
+
+				try (FileInputStream fis = new FileInputStream(src);
+					 FileOutputStream fos = new FileOutputStream(dst);
+					 FileChannel srcC = fis.getChannel();
+					 FileChannel dstC = fos.getChannel())
+				{
+					dstC.transferFrom(srcC, 0L, srcC.size());
+				}
 			}
 		}
 	}

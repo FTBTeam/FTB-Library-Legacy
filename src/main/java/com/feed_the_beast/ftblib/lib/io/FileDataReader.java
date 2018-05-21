@@ -54,21 +54,33 @@ public class FileDataReader extends DataReader
 	public String string(int bufferSize) throws Exception
 	{
 		checkFile();
-		return readStringFromStream(new FileInputStream(file), bufferSize);
+
+		try (FileInputStream stream = new FileInputStream(file))
+		{
+			return readStringFromStream(stream, bufferSize);
+		}
 	}
 
 	@Override
 	public List<String> stringList() throws Exception
 	{
 		checkFile();
-		return readStringListFromStream(new FileInputStream(file));
+
+		try (FileInputStream stream = new FileInputStream(file))
+		{
+			return readStringListFromStream(stream);
+		}
 	}
 
 	@Override
 	public JsonElement json() throws Exception
 	{
 		checkFile();
-		return JsonUtils.PARSER.parse(new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)));
+
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8)))
+		{
+			return JsonUtils.parse(reader);
+		}
 	}
 
 	@Override

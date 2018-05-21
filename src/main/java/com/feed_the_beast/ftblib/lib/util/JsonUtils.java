@@ -11,7 +11,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.Streams;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
@@ -40,6 +43,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -51,7 +55,7 @@ import java.util.Map;
  */
 public class JsonUtils
 {
-	public static final JsonParser PARSER = new JsonParser();
+	private static final JsonParser PARSER = new JsonParser();
 	public static final JsonPrimitive JSON_TRUE = new JsonPrimitive(true);
 	public static final JsonPrimitive JSON_FALSE = new JsonPrimitive(false);
 
@@ -63,6 +67,27 @@ public class JsonUtils
 	public static JsonElement nonnull(@Nullable JsonElement json)
 	{
 		return isNull(json) ? JsonNull.INSTANCE : json;
+	}
+
+	public static JsonElement parse(@Nullable Reader reader) throws Exception
+	{
+		if (reader == null)
+		{
+			return JsonNull.INSTANCE;
+		}
+
+		JsonReader jsonReader = new JsonReader(reader);
+		JsonElement element;
+		boolean lenient = jsonReader.isLenient();
+		jsonReader.setLenient(true);
+		element = Streams.parse(jsonReader);
+
+		if (!element.isJsonNull() && jsonReader.peek() != JsonToken.END_DOCUMENT)
+		{
+			throw new JsonSyntaxException("Did not consume the entire document.");
+		}
+
+		return element;
 	}
 
 	public static void toJson(Writer writer, @Nullable JsonElement element, boolean prettyPrinting)

@@ -190,7 +190,7 @@ public class HttpDataReader extends DataReader
 
 		try (InputStream stream = connection.getInputStream())
 		{
-			return JsonUtils.PARSER.parse(new InputStreamReader(stream, StandardCharsets.UTF_8));
+			return JsonUtils.parse(new InputStreamReader(stream, StandardCharsets.UTF_8));
 		}
 		finally
 		{

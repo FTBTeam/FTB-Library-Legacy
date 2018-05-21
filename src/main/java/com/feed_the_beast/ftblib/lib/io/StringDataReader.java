@@ -7,6 +7,7 @@ import com.google.gson.JsonElement;
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,9 +61,12 @@ public class StringDataReader extends DataReader
 	}
 
 	@Override
-	public JsonElement json()
+	public JsonElement json() throws Exception
 	{
-		return JsonUtils.PARSER.parse(string);
+		try (Reader reader = new StringReader(string))
+		{
+			return JsonUtils.parse(reader);
+		}
 	}
 
 	@Override
