@@ -2,6 +2,8 @@ package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
 
+import javax.annotation.Nullable;
+
 /**
  * @author LatvianModder
  */
@@ -11,12 +13,16 @@ public final class RankConfigValueInfo implements Comparable<RankConfigValueInfo
 	public final ConfigValue defaultValue;
 	public final ConfigValue defaultOPValue;
 
-	public RankConfigValueInfo(Node s, ConfigValue def, ConfigValue defOP)
+	public RankConfigValueInfo(Node s, ConfigValue def, @Nullable ConfigValue defOP)
 	{
 		node = s;
 		defaultValue = def.copy();
 		defaultOPValue = def.copy();
-		defaultOPValue.fromJson(defOP.getSerializableElement());
+
+		if (defOP != null)
+		{
+			defaultOPValue.fromJson(defOP.getSerializableElement());
+		}
 	}
 
 	public String toString()

@@ -23,9 +23,16 @@ public class RegisterRankConfigEvent extends FTBLibEvent
 		callback.accept(info);
 	}
 
-	public RankConfigValueInfo register(Node id, ConfigValue defPlayer, ConfigValue defOP)
+	public RankConfigValueInfo register(Node id, ConfigValue defaultPlayerValue, ConfigValue defaultOPValue)
 	{
-		RankConfigValueInfo info = new RankConfigValueInfo(id, defPlayer, defOP);
+		RankConfigValueInfo info = new RankConfigValueInfo(id, defaultPlayerValue, defaultOPValue);
+		register(info);
+		return info;
+	}
+
+	public RankConfigValueInfo register(Node id, ConfigValue defaultValue)
+	{
+		RankConfigValueInfo info = new RankConfigValueInfo(id, defaultValue, null);
 		register(info);
 		return info;
 	}

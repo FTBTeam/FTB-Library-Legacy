@@ -16,7 +16,8 @@ public class CmdTeam extends CmdTreeBase
 		addSubcommand(new CmdTransferOwnership());
 		addSubcommand(new CmdKick());
 		addSubcommand(new CmdJoin());
-		addSubcommand(new CmdSetStatus());
+		addSubcommand(new CmdStatus());
 		addSubcommand(new CmdRequestInvite());
+		addSubcommand(new CmdDelete());
 	}
 }

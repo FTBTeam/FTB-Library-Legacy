@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftblib.lib;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.Collection;
@@ -23,7 +23,7 @@ public enum EnumTeamStatus implements IStringSerializable
 	OWNER(100, "owner", TextFormatting.GOLD, false);
 
 	public static final EnumTeamStatus[] VALUES = values();
-	public static final NameMap.ObjectProperties<EnumTeamStatus> OBJECT_PROPERTIES = NameMap.ObjectProperties.withComponentName(object -> StringUtils.color(new TextComponentTranslation(object.langKey), object.color));
+	public static final NameMap.ObjectProperties<EnumTeamStatus> OBJECT_PROPERTIES = NameMap.ObjectProperties.withName((sender, value) -> StringUtils.color(FTBLib.lang(sender, value.getLangKey()), value.getColor()));
 	public static final NameMap<EnumTeamStatus> NAME_MAP = NameMap.create(NONE, OBJECT_PROPERTIES, VALUES);
 	public static final NameMap<EnumTeamStatus> NAME_MAP_PERMS = NameMap.create(ALLY, OBJECT_PROPERTIES, NONE, ALLY, MEMBER);
 	public static final Collection<EnumTeamStatus> VALID_VALUES = new LinkedHashSet<>();

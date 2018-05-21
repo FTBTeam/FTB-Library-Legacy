@@ -58,6 +58,7 @@ public class JsonUtils
 	private static final JsonParser PARSER = new JsonParser();
 	public static final JsonPrimitive JSON_TRUE = new JsonPrimitive(true);
 	public static final JsonPrimitive JSON_FALSE = new JsonPrimitive(false);
+	public static final JsonPrimitive JSON_EMPTY_STRING = new JsonPrimitive("");
 
 	public static boolean isNull(@Nullable JsonElement element)
 	{
@@ -743,7 +744,10 @@ public class JsonUtils
 				return json;
 			}
 			case Constants.NBT.TAG_STRING:
-				return new JsonPrimitive(((NBTTagString) nbt).getString());
+			{
+				String s = ((NBTTagString) nbt).getString();
+				return s.isEmpty() ? JSON_EMPTY_STRING : new JsonPrimitive(s);
+			}
 			case Constants.NBT.TAG_BYTE:
 				return new JsonPrimitive(((NBTPrimitive) nbt).getByte());
 			case Constants.NBT.TAG_SHORT:

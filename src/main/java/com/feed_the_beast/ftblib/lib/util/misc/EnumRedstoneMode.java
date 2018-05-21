@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util.misc;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import net.minecraft.util.IStringSerializable;
@@ -14,7 +15,7 @@ public enum EnumRedstoneMode implements IStringSerializable
 	ACTIVE_LOW("active_low"),
 	PULSE("pulse");
 
-	public static final NameMap.ObjectProperties<EnumRedstoneMode> OBJECT_PROPERTIES = NameMap.ObjectProperties.withTranslatedName(EnumRedstoneMode::getLangKey);
+	public static final NameMap.ObjectProperties<EnumRedstoneMode> OBJECT_PROPERTIES = NameMap.ObjectProperties.withName((sender, value) -> FTBLib.lang(sender, value.getLangKey()));
 	public static final NameMap<EnumRedstoneMode> NAME_MAP = NameMap.create(DISABLED, OBJECT_PROPERTIES, DISABLED, ACTIVE_HIGH, ACTIVE_LOW);
 	public static final NameMap<EnumRedstoneMode> NAME_MAP_WITH_PULSE = NameMap.create(DISABLED, OBJECT_PROPERTIES, DISABLED, ACTIVE_HIGH, ACTIVE_LOW, PULSE);
 	public static final String ENUM_LANG_KEY = "redstone_mode";

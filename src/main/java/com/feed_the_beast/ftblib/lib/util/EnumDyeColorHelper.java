@@ -4,20 +4,18 @@ import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 
-import java.util.EnumMap;
-
 /**
  * @author LatvianModder
  */
 public class EnumDyeColorHelper // ItemDye
 {
-	public static final EnumMap<EnumDyeColor, EnumDyeColorHelper> HELPERS = new EnumMap<>(EnumDyeColor.class);
+	public static final EnumDyeColorHelper[] HELPERS = new EnumDyeColorHelper[EnumDyeColor.values().length];
 
 	static
 	{
 		for (EnumDyeColor c : EnumDyeColor.values())
 		{
-			HELPERS.put(c, new EnumDyeColorHelper(c));
+			HELPERS[c.ordinal()] = new EnumDyeColorHelper(c);
 		}
 	}
 
@@ -34,7 +32,7 @@ public class EnumDyeColorHelper // ItemDye
 
 	public static EnumDyeColorHelper get(EnumDyeColor dye)
 	{
-		return HELPERS.get(dye);
+		return HELPERS[dye.ordinal()];
 	}
 
 	public ItemStack getDye(int s)

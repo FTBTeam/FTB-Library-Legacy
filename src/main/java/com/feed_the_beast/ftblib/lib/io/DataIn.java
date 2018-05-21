@@ -348,7 +348,10 @@ public class DataIn
 				return json;
 			}
 			case 3:
-				return new JsonPrimitive(readString());
+			{
+				String s = readString();
+				return s.isEmpty() ? JsonUtils.JSON_EMPTY_STRING : new JsonPrimitive(s);
+			}
 			case 4:
 				return readBoolean() ? JsonUtils.JSON_TRUE : JsonUtils.JSON_FALSE;
 			case 5:

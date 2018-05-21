@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.text.TextFormatting;
@@ -121,7 +122,8 @@ public class ConfigString extends ConfigValue
 	@Override
 	public JsonElement getSerializableElement()
 	{
-		return new JsonPrimitive(getString());
+		String s = getString();
+		return s.isEmpty() ? JsonUtils.JSON_EMPTY_STRING : new JsonPrimitive(s);
 	}
 
 	@Override

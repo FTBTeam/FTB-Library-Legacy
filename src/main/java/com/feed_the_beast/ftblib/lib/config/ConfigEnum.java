@@ -87,7 +87,7 @@ public class ConfigEnum<E> extends ConfigValue
 
 	public String toString()
 	{
-		return getNameMap().getDisplayName(getValue()).getFormattedText();
+		return getNameMap().getDisplayName(null, getValue()).getFormattedText();
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class ConfigEnum<E> extends ConfigValue
 	@Override
 	public void addInfo(ConfigValueInfo info, List<String> list)
 	{
-		list.add(TextFormatting.AQUA + "Def: " + getNameMap().getDisplayName(CommonUtils.cast(info.defaultValue.getValue())).getFormattedText());
+		list.add(TextFormatting.AQUA + "Def: " + getNameMap().getDisplayName(null, CommonUtils.cast(info.defaultValue.getValue())).getFormattedText());
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class ConfigEnum<E> extends ConfigValue
 		for (Map.Entry<String, E> entry : nameMap.map.entrySet())
 		{
 			data.writeString(entry.getKey());
-			data.writeTextComponent(nameMap.getDisplayName(entry.getValue()));
+			data.writeTextComponent(nameMap.getDisplayName(null, entry.getValue()));
 			data.writeIcon(nameMap.getColor(entry.getValue()));
 		}
 

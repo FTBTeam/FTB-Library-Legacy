@@ -9,6 +9,9 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * @author LatvianModder
  */
@@ -16,7 +19,13 @@ public class CmdTeamConfig extends CmdEditConfigBase
 {
 	public CmdTeamConfig()
 	{
-		super("config", Level.ALL);
+		super("settings", Level.ALL);
+	}
+
+	@Override
+	public List<String> getAliases()
+	{
+		return Collections.singletonList("config");
 	}
 
 	@Override

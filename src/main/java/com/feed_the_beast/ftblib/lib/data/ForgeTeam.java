@@ -223,7 +223,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 		if (title.isEmpty())
 		{
-			cachedTitle = new TextComponentString(hasOwner() ? (owner.getDisplayName() + "'s Team") : "Unnamed");
+			cachedTitle = hasOwner() ? owner.getDisplayName().appendText("'s Team") : new TextComponentString("Unnamed");
 		}
 		else
 		{
@@ -531,9 +531,10 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 			if (type.isPlayer)
 			{
-				new ForgeTeamDeletedEvent(this).post();
+				File folder = new File(universe.world.getSaveHandler().getWorldDirectory(), "data/ftb_lib/teams/");
+				new ForgeTeamDeletedEvent(this, folder).post();
 				universe.teams.remove(getName());
-				FileUtils.delete(new File(universe.world.getSaveHandler().getWorldDirectory(), "data/ftb_lib/teams/" + getName() + ".dat"));
+				FileUtils.delete(new File(folder, getName() + ".dat"));
 			}
 			else
 			{

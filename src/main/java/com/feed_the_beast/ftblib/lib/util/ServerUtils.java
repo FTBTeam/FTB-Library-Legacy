@@ -98,6 +98,11 @@ public class ServerUtils
 		return server.getPlayerList().canSendCommands(profile);
 	}
 
+	public static boolean isOP(EntityPlayerMP player)
+	{
+		return isOP(player.mcServer, player.getGameProfile());
+	}
+
 	public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)
 	{
 		Collection<ICommand> commands = new HashSet<>();

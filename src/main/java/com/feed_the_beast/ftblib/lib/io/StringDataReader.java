@@ -2,7 +2,10 @@ package com.feed_the_beast.ftblib.lib.io;
 
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonObject;
 
 import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
@@ -63,6 +66,37 @@ public class StringDataReader extends DataReader
 	@Override
 	public JsonElement json() throws Exception
 	{
+		if (string.equals("null"))
+		{
+			return JsonNull.INSTANCE;
+		}
+		else if (string.equals("true"))
+		{
+			return JsonUtils.JSON_TRUE;
+		}
+		else if (string.equals("false"))
+		{
+			return JsonUtils.JSON_FALSE;
+		}
+		else if (string.length() == 2)
+		{
+			char c0 = string.charAt(0);
+			char c1 = string.charAt(1);
+
+			if (c0 == '[' && c1 == ']')
+			{
+				return new JsonArray();
+			}
+			else if (c0 == '{' && c1 == '}')
+			{
+				return new JsonObject();
+			}
+			else if (c0 == '"' && c1 == '"')
+			{
+				return JsonUtils.JSON_EMPTY_STRING;
+			}
+		}
+
 		try (Reader reader = new StringReader(string))
 		{
 			return JsonUtils.parse(reader);

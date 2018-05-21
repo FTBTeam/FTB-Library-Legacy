@@ -26,6 +26,7 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants;
@@ -33,6 +34,8 @@ import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.server.permission.PermissionAPI;
 import net.minecraftforge.server.permission.context.IContext;
+import net.minecraftforge.server.permission.context.PlayerContext;
+import net.minecraftforge.server.permission.context.WorldContext;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -168,9 +171,14 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		}
 	}
 
-	public final String getDisplayName()
+	public final String getDisplayNameString()
 	{
 		return isOnline() ? getPlayer().getDisplayNameString() : getName();
+	}
+
+	public final ITextComponent getDisplayName()
+	{
+		return isOnline() ? getPlayer().getDisplayName() : new TextComponentString(getName());
 	}
 
 	public EntityPlayerMP getCommandPlayer() throws CommandException
@@ -201,12 +209,12 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	@Override
 	public final int compareTo(ForgePlayer o)
 	{
-		return StringUtils.IGNORE_CASE_COMPARATOR.compare(getDisplayName(), o.getDisplayName());
+		return StringUtils.IGNORE_CASE_COMPARATOR.compare(getDisplayNameString(), o.getDisplayNameString());
 	}
 
 	public final String toString()
 	{
-		return getDisplayName();
+		return getName();
 	}
 
 	public final int hashCode()
@@ -359,14 +367,24 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		return PermissionAPI.hasPermission(getProfile(), node, context);
 	}
 
+	public IContext getContext()
+	{
+		if (isOnline())
+		{
+			return new PlayerContext(getPlayer());
+		}
+
+		return new WorldContext(team.universe.world);
+	}
+
 	public boolean hasPermission(String node)
 	{
-		return isOnline() ? PermissionAPI.hasPermission(getPlayer(), node) : PermissionAPI.hasPermission(getProfile(), node, null);
+		return PermissionAPI.hasPermission(getProfile(), node, getContext());
 	}
 
 	public ConfigValue getRankConfig(Node node)
 	{
-		return isOnline() ? RankConfigAPI.get(getPlayer(), node) : RankConfigAPI.get(team.universe.server, getProfile(), node, null);
+		return RankConfigAPI.get(team.universe.server, getProfile(), node, getContext());
 	}
 
 	public boolean isFirstLogin(ResourceLocation id)

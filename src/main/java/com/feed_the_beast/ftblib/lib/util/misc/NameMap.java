@@ -8,10 +8,10 @@ import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 /**
@@ -38,7 +39,7 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 			return StringUtils.getId(object, StringUtils.FLAG_ID_ONLY_LOWERCASE | StringUtils.FLAG_ID_FIX);
 		}
 
-		public ITextComponent getDisplayName(T object)
+		public ITextComponent getDisplayName(@Nullable ICommandSender sender, T object)
 		{
 			return new TextComponentString(getName(object));
 		}
@@ -48,50 +49,26 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 			return Icon.EMPTY;
 		}
 
-		public static <Y> ObjectProperties<Y> withComponentName(Function<Y, ITextComponent> nameGetter)
+		public static <Y> ObjectProperties<Y> withName(BiFunction<ICommandSender, Y, ITextComponent> nameGetter)
 		{
 			return new ObjectProperties<Y>()
 			{
 				@Override
-				public ITextComponent getDisplayName(Y object)
+				public ITextComponent getDisplayName(@Nullable ICommandSender sender, Y object)
 				{
-					return nameGetter.apply(object);
+					return nameGetter.apply(sender, object);
 				}
 			};
 		}
 
-		public static <Y> ObjectProperties<Y> withTranslatedName(Function<Y, String> nameGetter)
+		public static <Y> ObjectProperties<Y> withNameAndColor(BiFunction<ICommandSender, Y, ITextComponent> nameGetter, Function<Y, Color4I> colorGetter)
 		{
 			return new ObjectProperties<Y>()
 			{
 				@Override
-				public ITextComponent getDisplayName(Y object)
+				public ITextComponent getDisplayName(@Nullable ICommandSender sender, Y object)
 				{
-					return new TextComponentTranslation(nameGetter.apply(object));
-				}
-			};
-		}
-
-		public static <Y> ObjectProperties<Y> withColor(Function<Y, Color4I> colorGetter)
-		{
-			return new ObjectProperties<Y>()
-			{
-				@Override
-				public Color4I getColor(Y object)
-				{
-					return colorGetter.apply(object);
-				}
-			};
-		}
-
-		public static <Y> ObjectProperties<Y> withTranslatedNameAndColor(Function<Y, String> nameGetter, Function<Y, Color4I> colorGetter)
-		{
-			return new ObjectProperties<Y>()
-			{
-				@Override
-				public ITextComponent getDisplayName(Y object)
-				{
-					return new TextComponentTranslation(nameGetter.apply(object));
+					return nameGetter.apply(sender, object);
 				}
 
 				@Override
@@ -167,9 +144,9 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 		return objectProperties.getName(value);
 	}
 
-	public ITextComponent getDisplayName(E value)
+	public ITextComponent getDisplayName(@Nullable ICommandSender sender, E value)
 	{
-		return objectProperties.getDisplayName(value);
+		return objectProperties.getDisplayName(sender, value);
 	}
 
 	public Color4I getColor(E value)
