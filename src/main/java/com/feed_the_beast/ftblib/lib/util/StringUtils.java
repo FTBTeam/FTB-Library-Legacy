@@ -3,8 +3,10 @@ package com.feed_the_beast.ftblib.lib.util;
 import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -39,7 +41,41 @@ public class StringUtils
 	public static final DecimalFormat DOUBLE_FORMATTER_00 = new DecimalFormat("#0.00");
 	public static final DecimalFormat DOUBLE_FORMATTER_0 = new DecimalFormat("#0.0");
 	public final static int[] INT_SIZE_TABLE = {9, 99, 999, 9999, 99999, 999999, 9999999, 99999999, 999999999, Integer.MAX_VALUE};
-	public static final NameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = NameMap.create(TextFormatting.RESET, TextFormatting.values());
+
+	public static final NameMap.ObjectProperties<TextFormatting> TEXT_FORMATTING_OBJECT_PROPERTIES = new NameMap.ObjectProperties<TextFormatting>()
+	{
+		@Override
+		public String getName(TextFormatting value)
+		{
+			return value.getFriendlyName();
+		}
+
+		@Override
+		public ITextComponent getDisplayName(@Nullable ICommandSender sender, TextFormatting value)
+		{
+			return StringUtils.color(new TextComponentString(getName(value)), value);
+		}
+	};
+
+	public static final NameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = NameMap.create(TextFormatting.RESET, TEXT_FORMATTING_OBJECT_PROPERTIES, TextFormatting.values());
+	public static final NameMap<TextFormatting> TEXT_FORMATTING_COLORS_NAME_MAP = NameMap.create(TextFormatting.WHITE, TEXT_FORMATTING_OBJECT_PROPERTIES,
+			TextFormatting.BLACK,
+			TextFormatting.DARK_BLUE,
+			TextFormatting.DARK_GREEN,
+			TextFormatting.DARK_AQUA,
+			TextFormatting.DARK_RED,
+			TextFormatting.DARK_PURPLE,
+			TextFormatting.GOLD,
+			TextFormatting.GRAY,
+			TextFormatting.DARK_GRAY,
+			TextFormatting.BLUE,
+			TextFormatting.GREEN,
+			TextFormatting.AQUA,
+			TextFormatting.RED,
+			TextFormatting.LIGHT_PURPLE,
+			TextFormatting.YELLOW,
+			TextFormatting.WHITE
+	);
 
 	public static String emptyIfNull(@Nullable Object o)
 	{

@@ -39,9 +39,9 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 			return StringUtils.getId(object, StringUtils.FLAG_ID_ONLY_LOWERCASE | StringUtils.FLAG_ID_FIX);
 		}
 
-		public ITextComponent getDisplayName(@Nullable ICommandSender sender, T object)
+		public ITextComponent getDisplayName(@Nullable ICommandSender sender, T value)
 		{
-			return new TextComponentString(getName(object));
+			return new TextComponentString(getName(value));
 		}
 
 		public Color4I getColor(T object)
@@ -54,9 +54,9 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 			return new ObjectProperties<Y>()
 			{
 				@Override
-				public ITextComponent getDisplayName(@Nullable ICommandSender sender, Y object)
+				public ITextComponent getDisplayName(@Nullable ICommandSender sender, Y value)
 				{
-					return nameGetter.apply(sender, object);
+					return nameGetter.apply(sender, value);
 				}
 			};
 		}
@@ -66,9 +66,9 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 			return new ObjectProperties<Y>()
 			{
 				@Override
-				public ITextComponent getDisplayName(@Nullable ICommandSender sender, Y object)
+				public ITextComponent getDisplayName(@Nullable ICommandSender sender, Y value)
 				{
-					return nameGetter.apply(sender, object);
+					return nameGetter.apply(sender, value);
 				}
 
 				@Override
