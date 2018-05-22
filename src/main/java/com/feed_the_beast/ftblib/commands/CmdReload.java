@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.commands;
 
 import com.feed_the_beast.ftblib.FTBLibCommon;
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
@@ -44,7 +45,7 @@ public class CmdReload extends CmdBase
 
 	public CmdReload()
 	{
-		this("reload", Level.OP);
+		this(FTBLibConfig.general.replace_reload_command ? "reload" : "ftb_reload", Level.OP);
 	}
 
 	@Override

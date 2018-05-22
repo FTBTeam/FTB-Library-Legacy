@@ -1,11 +1,12 @@
 package com.feed_the_beast.ftblib;
 
-import com.feed_the_beast.ftblib.commands.CmdFTB;
+import com.feed_the_beast.ftblib.commands.CmdAddFakePlayer;
+import com.feed_the_beast.ftblib.commands.CmdMySettings;
+import com.feed_the_beast.ftblib.commands.CmdReload;
+import com.feed_the_beast.ftblib.commands.team.CmdTeam;
 import com.feed_the_beast.ftblib.events.RegisterPermissionsEvent;
 import com.feed_the_beast.ftblib.lib.OtherMods;
-import com.feed_the_beast.ftblib.lib.cmd.CommandMirror;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.Mod;
@@ -72,18 +73,13 @@ public class FTBLib
 	@Mod.EventHandler
 	public void onServerStarting(FMLServerStartingEvent event)
 	{
-		CmdFTB cmd = new CmdFTB(event.getServer().isDedicatedServer());
-		event.registerServerCommand(cmd);
+		event.registerServerCommand(new CmdReload());
+		event.registerServerCommand(new CmdMySettings());
+		event.registerServerCommand(new CmdTeam());
 
-		if (FTBLibConfig.general.mirror_ftb_commands)
+		if (FTBLibConfig.debugging.special_commands)
 		{
-			for (ICommand command : cmd.getSubCommands())
-			{
-				if (!command.getName().equals("reload"))
-				{
-					event.registerServerCommand(new CommandMirror(command));
-				}
-			}
+			event.registerServerCommand(new CmdAddFakePlayer());
 		}
 	}
 

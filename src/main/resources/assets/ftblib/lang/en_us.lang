@@ -82,7 +82,7 @@ ftblib.lang.add_fake_player.added=Fake player %s added!
 
 # Config
 ftblib.general.clientless_mode=Clientless Mode
-ftblib.general.mirror_ftb_commands=Mirror /ftb Commands
+ftblib.general.replace_reload_command=Replace /reload Command
 ftblib.general.merge_offline_mode_players=Merge Offline Mode Players
 
 ftblib.teams=Teams
@@ -104,7 +104,6 @@ ftblib.debugging.log_events=Log Events
 ftblib_client.general.item_ore_names=Display Item OreDictionary names
 ftblib_client.general.item_ore_names.item_tooltip=Ore Dictionary Names:
 ftblib_client.general.item_nbt=Display Item NBT
-ftblib_client.general.mirror_commands=Mirror /ftbc Commands
 ftblib_client.general.replace_vanilla_status_messages=Replace vanilla status messages
 ftblib_client.general.debug_helper=Debug Helper
 ftblib_client.general.collapse_sidebar_buttons=Collapse Sidebar Buttons

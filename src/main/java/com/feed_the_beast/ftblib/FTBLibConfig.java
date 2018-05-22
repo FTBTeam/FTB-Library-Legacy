@@ -27,9 +27,9 @@ public class FTBLibConfig
 		@Config.Comment("When this mode is enabled, FTBLib assumes that server clients don't have FTBLib and/or other mods installed.")
 		public boolean clientless_mode = false;
 
-		@Config.Comment("This will make all '/ftb x' commands work just as '/x'. Example: '/ftb home abc' => '/home abc'.")
+		@Config.Comment("This will replace /reload with FTB version of it.")
 		@Config.RequiresWorldRestart
-		public boolean mirror_ftb_commands = true;
+		public boolean replace_reload_command = true;
 
 		@Config.Comment({"Merges player profiles, in case player logged in without internet connection/in offline mode server.", "If set to DEFAULT, it will only merge on singleplayer worlds."})
 		public EnumTristate merge_offline_mode_players = EnumTristate.TRUE;

@@ -6,30 +6,16 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.server.command.CommandTreeBase;
 
-import javax.annotation.Nullable;
-
 /**
  * @author LatvianModder
  */
-public class CmdTreeBase extends CommandTreeBase implements ICommandWithParent
+public class CmdTreeBase extends CommandTreeBase
 {
 	private final String name;
-	private ICommand parent;
 
 	public CmdTreeBase(String n)
 	{
 		name = n;
-	}
-
-	@Override
-	public void addSubcommand(ICommand command)
-	{
-		super.addSubcommand(command);
-
-		if (command instanceof ICommandWithParent)
-		{
-			((ICommandWithParent) command).setParent(this);
-		}
 	}
 
 	@Override
@@ -57,7 +43,7 @@ public class CmdTreeBase extends CommandTreeBase implements ICommandWithParent
 	@Override
 	public String getUsage(ICommandSender ics)
 	{
-		return "commands." + ICommandWithParent.getFullPath(this) + ".usage";
+		return "commands." + getName() + ".usage";
 	}
 
 	@Override
@@ -72,18 +58,5 @@ public class CmdTreeBase extends CommandTreeBase implements ICommandWithParent
 		}
 
 		return false;
-	}
-
-	@Override
-	public void setParent(@Nullable ICommand p)
-	{
-		parent = p;
-	}
-
-	@Override
-	@Nullable
-	public ICommand getParent()
-	{
-		return parent;
 	}
 }
