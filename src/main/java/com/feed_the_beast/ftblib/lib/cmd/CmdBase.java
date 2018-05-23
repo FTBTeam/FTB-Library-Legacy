@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class CmdBase extends CommandBase
+public abstract class CmdBase extends CommandBase implements ICommandWithParent
 {
 	public enum Level
 	{
@@ -72,6 +72,7 @@ public abstract class CmdBase extends CommandBase
 
 	private final String name;
 	public final Level level;
+	private ICommand parent;
 
 	public CmdBase(String n, Level l)
 	{
@@ -89,12 +90,6 @@ public abstract class CmdBase extends CommandBase
 	public final int getRequiredPermissionLevel()
 	{
 		return 2;
-	}
-
-	@Override
-	public String getUsage(ICommandSender ics)
-	{
-		return "commands." + getName() + ".usage";
 	}
 
 	@Override
@@ -122,6 +117,18 @@ public abstract class CmdBase extends CommandBase
 	public boolean isUsernameIndex(String[] args, int index)
 	{
 		return false;
+	}
+
+	@Override
+	public ICommand getParent()
+	{
+		return parent;
+	}
+
+	@Override
+	public void setParent(ICommand c)
+	{
+		parent = c;
 	}
 
 	// Static //

@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.command.team;
 
 import com.feed_the_beast.ftblib.lib.cmd.CmdTreeBase;
+import net.minecraftforge.server.command.CommandTreeHelp;
 
 /**
  * @author LatvianModder
@@ -19,5 +20,6 @@ public class CmdTeam extends CmdTreeBase
 		addSubcommand(new CmdStatus());
 		addSubcommand(new CmdRequestInvite());
 		addSubcommand(new CmdDelete());
+		addSubcommand(new CommandTreeHelp(this));
 	}
 }

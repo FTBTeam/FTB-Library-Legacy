@@ -9,13 +9,25 @@ import net.minecraftforge.server.command.CommandTreeBase;
 /**
  * @author LatvianModder
  */
-public class CmdTreeBase extends CommandTreeBase
+public class CmdTreeBase extends CommandTreeBase implements ICommandWithParent
 {
 	private final String name;
+	private ICommand parent;
 
 	public CmdTreeBase(String n)
 	{
 		name = n;
+	}
+
+	@Override
+	public void addSubcommand(ICommand command)
+	{
+		super.addSubcommand(command);
+
+		if (command instanceof ICommandWithParent)
+		{
+			((ICommandWithParent) command).setParent(this);
+		}
 	}
 
 	@Override
@@ -27,23 +39,17 @@ public class CmdTreeBase extends CommandTreeBase
 	@Override
 	public int getRequiredPermissionLevel()
 	{
-		int level = 0;
+		int level = Integer.MAX_VALUE;
 
 		for (ICommand command : getSubCommands())
 		{
 			if (command instanceof CommandBase)
 			{
-				level = Math.max(level, ((CommandBase) command).getRequiredPermissionLevel());
+				level = Math.min(level, ((CommandBase) command).getRequiredPermissionLevel());
 			}
 		}
 
 		return level;
-	}
-
-	@Override
-	public String getUsage(ICommandSender ics)
-	{
-		return "commands." + getName() + ".usage";
 	}
 
 	@Override
@@ -58,5 +64,17 @@ public class CmdTreeBase extends CommandTreeBase
 		}
 
 		return false;
+	}
+
+	@Override
+	public ICommand getParent()
+	{
+		return parent;
+	}
+
+	@Override
+	public void setParent(ICommand c)
+	{
+		parent = c;
 	}
 }
