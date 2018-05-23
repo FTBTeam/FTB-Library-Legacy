@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftblib;
 
-import com.feed_the_beast.ftblib.commands.CmdAddFakePlayer;
-import com.feed_the_beast.ftblib.commands.CmdMySettings;
-import com.feed_the_beast.ftblib.commands.CmdReload;
-import com.feed_the_beast.ftblib.commands.team.CmdTeam;
+import com.feed_the_beast.ftblib.command.CmdAddFakePlayer;
+import com.feed_the_beast.ftblib.command.CmdMySettings;
+import com.feed_the_beast.ftblib.command.CmdReload;
+import com.feed_the_beast.ftblib.command.team.CmdTeam;
 import com.feed_the_beast.ftblib.events.RegisterPermissionsEvent;
 import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;

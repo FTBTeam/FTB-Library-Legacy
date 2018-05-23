@@ -212,27 +212,20 @@ click_action.file=Open File
 click_action.gui=Open Gui
 
 # Commands
-commands.ftb.usage=/ftb
-commands.ftb.reload.usage=/ftb reload [*|domain:*|domain:id]
-commands.ftb.reload_client.usage=/ftb reload_client [*|domain:*|domain:id]
-commands.ftb.my_settings.usage=/ftb my_settings <id> [value]
-commands.ftb.team.usage=/ftb team
-commands.ftb.team.gui.usage=/ftb team gui
-commands.ftb.team.settings.usage=/ftb team settings <id> [value]
-commands.ftb.team.create.usage=/ftb team create <id> [color]
-commands.ftb.team.leave.usage=/ftb team leave
-commands.ftb.team.transfer_ownership.usage=/ftb team transfer_ownership <player>
-commands.ftb.team.kick.usage=/ftb team kick <player>
-commands.ftb.team.join.usage=/ftb team join <id>
-commands.ftb.team.status.usage=/ftb team status <player> [set_status]
-commands.ftb.team.status.set=Status for %s set to %s
-commands.ftb.team.status.cant_set=Status can't be set!
-commands.ftb.team.msg.usage=/ftb team msg <message...>
-commands.ftb.packmode.usage=/ftb packmode
-commands.ftb.packmode.set.usage=/ftb packmode set <mode>
-commands.ftb.packmode.get.usage=/ftb packmode get
-commands.ftb.packmode.list.usage=/ftb packmode list
-commands.ftb.notify.usage=/ftb notify <player> <id>
-commands.ftb.edit_gamerules.usage=/ftb edit_gamerules <id> [value]
-commands.ftb.edit_config.usage=/ftb edit_config <mod> <id> [value]
-commands.ftb.add_fake_player.usage=/ftb add_fake_player <uuid> <name>
+commands.reload.usage=/reload [*|domain:*|domain:id]
+commands.my_settings.usage=/my_settings <id> [value]
+commands.team.usage=/team
+commands.team.settings.usage=/team settings <id> [value]
+commands.team.create.usage=/team create <id> [color]
+commands.team.leave.usage=/team leave
+commands.team.transfer_ownership.usage=/team transfer_ownership <player>
+commands.team.kick.usage=/team kick <player>
+commands.team.join.usage=/team join <id>
+commands.team.status.usage=/team status <player> [set_status]
+commands.team.status.set=Status for %s set to %s
+commands.team.status.cant_set=Status can't be set!
+commands.team.msg.usage=/team msg <message...>
+commands.add_fake_player.usage=/add_fake_player <uuid> <name>
+
+# Client Commands
+commands.client_config.usage=/client_config

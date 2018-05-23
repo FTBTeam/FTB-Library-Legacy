@@ -174,8 +174,7 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	@Override
 	public JsonElement getSerializableElement()
 	{
-		long timer = getLong();
-		return timer == 0L ? new JsonPrimitive(0) : new JsonPrimitive(Ticks.toString(timer));
+		return new JsonPrimitive(Ticks.toString(getLong()));
 	}
 
 	@Override

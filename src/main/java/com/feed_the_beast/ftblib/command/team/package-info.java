@@ -1,3 +1,3 @@
 @javax.annotation.ParametersAreNonnullByDefault
 @mcp.MethodsReturnNonnullByDefault
-package com.feed_the_beast.ftblib.commands;
+package com.feed_the_beast.ftblib.command.team;

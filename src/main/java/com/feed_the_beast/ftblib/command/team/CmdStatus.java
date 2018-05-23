@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftblib.commands.team;
+package com.feed_the_beast.ftblib.command.team;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
@@ -82,11 +82,11 @@ public class CmdStatus extends CmdBase
 		if (status.canBeSet())
 		{
 			p.team.setStatus(p1, status);
-			sender.sendMessage(FTBLib.lang(sender, "commands.ftb.team.status.set", p1.getDisplayName(), EnumTeamStatus.NAME_MAP.getDisplayName(sender, status)));
+			sender.sendMessage(FTBLib.lang(sender, "commands.team.status.set", p1.getDisplayName(), EnumTeamStatus.NAME_MAP.getDisplayName(sender, status)));
 		}
 		else
 		{
-			sender.sendMessage(FTBLib.lang(sender, "commands.ftb.team.status.cant_set"));
+			sender.sendMessage(FTBLib.lang(sender, "commands.team.status.cant_set"));
 		}
 	}
 }

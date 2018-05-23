@@ -219,12 +219,11 @@ public class StringUtils
 		return sb.toString();
 	}
 
-	@Nullable
 	public static String joinSpaceUntilEnd(int startIndex, CharSequence[] o)
 	{
 		if (startIndex < 0 || o.length <= startIndex)
 		{
-			return null;
+			return "";
 		}
 
 		StringBuilder sb = new StringBuilder();

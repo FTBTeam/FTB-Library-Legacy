@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftblib.commands;
+package com.feed_the_beast.ftblib.command;
 
 import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;

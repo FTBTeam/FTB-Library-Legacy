@@ -25,7 +25,7 @@ public class CmdTreeBase extends CommandTreeBase
 	}
 
 	@Override
-	public final int getRequiredPermissionLevel()
+	public int getRequiredPermissionLevel()
 	{
 		int level = 0;
 
@@ -47,7 +47,7 @@ public class CmdTreeBase extends CommandTreeBase
 	}
 
 	@Override
-	public final boolean checkPermission(MinecraftServer server, ICommandSender sender)
+	public boolean checkPermission(MinecraftServer server, ICommandSender sender)
 	{
 		for (ICommand command : getSubCommands())
 		{

@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftblib.commands.client;
+package com.feed_the_beast.ftblib.command.client;
 
 import com.feed_the_beast.ftblib.client.GuiClientConfig;
 import com.feed_the_beast.ftblib.lib.cmd.CmdBase;

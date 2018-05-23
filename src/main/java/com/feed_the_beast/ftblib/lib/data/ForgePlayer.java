@@ -343,12 +343,31 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 			}
 		}
 
+		if (cachedPlayerNBT == null)
+		{
+			cachedPlayerNBT = new NBTTagCompound();
+		}
+
 		return cachedPlayerNBT;
 	}
 
 	public void setPlayerNBT(NBTTagCompound nbt)
 	{
-		//FIXME
+		if (isOnline())
+		{
+			EntityPlayerMP player = getPlayer();
+			player.deserializeNBT(nbt);
+
+			if (player.isEntityAlive())
+			{
+				player.world.updateEntityWithOptionalForce(player, true);
+			}
+		}
+		else
+		{
+			FileUtils.writeNBT(new File(team.universe.world.getSaveHandler().getWorldDirectory(), "playerdata/" + getId() + ".dat"), nbt);
+		}
+
 		markDirty();
 	}
 

@@ -594,9 +594,9 @@ public class Universe implements IHasCache
 
 		boolean sendTeamJoinEvent = false, sendTeamCreatedEvent = false;
 
-		if (firstLogin && (player.mcServer.isDedicatedServer() ? FTBLibConfig.teams.autocreate_mp : FTBLibConfig.teams.autocreate_sp))
+		if (firstLogin && (player.mcServer.isSinglePlayer() ? FTBLibConfig.teams.autocreate_sp : FTBLibConfig.teams.autocreate_mp))
 		{
-			if (player.mcServer.isDedicatedServer())
+			if (!player.mcServer.isSinglePlayer())
 			{
 				String id = p.getName().toLowerCase();
 

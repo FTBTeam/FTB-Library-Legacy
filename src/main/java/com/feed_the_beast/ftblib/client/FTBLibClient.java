@@ -3,12 +3,11 @@ package com.feed_the_beast.ftblib.client;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.commands.client.CmdFTBC;
+import com.feed_the_beast.ftblib.command.client.CmdClientConfig;
 import com.feed_the_beast.ftblib.events.client.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftblib.events.player.IGuiProvider;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.client.ParticleColoredDust;
-import com.feed_the_beast.ftblib.lib.cmd.CommandMirror;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
@@ -21,7 +20,6 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.command.ICommand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -214,16 +212,7 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 	{
 		super.postInit();
 
-		CmdFTBC cmd = new CmdFTBC();
-		ClientCommandHandler.instance.registerCommand(cmd);
-
-		if (FTBLibClientConfig.general.mirror_commands)
-		{
-			for (ICommand command : cmd.getSubCommands())
-			{
-				ClientCommandHandler.instance.registerCommand(new CommandMirror(command));
-			}
-		}
+		ClientCommandHandler.instance.registerCommand(new CmdClientConfig());
 	}
 
 	@Override

@@ -37,7 +37,7 @@ public abstract class CmdBase extends CommandBase
 					@Override
 					public boolean checkPermission(MinecraftServer server, ICommandSender sender, ICommand command)
 					{
-						return !server.isDedicatedServer() || sender.canUseCommand(2, command.getName());
+						return server.isSinglePlayer() || sender.canUseCommand(2, command.getName());
 					}
 				},
 		OP()

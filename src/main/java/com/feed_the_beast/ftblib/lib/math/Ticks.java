@@ -41,6 +41,11 @@ public class Ticks
 
 	public static String toString(long timer)
 	{
+		if (timer <= 0L)
+		{
+			return "0s";
+		}
+
 		StringBuilder builder = new StringBuilder();
 
 		if (timer < 20L)
@@ -97,6 +102,11 @@ public class Ticks
 
 	public static long fromString(String value) throws NumberFormatException
 	{
+		if (value.equals("0s"))
+		{
+			return 0L;
+		}
+
 		long timer = 0L;
 
 		for (String s : value.split(" "))
