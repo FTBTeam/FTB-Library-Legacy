@@ -8,6 +8,8 @@ public class Ticks
 	public static final long SECOND = 20L;
 	public static final long MINUTE = SECOND * 60L;
 	public static final long HOUR = MINUTE * 60L;
+	public static final long DAY = HOUR * 24L;
+	public static final long WEEK = DAY * 7L;
 
 	public static long ts(long ticks)
 	{
@@ -39,6 +41,26 @@ public class Ticks
 		return hours * HOUR;
 	}
 
+	public static long td(long ticks)
+	{
+		return ticks / DAY;
+	}
+
+	public static long dt(long days)
+	{
+		return days * DAY;
+	}
+
+	public static long tw(long ticks)
+	{
+		return ticks / WEEK;
+	}
+
+	public static long wt(long weeks)
+	{
+		return weeks * WEEK;
+	}
+
 	public static String toString(long timer)
 	{
 		if (timer <= 0L)
@@ -55,45 +77,82 @@ public class Ticks
 			return builder.toString();
 		}
 
-		boolean hasHours = false;
-		boolean hasMinutes = false;
+		long weeks = tw(timer);
+		boolean hasWeeks = weeks > 0L;
 
-		if (timer / Ticks.HOUR > 0L)
+		if (hasWeeks)
 		{
-			hasHours = true;
+			builder.append(weeks);
+			builder.append('w');
+		}
 
-			builder.append(timer / HOUR);
+		long days = td(timer) % 7L;
+		boolean hasDays = hasWeeks || days != 0L;
+
+		if (days != 0L)
+		{
+			if (hasWeeks)
+			{
+				builder.append(' ');
+			}
+
+			builder.append(days);
+			builder.append('d');
+		}
+
+		long hours = th(timer) % 24L;
+		boolean hasHours = hasDays || hours != 0L;
+
+		if (hours != 0L)
+		{
+			if (hasDays)
+			{
+				builder.append(' ');
+			}
+
+			builder.append(hours);
 			builder.append('h');
 		}
 
-		if ((timer / MINUTE) % 60L != 0L)
-		{
-			hasMinutes = true;
+		long minutes = tm(timer) % 60L;
+		boolean hasMinutes = hasHours || minutes != 0L;
 
+		if (minutes != 0L)
+		{
 			if (hasHours)
 			{
 				builder.append(' ');
 			}
 
-			builder.append((timer / MINUTE) % 60L);
+			builder.append(minutes);
 			builder.append('m');
 		}
 
-		if ((timer / SECOND) % 60L != 0L)
+		long seconds = ts(timer) % 60L;
+		boolean hasSeconds = hasMinutes || seconds != 0L;
+
+		if (seconds != 0L)
 		{
-			if (hasHours || hasMinutes)
+			if (hasMinutes)
 			{
 				builder.append(' ');
 			}
 
-			builder.append((timer / SECOND) % 60L);
+			builder.append(seconds);
 			builder.append('s');
 		}
 
-		if (timer % 20L != 0L)
+		long ticks = timer % 20L;
+		boolean hasTicks = ticks != 0L;
+
+		if (ticks != 0L)
 		{
-			builder.append(' ');
-			builder.append(timer % 20L);
+			if (hasSeconds)
+			{
+				builder.append(' ');
+			}
+
+			builder.append(ticks);
 			builder.append('t');
 		}
 
@@ -121,15 +180,23 @@ public class Ticks
 						break;
 					case 's':
 					case 'S':
-						timer += Long.parseLong(s.substring(0, s.length() - 1)) * SECOND;
+						timer += st(Long.parseLong(s.substring(0, s.length() - 1)));
 						break;
 					case 'm':
 					case 'M':
-						timer += Long.parseLong(s.substring(0, s.length() - 1)) * MINUTE;
+						timer += mt(Long.parseLong(s.substring(0, s.length() - 1)));
 						break;
 					case 'h':
 					case 'H':
-						timer += Long.parseLong(s.substring(0, s.length() - 1)) * HOUR;
+						timer += ht(Long.parseLong(s.substring(0, s.length() - 1)));
+						break;
+					case 'd':
+					case 'D':
+						timer += dt(Long.parseLong(s.substring(0, s.length() - 1)));
+						break;
+					case 'w':
+					case 'W':
+						timer += wt(Long.parseLong(s.substring(0, s.length() - 1)));
 						break;
 					default:
 						timer += Long.parseLong(s);
