@@ -75,13 +75,13 @@ public class GuiSelectTeam extends GuiButtonListBase
 
 			if (team.type == PublicTeamData.Type.CAN_JOIN)
 			{
-				ClientUtils.execClientCommand("/ftb team join " + team.getName());
+				ClientUtils.execClientCommand("/team join " + team.getName());
 				getGui().closeGui();
-				ClientUtils.execClientCommand("/ftb team gui");
+				ClientUtils.execClientCommand("/team gui");
 			}
 			else if (team.type != PublicTeamData.Type.ENEMY && team.type != PublicTeamData.Type.REQUESTING_INVITE)
 			{
-				ClientUtils.execClientCommand("/ftb team request_invite " + team.getName());
+				ClientUtils.execClientCommand("/team request_invite " + team.getName());
 				team.type = PublicTeamData.Type.REQUESTING_INVITE;
 				setTitle(TextFormatting.AQUA + getTitle());
 				parent.alignWidgets();

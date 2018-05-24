@@ -665,11 +665,11 @@ public class Universe implements IHasCache
 		{
 			ITextComponent b1 = FTBLib.lang(player, "click_here");
 			b1.getStyle().setColor(TextFormatting.GOLD);
-			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb team gui"));
+			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftblib_simulate_button custom:ftblib:my_team_gui"));
 			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLib.lang(player, "sidebar_button.ftblib.my_team")));
 			ITextComponent b2 = FTBLib.lang(player, "click_here");
 			b2.getStyle().setColor(TextFormatting.GOLD);
-			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftb my_settings " + FTBLib.MOD_ID + ".hide_team_notification toggle"));
+			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/my_settings " + FTBLib.MOD_ID + ".hide_team_notification toggle"));
 			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLib.lang(player, "ftblib.lang.team.notification.hide")));
 			player.sendMessage(FTBLib.lang(player, "ftblib.lang.team.notification", b1, b2));
 		}

@@ -119,7 +119,7 @@ public class GuiClientConfig extends GuiButtonListBase
 			{
 				GuiHelper.playClickSound();
 				new GuiLoading().openGui();
-				ClientUtils.execClientCommand("/ftb my_settings");
+				ClientUtils.execClientCommand("/my_settings");
 			}
 
 			@Override

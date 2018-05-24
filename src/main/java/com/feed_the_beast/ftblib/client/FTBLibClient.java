@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.command.client.CmdClientConfig;
+import com.feed_the_beast.ftblib.command.client.CmdSimulateButton;
 import com.feed_the_beast.ftblib.events.client.RegisterGuiProvidersEvent;
 import com.feed_the_beast.ftblib.events.player.IGuiProvider;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
@@ -213,6 +214,7 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 		super.postInit();
 
 		ClientCommandHandler.instance.registerCommand(new CmdClientConfig());
+		ClientCommandHandler.instance.registerCommand(new CmdSimulateButton());
 	}
 
 	@Override

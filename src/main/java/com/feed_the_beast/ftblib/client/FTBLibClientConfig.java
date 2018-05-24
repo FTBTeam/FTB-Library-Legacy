@@ -35,9 +35,6 @@ public class FTBLibClientConfig
 		@Config.LangKey("sidebar_button")
 		public EnumSidebarButtonPlacement action_buttons = EnumSidebarButtonPlacement.AUTO;
 
-		@Config.Comment("Mirror /ftbc commands.")
-		public boolean mirror_commands = true;
-
 		@Config.Comment("Replace vanilla status message with Notifications, which support colors and timers.")
 		public boolean replace_vanilla_status_messages = true;
 

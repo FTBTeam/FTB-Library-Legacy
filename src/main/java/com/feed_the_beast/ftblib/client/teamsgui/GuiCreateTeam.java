@@ -44,7 +44,7 @@ public class GuiCreateTeam extends GuiBase
 				if (!textBoxId.getText().isEmpty())
 				{
 					getGui().closeGui(false);
-					ClientUtils.execClientCommand("/ftb team create " + textBoxId.getText() + " " + color.getName());
+					ClientUtils.execClientCommand("/team create " + textBoxId.getText() + " " + color.getName());
 				}
 			}
 
