@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.lib.util.text_components;
 
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -143,5 +144,21 @@ public class Notification extends TextComponentString
 	public void send(MinecraftServer server, @Nullable EntityPlayer player)
 	{
 		ServerUtils.notify(server, player, this);
+	}
+
+	public void send(MinecraftServer server, @Nullable ICommandSender sender)
+	{
+		if (sender == null)
+		{
+			ServerUtils.notify(server, null, this);
+		}
+		else if (sender instanceof EntityPlayer)
+		{
+			ServerUtils.notify(server, (EntityPlayer) sender, this);
+		}
+		else
+		{
+			sender.sendMessage(this);
+		}
 	}
 }
