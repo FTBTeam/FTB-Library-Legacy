@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftblib.lib.net;
 
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import io.netty.channel.ChannelFutureListener;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.network.FMLEmbeddedChannel;
 import net.minecraftforge.fml.common.network.FMLOutboundHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -17,7 +17,7 @@ public abstract class MessageToClient extends MessageBase
 {
 	public final void sendTo(EntityPlayerMP player)
 	{
-		if (player.connection == null || player instanceof FakePlayer)
+		if (ServerUtils.isFake(player))
 		{
 			return;
 		}

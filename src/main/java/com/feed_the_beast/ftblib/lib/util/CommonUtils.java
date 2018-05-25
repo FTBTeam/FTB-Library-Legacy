@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.block.BlockFlags;
+import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.Block;
@@ -24,7 +25,6 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 /**
@@ -34,7 +34,7 @@ public class CommonUtils
 {
 	public static final boolean DEV_ENV = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
 	public static final GameProfile FAKE_PLAYER_PROFILE = new GameProfile(StringUtils.fromString("069be1413c1b45c3b3b160d3f9fcd236"), "FakeForgePlayer");
-	private static Optional<ListMultimap<String, ModContainer>> packageOwners = null;
+	private static ListMultimap<String, ModContainer> packageOwners = null;
 
 	public static File folderConfig, folderMinecraft, folderLocal;
 
@@ -204,25 +204,20 @@ public class CommonUtils
 			try
 			{
 				LoadController instance = ReflectionHelper.getPrivateValue(Loader.class, Loader.instance(), "modController");
-				packageOwners = Optional.of(ReflectionHelper.getPrivateValue(LoadController.class, instance, "packageOwners"));
+				packageOwners = ReflectionHelper.getPrivateValue(LoadController.class, instance, "packageOwners");
 			}
 			catch (Exception ex)
 			{
-				packageOwners = Optional.empty();
+				packageOwners = ImmutableListMultimap.of();
 			}
 		}
 
-		if (packageOwners.isPresent())
+		if (packageOwners.isEmpty())
 		{
-			int idx = clazz.getName().lastIndexOf('.');
-			String pkg = clazz.getName().substring(0, idx);
-
-			if (packageOwners.get().containsKey(pkg))
-			{
-				return packageOwners.get().get(pkg).get(0);
-			}
+			return null;
 		}
 
-		return null;
+		String pkg = clazz.getName().substring(0, clazz.getName().lastIndexOf('.'));
+		return packageOwners.containsKey(pkg) ? packageOwners.get(pkg).get(0) : null;
 	}
 }

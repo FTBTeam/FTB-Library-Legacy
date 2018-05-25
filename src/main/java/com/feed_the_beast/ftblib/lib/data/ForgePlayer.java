@@ -286,7 +286,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		if (playerForStats == null)
 		{
-			playerForStats = new FakePlayer(team.universe.world, new GameProfile(new UUID(0L, 0L), "_unknown"));
+			playerForStats = new FakePlayer(team.universe.world, CommonUtils.FAKE_PLAYER_PROFILE);
 		}
 
 		playerForStats.setWorld(team.universe.world);

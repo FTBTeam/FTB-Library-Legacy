@@ -20,6 +20,7 @@ import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -83,8 +84,18 @@ public class ServerUtils
 		return false;
 	}
 
-	public static boolean isOP(@Nullable MinecraftServer server, GameProfile profile)
+	public static boolean isFake(EntityPlayerMP player)
 	{
+		return player.connection == null || player instanceof FakePlayer;
+	}
+
+	public static boolean isOP(@Nullable MinecraftServer server, @Nullable GameProfile profile)
+	{
+		if (profile == null || profile.getId() == null || profile.getName() == null)
+		{
+			return false;
+		}
+
 		if (server == null)
 		{
 			server = FMLCommonHandler.instance().getMinecraftServerInstance();

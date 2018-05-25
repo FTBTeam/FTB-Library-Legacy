@@ -15,6 +15,7 @@ import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.net.MessageSyncData;
@@ -34,7 +35,6 @@ import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -144,7 +144,7 @@ public class Universe implements IHasCache
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
 	{
-		if (loaded() && event.player instanceof EntityPlayerMP && !(event.player instanceof FakePlayer))
+		if (loaded() && event.player instanceof EntityPlayerMP && !ServerUtils.isFake((EntityPlayerMP) event.player))
 		{
 			INSTANCE.onPlayerLoggedIn((EntityPlayerMP) event.player);
 		}
@@ -752,7 +752,8 @@ public class Universe implements IHasCache
 		if (sender instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = (EntityPlayerMP) sender;
-			if (player.connection == null || player instanceof FakePlayer)
+
+			if (ServerUtils.isFake(player))
 			{
 				fakePlayer.entityPlayer = player;
 				fakePlayer.clearCache();
