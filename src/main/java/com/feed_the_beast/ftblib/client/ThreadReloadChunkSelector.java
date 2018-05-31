@@ -121,6 +121,10 @@ public class ThreadReloadChunkSelector extends Thread
 		{
 			return 0x549954;
 		}
+		else if (b == Blocks.GRASS_PATH)
+		{
+			return 0xB7A14B;
+		}
 		else if (b == Blocks.TORCH)
 		{
 			return 0xFFA530;

@@ -372,7 +372,7 @@ public class StringUtils
 	public static String getTimeString(long millis)
 	{
 		boolean neg = false;
-		if (millis <= 0L)
+		if (millis < 0L)
 		{
 			neg = true;
 			millis = -millis;
