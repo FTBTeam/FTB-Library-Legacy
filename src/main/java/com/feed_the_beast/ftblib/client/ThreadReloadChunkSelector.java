@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import org.lwjgl.opengl.GL11;
@@ -195,7 +196,7 @@ public class ThreadReloadChunkSelector extends Thread
 		pixelBuffer = PIXELS.toByteBuffer(false);
 
 		Chunk chunk;
-		int cx, cz, x, z, wi, wx, wz, by, topY;
+		int x, z, wi, wx, wz, by, topY;
 		Color4I color;
 		IBlockState state;
 
@@ -203,105 +204,113 @@ public class ThreadReloadChunkSelector extends Thread
 
 		try
 		{
-			for (cz = 0; cz < ChunkSelectorMap.TILES_GUI; cz++)
+			for (int index = 0; index < ChunkSelectorMap.TILES_GUI * ChunkSelectorMap.TILES_GUI + 1; index++)
 			{
-				for (cx = 0; cx < ChunkSelectorMap.TILES_GUI; cx++)
+				World w = world;
+
+				if (w == null)
 				{
-					if (world == null)
-					{
-						continue;
-					}
-
-					chunk = world.getChunkProvider().getLoadedChunk(startX + cx, startZ + cz);
-
-					if (chunk != null)
-					{
-						x = (startX + cx) << 4;
-						z = (startZ + cz) << 4;
-						topY = (world.provider.getDimension() == -1) ? startY + 5 : Math.max(world.getActualHeight(), chunk.getTopFilledSegment() + 15);
-
-						for (wi = 0; wi < 256; wi++)
-						{
-							wx = wi % 16;
-							wz = wi / 16;
-
-							for (by = topY; by > 0; --by)
-							{
-								if (cancelled)
-								{
-									return;
-								}
-
-								CURRENT_BLOCK_POS.setPos(x + wx, by, z + wz);
-								state = chunk.getBlockState(wx, by, wz);
-
-								if (state.getBlock() != Blocks.TALLGRASS && !state.getBlock().isAir(state, world, CURRENT_BLOCK_POS))
-								{
-									HEIGHT_MAP[(cx * 16 + wx) + (cz * 16 + wz) * PIXEL_SIZE] = by;
-									break;
-								}
-							}
-						}
-					}
+					break;
 				}
-			}
 
-			for (cz = 0; cz < ChunkSelectorMap.TILES_GUI; cz++)
-			{
-				for (cx = 0; cx < ChunkSelectorMap.TILES_GUI; cx++)
+				ChunkPos pos = MathUtils.getSpiralPoint(index);
+				int cx = pos.x + ChunkSelectorMap.TILES_GUI2;
+				int cz = pos.z + ChunkSelectorMap.TILES_GUI2;
+
+				chunk = w.getChunkProvider().getLoadedChunk(startX + cx, startZ + cz);
+
+				if (chunk != null)
 				{
-					if (world == null)
+					x = (startX + cx) << 4;
+					z = (startZ + cz) << 4;
+					topY = (w.provider.getDimension() == -1) ? startY + 5 : Math.max(w.getActualHeight(), chunk.getTopFilledSegment() + 15);
+
+					for (wi = 0; wi < 256; wi++)
 					{
-						continue;
-					}
+						wx = wi % 16;
+						wz = wi / 16;
 
-					chunk = world.getChunkProvider().getLoadedChunk(startX + cx, startZ + cz);
-
-					if (chunk != null)
-					{
-						x = (startX + cx) << 4;
-						z = (startZ + cz) << 4;
-
-						for (wi = 0; wi < 256; wi++)
+						for (by = topY; by > 0; --by)
 						{
-							wx = wi % 16;
-							wz = wi / 16;
-							by = getHeight(cx * 16 + wx, cz * 16 + wz);
-
-							if (by < 0)
+							if (cancelled)
 							{
-								continue;
+								return;
 							}
 
 							CURRENT_BLOCK_POS.setPos(x + wx, by, z + wz);
 							state = chunk.getBlockState(wx, by, wz);
 
-							color = COLOR_CACHE.computeIfAbsent(state, COLOR_GETTER).addBrightness(MathUtils.RAND.nextFloat() * 0.04F);
-
-							int bn = getHeight(cx * 16 + wx, cz * 16 + wz - 1);
-							int bw = getHeight(cx * 16 + wx - 1, cz * 16 + wz);
-
-							if (by > bn && bn != -1 || by > bw && bw != -1)
+							if (state.getBlock() != Blocks.TALLGRASS && !state.getBlock().isAir(state, w, CURRENT_BLOCK_POS))
 							{
-								color = color.addBrightness(0.1F);
+								HEIGHT_MAP[(cx * 16 + wx) + (cz * 16 + wz) * PIXEL_SIZE] = by;
+								break;
 							}
-
-							if (by < bn && bn != -1 || by < bw && bw != -1)
-							{
-								color = color.addBrightness(-0.1F);
-							}
-
-							PIXELS.setRGB(cx * 16 + wx, cz * 16 + wz, color.rgba());
 						}
 					}
-
-					pixelBuffer = PIXELS.toByteBuffer(false);
 				}
 			}
+
+			for (int index = 0; index < ChunkSelectorMap.TILES_GUI * ChunkSelectorMap.TILES_GUI + 1; index++)
+			{
+				World w = world;
+
+				if (w == null)
+				{
+					break;
+				}
+
+				ChunkPos pos = MathUtils.getSpiralPoint(index);
+				int cx = pos.x + ChunkSelectorMap.TILES_GUI2;
+				int cz = pos.z + ChunkSelectorMap.TILES_GUI2;
+
+				chunk = w.getChunkProvider().getLoadedChunk(startX + cx, startZ + cz);
+
+				if (chunk == null)
+				{
+					continue;
+				}
+
+				x = (startX + cx) << 4;
+				z = (startZ + cz) << 4;
+
+				for (wi = 0; wi < 256; wi++)
+				{
+					wx = wi % 16;
+					wz = wi / 16;
+					by = getHeight(cx * 16 + wx, cz * 16 + wz);
+
+					if (by < 0)
+					{
+						continue;
+					}
+
+					CURRENT_BLOCK_POS.setPos(x + wx, by, z + wz);
+					state = chunk.getBlockState(wx, by, wz);
+
+					color = COLOR_CACHE.computeIfAbsent(state, COLOR_GETTER).addBrightness(MathUtils.RAND.nextFloat() * 0.04F);
+
+					int bn = getHeight(cx * 16 + wx, cz * 16 + wz - 1);
+					int bw = getHeight(cx * 16 + wx - 1, cz * 16 + wz);
+
+					if (by > bn && bn != -1 || by > bw && bw != -1)
+					{
+						color = color.addBrightness(0.1F);
+					}
+
+					if (by < bn && bn != -1 || by < bw && bw != -1)
+					{
+						color = color.addBrightness(-0.1F);
+					}
+
+					PIXELS.setRGB(cx * 16 + wx, cz * 16 + wz, color.rgba());
+				}
+
+				pixelBuffer = PIXELS.toByteBuffer(false);
+			}
 		}
-		catch (Exception e)
+		catch (Exception ex)
 		{
-			e.printStackTrace();
+			ex.printStackTrace();
 		}
 
 		pixelBuffer = PIXELS.toByteBuffer(false);
