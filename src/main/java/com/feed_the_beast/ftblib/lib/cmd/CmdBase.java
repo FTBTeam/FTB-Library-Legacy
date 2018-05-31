@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
+import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -165,6 +166,11 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 			}
 			case "@p":
 			{
+				if (sender instanceof EntityPlayerMP && !ServerUtils.isFake((EntityPlayerMP) sender))
+				{
+					return Universe.get().getPlayer(sender);
+				}
+
 				p = null;
 				double dist = Double.POSITIVE_INFINITY;
 

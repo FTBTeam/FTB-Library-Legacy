@@ -11,7 +11,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.EnumPrivacyLevel;
@@ -20,6 +19,7 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -39,6 +39,9 @@ import net.minecraftforge.server.permission.context.WorldContext;
 
 import javax.annotation.Nullable;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
@@ -333,9 +336,9 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 
 		if (cachedPlayerNBT == null)
 		{
-			try
+			try (InputStream stream = new FileInputStream(new File(team.universe.world.getSaveHandler().getWorldDirectory(), "playerdata/" + getId() + ".dat")))
 			{
-				cachedPlayerNBT = FileUtils.readNBT(new File(team.universe.world.getSaveHandler().getWorldDirectory(), "playerdata/" + getId() + ".dat"));
+				cachedPlayerNBT = CompressedStreamTools.readCompressed(stream);
 			}
 			catch (Exception ex)
 			{
@@ -365,7 +368,14 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		}
 		else
 		{
-			FileUtils.writeNBT(new File(team.universe.world.getSaveHandler().getWorldDirectory(), "playerdata/" + getId() + ".dat"), nbt);
+			try (FileOutputStream stream = new FileOutputStream(new File(team.universe.world.getSaveHandler().getWorldDirectory(), "playerdata/" + getId() + ".dat")))
+			{
+				CompressedStreamTools.writeCompressed(nbt, stream);
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
 		}
 
 		markDirty();

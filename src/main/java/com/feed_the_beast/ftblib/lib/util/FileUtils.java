@@ -140,8 +140,6 @@ public class FileUtils
 		}
 		catch (Exception ex)
 		{
-			ex.printStackTrace();
-
 			try (InputStream stream = new FileInputStream(file))
 			{
 				return CompressedStreamTools.readCompressed(stream);

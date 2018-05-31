@@ -14,7 +14,6 @@ import com.feed_the_beast.ftblib.lib.icon.IconPresets;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftblib.net.MessageAdminPanelGui;
 import com.feed_the_beast.ftblib.net.MessageMyTeamGui;
@@ -114,7 +113,7 @@ public class FTBLibClientEventHandler
 				{
 					if (!line.isEmpty())
 					{
-						line = StringUtils.trimAllWhitespace(line);
+						line = line.trim();
 						text.add(line);
 						width = Math.max(width, font.getStringWidth(line));
 					}

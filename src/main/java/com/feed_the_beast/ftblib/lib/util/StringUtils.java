@@ -277,12 +277,21 @@ public class StringUtils
 
 	public static String removeAllWhitespace(String s)
 	{
-		return s.isEmpty() ? s : s.replaceAll("\\s+", "");
-	}
+		char[] chars = new char[s.length()];
+		int j = 0;
 
-	public static String trimAllWhitespace(String s)
-	{
-		return s.isEmpty() ? s : s.replace("^\\s*(.*?)\\s*$", "$1");
+		for (int i = 0; i < chars.length; i++)
+		{
+			char c = s.charAt(i);
+
+			if (c > ' ')
+			{
+				chars[j] = c;
+				j++;
+			}
+		}
+
+		return new String(chars, 0, j);
 	}
 
 	public static String formatDouble0(double value)
