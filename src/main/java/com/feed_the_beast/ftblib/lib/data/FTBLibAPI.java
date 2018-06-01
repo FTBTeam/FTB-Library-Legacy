@@ -78,7 +78,7 @@ public class FTBLibAPI
 				}
 
 				notification.setImportant(true);
-				notification.setTimer(140);
+				notification.setTimer(140L);
 				notification.send(universe.server, player);
 			}
 		}

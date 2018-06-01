@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.ATHelper;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftblib.lib.util.text_components.TextComponentCountdown;
 import com.google.gson.JsonArray;
@@ -276,7 +277,7 @@ public class JsonUtils
 
 				if (n.getTimer() != 60)
 				{
-					json.addProperty("timer", n.getTimer());
+					json.addProperty("timer", Ticks.toString(n.getTimer()));
 				}
 
 				if (n.isImportant())
@@ -392,7 +393,16 @@ public class JsonUtils
 
 					if (json.has("timer"))
 					{
-						n.setTimer(net.minecraft.util.JsonUtils.getInt(json, "timer"));
+						JsonElement e = json.get("timer");
+
+						if (e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber())
+						{
+							n.setTimer(e.getAsLong());
+						}
+						else
+						{
+							n.setTimer(Ticks.fromString(e.getAsString()));
+						}
 					}
 
 					if (json.has("important"))

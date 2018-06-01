@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util.text_components;
 
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
 import net.minecraft.command.ICommandSender;
@@ -37,14 +38,14 @@ public class Notification extends TextComponentString
 	}
 
 	private final ResourceLocation id;
-	private int timer;
+	private long timer;
 	private boolean important;
 
 	private Notification(ResourceLocation i, String text)
 	{
 		super(text);
 		id = i;
-		timer = 60;
+		timer = 60L;
 		important = false;
 	}
 
@@ -60,6 +61,7 @@ public class Notification extends TextComponentString
 		}
 
 		setTimer(n.getTimer());
+		setImportant(n.isImportant());
 	}
 
 	public Notification addLine(ITextComponent line)
@@ -105,7 +107,7 @@ public class Notification extends TextComponentString
 
 	public String toString()
 	{
-		return "Notification{" + StringJoiner.with(", ").joinObjects("id=" + id, "siblings=" + siblings, "style=" + getStyle(), "timer=" + timer, "important=" + important) + '}';
+		return "Notification{" + StringJoiner.with(", ").joinObjects("id=" + id, "siblings=" + siblings, "style=" + getStyle(), "timer=" + Ticks.toString(timer), "important=" + important) + '}';
 	}
 
 	public ResourceLocation getId()
@@ -113,12 +115,12 @@ public class Notification extends TextComponentString
 		return id;
 	}
 
-	public int getTimer()
+	public long getTimer()
 	{
 		return timer;
 	}
 
-	public Notification setTimer(int t)
+	public Notification setTimer(long t)
 	{
 		timer = t;
 		return this;

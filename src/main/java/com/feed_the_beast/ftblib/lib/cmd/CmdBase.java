@@ -14,12 +14,15 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.server.permission.PermissionAPI;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.OptionalInt;
 
 public abstract class CmdBase extends CommandBase implements ICommandWithParent
 {
@@ -127,7 +130,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 	}
 
 	@Override
-	public void setParent(ICommand c)
+	public void setParent(@Nullable ICommand c)
 	{
 		parent = c;
 	}
@@ -218,22 +221,64 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 		throw new CommandException("ftblib.lang.team.error.not_found", s);
 	}
 
-	public static EntityPlayerMP getSelfOrOther(ICommandSender sender, String[] args, int index) throws CommandException
+	public static ForgePlayer getSelfOrOther(ICommandSender sender, String[] args, int index) throws CommandException
 	{
 		return getSelfOrOther(sender, args, index, "");
 	}
 
-	public static EntityPlayerMP getSelfOrOther(ICommandSender sender, String[] args, int index, String specialPerm) throws CommandException
+	public static ForgePlayer getSelfOrOther(ICommandSender sender, String[] args, int index, String specialPerm) throws CommandException
 	{
 		if (args.length <= index)
 		{
-			return getCommandSenderAsPlayer(sender);
+			return getForgePlayer(sender);
 		}
 		else if (!specialPerm.isEmpty() && sender instanceof EntityPlayerMP && !PermissionAPI.hasPermission((EntityPlayerMP) sender, specialPerm))
 		{
 			throw new CommandException("commands.generic.permission");
 		}
 
-		return getForgePlayer(sender, args[index]).getCommandPlayer();
+		return getForgePlayer(sender, args[index]);
+	}
+
+	public static List<String> getDimensionNames()
+	{
+		List<String> list = new ArrayList<>();
+		list.add("overworld");
+		list.add("nether");
+		list.add("end");
+
+		for (Integer dim : DimensionManager.getStaticDimensionIDs())
+		{
+			if (dim != null && (dim < -1 || dim > 1))
+			{
+				list.add(dim.toString());
+			}
+		}
+
+		return list;
+	}
+
+	public static OptionalInt parseDimension(ICommandSender sender, String[] args, int index) throws CommandException
+	{
+		if (args.length <= index)
+		{
+			return OptionalInt.empty();
+		}
+
+		switch (args[index])
+		{
+			case "overworld":
+				return OptionalInt.of(0);
+			case "nether":
+				return OptionalInt.of(-1);
+			case "end":
+				return OptionalInt.of(1);
+			case "this":
+				return OptionalInt.of(sender.getEntityWorld().provider.getDimension());
+			case "none":
+				return OptionalInt.empty();
+			default:
+				return OptionalInt.of(parseInt(args[index]));
+		}
 	}
 }

@@ -161,7 +161,7 @@ public class Ticks
 
 	public static long fromString(String value) throws NumberFormatException
 	{
-		if (value.equals("0s"))
+		if (value.isEmpty() || value.equals("0s"))
 		{
 			return 0L;
 		}
