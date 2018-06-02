@@ -39,7 +39,7 @@ public class CmdTreeBase extends CommandTreeBase implements ICommandWithParent
 	@Override
 	public int getRequiredPermissionLevel()
 	{
-		int level = Integer.MAX_VALUE;
+		int level = 4;
 
 		for (ICommand command : getSubCommands())
 		{

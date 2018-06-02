@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftblib.events.universe.PersistentScheduledTaskEvent;
+import com.feed_the_beast.ftblib.events.universe.UniverseClearCacheEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseClosedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseLoadedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
@@ -825,6 +826,8 @@ public class Universe implements IHasCache
 	@Override
 	public void clearCache()
 	{
+		new UniverseClearCacheEvent(this).post();
+
 		for (ForgeTeam team : teams.values())
 		{
 			team.clearCache();
