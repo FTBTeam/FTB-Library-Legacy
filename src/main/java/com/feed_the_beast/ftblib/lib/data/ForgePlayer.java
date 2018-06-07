@@ -184,11 +184,11 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		return isOnline() ? getPlayer().getDisplayName() : new TextComponentString(getName());
 	}
 
-	public EntityPlayerMP getCommandPlayer() throws CommandException
+	public EntityPlayerMP getCommandPlayer(ICommandSender sender) throws CommandException
 	{
 		if (!isOnline())
 		{
-			throw new CommandException("commands.generic.player.notFound", getDisplayName());
+			throw FTBLib.error(sender, "player_must_be_online");
 		}
 
 		return getPlayer();

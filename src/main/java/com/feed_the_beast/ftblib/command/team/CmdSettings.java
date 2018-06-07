@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftblib.command.team;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdEditConfigBase;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.command.CmdEditConfigBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
@@ -15,9 +17,9 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class CmdTeamConfig extends CmdEditConfigBase
+public class CmdSettings extends CmdEditConfigBase
 {
-	public CmdTeamConfig()
+	public CmdSettings()
 	{
 		super("settings", Level.ALL);
 	}
@@ -32,12 +34,12 @@ public class CmdTeamConfig extends CmdEditConfigBase
 	public ConfigGroup getGroup(ICommandSender sender) throws CommandException
 	{
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		ForgePlayer p = getForgePlayer(player);
+		ForgePlayer p = CommandUtils.getForgePlayer(player);
 
 		if (!p.hasTeam())
 		{
 			FTBLibAPI.sendCloseGuiPacket(player);
-			throw new CommandException("ftblib.lang.team.error.no_team");
+			throw FTBLib.error(sender, "ftblib.lang.team.error.no_team");
 		}
 		else if (!p.team.isModerator(p))
 		{
@@ -51,6 +53,6 @@ public class CmdTeamConfig extends CmdEditConfigBase
 	@Override
 	public IConfigCallback getCallback(ICommandSender sender) throws CommandException
 	{
-		return getForgePlayer(sender).team.getConfigCallback();
+		return CommandUtils.getForgePlayer(sender).team.getConfigCallback();
 	}
 }

@@ -5,7 +5,8 @@ import com.feed_the_beast.ftblib.FTBLibGameRules;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.TeamType;
@@ -53,27 +54,27 @@ public class CmdCreate extends CmdBase
 	{
 		if (!FTBLibGameRules.canCreateTeam(server.getWorld(0)))
 		{
-			throw new CommandException("feature_disabled_server");
+			throw FTBLib.error(sender, "feature_disabled_server");
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		ForgePlayer p = getForgePlayer(player);
+		ForgePlayer p = CommandUtils.getForgePlayer(player);
 
 		if (p.hasTeam())
 		{
-			throw new CommandException("ftblib.lang.team.error.must_leave");
+			throw FTBLib.error(sender, "ftblib.lang.team.error.must_leave");
 		}
 
 		checkArgs(sender, args, 1);
 
 		if (!isValidTeamID(args[0]))
 		{
-			throw new CommandException("ftblib.lang.team.id_invalid");
+			throw FTBLib.error(sender, "ftblib.lang.team.id_invalid");
 		}
 
 		if (p.team.universe.getTeam(args[0]).isValid())
 		{
-			throw new CommandException("ftblib.lang.team.id_already_exists");
+			throw FTBLib.error(sender, "ftblib.lang.team.id_already_exists");
 		}
 
 		ForgeTeam team = new ForgeTeam(p.team.universe, args[0], TeamType.PLAYER);

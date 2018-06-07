@@ -4,7 +4,7 @@ import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import net.minecraft.command.CommandException;

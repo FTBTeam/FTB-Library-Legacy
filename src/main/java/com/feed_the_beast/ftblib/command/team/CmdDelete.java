@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.command.team;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -42,7 +43,7 @@ public class CmdDelete extends CmdBase
 
 		if (!team.isValid())
 		{
-			throw new CommandException("ftblib.lang.team.error.not_found", args[0]);
+			throw FTBLib.error(sender, "ftblib.lang.team.error.not_found", args[0]);
 		}
 
 		for (ForgePlayer player : team.getMembers())

@@ -1,5 +1,6 @@
-package com.feed_the_beast.ftblib.lib.cmd;
+package com.feed_the_beast.ftblib.lib.command;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -7,135 +8,26 @@ import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.server.permission.PermissionAPI;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.OptionalInt;
 
-public abstract class CmdBase extends CommandBase implements ICommandWithParent
+/**
+ * @author LatvianModder
+ */
+public class CommandUtils
 {
-	public enum Level
+	public static CommandException error(ITextComponent component)
 	{
-		ALL()
-				{
-					@Override
-					public boolean checkPermission(MinecraftServer server, ICommandSender sender, ICommand command)
-					{
-						return true;
-					}
-				},
-		OP_OR_SP()
-				{
-					@Override
-					public boolean checkPermission(MinecraftServer server, ICommandSender sender, ICommand command)
-					{
-						return server.isSinglePlayer() || sender.canUseCommand(2, command.getName());
-					}
-				},
-		OP()
-				{
-					@Override
-					public boolean checkPermission(MinecraftServer server, ICommandSender sender, ICommand command)
-					{
-						return sender.canUseCommand(2, command.getName());
-					}
-				},
-		SERVER()
-				{
-					@Override
-					public boolean checkPermission(MinecraftServer server, ICommandSender sender, ICommand command)
-					{
-						return sender instanceof MinecraftServer;
-					}
-				};
-
-		public abstract boolean checkPermission(MinecraftServer server, ICommandSender sender, ICommand command);
+		return new CommandException("disconnect.genericReason", component);
 	}
-
-	protected static final List<String> LIST_TRUE_FALSE = Collections.unmodifiableList(Arrays.asList("true", "false"));
-
-	public void checkArgs(ICommandSender sender, String[] args, int i) throws CommandException
-	{
-		if (args.length < i)
-		{
-			throw new WrongUsageException(getUsage(sender));
-		}
-	}
-
-	private final String name;
-	public final Level level;
-	private ICommand parent;
-
-	public CmdBase(String n, Level l)
-	{
-		name = n;
-		level = l;
-	}
-
-	@Override
-	public final String getName()
-	{
-		return name;
-	}
-
-	@Override
-	public final int getRequiredPermissionLevel()
-	{
-		return 2;
-	}
-
-	@Override
-	public boolean checkPermission(MinecraftServer server, ICommandSender sender)
-	{
-		return level.checkPermission(server, sender, this);
-	}
-
-	@Override
-	public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos)
-	{
-		if (args.length == 0)
-		{
-			return Collections.emptyList();
-		}
-		else if (isUsernameIndex(args, args.length - 1))
-		{
-			return getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames());
-		}
-
-		return super.getTabCompletions(server, sender, args, pos);
-	}
-
-	@Override
-	public boolean isUsernameIndex(String[] args, int index)
-	{
-		return false;
-	}
-
-	@Override
-	public ICommand getParent()
-	{
-		return parent;
-	}
-
-	@Override
-	public void setParent(@Nullable ICommand c)
-	{
-		parent = c;
-	}
-
-	// Static //
 
 	public static ForgePlayer getForgePlayer(ICommandSender sender) throws CommandException
 	{
@@ -209,16 +101,16 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 		return p;
 	}
 
-	public static ForgeTeam getTeam(String s) throws CommandException
+	public static ForgeTeam getTeam(ICommandSender sender, String id) throws CommandException
 	{
-		ForgeTeam team = Universe.get().getTeam(s);
+		ForgeTeam team = Universe.get().getTeam(id);
 
 		if (team.isValid())
 		{
 			return team;
 		}
 
-		throw new CommandException("ftblib.lang.team.error.not_found", s);
+		throw FTBLib.error(sender, "ftblib.lang.team.error.not_found", id);
 	}
 
 	public static ForgePlayer getSelfOrOther(ICommandSender sender, String[] args, int index) throws CommandException
@@ -278,7 +170,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 			case "none":
 				return OptionalInt.empty();
 			default:
-				return OptionalInt.of(parseInt(args[index]));
+				return OptionalInt.of(CommandBase.parseInt(args[index]));
 		}
 	}
 }

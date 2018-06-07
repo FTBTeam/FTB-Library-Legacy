@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftblib.command.team;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -37,11 +39,11 @@ public class CmdRequestInvite extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		ForgePlayer p = getForgePlayer(getCommandSenderAsPlayer(sender));
+		ForgePlayer p = CommandUtils.getForgePlayer(getCommandSenderAsPlayer(sender));
 
 		if (p.hasTeam())
 		{
-			throw new CommandException("ftblib.lang.team.error.must_leave");
+			throw FTBLib.error(sender, "ftblib.lang.team.error.must_leave");
 		}
 
 		checkArgs(sender, args, 1);
@@ -50,7 +52,7 @@ public class CmdRequestInvite extends CmdBase
 
 		if (!team.isValid())
 		{
-			throw new CommandException("error", args[0]);
+			throw FTBLib.error(sender, "error", args[0]);
 		}
 
 		team.setRequestingInvite(p, true);

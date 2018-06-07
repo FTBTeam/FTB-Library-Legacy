@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftblib.command;
 
 import com.feed_the_beast.ftblib.FTBLib;
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -36,12 +36,12 @@ public class CmdAddFakePlayer extends CmdBase
 
 		if (id == null)
 		{
-			throw new CommandException("ftblib.lang.add_fake_player.invalid_uuid");
+			throw FTBLib.error(sender, "ftblib.lang.add_fake_player.invalid_uuid");
 		}
 
 		if (Universe.get().getPlayer(id) != null || Universe.get().getPlayer(args[1]) != null)
 		{
-			throw new CommandException("ftblib.lang.add_fake_player.player_exists");
+			throw FTBLib.error(sender, "ftblib.lang.add_fake_player.player_exists");
 		}
 
 		ForgePlayer p = new ForgePlayer(Universe.get(), id, args[1]);

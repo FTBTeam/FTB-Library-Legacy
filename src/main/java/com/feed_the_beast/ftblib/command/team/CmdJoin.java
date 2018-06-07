@@ -1,7 +1,9 @@
 package com.feed_the_beast.ftblib.command.team;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibGameRules;
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
@@ -40,7 +42,7 @@ public class CmdJoin extends CmdBase
 
 			try
 			{
-				ForgePlayer player = getForgePlayer(sender);
+				ForgePlayer player = CommandUtils.getForgePlayer(sender);
 
 				for (ForgeTeam team : Universe.get().getTeams())
 				{
@@ -71,24 +73,24 @@ public class CmdJoin extends CmdBase
 	{
 		if (!FTBLibGameRules.canJoinTeam(server.getWorld(0)))
 		{
-			throw new CommandException("feature_disabled_server");
+			throw FTBLib.error(sender, "feature_disabled_server");
 		}
 
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
-		ForgePlayer p = getForgePlayer(player);
+		ForgePlayer p = CommandUtils.getForgePlayer(player);
 
 		if (p.hasTeam())
 		{
-			throw new CommandException("ftblib.lang.team.error.must_leave");
+			throw FTBLib.error(sender, "ftblib.lang.team.error.must_leave");
 		}
 
 		checkArgs(sender, args, 1);
 
-		ForgeTeam team = getTeam(args[0]);
+		ForgeTeam team = CommandUtils.getTeam(sender, args[0]);
 
 		if (!team.addMember(p, false))
 		{
-			throw new CommandException("ftblib.lang.team.error.not_member", p.getDisplayName());
+			throw FTBLib.error(sender, "ftblib.lang.team.error.not_member", p.getDisplayName());
 		}
 	}
 }

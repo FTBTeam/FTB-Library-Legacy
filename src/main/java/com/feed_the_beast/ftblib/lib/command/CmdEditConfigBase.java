@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftblib.lib.cmd;
+package com.feed_the_beast.ftblib.lib.command;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
@@ -99,7 +99,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 
 		if (entry.isNull())
 		{
-			throw new CommandException("ftblib.lang.config_command.invalid_key", node.toString());
+			throw FTBLib.error(sender, "ftblib.lang.config_command.invalid_key", node.toString());
 		}
 
 		if (args.length >= 2)
@@ -120,7 +120,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 			catch (Exception ex)
 			{
 				ex.printStackTrace();
-				throw new CommandException("error", ex.toString());
+				throw FTBLib.error(sender, "error", ex.toString());
 			}
 		}
 

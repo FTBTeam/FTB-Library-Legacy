@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftblib.lib.cmd;
+package com.feed_the_beast.ftblib.lib.command;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;

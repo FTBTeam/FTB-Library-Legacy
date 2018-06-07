@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftblib.command.team;
 
-import com.feed_the_beast.ftblib.lib.cmd.CmdBase;
+import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.command.CmdBase;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -25,11 +27,11 @@ public class CmdKick extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
 	{
-		ForgePlayer p = getForgePlayer(getCommandSenderAsPlayer(sender));
+		ForgePlayer p = CommandUtils.getForgePlayer(getCommandSenderAsPlayer(sender));
 
 		if (!p.hasTeam())
 		{
-			throw new CommandException("ftblib.lang.team.error.no_team");
+			throw FTBLib.error(sender, "ftblib.lang.team.error.no_team");
 		}
 		else if (!p.team.isModerator(p))
 		{
@@ -38,11 +40,11 @@ public class CmdKick extends CmdBase
 
 		checkArgs(sender, args, 1);
 
-		ForgePlayer p1 = getForgePlayer(sender, args[0]);
+		ForgePlayer p1 = CommandUtils.getForgePlayer(sender, args[0]);
 
 		if (!p.team.isMember(p1))
 		{
-			throw new CommandException("ftblib.lang.team.error.not_member", p1.getDisplayName());
+			throw FTBLib.error(sender, "ftblib.lang.team.error.not_member", p1.getDisplayName());
 		}
 		else if (!p1.equalsPlayer(p))
 		{
@@ -50,7 +52,7 @@ public class CmdKick extends CmdBase
 		}
 		else
 		{
-			throw new CommandException("ftblib.lang.team.error.must_transfer_ownership");
+			throw FTBLib.error(sender, "ftblib.lang.team.error.must_transfer_ownership");
 		}
 	}
 }

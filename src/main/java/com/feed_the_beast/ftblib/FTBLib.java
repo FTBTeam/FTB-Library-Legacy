@@ -6,7 +6,9 @@ import com.feed_the_beast.ftblib.command.CmdReload;
 import com.feed_the_beast.ftblib.command.team.CmdTeam;
 import com.feed_the_beast.ftblib.events.RegisterPermissionsEvent;
 import com.feed_the_beast.ftblib.lib.OtherMods;
+import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.Mod;
@@ -48,6 +50,11 @@ public class FTBLib
 	public static ITextComponent lang(@Nullable ICommandSender sender, String key, Object... args)
 	{
 		return SidedUtils.lang(sender, MOD_ID, key, args);
+	}
+
+	public static CommandException error(@Nullable ICommandSender sender, String key, Object... args)
+	{
+		return CommandUtils.error(lang(sender, key, args));
 	}
 
 	@Mod.EventHandler
