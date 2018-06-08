@@ -37,6 +37,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.storage.ThreadedFileIOBase;
+import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -60,6 +61,7 @@ public class JsonUtils
 	public static final JsonPrimitive JSON_TRUE = new JsonPrimitive(true);
 	public static final JsonPrimitive JSON_FALSE = new JsonPrimitive(false);
 	public static final JsonPrimitive JSON_EMPTY_STRING = new JsonPrimitive("");
+	public static final JsonContext MINECRAFT_JSON_CONTEXT = new JsonContext("minecraft");
 
 	public static boolean isNull(@Nullable JsonElement element)
 	{

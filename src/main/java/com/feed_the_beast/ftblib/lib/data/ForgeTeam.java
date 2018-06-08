@@ -531,7 +531,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 			if (type.isPlayer)
 			{
-				File folder = new File(universe.world.getSaveHandler().getWorldDirectory(), "data/ftb_lib/teams/");
+				File folder = new File(universe.getWorldDirectory(), "data/ftb_lib/teams/");
 				new ForgeTeamDeletedEvent(this, folder).post();
 				universe.teams.remove(getName());
 				FileUtils.delete(new File(folder, getName() + ".dat"));

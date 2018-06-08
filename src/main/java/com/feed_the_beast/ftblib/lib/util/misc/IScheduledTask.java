@@ -7,9 +7,9 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
  */
 public interface IScheduledTask
 {
-	default boolean isComplete(long now, long time)
+	default boolean isComplete(Universe universe, TimeType type, long time)
 	{
-		return now >= time;
+		return (type == TimeType.TICKS ? universe.ticks : System.currentTimeMillis()) >= time;
 	}
 
 	void execute(Universe universe);

@@ -16,7 +16,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -40,7 +39,6 @@ public class CommonUtils
 
 	private static final Predicate<Object> PREDICATE_ALWAYS_TRUE = object -> true;
 	public static final Object[] NO_OBJECTS = { };
-	public static final JsonContext MINECRAFT_JSON_CONTEXT = new JsonContext("minecraft");
 
 	public static final char[] HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 

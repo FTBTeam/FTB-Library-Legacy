@@ -57,6 +57,11 @@ public class FTBLib
 		return CommandUtils.error(lang(sender, key, args));
 	}
 
+	public static CommandException errorFeatureDisabledServer(@Nullable ICommandSender sender)
+	{
+		return error(sender, "feature_disabled_server");
+	}
+
 	@Mod.EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)
 	{

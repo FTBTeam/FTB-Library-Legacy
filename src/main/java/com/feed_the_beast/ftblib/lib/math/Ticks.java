@@ -6,10 +6,21 @@ package com.feed_the_beast.ftblib.lib.math;
 public class Ticks
 {
 	public static final long SECOND = 20L;
+	public static final long TICK_MS = 1000L / SECOND;
 	public static final long MINUTE = SECOND * 60L;
 	public static final long HOUR = MINUTE * 60L;
 	public static final long DAY = HOUR * 24L;
 	public static final long WEEK = DAY * 7L;
+
+	public static long tms(long ticks)
+	{
+		return ticks * TICK_MS;
+	}
+
+	public static long mst(long millis)
+	{
+		return millis / TICK_MS;
+	}
 
 	public static long ts(long ticks)
 	{

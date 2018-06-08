@@ -168,7 +168,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		if (!isFake() && !playerName.equals(n))
 		{
-			new File(team.universe.world.getSaveHandler().getWorldDirectory(), "data/ftb_lib/players/" + playerName.toLowerCase() + ".dat").delete();
+			new File(team.universe.getWorldDirectory(), "data/ftb_lib/players/" + playerName.toLowerCase() + ".dat").delete();
 			playerName = n;
 			markDirty();
 		}
@@ -336,7 +336,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 
 		if (cachedPlayerNBT == null)
 		{
-			try (InputStream stream = new FileInputStream(new File(team.universe.world.getSaveHandler().getWorldDirectory(), "playerdata/" + getId() + ".dat")))
+			try (InputStream stream = new FileInputStream(new File(team.universe.getWorldDirectory(), "playerdata/" + getId() + ".dat")))
 			{
 				cachedPlayerNBT = CompressedStreamTools.readCompressed(stream);
 			}
@@ -368,7 +368,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		}
 		else
 		{
-			try (FileOutputStream stream = new FileOutputStream(new File(team.universe.world.getSaveHandler().getWorldDirectory(), "playerdata/" + getId() + ".dat")))
+			try (FileOutputStream stream = new FileOutputStream(new File(team.universe.getWorldDirectory(), "playerdata/" + getId() + ".dat")))
 			{
 				CompressedStreamTools.writeCompressed(nbt, stream);
 			}
@@ -388,7 +388,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 
 	public long getLastTimeSeen()
 	{
-		return isOnline() ? team.universe.world.getTotalWorldTime() : lastTimeSeen;
+		return isOnline() ? team.universe.ticks : lastTimeSeen;
 	}
 
 	public boolean hasPermission(String node, @Nullable IContext context)
