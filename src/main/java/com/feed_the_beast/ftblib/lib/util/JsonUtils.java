@@ -277,9 +277,9 @@ public class JsonUtils
 					json.addProperty("notification", n.getId().toString());
 				}
 
-				if (n.getTimer() != 60)
+				if (n.getTimer().ticks() != 60)
 				{
-					json.addProperty("timer", Ticks.toString(n.getTimer()));
+					json.addProperty("timer", n.getTimer().toString());
 				}
 
 				if (n.isImportant())
@@ -399,11 +399,11 @@ public class JsonUtils
 
 						if (e.isJsonPrimitive() && e.getAsJsonPrimitive().isNumber())
 						{
-							n.setTimer(e.getAsLong());
+							n.setTimer(Ticks.get(e.getAsLong()));
 						}
 						else
 						{
-							n.setTimer(Ticks.fromString(e.getAsString()));
+							n.setTimer(Ticks.get(e.getAsString()));
 						}
 					}
 

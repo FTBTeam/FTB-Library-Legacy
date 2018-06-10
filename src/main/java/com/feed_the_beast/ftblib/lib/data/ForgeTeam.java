@@ -324,15 +324,6 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		return fakePlayerStatus.getValue();
 	}
 
-	public void setFakePlyerStatus(EnumTeamStatus status)
-	{
-		if (fakePlayerStatus.getValue() != status)
-		{
-			fakePlayerStatus.setValue(status);
-			markDirty();
-		}
-	}
-
 	public EnumTeamStatus getHighestStatus(@Nullable ForgePlayer player)
 	{
 		if (player == null)
@@ -434,6 +425,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 			if (!player.equalsPlayer(owner))
 			{
+				universe.clearCache();
 				ForgePlayer oldOwner = owner;
 				owner = player;
 				players.remove(player);
@@ -455,6 +447,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		{
 			if (players.put(player, status) != status)
 			{
+				universe.clearCache();
 				player.markDirty();
 				markDirty();
 				return true;
@@ -462,14 +455,16 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		}
 		else if (players.remove(player) != status)
 		{
+			universe.clearCache();
 			player.markDirty();
 			markDirty();
 			return true;
 		}
+
 		return false;
 	}
 
-	public Collection<ForgePlayer> getPlayersWithStatus(Collection<ForgePlayer> collection, EnumTeamStatus status)
+	public <C extends Collection<ForgePlayer>> C getPlayersWithStatus(C collection, EnumTeamStatus status)
 	{
 		if (!isValid())
 		{
@@ -489,14 +484,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 	public List<ForgePlayer> getPlayersWithStatus(EnumTeamStatus status)
 	{
-		if (!isValid())
-		{
-			return Collections.emptyList();
-		}
-
-		List<ForgePlayer> list = new ArrayList<>();
-		getPlayersWithStatus(list, status);
-		return list;
+		return isValid() ? getPlayersWithStatus(new ArrayList<>(), status) : Collections.emptyList();
 	}
 
 	public boolean addMember(ForgePlayer player, boolean simulate)
@@ -505,6 +493,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		{
 			if (!simulate)
 			{
+				universe.clearCache();
 				player.team = this;
 				players.remove(player);
 				requestingInvite.remove(player);
@@ -527,6 +516,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		}
 		else if (getMembers().size() == 1)
 		{
+			universe.clearCache();
 			new ForgeTeamPlayerLeftEvent(player).post();
 
 			if (type.isPlayer)
@@ -550,6 +540,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 			return false;
 		}
 
+		universe.clearCache();
 		new ForgeTeamPlayerLeftEvent(player).post();
 		player.team = universe.getTeam("");
 		setStatus(player, EnumTeamStatus.NONE);

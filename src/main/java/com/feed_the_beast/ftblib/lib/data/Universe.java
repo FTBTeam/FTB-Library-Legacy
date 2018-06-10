@@ -14,6 +14,7 @@ import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
@@ -177,7 +178,7 @@ public class Universe implements IHasCache
 
 		if (event.phase == TickEvent.Phase.START)
 		{
-			universe.ticks = universe.world.getTotalWorldTime();
+			universe.ticks = Ticks.get(universe.world.getTotalWorldTime());
 		}
 		else if (!event.world.isRemote && event.world.provider.getDimension() == 0)
 		{
@@ -205,7 +206,7 @@ public class Universe implements IHasCache
 			{
 				PersistentScheduledTask task = piterator.next();
 
-				if (universe.ticks >= task.time)
+				if ((task.type == TimeType.TICKS ? universe.ticks.ticks() : System.currentTimeMillis()) >= task.time)
 				{
 					new PersistentScheduledTaskEvent(universe, task.id, task.data).post();
 					piterator.remove();
@@ -231,14 +232,14 @@ public class Universe implements IHasCache
 	private final List<PersistentScheduledTask> persistentScheduledTasks;
 	private final List<ScheduledTask> scheduledTaskQueue;
 	private final List<PersistentScheduledTask> persistentScheduledTaskQueue;
-	public long ticks;
+	public Ticks ticks;
 
 	@SuppressWarnings("ConstantConditions")
 	public Universe(WorldServer w)
 	{
 		server = w.getMinecraftServer();
 		world = w;
-		ticks = world.getTotalWorldTime();
+		ticks = Ticks.get(world.getTotalWorldTime());
 		players = new HashMap<>();
 		teams = new HashMap<>();
 		noneTeam = new ForgeTeam(this, "", TeamType.NONE);
@@ -667,7 +668,7 @@ public class Universe implements IHasCache
 
 		if (!p.isFake())
 		{
-			p.lastTimeSeen = ticks;
+			p.lastTimeSeen = ticks.ticks();
 			//FTBLibStats.updateLastSeen(stats());
 			new MessageSyncData(true, player, p).sendTo(p.entityPlayer);
 		}

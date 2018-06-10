@@ -388,7 +388,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 
 	public long getLastTimeSeen()
 	{
-		return isOnline() ? team.universe.ticks : lastTimeSeen;
+		return isOnline() ? team.universe.ticks.ticks() : lastTimeSeen;
 	}
 
 	public boolean hasPermission(String node, @Nullable IContext context)

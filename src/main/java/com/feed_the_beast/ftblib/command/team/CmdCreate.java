@@ -77,6 +77,8 @@ public class CmdCreate extends CmdBase
 			throw FTBLib.error(sender, "ftblib.lang.team.id_already_exists");
 		}
 
+		p.team.universe.clearCache();
+
 		ForgeTeam team = new ForgeTeam(p.team.universe, args[0], TeamType.PLAYER);
 
 		if (args.length > 1)

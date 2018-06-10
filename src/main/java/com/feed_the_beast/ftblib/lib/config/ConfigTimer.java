@@ -18,19 +18,19 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 {
 	public static final String ID = "timer";
 
-	private long value;
-	private long maxValue = Long.MAX_VALUE;
+	private Ticks value;
+	private Ticks maxValue = Ticks.NO_TICKS;
 
 	public ConfigTimer()
 	{
 	}
 
-	public ConfigTimer(long v)
+	public ConfigTimer(Ticks v)
 	{
 		value = v;
 	}
 
-	public ConfigTimer(long v, long max)
+	public ConfigTimer(Ticks v, Ticks max)
 	{
 		this(v);
 		maxValue = max;
@@ -45,72 +45,66 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	@Override
 	public Object getValue()
 	{
-		return getInt();
+		return getTimer();
 	}
 
-	public ConfigTimer setMax(long v)
+	public ConfigTimer setMax(Ticks v)
 	{
 		maxValue = v;
 		return this;
 	}
 
-	public long getMax()
+	public Ticks getMax()
 	{
 		return maxValue;
 	}
 
 	@Override
-	public long getLong()
+	public Ticks getTimer()
 	{
 		return value;
 	}
 
-	public void setTimer(long v)
+	public void setTimer(Ticks v)
 	{
-		if (v < 0L)
-		{
-			value = 0L;
-		}
-		else
-		{
-			value = v > getMax() ? getMax() : v;
-		}
+		Ticks max = getMax();
+		value = max.hasTicks() && v.ticks() >= max.ticks() ? max : v;
 	}
 
 	@Override
 	public String getString()
 	{
-		return Ticks.toString(getLong());
+		return getTimer().toString();
 	}
 
 	@Override
 	public boolean getBoolean()
 	{
-		return getLong() > 0L;
+		return getTimer().hasTicks();
 	}
 
 	@Override
 	public int getInt()
 	{
-		return (int) getLong();
+		return (int) getTimer().ticks();
 	}
 
 	@Override
 	public double getDouble()
 	{
-		return getLong();
+		return getTimer().ticks();
 	}
 
 	@Override
 	public ConfigTimer copy()
 	{
-		return new ConfigTimer(getInt(), getMax());
+		return new ConfigTimer(getTimer(), getMax());
 	}
 
 	@Override
 	public boolean equalsValue(ConfigValue value)
 	{
-		return value instanceof ConfigTimer && getLong() == value.getLong();
+		return value instanceof ConfigTimer && getTimer().equalsTimer(value.getTimer());
 	}
 
 	@Override
@@ -124,11 +118,11 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	{
 		super.addInfo(info, list);
 
-		long m = getMax();
+		Ticks max = getMax();
 
-		if (m != Long.MAX_VALUE)
+		if (max.hasTicks())
 		{
-			list.add(TextFormatting.AQUA + "Max: " + Ticks.toString(m));
+			list.add(TextFormatting.AQUA + "Max: " + max);
 		}
 	}
 
@@ -142,7 +136,7 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 
 		try
 		{
-			value = Ticks.fromString(text);
+			value = Ticks.get(text);
 
 			if (!simulate)
 			{
@@ -162,11 +156,11 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	{
 		if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isNumber())
 		{
-			setTimer(json.getAsLong());
+			setTimer(Ticks.get(json.getAsLong()));
 		}
 		else
 		{
-			setTimer(0L);
+			setTimer(Ticks.NO_TICKS);
 			setValueFromString(json.getAsString(), false);
 		}
 	}
@@ -174,26 +168,26 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	@Override
 	public JsonElement getSerializableElement()
 	{
-		return new JsonPrimitive(Ticks.toString(getLong()));
+		return new JsonPrimitive(getTimer().toString());
 	}
 
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeLong(getLong());
-		data.writeLong(getMax());
+		data.writeLong(getTimer().ticks());
+		data.writeLong(getMax().ticks());
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		setTimer(data.readLong());
-		setMax(data.readLong());
+		setTimer(Ticks.get(data.readLong()));
+		setMax(Ticks.get(data.readLong()));
 	}
 
 	@Override
 	public long getAsLong()
 	{
-		return getLong();
+		return getTimer().ticks();
 	}
 }

@@ -38,14 +38,14 @@ public class Notification extends TextComponentString
 	}
 
 	private final ResourceLocation id;
-	private long timer;
+	private Ticks timer;
 	private boolean important;
 
 	private Notification(ResourceLocation i, String text)
 	{
 		super(text);
 		id = i;
-		timer = 60L;
+		timer = Ticks.SECOND.x(3);
 		important = false;
 	}
 
@@ -107,7 +107,7 @@ public class Notification extends TextComponentString
 
 	public String toString()
 	{
-		return "Notification{" + StringJoiner.with(", ").joinObjects("id=" + id, "siblings=" + siblings, "style=" + getStyle(), "timer=" + Ticks.toString(timer), "important=" + important) + '}';
+		return "Notification{" + StringJoiner.with(", ").joinObjects("id=" + id, "siblings=" + siblings, "style=" + getStyle(), "timer=" + timer, "important=" + important) + '}';
 	}
 
 	public ResourceLocation getId()
@@ -115,12 +115,12 @@ public class Notification extends TextComponentString
 		return id;
 	}
 
-	public long getTimer()
+	public Ticks getTimer()
 	{
 		return timer;
 	}
 
-	public Notification setTimer(long t)
+	public Notification setTimer(Ticks t)
 	{
 		timer = t;
 		return this;

@@ -105,7 +105,7 @@ public class FTBLibClientEventHandler
 			width = 0;
 			font = f;
 			text = new ArrayList<>();
-			timer = n instanceof Notification ? ((Notification) n).getTimer() : 60L;
+			timer = n instanceof Notification ? ((Notification) n).getTimer().ticks() : 60L;
 
 			for (String s : font.listFormattedStringToWidth(notification.getFormattedText(), new ScaledResolution(ClientUtils.MC).getScaledWidth()))
 			{

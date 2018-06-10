@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.io.Bits;
-import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IStringSerializable;
@@ -20,8 +19,6 @@ import java.util.UUID;
 
 public class StringUtils
 {
-	public static final int DAY24 = 24 * 60 * 60;
-
 	public static final String ALLOWED_TEXT_CHARS = " .-_!@#$%^&*()+=\\/,<>?\'\"[]{}|;:`~";
 	public static final char FORMATTING_CHAR = '\u00a7';
 	public static final String FORMATTING = "" + FORMATTING_CHAR;
@@ -373,11 +370,6 @@ public class StringUtils
 		return formatDouble(value, false);
 	}
 
-	public static String getTimeStringTicks(long ticks)
-	{
-		return getTimeString(Ticks.ts(ticks) * 1000L);
-	}
-
 	public static String getTimeString(long millis)
 	{
 		boolean neg = false;
@@ -387,18 +379,22 @@ public class StringUtils
 			millis = -millis;
 		}
 
+		StringBuilder sb = new StringBuilder();
+
 		if (millis < 1000L)
 		{
-			return (neg ? "-" : "") + millis + "ms";
-		}
+			if (neg)
+			{
+				sb.append('-');
+			}
 
-		if (neg)
-		{
-			millis += 1000L;
+			sb.append(millis);
+			sb.append('m');
+			sb.append('s');
+			return sb.toString();
 		}
 
 		long secs = millis / 1000L;
-		StringBuilder sb = new StringBuilder();
 
 		if (neg)
 		{
@@ -409,14 +405,14 @@ public class StringUtils
 		long m = (secs / 60L) % 60L;
 		long s = secs % 60L;
 
-		if (secs >= DAY24)
+		if (secs >= 86400L)
 		{
-			sb.append(secs / DAY24);
+			sb.append(secs / 86400L);
 			sb.append('d');
 			sb.append(' ');
 		}
 
-		if (h > 0 || secs >= DAY24)
+		if (h > 0 || secs >= 86400L)
 		{
 			if (h < 10)
 			{

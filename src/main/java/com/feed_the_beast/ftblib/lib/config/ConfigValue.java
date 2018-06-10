@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.google.gson.JsonElement;
 import net.minecraft.util.IJsonSerializable;
@@ -33,9 +34,9 @@ public abstract class ConfigValue implements IStringSerializable, IJsonSerializa
 		return getInt();
 	}
 
-	public long getLong()
+	public Ticks getTimer()
 	{
-		return getInt();
+		return Ticks.NO_TICKS;
 	}
 
 	public abstract ConfigValue copy();

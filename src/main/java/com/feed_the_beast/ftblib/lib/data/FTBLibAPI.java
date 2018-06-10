@@ -10,6 +10,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
@@ -78,7 +79,7 @@ public class FTBLibAPI
 				}
 
 				notification.setImportant(true);
-				notification.setTimer(140L);
+				notification.setTimer(Ticks.SECOND.x(7));
 				notification.send(universe.server, player);
 			}
 		}

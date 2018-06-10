@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftblib.lib.util.text_components;
 
 import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.StringJoiner;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
@@ -27,7 +27,7 @@ public class TextComponentCountdown extends TextComponentString
 	@Override
 	public String getText()
 	{
-		return StringUtils.getTimeStringTicks(countdown - FTBLib.PROXY.getWorldTime() - (countdown % 20L));
+		return Ticks.get(countdown - FTBLib.PROXY.getWorldTime() - (countdown % 20L)).toTimeString();
 	}
 
 	@Override
