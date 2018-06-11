@@ -135,6 +135,7 @@ public class CommandUtils
 	public static List<String> getDimensionNames()
 	{
 		List<String> list = new ArrayList<>();
+		list.add("all");
 		list.add("overworld");
 		list.add("nether");
 		list.add("end");
@@ -157,17 +158,22 @@ public class CommandUtils
 			return OptionalInt.empty();
 		}
 
-		switch (args[index])
+		switch (args[index].toLowerCase())
 		{
 			case "overworld":
+			case "0":
 				return OptionalInt.of(0);
 			case "nether":
+			case "-1":
 				return OptionalInt.of(-1);
 			case "end":
+			case "1":
 				return OptionalInt.of(1);
 			case "this":
+			case "~":
 				return OptionalInt.of(sender.getEntityWorld().provider.getDimension());
-			case "none":
+			case "all":
+			case "*":
 				return OptionalInt.empty();
 			default:
 				return OptionalInt.of(CommandBase.parseInt(args[index]));
