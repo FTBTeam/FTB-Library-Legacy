@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.events.RegisterConfigValueProvidersEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
-import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigBlockState;
 import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigColor;
@@ -28,12 +27,13 @@ import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * @author LatvianModder
  */
-@EventHandler
+@Mod.EventBusSubscriber(modid = FTBLib.MOD_ID)
 public class FTBLibEventHandler
 {
 	public static final ResourceLocation RELOAD_CONFIG = new ResourceLocation(FTBLib.MOD_ID, "config");

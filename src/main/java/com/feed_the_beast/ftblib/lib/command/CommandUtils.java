@@ -118,18 +118,21 @@ public class CommandUtils
 		return getSelfOrOther(sender, args, index, "");
 	}
 
-	public static ForgePlayer getSelfOrOther(ICommandSender sender, String[] args, int index, String specialPerm) throws CommandException
+	public static ForgePlayer getSelfOrOther(ICommandSender sender, String[] args, int index, String specialPermForOther) throws CommandException
 	{
 		if (args.length <= index)
 		{
 			return getForgePlayer(sender);
 		}
-		else if (!specialPerm.isEmpty() && sender instanceof EntityPlayerMP && !PermissionAPI.hasPermission((EntityPlayerMP) sender, specialPerm))
+
+		ForgePlayer p = getForgePlayer(sender, args[index]);
+
+		if (!specialPermForOther.isEmpty() && sender instanceof EntityPlayerMP && !p.getId().equals(((EntityPlayerMP) sender).getUniqueID()) && !PermissionAPI.hasPermission((EntityPlayerMP) sender, specialPermForOther))
 		{
 			throw new CommandException("commands.generic.permission");
 		}
 
-		return getForgePlayer(sender, args[index]);
+		return p;
 	}
 
 	public static List<String> getDimensionNames()

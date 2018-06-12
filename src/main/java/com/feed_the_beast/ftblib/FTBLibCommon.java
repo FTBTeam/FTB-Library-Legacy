@@ -7,7 +7,6 @@ import com.feed_the_beast.ftblib.events.RegisterSyncDataEvent;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.player.IContainerProvider;
 import com.feed_the_beast.ftblib.events.team.RegisterTeamGuiActionsEvent;
-import com.feed_the_beast.ftblib.lib.EventHandler;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
@@ -21,18 +20,11 @@ import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.net.FTBLibNetHandler;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.discovery.ASMDataTable;
-import net.minecraftforge.fml.common.discovery.asm.ModAnnotation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -41,7 +33,6 @@ import java.util.UUID;
  */
 public class FTBLibCommon
 {
-	private static final EnumSet<Side> DEFAULT_SIDES = EnumSet.allOf(Side.class);
 	public static final Map<String, ConfigValueProvider> CONFIG_VALUE_PROVIDERS = new HashMap<>();
 	public static final Map<UUID, EditingConfig> TEMP_SERVER_CONFIG = new HashMap<>();
 	public static final Map<ResourceLocation, IContainerProvider> GUI_CONTAINER_PROVIDERS = new HashMap<>();
@@ -62,81 +53,10 @@ public class FTBLibCommon
 		}
 	}
 
-	private void registerEventHandler(ASMDataTable.ASMData data, Side side) throws Exception
-	{
-		@SuppressWarnings("unchecked")
-		List<ModAnnotation.EnumHolder> sidesEnum = (List<ModAnnotation.EnumHolder>) data.getAnnotationInfo().get("value");
-		EnumSet<Side> sides = DEFAULT_SIDES;
-		if (sidesEnum != null)
-		{
-			sides = EnumSet.noneOf(Side.class);
-
-			for (ModAnnotation.EnumHolder h : sidesEnum)
-			{
-				sides.add(Side.valueOf(h.getValue()));
-			}
-		}
-
-		if (sides != DEFAULT_SIDES && !sides.contains(side))
-		{
-			return;
-		}
-
-		@SuppressWarnings("unchecked")
-		List<String> requiredMods = (List<String>) data.getAnnotationInfo().get("requiredMods");
-
-		if (requiredMods != null && !requiredMods.isEmpty())
-		{
-			for (String s : requiredMods)
-			{
-				if (!isModLoaded(s.split(";")))
-				{
-					return;
-				}
-			}
-		}
-
-		Class<?> c = Class.forName(data.getObjectName());
-		MinecraftForge.EVENT_BUS.register(c);
-	}
-
-	private static boolean isModLoaded(String[] mods)
-	{
-		for (String mod : mods)
-		{
-			if (mod.startsWith("!"))
-			{
-				if (Loader.isModLoaded(mod.substring(1)))
-				{
-					return false;
-				}
-			}
-			else if (Loader.isModLoaded(mod))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	public void preInit(FMLPreInitializationEvent event)
 	{
 		FTBLib.LOGGER.info("Loading FTBLib, DevEnv:" + CommonUtils.DEV_ENV);
 		CommonUtils.init(event.getModConfigurationDirectory());
-		Side side = event.getSide();
-
-		for (ASMDataTable.ASMData data : event.getAsmData().getAll(EventHandler.class.getName()))
-		{
-			try
-			{
-				registerEventHandler(data, side);
-			}
-			catch (Exception ex)
-			{
-			}
-		}
-
 		FTBLibNetHandler.init();
 
 		new RegisterConfigValueProvidersEvent(CONFIG_VALUE_PROVIDERS::put).post();
