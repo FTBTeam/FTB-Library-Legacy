@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.command.CmdAddFakePlayer;
 import com.feed_the_beast.ftblib.command.CmdMySettings;
 import com.feed_the_beast.ftblib.command.CmdReload;
 import com.feed_the_beast.ftblib.command.team.CmdTeam;
-import com.feed_the_beast.ftblib.events.RegisterPermissionsEvent;
 import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
@@ -13,7 +12,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
@@ -68,12 +66,6 @@ public class FTBLib
 		Locale.setDefault(Locale.US);
 		FTBLibConfig.sync();
 		PROXY.preInit(event);
-	}
-
-	@Mod.EventHandler
-	public void onInit(FMLInitializationEvent event)
-	{
-		new RegisterPermissionsEvent().post();
 	}
 
 	@Mod.EventHandler

@@ -14,12 +14,14 @@ import java.util.List;
 
 public abstract class CmdBase extends CommandBase implements ICommandWithParent
 {
-	public enum Level
+	public static class Level
 	{
-		ALL(0, (server, sender, command) -> true),
-		OP_OR_SP(2, (server, sender, command) -> server.isSinglePlayer() || sender.canUseCommand(2, command.getName())),
-		OP(2, (server, sender, command) -> sender.canUseCommand(2, command.getName())),
-		SERVER(4, (server, sender, command) -> sender instanceof MinecraftServer);
+		public static final Level ALL = new Level(0, (server, sender, command) -> true);
+		public static final Level OP_OR_SP = new Level(2, (server, sender, command) -> server.isSinglePlayer() || sender.canUseCommand(2, command.getName()));
+		public static final Level OP = new Level(2, (server, sender, command) -> sender.canUseCommand(2, command.getName()));
+		public static final Level STRONG_OP_OR_SP = new Level(4, (server, sender, command) -> server.isSinglePlayer() || sender.canUseCommand(4, command.getName()));
+		public static final Level STRONG_OP = new Level(4, (server, sender, command) -> sender.canUseCommand(4, command.getName()));
+		public static final Level SERVER = new Level(4, (server, sender, command) -> sender instanceof MinecraftServer);
 
 		public interface PermissionChecker
 		{
@@ -29,7 +31,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 		public final int requiredPermissionLevel;
 		public final PermissionChecker permissionChecker;
 
-		Level(int l, PermissionChecker p)
+		public Level(int l, PermissionChecker p)
 		{
 			requiredPermissionLevel = l;
 			permissionChecker = p;
@@ -53,7 +55,7 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 	}
 
 	@Override
-	public final int getRequiredPermissionLevel()
+	public int getRequiredPermissionLevel()
 	{
 		return level.requiredPermissionLevel;
 	}
@@ -85,12 +87,6 @@ public abstract class CmdBase extends CommandBase implements ICommandWithParent
 		}
 
 		return super.getTabCompletions(server, sender, args, pos);
-	}
-
-	@Override
-	public boolean isUsernameIndex(String[] args, int index)
-	{
-		return false;
 	}
 
 	@Override

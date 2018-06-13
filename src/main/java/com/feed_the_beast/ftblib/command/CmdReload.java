@@ -45,7 +45,7 @@ public class CmdReload extends CmdBase
 
 	public CmdReload()
 	{
-		this(FTBLibConfig.general.replace_reload_command ? "reload" : "ftb_reload", Level.OP);
+		this(FTBLibConfig.general.replace_reload_command ? "reload" : "ftb_reload", Level.OP_OR_SP);
 	}
 
 	@Override

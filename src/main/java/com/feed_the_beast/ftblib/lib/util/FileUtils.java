@@ -219,24 +219,18 @@ public class FileUtils
 	{
 		if (b >= GB_D)
 		{
-			b /= GB_D;
-			b = (long) (b * 10D) / 10D;
-			return b + "GB";
+			return String.format("%.1fGB", b / GB_D);
 		}
 		else if (b >= MB_D)
 		{
-			b /= MB_D;
-			b = (long) (b * 10D) / 10D;
-			return b + "MB";
+			return String.format("%.1fMB", b / MB_D);
 		}
 		else if (b >= KB_D)
 		{
-			b /= KB_D;
-			b = (long) (b * 10D) / 10D;
-			return b + "KB";
+			return String.format("%.1fKB", b / KB_D);
 		}
 
-		return b + "B";
+		return ((long) b) + "B";
 	}
 
 	public static String getSizeString(File file)
