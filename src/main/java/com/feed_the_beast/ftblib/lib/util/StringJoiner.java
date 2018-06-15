@@ -31,6 +31,8 @@ public abstract class StringJoiner
 		{
 			case ',':
 				return WithChar.WITH_COMMA;
+			case '.':
+				return WithChar.WITH_PERIOD;
 			case ' ':
 				return WithChar.WITH_SPACE;
 			default:
@@ -65,6 +67,7 @@ public abstract class StringJoiner
 	private static class WithChar extends StringJoiner
 	{
 		private static final WithChar WITH_COMMA = new WithChar(',');
+		private static final WithChar WITH_PERIOD = new WithChar('.');
 		private static final WithChar WITH_SPACE = new WithChar(' ');
 
 		private final char c;
@@ -105,6 +108,15 @@ public abstract class StringJoiner
 
 	public String joinObjects(Object... objects)
 	{
+		if (objects.length == 0)
+		{
+			return "";
+		}
+		else if (objects.length == 1)
+		{
+			return String.valueOf(objects[0]);
+		}
+
 		StringBuilder builder = new StringBuilder();
 		boolean first = true;
 
@@ -125,11 +137,51 @@ public abstract class StringJoiner
 		return builder.toString();
 	}
 
-	public String join(Iterable objects)
+	public String joinStrings(String[] strings, int start, int end)
 	{
-		if (objects instanceof Collection && ((Collection) objects).isEmpty())
+		if (strings.length == 0)
 		{
 			return "";
+		}
+		else if (strings.length == 1 && start == 0)
+		{
+			return strings[0];
+		}
+
+		StringBuilder builder = new StringBuilder();
+
+		for (int i = start; i < end; i++)
+		{
+			if (i > start)
+			{
+				append(builder);
+			}
+
+			builder.append(strings[i]);
+		}
+
+		return builder.toString();
+	}
+
+	public String joinStrings(String[] objects)
+	{
+		return joinStrings(objects, 0, objects.length);
+	}
+
+	public String join(Iterable objects)
+	{
+		if (objects instanceof Collection)
+		{
+			Collection c = (Collection) objects;
+
+			if (c.isEmpty())
+			{
+				return "";
+			}
+			else if (c.size() == 1)
+			{
+				return String.valueOf(c.iterator().next());
+			}
 		}
 
 		StringBuilder builder = new StringBuilder();

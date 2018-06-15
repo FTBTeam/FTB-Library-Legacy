@@ -5,8 +5,6 @@ import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.command.client.CmdClientConfig;
 import com.feed_the_beast.ftblib.command.client.CmdSimulateButton;
-import com.feed_the_beast.ftblib.events.client.RegisterGuiProvidersEvent;
-import com.feed_the_beast.ftblib.events.player.IGuiProvider;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.client.ParticleColoredDust;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
@@ -26,7 +24,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -40,7 +37,6 @@ import java.util.Map;
 public class FTBLibClient extends FTBLibCommon implements IResourceManagerReloadListener
 {
 	public static final List<SidebarButtonGroup> SIDEBAR_BUTTON_GROUPS = new ArrayList<>();
-	private static final Map<ResourceLocation, IGuiProvider> GUI_PROVIDERS = new HashMap<>();
 	public static final Map<String, ClientConfig> CLIENT_CONFIG_MAP = new HashMap<>();
 
 	@Override
@@ -48,7 +44,6 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 	{
 		super.preInit(event);
 		FTBLibClientConfig.sync();
-		new RegisterGuiProvidersEvent(GUI_PROVIDERS::put).post();
 		ClientUtils.localPlayerHead = new PlayerHeadIcon(ClientUtils.MC.getSession().getProfile().getId());
 		((IReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(this);
 		ChunkSelectorMap.setMap(new BuiltinChunkMap());
@@ -238,12 +233,6 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 	public long getWorldTime()
 	{
 		return ClientUtils.MC.world == null ? super.getWorldTime() : ClientUtils.MC.world.getTotalWorldTime();
-	}
-
-	@Nullable
-	public static IGuiProvider getGui(ResourceLocation id)
-	{
-		return GUI_PROVIDERS.get(id);
 	}
 
 	public static void saveSidebarButtonConfig()

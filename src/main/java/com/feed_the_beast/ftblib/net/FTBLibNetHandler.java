@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.net;
 
-import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 
 /**
@@ -8,14 +8,14 @@ import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
  */
 public class FTBLibNetHandler
 {
-	static final NetworkWrapper GENERAL = NetworkWrapper.newWrapper(FTBLib.MOD_ID);
+	static final NetworkWrapper GENERAL = NetworkWrapper.newWrapper("ftblib");
 	static final NetworkWrapper EDIT_CONFIG = NetworkWrapper.newWrapper("ftblib_edit_config");
 	static final NetworkWrapper MY_TEAM = NetworkWrapper.newWrapper("ftblib_my_team");
 
 	public static void init()
 	{
 		GENERAL.register(new MessageSyncData());
-		GENERAL.register(new MessageOpenGui());
+		GENERAL.register((MessageToClient) null); //TODO: Replace me
 		GENERAL.register(new MessageCloseGui());
 		GENERAL.register(new MessageAdminPanelGui());
 		GENERAL.register(new MessageAdminPanelGuiResponse());

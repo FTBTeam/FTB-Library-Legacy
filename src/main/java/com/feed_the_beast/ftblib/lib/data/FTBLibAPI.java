@@ -2,33 +2,29 @@ package com.feed_the_beast.ftblib.lib.data;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibCommon;
+import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.FTBLibNotifications;
+import com.feed_the_beast.ftblib.events.IReloadHandler;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
-import com.feed_the_beast.ftblib.events.player.IContainerProvider;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
-import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftblib.net.MessageCloseGui;
 import com.feed_the_beast.ftblib.net.MessageEditConfig;
-import com.feed_the_beast.ftblib.net.MessageOpenGui;
 import com.feed_the_beast.ftblib.net.MessageSyncData;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nullable;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -44,6 +40,27 @@ public class FTBLibAPI
 
 		HashSet<ResourceLocation> failed = new HashSet<>();
 		ServerReloadEvent event = new ServerReloadEvent(universe, sender, type, id, failed);
+
+		for (Map.Entry<ResourceLocation, IReloadHandler> entry : FTBLibCommon.RELOAD_IDS.entrySet())
+		{
+			try
+			{
+				if (event.reload(entry.getKey()) && !entry.getValue().onReload(event))
+				{
+					event.failedToReload(entry.getKey());
+				}
+			}
+			catch (Exception ex)
+			{
+				event.failedToReload(entry.getKey());
+
+				if (FTBLibConfig.debugging.print_more_errors)
+				{
+					ex.printStackTrace();
+				}
+			}
+		}
+
 		event.post();
 
 		for (EntityPlayerMP player : universe.server.getPlayerList().getPlayers())
@@ -86,35 +103,6 @@ public class FTBLibAPI
 
 		universe.server.reload();
 		FTBLib.LOGGER.info("Reloaded server in " + millis);
-	}
-
-	public static void openGui(ResourceLocation guiId, EntityPlayerMP player, BlockPos pos, @Nullable NBTTagCompound data)
-	{
-		if (ServerUtils.isFake(player))
-		{
-			return;
-		}
-
-		IContainerProvider containerProvider = FTBLibCommon.GUI_CONTAINER_PROVIDERS.get(guiId);
-
-		if (containerProvider == null)
-		{
-			return;
-		}
-
-		Container c = containerProvider.getContainer(player, pos, data);
-
-		player.getNextWindowId();
-		player.closeContainer();
-
-		if (c != null)
-		{
-			player.openContainer = c;
-		}
-
-		player.openContainer.windowId = player.currentWindowId;
-		player.openContainer.addListener(player);
-		new MessageOpenGui(guiId, pos, data, player.currentWindowId).sendTo(player);
 	}
 
 	public static void editServerConfig(EntityPlayerMP player, ConfigGroup group, IConfigCallback callback)

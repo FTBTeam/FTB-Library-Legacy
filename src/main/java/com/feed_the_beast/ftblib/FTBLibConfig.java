@@ -78,9 +78,10 @@ public class FTBLibConfig
 		public boolean log_events = false;
 	}
 
-	public static void sync()
+	public static boolean sync()
 	{
 		ConfigManager.sync(FTBLib.MOD_ID, Config.Type.INSTANCE);
+		return true;
 	}
 
 	@SubscribeEvent

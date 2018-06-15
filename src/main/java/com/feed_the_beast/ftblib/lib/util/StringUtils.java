@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
+import it.unimi.dsi.fastutil.chars.Char2ObjectOpenHashMap;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
@@ -50,7 +51,7 @@ public class StringUtils
 		@Override
 		public ITextComponent getDisplayName(@Nullable ICommandSender sender, TextFormatting value)
 		{
-			return StringUtils.color(new TextComponentString(getName(value)), value);
+			return color(new TextComponentString(getName(value)), value);
 		}
 	};
 
@@ -73,6 +74,16 @@ public class StringUtils
 			TextFormatting.YELLOW,
 			TextFormatting.WHITE
 	);
+
+	public static final Char2ObjectOpenHashMap<TextFormatting> CODE_TO_FORMATTING = new Char2ObjectOpenHashMap<>();
+
+	static
+	{
+		for (TextFormatting formatting : TEXT_FORMATTING_NAME_MAP.values)
+		{
+			CODE_TO_FORMATTING.put(formatting.toString().charAt(1), formatting);
+		}
+	}
 
 	public static String emptyIfNull(@Nullable Object o)
 	{

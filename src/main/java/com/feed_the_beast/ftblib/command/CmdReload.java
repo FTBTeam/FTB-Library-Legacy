@@ -33,7 +33,7 @@ public class CmdReload extends CmdBase
 		tab = new HashSet<>();
 		tab.add("*");
 
-		for (ResourceLocation r : FTBLibCommon.RELOAD_IDS)
+		for (ResourceLocation r : FTBLibCommon.RELOAD_IDS.keySet())
 		{
 			tab.add(r.toString());
 			tab.add(r.getResourceDomain() + ":*");
