@@ -19,20 +19,12 @@ public class TextComponentParser
 		return new TextComponentParser(text, substitutes).parse();
 	}
 
-	private static final Style ERROR_STYLE = new Style();
-
-	static
-	{
-		ERROR_STYLE.setColor(TextFormatting.RED);
-	}
-
 	private String text;
 	private Function<String, ITextComponent> substitutes;
 
 	private ITextComponent component;
 	private StringBuilder builder;
 	private Style style;
-	private boolean sub;
 
 	private TextComponentParser(String txt, @Nullable Function<String, ITextComponent> sub)
 	{
@@ -67,7 +59,7 @@ public class TextComponentParser
 		component = new TextComponentString("");
 		style = new Style();
 		builder = new StringBuilder();
-		sub = false;
+		boolean sub = false;
 
 		for (int i = 0; i < c.length; i++)
 		{
@@ -185,8 +177,7 @@ public class TextComponentParser
 		}
 		else
 		{
-			component1 = new TextComponentString(string);
-			component1.getStyle().setColor(TextFormatting.RED);
+			throw new IllegalArgumentException("Invalid formatting! Unknown substitute " + string);
 		}
 
 		component.appendSibling(component1);
