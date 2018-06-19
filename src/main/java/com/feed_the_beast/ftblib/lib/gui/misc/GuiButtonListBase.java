@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.gui.TextBox;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
+import net.minecraft.client.resources.I18n;
 
 /**
  * @author LatvianModder
@@ -105,6 +106,7 @@ public abstract class GuiButtonListBase extends GuiBase
 			}
 		};
 
+		textBox.ghostText = I18n.format("gui.search");
 		hasSearchBox = false;
 	}
 

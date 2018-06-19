@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.TextFormatting;
 import org.lwjgl.input.Keyboard;
 
 public class TextBox extends Widget
@@ -28,6 +29,7 @@ public class TextBox extends Widget
 	public TextBox(Panel panel)
 	{
 		super(panel);
+		setText("", false);
 	}
 
 	public final boolean isFocused()
@@ -463,15 +465,14 @@ public class TextBox extends Widget
 		int ax = getAX();
 		int ay = getAY();
 		getIcon().draw(ax, ay, width, height);
-		String textToDraw = (!isFocused() && text.isEmpty()) ? ghostText : text;
+		boolean drawGhostText = !isFocused() && text.isEmpty() && !ghostText.isEmpty();
+		String textToDraw = drawGhostText ? (TextFormatting.ITALIC + ghostText) : text;
 		GuiHelper.pushScissor(getScreen(), ax, ay, width, height);
 
-		Color4I col = validText ? textColor.isEmpty() ? getTheme().getContentColor(WidgetType.NORMAL) : textColor : Color4I.RED;
+		Color4I col = validText ? (textColor.isEmpty() ? getTheme().getContentColor(WidgetType.NORMAL) : textColor).withAlpha(drawGhostText ? 120 : 255) : Color4I.RED;
 		int j = cursorPosition - lineScrollOffset;
 		int k = selectionEnd - lineScrollOffset;
 		String s = trimStringToWidth(textToDraw.substring(lineScrollOffset), width, false);
-		boolean flag = j >= 0 && j <= s.length();
-		boolean flag1 = isFocused() && flag && (Minecraft.getSystemTime() % 1000L > 500L);
 		int textX = ax + 4;
 		int textY = ay + (height - 8) / 2;
 		int textX1 = textX;
@@ -483,29 +484,29 @@ public class TextBox extends Widget
 
 		if (!s.isEmpty())
 		{
-			String s1 = flag ? s.substring(0, j) : s;
+			String s1 = j > 0 && j <= s.length() ? s.substring(0, j) : s;
 			textX1 = drawString(s1, textX, textY, col, 0);
 		}
 
 		boolean drawCursor = cursorPosition < textToDraw.length() || textToDraw.length() >= charLimit;
 		int cursorX = textX1;
 
-		if (!flag)
+		if (j <= 0 || j > s.length())
 		{
 			cursorX = j > 0 ? textX + width : textX;
 		}
 		else if (drawCursor)
 		{
 			cursorX = textX1 - 1;
-			//--textX1; //why?
+			//--textX1;
 		}
 
-		if (!s.isEmpty() && flag && j < s.length())
+		if (j > 0 && j < s.length())
 		{
 			drawString(s.substring(j), textX1, textY, col, 0);
 		}
 
-		if (flag1)
+		if (j >= 0 && j <= s.length() && isFocused() && Minecraft.getSystemTime() % 1000L > 500L)
 		{
 			if (drawCursor)
 			{
