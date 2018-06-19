@@ -319,7 +319,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		}
 	}
 
-	public EnumTeamStatus getFakePlayerStatus()
+	public EnumTeamStatus getFakePlayerStatus(ForgePlayer player)
 	{
 		return fakePlayerStatus.getValue();
 	}
@@ -386,7 +386,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 		if (player.isFake())
 		{
-			return getFakePlayerStatus().isEqualOrGreaterThan(status);
+			return getFakePlayerStatus(player).isEqualOrGreaterThan(status);
 		}
 
 		switch (status)

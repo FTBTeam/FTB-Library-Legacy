@@ -3,15 +3,16 @@ package com.feed_the_beast.ftblib.lib;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.ItemStack;
+import net.minecraft.server.management.PlayerList;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -19,14 +20,9 @@ import java.util.Set;
  */
 public final class ATHelper
 {
-	public static Slot addSlot(Container container, Slot slot)
+	public static List<IContainerListener> getContainerListeners(Container container)
 	{
-		return container.addSlotToContainer(slot);
-	}
-
-	public static boolean mergeItemStack(Container container, ItemStack stack, int startIndex, int endIndex, boolean reverseDirection)
-	{
-		return container.mergeItemStack(stack, startIndex, endIndex, reverseDirection);
+		return container.listeners;
 	}
 
 	public static TextFormatting getTextFormattingFromDyeColor(EnumDyeColor color)
@@ -42,6 +38,11 @@ public final class ATHelper
 	public static Set<ICommand> getCommandSet(CommandHandler handler)
 	{
 		return handler.commandSet;
+	}
+
+	public static boolean areCommandsAllowedForAll(PlayerList playerList)
+	{
+		return playerList.commandsAllowedForAll;
 	}
 
 	@Nullable

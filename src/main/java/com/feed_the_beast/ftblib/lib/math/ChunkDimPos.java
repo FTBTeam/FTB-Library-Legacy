@@ -30,7 +30,7 @@ public final class ChunkDimPos
 
 	public ChunkDimPos(Entity entity)
 	{
-		this(MathUtils.chunk(entity.posX), MathUtils.chunk(entity.posZ), entity.dimension);
+		this(MathUtils.chunk(entity.posX), MathUtils.chunk(entity.posZ), entity.world.provider.getDimension());
 	}
 
 	public boolean equals(Object o)

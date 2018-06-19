@@ -11,6 +11,7 @@ import com.feed_the_beast.ftblib.events.universe.UniverseClearCacheEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseClosedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseLoadedEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
+import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
@@ -212,6 +213,17 @@ public class Universe implements IHasCache
 					piterator.remove();
 				}
 			}
+
+			if (universe.server.isSinglePlayer())
+			{
+				boolean cheats = ATHelper.areCommandsAllowedForAll(universe.server.getPlayerList());
+
+				if (universe.prevCheats != cheats)
+				{
+					universe.prevCheats = cheats;
+					universe.clearCache();
+				}
+			}
 		}
 	}
 
@@ -233,6 +245,7 @@ public class Universe implements IHasCache
 	private final List<ScheduledTask> scheduledTaskQueue;
 	private final List<PersistentScheduledTask> persistentScheduledTaskQueue;
 	public Ticks ticks;
+	private boolean prevCheats = false;
 
 	@SuppressWarnings("ConstantConditions")
 	public Universe(WorldServer w)
@@ -719,7 +732,7 @@ public class Universe implements IHasCache
 	@Nullable
 	public ForgePlayer getPlayer(@Nullable UUID id)
 	{
-		if (id == null || id.getLeastSignificantBits() == 0L && id.getMostSignificantBits() == 0L)
+		if (id == null)
 		{
 			return null;
 		}

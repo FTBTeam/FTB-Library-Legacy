@@ -44,7 +44,7 @@ public class TextComponentParser
 
 		for (char c1 : c)
 		{
-			if (c1 == '$' || c1 == '&' || c1 == StringUtils.FORMATTING_CHAR)
+			if (c1 == '{' || c1 == '&' || c1 == StringUtils.FORMATTING_CHAR)
 			{
 				hasSpecialCodes = true;
 				break;
@@ -66,10 +66,16 @@ public class TextComponentParser
 			boolean escape = i > 0 && c[i - 1] == '\\';
 			boolean end = i == c.length - 1;
 
-			if (sub && (end || !StringUtils.isTextChar(c[i], true)))
+			if (sub && (end || c[i] == '{' || c[i] == '}'))
 			{
+				if (c[i] == '{')
+				{
+					throw new IllegalArgumentException("Invalid formatting! Can't nest multiple substitutes!");
+				}
+
 				finishPart();
 				sub = false;
+				continue;
 			}
 
 			if (!escape)
@@ -123,24 +129,23 @@ public class TextComponentParser
 
 					continue;
 				}
-				else if (c[i] == '$')
+				else if (c[i] == '{')
 				{
 					finishPart();
 
 					if (end)
 					{
-						throw new IllegalArgumentException("Invalid formatting! Can't end string with $!");
+						throw new IllegalArgumentException("Invalid formatting! Can't end string with {!");
 					}
 
 					sub = true;
 				}
 			}
-			else if (c[i] == ' ')
-			{
-				continue;
-			}
 
-			builder.append(c[i]);
+			if (c[i] != '\\' || escape)
+			{
+				builder.append(c[i]);
+			}
 		}
 
 		finishPart();
@@ -156,7 +161,7 @@ public class TextComponentParser
 		{
 			return;
 		}
-		else if (string.length() < 2 || string.charAt(0) != '$')
+		else if (string.length() < 2 || string.charAt(0) != '{')
 		{
 			ITextComponent component1 = new TextComponentString(string);
 			component1.setStyle(style.createShallowCopy());

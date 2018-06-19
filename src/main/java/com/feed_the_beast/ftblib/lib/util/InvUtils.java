@@ -8,9 +8,9 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -46,115 +46,6 @@ public class InvUtils
 	public static NBTTagCompound nullIfEmpty(@Nullable NBTTagCompound nbt)
 	{
 		return nbt == null || nbt.hasNoTags() ? null : nbt;
-	}
-
-	public static void addPlayerSlots(Container container, EntityPlayer player, int posX, int posY, boolean ignoreCurrent)
-	{
-		if (player.inventory == null)
-		{
-			return;
-		}
-
-		for (int y = 0; y < 3; y++)
-		{
-			for (int x = 0; x < 9; x++)
-			{
-				ATHelper.addSlot(container, new Slot(player.inventory, x + y * 9 + 9, posX + x * 18, posY + y * 18));
-			}
-		}
-
-		int i = ignoreCurrent ? player.inventory.currentItem : -1;
-
-		for (int x = 0; x < 9; x++)
-		{
-			if (x != i)
-			{
-				ATHelper.addSlot(container, new Slot(player.inventory, x, posX + x * 18, posY + 58));
-			}
-			else
-			{
-				ATHelper.addSlot(container, new Slot(player.inventory, x, posX + x * 18, posY + 58)
-				{
-					@Override
-					public boolean canTakeStack(EntityPlayer ep)
-					{
-						return false;
-					}
-				});
-			}
-		}
-	}
-
-	public static ItemStack transferStackInSlot(Container container, int index, int nonPlayerSlots)
-	{
-		if (nonPlayerSlots <= 0)
-		{
-			return ItemStack.EMPTY;
-		}
-
-		ItemStack is = ItemStack.EMPTY;
-		Slot slot = container.inventorySlots.get(index);
-
-		if (slot != null && slot.getHasStack())
-		{
-			ItemStack is1 = slot.getStack();
-			is = is1.copy();
-
-			if (index < nonPlayerSlots)
-			{
-				if (!ATHelper.mergeItemStack(container, is1, nonPlayerSlots, container.inventorySlots.size(), true))
-				{
-					return ItemStack.EMPTY;
-				}
-			}
-			else if (!ATHelper.mergeItemStack(container, is1, 0, nonPlayerSlots, false))
-			{
-				return ItemStack.EMPTY;
-			}
-
-			if (is1.isEmpty())
-			{
-				slot.putStack(ItemStack.EMPTY);
-			}
-			else
-			{
-				slot.onSlotChanged();
-			}
-		}
-
-		return is;
-	}
-
-	public static ItemStack getAndSplit(IItemHandlerModifiable itemHandler, int index, int amount)
-	{
-		if (index >= 0 && index < itemHandler.getSlots() && !itemHandler.getStackInSlot(index).isEmpty() && amount > 0)
-		{
-			ItemStack itemstack = itemHandler.getStackInSlot(index).splitStack(amount);
-
-			if (itemHandler.getStackInSlot(index).isEmpty())
-			{
-				itemHandler.setStackInSlot(index, ItemStack.EMPTY);
-			}
-
-			return itemstack;
-		}
-
-		return ItemStack.EMPTY;
-	}
-
-	public static ItemStack getAndRemove(IItemHandlerModifiable itemHandler, int index)
-	{
-		ItemStack itemStack = itemHandler.getStackInSlot(index);
-		itemHandler.setStackInSlot(index, ItemStack.EMPTY);
-		return itemStack;
-	}
-
-	public static void clear(IItemHandlerModifiable itemHandler)
-	{
-		for (int i = 0; i < itemHandler.getSlots(); i++)
-		{
-			itemHandler.setStackInSlot(i, ItemStack.EMPTY);
-		}
 	}
 
 	public static void dropItem(World w, double x, double y, double z, double mx, double my, double mz, ItemStack item, int delay)
@@ -391,5 +282,25 @@ public class InvUtils
 		}
 
 		return false;
+	}
+
+	public static void forceUpdate(Container container)
+	{
+		for (int i = 0; i < container.inventorySlots.size(); ++i)
+		{
+			ItemStack itemstack = container.inventorySlots.get(i).getStack();
+			ItemStack itemstack1 = itemstack.isEmpty() ? ItemStack.EMPTY : itemstack.copy();
+			container.inventoryItemStacks.set(i, itemstack1);
+
+			for (IContainerListener listener : ATHelper.getContainerListeners(container))
+			{
+				listener.sendSlotContents(container, i, itemstack1);
+			}
+		}
+	}
+
+	public static void forceUpdate(EntityPlayer player)
+	{
+		forceUpdate(player.inventoryContainer);
 	}
 }
