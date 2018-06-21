@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.net;
 
-import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 
 /**
@@ -15,7 +14,7 @@ public class FTBLibNetHandler
 	public static void init()
 	{
 		GENERAL.register(new MessageSyncData());
-		GENERAL.register((MessageToClient) null); //TODO: Replace me
+		GENERAL.registerBlank();
 		GENERAL.register(new MessageCloseGui());
 		GENERAL.register(new MessageAdminPanelGui());
 		GENERAL.register(new MessageAdminPanelGuiResponse());

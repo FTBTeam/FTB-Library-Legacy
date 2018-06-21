@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleChannelHandlerWrap
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleIndexedCodec;
 import net.minecraftforge.fml.relauncher.Side;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 
 public class NetworkWrapper // SimpleNetworkWrapper
@@ -14,7 +13,7 @@ public class NetworkWrapper // SimpleNetworkWrapper
 	private final SimpleIndexedCodec packetCodec;
 	private final FMLEmbeddedChannel serverChannels;
 	private final FMLEmbeddedChannel clientChannels;
-	private int nextDiscriminator = 1;
+	private int nextDiscriminator = 0;
 
 	private NetworkWrapper(String s)
 	{
@@ -39,33 +38,30 @@ public class NetworkWrapper // SimpleNetworkWrapper
 		return s.isServer() ? serverChannels : clientChannels;
 	}
 
-	@SuppressWarnings("unchecked")
-	public void register(@Nullable MessageToClient m)
+	public void registerBlank()
 	{
-		if (m != null)
-		{
-			Class<? extends MessageToClient> clazz = m.getClass();
-			packetCodec.addDiscriminator(nextDiscriminator, clazz);
-			FMLEmbeddedChannel channel = getChannel(Side.CLIENT);
-			String type = channel.findChannelHandlerNameForType(SimpleIndexedCodec.class);
-			channel.pipeline().addAfter(type, clazz.getName(), new SimpleChannelHandlerWrapper(MessageToClientHandler.INSTANCE, Side.CLIENT, clazz));
-		}
-
 		nextDiscriminator++;
 	}
 
 	@SuppressWarnings("unchecked")
-	public void register(@Nullable MessageToServer m)
+	public void register(MessageToClient m)
 	{
-		if (m != null)
-		{
-			Class<? extends MessageToServer> clazz = m.getClass();
-			packetCodec.addDiscriminator(nextDiscriminator, clazz);
-			FMLEmbeddedChannel channel = getChannel(Side.SERVER);
-			String type = channel.findChannelHandlerNameForType(SimpleIndexedCodec.class);
-			channel.pipeline().addAfter(type, clazz.getName(), new SimpleChannelHandlerWrapper(MessageToServerHandler.INSTANCE, Side.SERVER, clazz));
-		}
+		registerBlank();
+		Class<? extends MessageToClient> clazz = m.getClass();
+		packetCodec.addDiscriminator(nextDiscriminator, clazz);
+		FMLEmbeddedChannel channel = getChannel(Side.CLIENT);
+		String type = channel.findChannelHandlerNameForType(SimpleIndexedCodec.class);
+		channel.pipeline().addAfter(type, clazz.getName(), new SimpleChannelHandlerWrapper(MessageToClientHandler.INSTANCE, Side.CLIENT, clazz));
+	}
 
-		nextDiscriminator++;
+	@SuppressWarnings("unchecked")
+	public void register(MessageToServer m)
+	{
+		registerBlank();
+		Class<? extends MessageToServer> clazz = m.getClass();
+		packetCodec.addDiscriminator(nextDiscriminator, clazz);
+		FMLEmbeddedChannel channel = getChannel(Side.SERVER);
+		String type = channel.findChannelHandlerNameForType(SimpleIndexedCodec.class);
+		channel.pipeline().addAfter(type, clazz.getName(), new SimpleChannelHandlerWrapper(MessageToServerHandler.INSTANCE, Side.SERVER, clazz));
 	}
 }
