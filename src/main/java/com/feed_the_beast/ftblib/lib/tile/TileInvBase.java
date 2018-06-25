@@ -25,7 +25,6 @@ public class TileInvBase extends TileBase
 			@Override
 			protected void onContentsChanged(int slot)
 			{
-				super.onContentsChanged(slot);
 				TileInvBase.this.markDirty();
 			}
 		};

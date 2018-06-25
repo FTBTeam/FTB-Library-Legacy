@@ -19,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -125,9 +126,9 @@ public class PlayerHeadIcon extends ImageIcon
 
 	public final UUID uuid;
 
-	public PlayerHeadIcon(UUID id)
+	public PlayerHeadIcon(@Nullable UUID id)
 	{
-		super(new ResourceLocation("skins/" + StringUtils.fromUUID(id)));
+		super(id == null ? DefaultPlayerSkin.getDefaultSkinLegacy() : new ResourceLocation("skins/" + StringUtils.fromUUID(id)));
 		uuid = id;
 	}
 

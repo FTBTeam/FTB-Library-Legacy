@@ -13,7 +13,6 @@ import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author LatvianModder
@@ -164,10 +163,7 @@ public abstract class Icon
 					{
 					}
 				case "player":
-				{
-					UUID uuid = StringUtils.fromString(ida[1]);
-					return uuid != null ? new PlayerHeadIcon(uuid) : EMPTY;
-				}
+					return new PlayerHeadIcon(StringUtils.fromString(ida[1]));
 			}
 		}
 

@@ -236,7 +236,7 @@ public class InvUtils
 
 	public static boolean stacksAreEqual(ItemStack stackA, ItemStack stackB)
 	{
-		return stackA.getItem() == stackB.getItem() && stackA.getMetadata() == stackB.getMetadata() && Objects.equals(getTag(stackA), getTag(stackB));
+		return stackA == stackB || stackA.getItem() == stackB.getItem() && stackA.getMetadata() == stackB.getMetadata() && Objects.equals(getTag(stackA), getTag(stackB));
 	}
 
 	public static Set<String> getOreNames(@Nullable Set<String> l, ItemStack is)
@@ -302,5 +302,20 @@ public class InvUtils
 	public static void forceUpdate(EntityPlayer player)
 	{
 		forceUpdate(player.inventoryContainer);
+	}
+
+	public static boolean hasItems(IItemHandler handler)
+	{
+		int s = handler.getSlots();
+
+		for (int i = 0; i < s; i++)
+		{
+			if (!handler.getStackInSlot(i).isEmpty())
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }
