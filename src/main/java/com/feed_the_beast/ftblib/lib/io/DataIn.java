@@ -17,6 +17,8 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTSizeTracker;
@@ -244,6 +246,29 @@ public class DataIn
 	}
 
 	public ItemStack readItemStack()
+	{
+		String id = readString();
+
+		if (id.isEmpty())
+		{
+			return ItemStack.EMPTY;
+		}
+
+		Item item = Item.getByNameOrId(id);
+
+		if (item == null || item == Items.AIR)
+		{
+			return ItemStack.EMPTY;
+		}
+
+		int size = readByte();
+		int meta = readShort();
+		ItemStack stack = new ItemStack(item, size, meta);
+		stack.getItem().readNBTShareTag(stack, readNBT());
+		return stack;
+	}
+
+	public ItemStack readItemStackFull()
 	{
 		NBTTagCompound nbt = readNBT();
 		return nbt == null ? ItemStack.EMPTY : new ItemStack(nbt);

@@ -76,22 +76,22 @@ public class InvUtils
 		dropItem(e.world, e.posX, e.posY, e.posZ, item, 0);
 	}
 
-	public static void giveItem(EntityPlayer ep, ItemStack item)
+	public static void giveItem(EntityPlayer player, ItemStack item)
 	{
 		if (!item.isEmpty())
 		{
-			if (ep.inventory.addItemStackToInventory(item))
+			if (player.inventory.addItemStackToInventory(item))
 			{
-				ep.inventory.markDirty();
+				player.inventory.markDirty();
 
-				if (ep.openContainer != null)
+				if (player.openContainer != null)
 				{
-					ep.openContainer.detectAndSendChanges();
+					player.openContainer.detectAndSendChanges();
 				}
 			}
 			else
 			{
-				dropItem(ep, item);
+				dropItem(player, item);
 			}
 		}
 	}

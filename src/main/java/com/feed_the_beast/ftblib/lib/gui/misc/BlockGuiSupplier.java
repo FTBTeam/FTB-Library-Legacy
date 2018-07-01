@@ -5,6 +5,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
+
 /**
  * @author LatvianModder
  */
@@ -24,6 +26,7 @@ public abstract class BlockGuiSupplier
 		player.openGui(mod, id, player.world, pos.getX(), pos.getY(), pos.getZ());
 	}
 
+	@Nullable
 	public abstract Container getContainer(EntityPlayer player, TileEntity tileEntity);
 
 	public abstract Object getGui(Container container);

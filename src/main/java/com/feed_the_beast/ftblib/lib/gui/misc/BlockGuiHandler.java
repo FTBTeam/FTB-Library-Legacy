@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.lib.gui.misc;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -52,7 +53,8 @@ public class BlockGuiHandler implements IGuiHandler
 
 			if (tileEntity != null)
 			{
-				return supplier.getGui(supplier.getContainer(player, tileEntity));
+				Container container = supplier.getContainer(player, tileEntity);
+				return container == null ? null : supplier.getGui(container);
 			}
 		}
 

@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.item;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -196,11 +197,16 @@ public final class ItemEntry
 		return stack1;
 	}
 
-	public JsonObject toJson()
+	public JsonElement toJson()
 	{
-		JsonObject json = new JsonObject();
-
 		ResourceLocation id = Item.REGISTRY.getNameForObject(item);
+
+		if (nbt == null && caps == null && (metadata == 0 || !item.getHasSubtypes()))
+		{
+			return new JsonPrimitive(id == null ? "minecraft:air" : id.toString());
+		}
+
+		JsonObject json = new JsonObject();
 		json.addProperty("item", id == null ? "minecraft:air" : id.toString());
 
 		if (item.getHasSubtypes())

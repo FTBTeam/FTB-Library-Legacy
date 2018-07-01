@@ -57,7 +57,15 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 		public void onClicked(MouseButton button)
 		{
 			GuiHelper.playClickSound();
-			sidebarButton.setConfig(!sidebarButton.getConfig());
+
+			if (isCtrlKeyDown())
+			{
+				sidebarButton.onClicked(isShiftKeyDown());
+			}
+			else
+			{
+				sidebarButton.setConfig(!sidebarButton.getConfig());
+			}
 		}
 	}
 

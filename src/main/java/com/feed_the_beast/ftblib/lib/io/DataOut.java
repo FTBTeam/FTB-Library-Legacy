@@ -208,6 +208,20 @@ public class DataOut
 
 	public void writeItemStack(ItemStack stack)
 	{
+		if (stack.isEmpty() || stack.getItem().getRegistryName() == null)
+		{
+			writeString("");
+			return;
+		}
+
+		writeString(stack.getItem().getRegistryName().toString());
+		writeByte(stack.getCount());
+		writeShort(stack.getMetadata());
+		writeNBT(stack.getItem().isDamageable() || stack.getItem().getShareTag() ? stack.getItem().getNBTShareTag(stack) : null);
+	}
+
+	public void writeItemStackFull(ItemStack stack)
+	{
 		writeNBT(stack.isEmpty() ? null : stack.serializeNBT());
 	}
 
