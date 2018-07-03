@@ -270,14 +270,11 @@ public class InvUtils
 	{
 		int[] ai = OreDictionary.getOreIDs(is);
 
-		if (ai.length > 0)
+		for (int i : ai)
 		{
-			for (int i : ai)
+			if (s.equals(OreDictionary.getOreName(i)))
 			{
-				if (s.equals(OreDictionary.getOreName(i)))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 

@@ -47,7 +47,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	public final Universe universe;
 	public final TeamType type;
 	public ForgePlayer owner;
-	public final NBTDataStorage dataStorage;
+	private final NBTDataStorage dataStorage;
 	private final ConfigString title;
 	private final ConfigString desc;
 	private final ConfigEnum<EnumTeamColor> color;
@@ -204,9 +204,9 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		universe.checkSaving = true;
 	}
 
-	public <T extends INBTSerializable<NBTTagCompound>> T getData(String id)
+	public NBTDataStorage getData()
 	{
-		return dataStorage.get(id);
+		return dataStorage;
 	}
 
 	public boolean hasOwner()
@@ -685,5 +685,15 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		}
 
 		return false;
+	}
+
+	public File getDataFile(String ext)
+	{
+		if (ext.isEmpty())
+		{
+			return new File(universe.getWorldDirectory(), "data/ftb_lib/teams/" + getName() + ".dat");
+		}
+
+		return new File(universe.getWorldDirectory(), "data/ftb_lib/teams/" + getName() + "." + ext + ".dat");
 	}
 }

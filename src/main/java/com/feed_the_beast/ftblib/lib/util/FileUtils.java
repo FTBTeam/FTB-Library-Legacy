@@ -118,12 +118,21 @@ public class FileUtils
 	{
 		try
 		{
-			CompressedStreamTools.write(tag, FileUtils.newFile(file));
+			CompressedStreamTools.writeCompressed(tag, new FileOutputStream(FileUtils.newFile(file)));
 		}
 		catch (Exception ex)
 		{
 			ex.printStackTrace();
 		}
+	}
+
+	public static void writeNBTSafe(File file, NBTTagCompound tag)
+	{
+		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
+		{
+			writeNBT(file, tag);
+			return false;
+		});
 	}
 
 	@Nullable
@@ -134,22 +143,21 @@ public class FileUtils
 			return null;
 		}
 
-		try
+		try (InputStream stream = new FileInputStream(file))
 		{
-			return CompressedStreamTools.read(file);
+			return CompressedStreamTools.readCompressed(stream);
 		}
 		catch (Exception ex)
 		{
-			try (InputStream stream = new FileInputStream(file))
+			try
 			{
-				return CompressedStreamTools.readCompressed(stream);
+				return CompressedStreamTools.read(file);
 			}
 			catch (Exception ex1)
 			{
+				return null;
 			}
 		}
-
-		return null;
 	}
 
 	public static void downloadFile(URL url, File out, Proxy proxy) throws Exception

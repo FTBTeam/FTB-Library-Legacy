@@ -1,26 +1,25 @@
 package com.feed_the_beast.ftblib.events.player;
 
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.INBTSerializable;
+import com.feed_the_beast.ftblib.lib.data.PlayerData;
 
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
  */
 public class ForgePlayerDataEvent extends ForgePlayerEvent
 {
-	private final BiConsumer<String, INBTSerializable<NBTTagCompound>> callback;
+	private final Consumer<PlayerData> callback;
 
-	public ForgePlayerDataEvent(ForgePlayer player, BiConsumer<String, INBTSerializable<NBTTagCompound>> c)
+	public ForgePlayerDataEvent(ForgePlayer player, Consumer<PlayerData> c)
 	{
 		super(player);
 		callback = c;
 	}
 
-	public void register(String id, INBTSerializable<NBTTagCompound> data)
+	public void register(PlayerData data)
 	{
-		callback.accept(id, data);
+		callback.accept(data);
 	}
 }

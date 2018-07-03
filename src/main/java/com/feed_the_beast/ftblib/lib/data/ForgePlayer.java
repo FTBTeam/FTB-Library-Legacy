@@ -56,7 +56,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	private final UUID playerId;
 	private String playerName;
 	public final HashSet<ResourceLocation> firstLogin;
-	public final NBTDataStorage dataStorage;
+	private final NBTDataStorage dataStorage;
 	public ForgeTeam team;
 	private final ConfigBoolean hideTeamNotification;
 	public EntityPlayerMP entityPlayer;
@@ -425,5 +425,15 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		}
 
 		return false;
+	}
+
+	public File getDataFile(String ext)
+	{
+		if (ext.isEmpty())
+		{
+			return new File(team.universe.getWorldDirectory(), "data/ftb_lib/players/" + getName().toLowerCase() + ".dat");
+		}
+
+		return new File(team.universe.getWorldDirectory(), "data/ftb_lib/players/" + getName().toLowerCase() + "." + ext + ".dat");
 	}
 }

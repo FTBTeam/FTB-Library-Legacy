@@ -3,9 +3,13 @@ package com.feed_the_beast.ftblib.lib.data;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerLoadedEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerSavedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamLoadedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamSavedEvent;
 import com.feed_the_beast.ftblib.events.universe.PersistentScheduledTaskEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseClearCacheEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseClosedEvent;
@@ -37,7 +41,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -445,6 +448,8 @@ public class Universe implements IHasCache
 				player.team = getTeam(nbt.getString("TeamID"));
 				player.deserializeNBT(nbt);
 			}
+
+			new ForgePlayerLoadedEvent(player).post();
 		}
 
 		for (ForgeTeam team : teams.values())
@@ -460,6 +465,8 @@ public class Universe implements IHasCache
 			{
 				team.deserializeNBT(nbt);
 			}
+
+			new ForgeTeamLoadedEvent(team).post();
 		}
 
 		if (universeData.hasKey("FakePlayer"))
@@ -487,13 +494,14 @@ public class Universe implements IHasCache
 			return;
 		}
 
-		final File worldDirectory = getWorldDirectory();
-		final NBTTagCompound universeData = new NBTTagCompound();
-		final Map<String, NBTTagCompound> playerDataMap = new HashMap<>();
-		final Map<String, NBTTagCompound> teamDataMap = new HashMap<>();
-
 		if (needsSaving)
 		{
+			if (FTBLibConfig.debugging.print_more_info)
+			{
+				FTBLib.LOGGER.info("Saving universe data");
+			}
+
+			NBTTagCompound universeData = new NBTTagCompound();
 			NBTTagCompound data = new NBTTagCompound();
 			new UniverseSavedEvent(this, data).post();
 			universeData.setTag("Data", data);
@@ -514,6 +522,7 @@ public class Universe implements IHasCache
 			universeData.setTag("PersistentScheduledTasks", taskTag);
 			universeData.setTag("FakePlayer", fakePlayer.serializeNBT());
 			universeData.setTag("FakeTeam", fakePlayerTeam.serializeNBT());
+			FileUtils.writeNBTSafe(new File(getWorldDirectory(), "data/ftb_lib/universe.dat"), universeData);
 			needsSaving = false;
 		}
 
@@ -521,11 +530,17 @@ public class Universe implements IHasCache
 		{
 			if (player.needsSaving)
 			{
+				if (FTBLibConfig.debugging.print_more_info)
+				{
+					FTBLib.LOGGER.info("Saved player data for " + player.getName());
+				}
+
 				NBTTagCompound nbt = player.serializeNBT();
 				nbt.setString("Name", player.getName());
 				nbt.setString("UUID", StringUtils.fromUUID(player.getId()));
 				nbt.setString("TeamID", player.team.getName());
-				playerDataMap.put(player.getName().toLowerCase(), nbt);
+				FileUtils.writeNBTSafe(player.getDataFile(""), nbt);
+				new ForgePlayerSavedEvent(player).post();
 				player.needsSaving = false;
 			}
 		}
@@ -534,70 +549,28 @@ public class Universe implements IHasCache
 		{
 			if (team.needsSaving)
 			{
+				if (FTBLibConfig.debugging.print_more_info)
+				{
+					FTBLib.LOGGER.info("Saved team data for " + team.getName());
+				}
+
+				File file = team.getDataFile("");
+
 				if (team.type.save && team.isValid())
 				{
 					NBTTagCompound nbt = team.serializeNBT();
 					nbt.setString("Type", team.type.getName());
-					teamDataMap.put(team.getName(), nbt);
+					FileUtils.writeNBTSafe(file, nbt);
+					new ForgeTeamSavedEvent(team).post();
 					team.needsSaving = false;
 				}
-				else
+				else if (file.exists())
 				{
-					File file = new File(worldDirectory, "data/ftb_lib/teams/" + team.getName() + ".dat");
-
-					if (file.exists())
-					{
-						file.delete();
-					}
+					file.delete();
 				}
 
 				team.needsSaving = false;
 			}
-		}
-
-		if (!universeData.hasNoTags() || !playerDataMap.isEmpty() || !teamDataMap.isEmpty())
-		{
-			ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
-			{
-				if (FTBLibConfig.debugging.print_more_info)
-				{
-					FTBLib.LOGGER.info("Saving data");
-				}
-
-				File folder = new File(worldDirectory, "data/ftb_lib");
-
-				if (!universeData.hasNoTags())
-				{
-					FileUtils.writeNBT(new File(folder, "universe.dat"), universeData);
-
-					if (FTBLibConfig.debugging.print_more_info)
-					{
-						FTBLib.LOGGER.info("Saved universe data");
-					}
-				}
-
-				for (Map.Entry<String, NBTTagCompound> entry : playerDataMap.entrySet())
-				{
-					FileUtils.writeNBT(new File(folder, "players/" + entry.getKey() + ".dat"), entry.getValue());
-
-					if (FTBLibConfig.debugging.print_more_info)
-					{
-						FTBLib.LOGGER.info("Saved player data for " + entry.getKey());
-					}
-				}
-
-				for (Map.Entry<String, NBTTagCompound> entry : teamDataMap.entrySet())
-				{
-					FileUtils.writeNBT(new File(folder, "teams/" + entry.getKey() + ".dat"), entry.getValue());
-
-					if (FTBLibConfig.debugging.print_more_info)
-					{
-						FTBLib.LOGGER.info("Saved team data for " + entry.getKey());
-					}
-				}
-
-				return false;
-			});
 		}
 
 		checkSaving = false;

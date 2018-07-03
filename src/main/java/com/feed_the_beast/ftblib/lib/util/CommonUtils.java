@@ -178,7 +178,7 @@ public class CommonUtils
 			state = world.getBlockState(pos);
 		}
 
-		world.notifyBlockUpdate(pos, state, state, BlockFlags.DEFAULT | BlockFlags.RERENDER_MAIN_THREAD);
+		world.notifyBlockUpdate(pos, state, state, BlockFlags.DEFAULT_AND_RERENDER);
 		return state;
 	}
 

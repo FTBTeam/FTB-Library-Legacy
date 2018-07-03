@@ -1,26 +1,25 @@
 package com.feed_the_beast.ftblib.events.team;
 
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.util.INBTSerializable;
+import com.feed_the_beast.ftblib.lib.data.TeamData;
 
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
  */
 public class ForgeTeamDataEvent extends ForgeTeamEvent
 {
-	private final BiConsumer<String, INBTSerializable<NBTTagCompound>> callback;
+	private final Consumer<TeamData> callback;
 
-	public ForgeTeamDataEvent(ForgeTeam team, BiConsumer<String, INBTSerializable<NBTTagCompound>> c)
+	public ForgeTeamDataEvent(ForgeTeam team, Consumer<TeamData> c)
 	{
 		super(team);
 		callback = c;
 	}
 
-	public void register(String id, INBTSerializable<NBTTagCompound> data)
+	public void register(TeamData data)
 	{
-		callback.accept(id, data);
+		callback.accept(data);
 	}
 }
