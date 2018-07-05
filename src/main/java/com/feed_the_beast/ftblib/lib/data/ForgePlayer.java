@@ -331,7 +331,9 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		if (isOnline())
 		{
-			return getPlayer().serializeNBT();
+			NBTTagCompound nbt = new NBTTagCompound();
+			getPlayer().writeToNBT(nbt);
+			return nbt;
 		}
 
 		if (cachedPlayerNBT == null)

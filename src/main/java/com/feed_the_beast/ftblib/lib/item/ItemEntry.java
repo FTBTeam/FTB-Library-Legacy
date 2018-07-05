@@ -87,7 +87,7 @@ public final class ItemEntry
 	private int hashCode;
 	private ItemStack stack = null;
 
-	private ItemEntry(Item i, int m, @Nullable NBTTagCompound n, @Nullable NBTTagCompound c)
+	public ItemEntry(Item i, int m, @Nullable NBTTagCompound n, @Nullable NBTTagCompound c)
 	{
 		item = i;
 		metadata = m;
