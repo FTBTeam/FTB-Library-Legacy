@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.data;
 
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.common.util.INBTSerializable;
@@ -110,10 +111,10 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>, IHasCac
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		CommonUtils.renameTag(nbt, "ftbl:data", "ftblib");
-		CommonUtils.renameTag(nbt, "ftbl", "ftblib");
-		CommonUtils.renameTag(nbt, "ftbu:data", "ftbutilities");
-		CommonUtils.renameTag(nbt, "ftbu", "ftbutilities");
+		NBTUtils.renameTag(nbt, "ftbl:data", "ftblib");
+		NBTUtils.renameTag(nbt, "ftbl", "ftblib");
+		NBTUtils.renameTag(nbt, "ftbu:data", "ftbutilities");
+		NBTUtils.renameTag(nbt, "ftbu", "ftbutilities");
 
 		for (Data data : map.values())
 		{

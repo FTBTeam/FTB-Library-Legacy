@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftblib.lib.block;
 
 import com.feed_the_beast.ftblib.lib.tile.TileBase;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
@@ -86,7 +86,7 @@ public class BlockBase extends Block
 				{
 					ItemStack stack = createStack(state, tileEntity);
 
-					if (CommonUtils.hasBlockData(stack))
+					if (NBTUtils.hasBlockData(stack))
 					{
 						NBTTagCompound displayTag = new NBTTagCompound();
 						NBTTagList loreList = new NBTTagList();
@@ -128,13 +128,13 @@ public class BlockBase extends Block
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
-		if (world.isRemote && stack.hasTagCompound() && hasTileEntity(state) && CommonUtils.hasBlockData(stack))
+		if (world.isRemote && stack.hasTagCompound() && hasTileEntity(state) && NBTUtils.hasBlockData(stack))
 		{
 			TileEntity tileEntity = world.getTileEntity(pos);
 
 			if (tileEntity != null)
 			{
-				tileEntity.handleUpdateTag(CommonUtils.getBlockData(stack));
+				tileEntity.handleUpdateTag(NBTUtils.getBlockData(stack));
 			}
 		}
 	}

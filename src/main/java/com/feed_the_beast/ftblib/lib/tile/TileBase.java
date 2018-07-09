@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileBase extends TileEntity implements IWorldNameable
+public abstract class TileBase extends TileEntity implements IWorldNameable, IChangeCallback
 {
 	private boolean isDirty = true;
 	private IBlockState currentState;
@@ -126,6 +126,12 @@ public abstract class TileBase extends TileEntity implements IWorldNameable
 	public void markDirty()
 	{
 		isDirty = true;
+	}
+
+	@Override
+	public void onContentsChanged(boolean majorChange)
+	{
+		markDirty();
 	}
 
 	public boolean shouldDrop()

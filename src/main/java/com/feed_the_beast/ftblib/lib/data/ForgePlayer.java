@@ -11,6 +11,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.EnumPrivacyLevel;
@@ -168,7 +169,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		if (!isFake() && !playerName.equals(n))
 		{
-			new File(team.universe.getWorldDirectory(), "data/ftb_lib/players/" + playerName.toLowerCase() + ".dat").delete();
+			FileUtils.delete(getDataFile(""));
 			playerName = n;
 			markDirty();
 		}
@@ -176,12 +177,34 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 
 	public final String getDisplayNameString()
 	{
-		return isOnline() ? getPlayer().getDisplayNameString() : getName();
+		if (isOnline())
+		{
+			try
+			{
+				return getPlayer().getDisplayNameString();
+			}
+			catch (Exception ex)
+			{
+			}
+		}
+
+		return getName();
 	}
 
 	public final ITextComponent getDisplayName()
 	{
-		return isOnline() ? getPlayer().getDisplayName() : new TextComponentString(getName());
+		if (isOnline())
+		{
+			try
+			{
+				return getPlayer().getDisplayName();
+			}
+			catch (Exception ex)
+			{
+			}
+		}
+
+		return new TextComponentString(getName());
 	}
 
 	public EntityPlayerMP getCommandPlayer(ICommandSender sender) throws CommandException

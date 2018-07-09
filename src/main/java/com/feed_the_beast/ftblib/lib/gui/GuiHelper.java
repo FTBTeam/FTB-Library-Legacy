@@ -194,7 +194,7 @@ public class GuiHelper
 
 	public static boolean drawItem(ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay, Color4I color)
 	{
-		if (stack.isEmpty() || !color.isEmpty() && color.alphai() < 100) //TODO: Figure out how to change color
+		if (stack.isEmpty())
 		{
 			return false;
 		}

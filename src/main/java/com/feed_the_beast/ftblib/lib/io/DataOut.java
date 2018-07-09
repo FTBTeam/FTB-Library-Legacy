@@ -249,11 +249,12 @@ public class DataOut
 		writeString(r.toString());
 	}
 
-	public void writeJson(@Nullable JsonElement element)
+	public int writeJson(@Nullable JsonElement element)
 	{
 		if (JsonUtils.isNull(element))
 		{
 			writeByte(0);
+			return 0;
 		}
 		else if (element.isJsonObject())
 		{
@@ -268,6 +269,7 @@ public class DataOut
 			}
 
 			writeMap(map, STRING, JSON);
+			return 1;
 		}
 		else if (element.isJsonArray())
 		{
@@ -282,61 +284,61 @@ public class DataOut
 			}
 
 			writeCollection(collection, JSON);
+			return 2;
 		}
-		else
+
+		JsonPrimitive primitive = element.getAsJsonPrimitive();
+
+		if (primitive.isBoolean())
 		{
-			JsonPrimitive primitive = element.getAsJsonPrimitive();
+			writeByte(4);
+			writeBoolean(primitive.getAsBoolean());
+			return 4;
+		}
+		else if (primitive.isNumber())
+		{
+			Class<? extends Number> n = primitive.getAsNumber().getClass();
 
-			if (primitive.isString())
+			if (n == Integer.class)
 			{
-				writeByte(3);
-				writeString(primitive.getAsString());
+				writeByte(7);
+				writeInt(primitive.getAsInt());
+				return 7;
 			}
-			else if (primitive.isBoolean())
+			else if (n == Byte.class)
 			{
-				writeByte(4);
-				writeBoolean(primitive.getAsBoolean());
+				writeByte(5);
+				writeByte(primitive.getAsByte());
+				return 5;
 			}
-			else
+			else if (n == Short.class)
 			{
-				Class<? extends Number> n = primitive.getAsNumber().getClass();
-
-				if (n == Integer.class)
-				{
-					writeByte(7);
-					writeInt(primitive.getAsInt());
-				}
-				else if (n == Byte.class)
-				{
-					writeByte(5);
-					writeByte(primitive.getAsByte());
-				}
-				else if (n == Short.class)
-				{
-					writeByte(6);
-					writeShort(primitive.getAsShort());
-				}
-				else if (n == Long.class)
-				{
-					writeByte(8);
-					writeLong(primitive.getAsLong());
-				}
-				else if (n == Float.class)
-				{
-					writeByte(9);
-					writeFloat(primitive.getAsFloat());
-				}
-				else if (n == Double.class)
-				{
-					writeByte(10);
-					writeDouble(primitive.getAsDouble());
-				}
-				else
-				{
-					writeByte(0);
-				}
+				writeByte(6);
+				writeShort(primitive.getAsShort());
+			}
+			else if (n == Long.class)
+			{
+				writeByte(8);
+				writeLong(primitive.getAsLong());
+				return 8;
+			}
+			else if (n == Float.class)
+			{
+				writeByte(9);
+				writeFloat(primitive.getAsFloat());
+				return 9;
+			}
+			else if (n == Double.class)
+			{
+				writeByte(10);
+				writeDouble(primitive.getAsDouble());
+				return 10;
 			}
 		}
+
+		writeByte(3);
+		writeString(primitive.getAsString());
+		return 3;
 	}
 
 	public void writeTextComponent(@Nullable ITextComponent component)

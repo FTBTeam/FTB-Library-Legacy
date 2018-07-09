@@ -822,4 +822,36 @@ public class JsonUtils
 			return null;
 		}
 	}
+
+	public static JsonElement copy(JsonElement json)
+	{
+		if (isNull(json))
+		{
+			return JsonNull.INSTANCE;
+		}
+		else if (json.isJsonObject())
+		{
+			JsonObject json1 = new JsonObject();
+
+			for (Map.Entry<String, JsonElement> entry : json.getAsJsonObject().entrySet())
+			{
+				json1.add(entry.getKey(), copy(entry.getValue()));
+			}
+
+			return json1;
+		}
+		else if (json.isJsonArray())
+		{
+			JsonArray json1 = new JsonArray();
+
+			for (JsonElement element : json.getAsJsonArray())
+			{
+				json1.add(copy(element));
+			}
+
+			return json1;
+		}
+
+		return json;
+	}
 }
