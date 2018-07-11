@@ -106,7 +106,7 @@ public abstract class GuiButtonListBase extends GuiBase
 			}
 		};
 
-		textBox.ghostText = I18n.format("gui.search");
+		textBox.ghostText = I18n.format("gui.search_box");
 		hasSearchBox = false;
 	}
 

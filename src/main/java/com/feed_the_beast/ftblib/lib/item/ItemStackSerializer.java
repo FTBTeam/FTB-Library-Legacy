@@ -8,6 +8,7 @@ import com.google.gson.JsonPrimitive;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -116,34 +117,40 @@ public class ItemStackSerializer
 		return builder.toString();
 	}
 
-	public static JsonElement serialize(ItemStack is, boolean forceNonnull, boolean string)
+	public static JsonElement serialize(ItemStack stack, boolean forceNonnull, boolean string)
 	{
-		if (!forceNonnull && is.isEmpty())
+		if (!forceNonnull && stack.isEmpty())
 		{
 			return JsonNull.INSTANCE;
 		}
 		else if (string)
 		{
-			return new JsonPrimitive(toString(is));
+			return new JsonPrimitive(toString(stack));
 		}
+
+		NBTTagCompound nbt = stack.serializeNBT();
 
 		JsonObject json = new JsonObject();
-		ResourceLocation id = Item.REGISTRY.getNameForObject(is.getItem());
-		json.addProperty("item", id == null ? "minecraft:air" : id.toString());
+		json.addProperty("item", nbt.getString("id"));
 
-		if (is.getHasSubtypes())
+		if (stack.getHasSubtypes())
 		{
-			json.addProperty("data", is.getMetadata());
+			json.addProperty("data", nbt.getShort("Damage"));
 		}
 
-		if (is.getCount() > 1)
+		if (stack.getCount() > 1)
 		{
-			json.addProperty("count", is.getCount());
+			json.addProperty("count", nbt.getByte("Count"));
 		}
 
-		if (is.hasTagCompound())
+		if (stack.hasTagCompound())
 		{
-			json.add("nbt", JsonUtils.toJson(is.getTagCompound()));
+			json.add("nbt", JsonUtils.toJson(nbt.getCompoundTag("tag")));
+		}
+
+		if (nbt.hasKey("ForgeCaps"))
+		{
+			json.add("caps", JsonUtils.toJson(nbt.getCompoundTag("ForgeCaps")));
 		}
 
 		return json;
@@ -159,49 +166,40 @@ public class ItemStackSerializer
 		{
 			return parseItem(e.getAsString());
 		}
-		else
+
+		JsonObject json = e.getAsJsonObject();
+
+		if (!json.has("item"))
 		{
-			JsonObject json = e.getAsJsonObject();
-
-			if (!json.has("item"))
-			{
-				return ItemStack.EMPTY;
-			}
-
-			Item item = Item.getByNameOrId(json.get("id").getAsString());
-
-			if (item == null)
-			{
-				return ItemStack.EMPTY;
-			}
-
-			int meta = 0;
-
-			if (item.getHasSubtypes() && json.has("data"))
-			{
-				meta = json.get("data").getAsInt();
-			}
-
-			int count = 1;
-
-			if (json.has("count"))
-			{
-				count = json.get("count").getAsInt();
-			}
-
-			ItemStack stack = new ItemStack(item, count, meta);
-
-			if (stack.isEmpty())
-			{
-				return ItemStack.EMPTY;
-			}
-
-			if (json.has("nbt"))
-			{
-				stack.setTagCompound((NBTTagCompound) JsonUtils.toNBT(json.get("nbt")));
-			}
-
-			return stack;
+			return ItemStack.EMPTY;
 		}
+
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setString("id", json.get("item").getAsString());
+		nbt.setShort("Damage", json.has("data") ? json.get("data").getAsShort() : (short) 0);
+		nbt.setShort("Count", json.has("count") ? json.get("count").getAsByte() : (byte) 1);
+
+		if (json.has("nbt"))
+		{
+			NBTBase nbt1 = JsonUtils.toNBT(json.get("nbt"));
+
+			if (nbt1 instanceof NBTTagCompound)
+			{
+				nbt.setTag("tag", nbt1);
+			}
+		}
+
+		if (json.has("caps"))
+		{
+			NBTBase nbt1 = JsonUtils.toNBT(json.get("caps"));
+
+			if (nbt1 instanceof NBTTagCompound && !nbt1.hasNoTags())
+			{
+				nbt.setTag("ForgeCaps", nbt1);
+			}
+		}
+
+		ItemStack stack = new ItemStack(nbt);
+		return stack.isEmpty() ? ItemStack.EMPTY : stack;
 	}
 }

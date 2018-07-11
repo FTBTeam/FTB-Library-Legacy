@@ -715,7 +715,6 @@ public class JsonUtils
 		return json;
 	}
 
-
 	public static JsonElement toJson(@Nullable NBTBase nbt)
 	{
 		if (nbt == null)
@@ -853,5 +852,13 @@ public class JsonUtils
 		}
 
 		return json;
+	}
+
+	public static void copy(JsonObject from, JsonObject to)
+	{
+		for (Map.Entry<String, JsonElement> entry : from.entrySet())
+		{
+			to.add(entry.getKey(), copy(entry.getValue()));
+		}
 	}
 }

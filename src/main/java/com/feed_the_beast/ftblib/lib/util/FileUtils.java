@@ -1,10 +1,7 @@
 package com.feed_the_beast.ftblib.lib.util;
 
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.storage.ThreadedFileIOBase;
 
-import javax.annotation.Nullable;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
@@ -112,52 +109,6 @@ public class FileUtils
 
 			return false;
 		});
-	}
-
-	public static void writeNBT(File file, NBTTagCompound tag)
-	{
-		try
-		{
-			CompressedStreamTools.writeCompressed(tag, new FileOutputStream(FileUtils.newFile(file)));
-		}
-		catch (Exception ex)
-		{
-			ex.printStackTrace();
-		}
-	}
-
-	public static void writeNBTSafe(File file, NBTTagCompound tag)
-	{
-		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
-		{
-			writeNBT(file, tag);
-			return false;
-		});
-	}
-
-	@Nullable
-	public static NBTTagCompound readNBT(File file)
-	{
-		if (!file.exists() || !file.isFile())
-		{
-			return null;
-		}
-
-		try (InputStream stream = new FileInputStream(file))
-		{
-			return CompressedStreamTools.readCompressed(stream);
-		}
-		catch (Exception ex)
-		{
-			try
-			{
-				return CompressedStreamTools.read(file);
-			}
-			catch (Exception ex1)
-			{
-				return null;
-			}
-		}
 	}
 
 	public static void downloadFile(URL url, File out, Proxy proxy) throws Exception

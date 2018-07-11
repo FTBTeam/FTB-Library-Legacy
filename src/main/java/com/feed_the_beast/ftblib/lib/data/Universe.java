@@ -22,6 +22,7 @@ import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
@@ -299,7 +300,7 @@ public class Universe implements IHasCache
 	private void load()
 	{
 		File folder = new File(getWorldDirectory(), "data/ftb_lib/");
-		NBTTagCompound universeData = FileUtils.readNBT(new File(folder, "universe.dat"));
+		NBTTagCompound universeData = NBTUtils.readNBT(new File(folder, "universe.dat"));
 
 		if (universeData == null)
 		{
@@ -353,7 +354,7 @@ public class Universe implements IHasCache
 				{
 					if (f.getName().endsWith(".dat"))
 					{
-						NBTTagCompound nbt = FileUtils.readNBT(f);
+						NBTTagCompound nbt = NBTUtils.readNBT(f);
 
 						if (nbt != null)
 						{
@@ -393,7 +394,7 @@ public class Universe implements IHasCache
 				{
 					if (file.getName().endsWith(".dat"))
 					{
-						NBTTagCompound nbt = FileUtils.readNBT(file);
+						NBTTagCompound nbt = NBTUtils.readNBT(file);
 
 						if (nbt != null)
 						{
@@ -522,7 +523,7 @@ public class Universe implements IHasCache
 			universeData.setTag("PersistentScheduledTasks", taskTag);
 			universeData.setTag("FakePlayer", fakePlayer.serializeNBT());
 			universeData.setTag("FakeTeam", fakePlayerTeam.serializeNBT());
-			FileUtils.writeNBTSafe(new File(getWorldDirectory(), "data/ftb_lib/universe.dat"), universeData);
+			NBTUtils.writeNBTSafe(new File(getWorldDirectory(), "data/ftb_lib/universe.dat"), universeData);
 			needsSaving = false;
 		}
 
@@ -539,7 +540,7 @@ public class Universe implements IHasCache
 				nbt.setString("Name", player.getName());
 				nbt.setString("UUID", StringUtils.fromUUID(player.getId()));
 				nbt.setString("TeamID", player.team.getName());
-				FileUtils.writeNBTSafe(player.getDataFile(""), nbt);
+				NBTUtils.writeNBTSafe(player.getDataFile(""), nbt);
 				new ForgePlayerSavedEvent(player).post();
 				player.needsSaving = false;
 			}
@@ -560,7 +561,7 @@ public class Universe implements IHasCache
 				{
 					NBTTagCompound nbt = team.serializeNBT();
 					nbt.setString("Type", team.type.getName());
-					FileUtils.writeNBTSafe(file, nbt);
+					NBTUtils.writeNBTSafe(file, nbt);
 					new ForgeTeamSavedEvent(team).post();
 					team.needsSaving = false;
 				}

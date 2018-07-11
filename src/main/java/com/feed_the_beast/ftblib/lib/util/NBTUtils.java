@@ -1,11 +1,17 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.storage.ThreadedFileIOBase;
 
 import javax.annotation.Nullable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 
 /**
  * @author LatvianModder
@@ -21,6 +27,52 @@ public class NBTUtils
 		{
 			nbt.removeTag(oldName);
 			nbt.setTag(newName, tag);
+		}
+	}
+
+	public static void writeNBT(File file, NBTTagCompound tag)
+	{
+		try
+		{
+			CompressedStreamTools.writeCompressed(tag, new FileOutputStream(FileUtils.newFile(file)));
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+	public static void writeNBTSafe(File file, NBTTagCompound tag)
+	{
+		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
+		{
+			writeNBT(file, tag);
+			return false;
+		});
+	}
+
+	@Nullable
+	public static NBTTagCompound readNBT(File file)
+	{
+		if (!file.exists() || !file.isFile())
+		{
+			return null;
+		}
+
+		try (InputStream stream = new FileInputStream(file))
+		{
+			return CompressedStreamTools.readCompressed(stream);
+		}
+		catch (Exception ex)
+		{
+			try
+			{
+				return CompressedStreamTools.read(file);
+			}
+			catch (Exception ex1)
+			{
+				return null;
+			}
 		}
 	}
 
