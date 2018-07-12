@@ -3,9 +3,13 @@ package com.feed_the_beast.ftblib.lib.util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.storage.ThreadedFileIOBase;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
 import java.io.File;
@@ -152,5 +156,113 @@ public class NBTUtils
 	public static NBTTagList minimize(@Nullable NBTTagList nbt)
 	{
 		return nbt == null || nbt.hasNoTags() ? null : nbt;
+	}
+
+	private static final TextFormatting[] COLORS = {TextFormatting.BLUE, TextFormatting.DARK_GREEN, TextFormatting.YELLOW, TextFormatting.RED};
+
+	public static String getColoredNBTString(@Nullable NBTBase nbt)
+	{
+		return getColoredNBTString(new StringBuilder(), nbt, 0).toString();
+	}
+
+	private static StringBuilder getColoredNBTString(StringBuilder builder, @Nullable NBTBase nbt, int level)
+	{
+		if (nbt == null)
+		{
+			return builder.append(TextFormatting.DARK_GRAY).append("null");
+		}
+
+		switch (nbt.getId())
+		{
+			case Constants.NBT.TAG_END:
+				return builder.append(TextFormatting.DARK_GRAY).append("null");
+			case Constants.NBT.TAG_BYTE:
+			case Constants.NBT.TAG_SHORT:
+			case Constants.NBT.TAG_INT:
+			case Constants.NBT.TAG_LONG:
+			case Constants.NBT.TAG_ANY_NUMERIC:
+			case Constants.NBT.TAG_FLOAT:
+			case Constants.NBT.TAG_DOUBLE:
+				return builder.append(TextFormatting.GRAY).append(nbt.toString());
+			case Constants.NBT.TAG_STRING:
+				return builder.append(TextFormatting.GRAY).append(nbt.toString());
+			case Constants.NBT.TAG_LIST:
+			{
+				NBTTagList list = (NBTTagList) nbt;
+				builder.append(COLORS[level % COLORS.length]).append('[');
+
+				for (int i = 0; i < list.tagCount(); i++)
+				{
+					if (i > 0)
+					{
+						builder.append(TextFormatting.DARK_GRAY).append(',').append(' ');
+					}
+
+					getColoredNBTString(builder, list.get(i), level + 1);
+				}
+
+				return builder.append(COLORS[level % COLORS.length]).append(']');
+			}
+			case Constants.NBT.TAG_COMPOUND:
+			{
+				NBTTagCompound map = (NBTTagCompound) nbt;
+				builder.append(COLORS[level % COLORS.length]).append('{');
+
+				boolean first = true;
+
+				for (String key : map.getKeySet())
+				{
+					if (first)
+					{
+						first = false;
+					}
+					else
+					{
+						builder.append(TextFormatting.DARK_GRAY).append(',').append(' ');
+					}
+
+					builder.append(TextFormatting.DARK_GRAY).append(key).append(':').append(' ');
+					getColoredNBTString(builder, map.getTag(key), level + 1);
+				}
+
+				return builder.append(COLORS[level % COLORS.length]).append('}');
+			}
+			case Constants.NBT.TAG_BYTE_ARRAY:
+			{
+				NBTTagByteArray list = (NBTTagByteArray) nbt;
+				builder.append(COLORS[level % COLORS.length]).append('[');
+
+				for (int i = 0; i < list.getByteArray().length; i++)
+				{
+					if (i > 0)
+					{
+						builder.append(TextFormatting.DARK_GRAY).append(',').append(' ');
+					}
+
+					builder.append(TextFormatting.GRAY).append(list.getByteArray()[i]);
+				}
+
+				return builder.append(COLORS[level % COLORS.length]).append(']');
+			}
+			case Constants.NBT.TAG_INT_ARRAY:
+			{
+				NBTTagIntArray list = (NBTTagIntArray) nbt;
+				builder.append(COLORS[level % COLORS.length]).append('[');
+
+				for (int i = 0; i < list.getIntArray().length; i++)
+				{
+					if (i > 0)
+					{
+						builder.append(TextFormatting.DARK_GRAY).append(',').append(' ');
+					}
+
+					builder.append(TextFormatting.GRAY).append(list.getIntArray()[i]);
+				}
+
+				return builder.append(COLORS[level % COLORS.length]).append(']');
+			}
+			default:
+				return builder.append(TextFormatting.GRAY).append(nbt.toString());
+		}
 	}
 }

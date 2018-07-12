@@ -76,12 +76,13 @@ public class Widget implements IGuiWrapper
 		setHeight(h);
 	}
 
-	public final void setPosAndSize(int x, int y, int w, int h)
+	public final Widget setPosAndSize(int x, int y, int w, int h)
 	{
 		setX(x);
 		setY(y);
 		setWidth(w);
 		setHeight(h);
+		return this;
 	}
 
 	public int getAX()
@@ -299,19 +300,16 @@ public class Widget implements IGuiWrapper
 
 	public final boolean handleClick(String click)
 	{
-		int i = click.indexOf(':');
+		int index = click.indexOf(':');
 
-		if (i != -1)
-		{
-			return handleClick(click.substring(0, i), click.substring(i + 1, click.length()));
-		}
-		else
+		if (index == -1)
 		{
 			return handleClick("", click);
 		}
+
+		return handleClick(click.substring(0, index), click.substring(index + 1));
 	}
 
-	//TODO: Improve me to fix occasional offset
 	public List<GuiBase.PositionedTextData> createDataFrom(ITextComponent component, int width)
 	{
 		if (width <= 0 || component.getUnformattedText().isEmpty())
