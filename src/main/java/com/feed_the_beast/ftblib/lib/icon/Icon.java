@@ -72,14 +72,7 @@ public abstract class Icon
 							icons.add(getIcon(e));
 						}
 
-						IconAnimation list = new IconAnimation(icons);
-
-						if (o.has("timer"))
-						{
-							list.timer = o.get("timer").getAsLong();
-						}
-
-						return list;
+						return IconAnimation.fromList(icons, true);
 					}
 					case "outline":
 					{

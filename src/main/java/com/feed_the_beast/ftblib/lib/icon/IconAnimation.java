@@ -3,11 +3,8 @@ package com.feed_the_beast.ftblib.lib.icon;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -15,48 +12,45 @@ import java.util.List;
  */
 public class IconAnimation extends Icon
 {
-	public static Icon fromIngredient(Ingredient ingredient)
+	public static Icon fromList(List<Icon> icons, boolean includeEmpty)
 	{
-		List<Icon> icons = new ArrayList<>();
+		List<Icon> list = new ArrayList<>(icons.size());
 
-		for (ItemStack stack : ingredient.getMatchingStacks())
+		for (Icon icon : icons)
 		{
-			if (!stack.isEmpty())
+			if (icon instanceof IconAnimation)
 			{
-				icons.add(ItemIcon.getItemIcon(stack.copy()));
+				for (Icon icon1 : ((IconAnimation) icon).list)
+				{
+					if (includeEmpty || !icon1.isEmpty())
+					{
+						list.add(icon1);
+					}
+				}
+			}
+			else if (includeEmpty || !icon.isEmpty())
+			{
+				list.add(icon);
 			}
 		}
 
-		return icons.isEmpty() ? EMPTY : icons.size() == 1 ? icons.get(0) : new IconAnimation(icons);
+		if (list.isEmpty())
+		{
+			return EMPTY;
+		}
+		else if (list.size() == 1)
+		{
+			return list.get(0);
+		}
+
+		return new IconAnimation(list);
 	}
 
 	public final List<Icon> list;
-	public Icon current = Icon.EMPTY;
-	public long timer = 1000L;
 
-	public IconAnimation(Collection<Icon> l)
+	private IconAnimation(List<Icon> l)
 	{
-		list = new ArrayList<>(l.size());
-
-		for (Icon o : l)
-		{
-			if (!o.isEmpty())
-			{
-				if (o instanceof IconAnimation)
-				{
-					list.addAll(((IconAnimation) o).list);
-				}
-				else
-				{
-					list.add(o);
-				}
-			}
-		}
-
-		if (!list.isEmpty())
-		{
-			current = list.get(0);
-		}
+		list = l;
 	}
 
 	@Override
@@ -65,19 +59,12 @@ public class IconAnimation extends Icon
 		return list.isEmpty();
 	}
 
-	public void setIndex(int i)
-	{
-		current = list.get(i % list.size());
-	}
-
 	@Override
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
-		current.draw(x, y, w, h, col);
-
 		if (!list.isEmpty())
 		{
-			setIndex((int) (System.currentTimeMillis() / timer));
+			list.get((int) ((System.currentTimeMillis() / 1000L) % list.size())).draw(x, y, w, h, col);
 		}
 	}
 
@@ -87,16 +74,11 @@ public class IconAnimation extends Icon
 		JsonObject json = new JsonObject();
 		json.addProperty("id", "animation");
 
-		if (timer != 1000L)
-		{
-			json.addProperty("timer", timer);
-		}
-
 		JsonArray array = new JsonArray();
 
-		for (Icon o : list)
+		for (Icon icon : list)
 		{
-			array.add(o.getJson());
+			array.add(icon.getJson());
 		}
 
 		json.add("icons", array);
