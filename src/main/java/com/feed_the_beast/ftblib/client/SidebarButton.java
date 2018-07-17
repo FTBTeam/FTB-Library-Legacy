@@ -100,7 +100,7 @@ public class SidebarButton implements Comparable<SidebarButton>
 
 	public String getLangKey()
 	{
-		return "sidebar_button." + id.getResourceDomain() + '.' + id.getResourcePath();
+		return "sidebar_button." + id.getNamespace() + '.' + id.getPath();
 	}
 
 	public String getTooltipLangKey()

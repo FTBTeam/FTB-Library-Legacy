@@ -444,7 +444,7 @@ public class Universe implements IHasCache
 		{
 			NBTTagCompound nbt = playerNBT.get(player.getId());
 
-			if (nbt != null && !nbt.hasNoTags())
+			if (nbt != null && !nbt.isEmpty())
 			{
 				player.team = getTeam(nbt.getString("TeamID"));
 				player.deserializeNBT(nbt);
@@ -462,7 +462,7 @@ public class Universe implements IHasCache
 
 			NBTTagCompound nbt = teamNBT.get(team.getName());
 
-			if (nbt != null && !nbt.hasNoTags())
+			if (nbt != null && !nbt.isEmpty())
 			{
 				team.deserializeNBT(nbt);
 			}
@@ -584,7 +584,7 @@ public class Universe implements IHasCache
 
 	private void onPlayerLoggedIn(EntityPlayerMP player)
 	{
-		if (!player.mcServer.getPlayerList().canJoin(player.getGameProfile()))
+		if (!player.server.getPlayerList().canJoin(player.getGameProfile()))
 		{
 			return;
 		}
@@ -605,9 +605,9 @@ public class Universe implements IHasCache
 
 		boolean sendTeamJoinEvent = false, sendTeamCreatedEvent = false;
 
-		if (firstLogin && (player.mcServer.isSinglePlayer() ? FTBLibConfig.teams.autocreate_sp : FTBLibConfig.teams.autocreate_mp))
+		if (firstLogin && (player.server.isSinglePlayer() ? FTBLibConfig.teams.autocreate_sp : FTBLibConfig.teams.autocreate_mp))
 		{
-			if (!player.mcServer.isSinglePlayer())
+			if (!player.server.isSinglePlayer())
 			{
 				String id = p.getName().toLowerCase();
 

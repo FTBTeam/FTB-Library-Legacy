@@ -106,7 +106,7 @@ public class NBTUtils
 
 	public static void copyTags(@Nullable NBTTagCompound from, @Nullable NBTTagCompound to)
 	{
-		if (from != null && to != null && !from.hasNoTags())
+		if (from != null && to != null && !from.isEmpty())
 		{
 			for (String key : from.getKeySet())
 			{
@@ -118,7 +118,7 @@ public class NBTUtils
 	@Nullable
 	public static NBTTagCompound minimize(@Nullable NBTTagCompound nbt)
 	{
-		if (nbt == null || nbt.hasNoTags())
+		if (nbt == null || nbt.isEmpty())
 		{
 			return null;
 		}
@@ -155,7 +155,7 @@ public class NBTUtils
 	@Nullable
 	public static NBTTagList minimize(@Nullable NBTTagList nbt)
 	{
-		return nbt == null || nbt.hasNoTags() ? null : nbt;
+		return nbt == null || nbt.isEmpty() ? null : nbt;
 	}
 
 	private static final TextFormatting[] COLORS = {TextFormatting.BLUE, TextFormatting.DARK_GREEN, TextFormatting.YELLOW, TextFormatting.RED};

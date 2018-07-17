@@ -2,14 +2,15 @@ package com.feed_the_beast.ftblib.lib.tile;
 
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +26,6 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 {
 	private boolean isDirty = true;
 	private IBlockState currentState;
-	public boolean destroyedByCreativePlayer = false;
 
 	protected abstract void writeData(NBTTagCompound nbt, EnumSaveType type);
 
@@ -47,7 +47,7 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 	@Nonnull
 	public ITextComponent getDisplayName()
 	{
-		return new TextComponentTranslation(getBlockType().getUnlocalizedName() + ".name");
+		return new TextComponentTranslation(getBlockType().getTranslationKey() + ".name");
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 		nbt.removeTag("x");
 		nbt.removeTag("y");
 		nbt.removeTag("z");
-		return nbt.hasNoTags() ? null : new SPacketUpdateTileEntity(pos, 0, nbt);
+		return nbt.isEmpty() ? null : new SPacketUpdateTileEntity(pos, 0, nbt);
 	}
 
 	@Override
@@ -138,7 +138,7 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 		writeData(nbt, EnumSaveType.SAVE);
-		return !nbt.hasNoTags();
+		return !nbt.isEmpty();
 	}
 
 	public final void checkIfDirty()
@@ -236,24 +236,19 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 		return new BlockDimPos(pos, hasWorld() ? world.provider.getDimension() : 0);
 	}
 
-	public NBTTagCompound createItemData()
+	public void writeToItem(ItemStack stack)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		NBTTagCompound nbt1 = new NBTTagCompound();
-		writeData(nbt1, EnumSaveType.SAVE);
+		writeData(nbt, EnumSaveType.NET_FULL);
 
-		if (!nbt1.hasNoTags())
+		if (!nbt.isEmpty())
 		{
-			ResourceLocation resourcelocation = getKey(getClass());
-
-			if (resourcelocation != null)
-			{
-				nbt1.setString("id", resourcelocation.toString());
-			}
-
-			nbt.setTag("BlockEntityTag", nbt1);
+			stack.setTagInfo("BlockEntityTag", nbt);
 		}
+	}
 
-		return nbt;
+	public void readFromItem(ItemStack stack)
+	{
+		readData(NBTUtils.getBlockData(stack), EnumSaveType.NET_FULL);
 	}
 }

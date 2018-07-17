@@ -99,7 +99,7 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>, IHasCac
 		{
 			NBTTagCompound nbt1 = data.serializeNBT();
 
-			if (!nbt1.hasNoTags())
+			if (!nbt1.isEmpty())
 			{
 				nbt.setTag(data.getName(), nbt1);
 			}

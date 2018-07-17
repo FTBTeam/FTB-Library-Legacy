@@ -193,7 +193,7 @@ public class ItemStackSerializer
 		{
 			NBTBase nbt1 = JsonUtils.toNBT(json.get("caps"));
 
-			if (nbt1 instanceof NBTTagCompound && !nbt1.hasNoTags())
+			if (nbt1 instanceof NBTTagCompound && !nbt1.isEmpty())
 			{
 				nbt.setTag("ForgeCaps", nbt1);
 			}

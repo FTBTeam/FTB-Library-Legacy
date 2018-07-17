@@ -728,7 +728,7 @@ public class JsonUtils
 			{
 				JsonObject json = new JsonObject();
 
-				if (!nbt.hasNoTags())
+				if (!nbt.isEmpty())
 				{
 					NBTTagCompound tagCompound = (NBTTagCompound) nbt;
 					for (String s : tagCompound.getKeySet())
@@ -743,7 +743,7 @@ public class JsonUtils
 			{
 				JsonArray json = new JsonArray();
 
-				if (!nbt.hasNoTags())
+				if (!nbt.isEmpty())
 				{
 					NBTTagList list = (NBTTagList) nbt;
 					for (int i = 0; i < list.tagCount(); i++)
@@ -775,7 +775,7 @@ public class JsonUtils
 			{
 				JsonArray json = new JsonArray();
 
-				if (!nbt.hasNoTags())
+				if (!nbt.isEmpty())
 				{
 					for (byte v : ((NBTTagByteArray) nbt).getByteArray())
 					{
@@ -789,7 +789,7 @@ public class JsonUtils
 			{
 				JsonArray json = new JsonArray();
 
-				if (!nbt.hasNoTags())
+				if (!nbt.isEmpty())
 				{
 					for (int v : ((NBTTagIntArray) nbt).getIntArray())
 					{

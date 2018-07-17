@@ -36,7 +36,7 @@ public class CmdReload extends CmdBase
 		for (ResourceLocation r : FTBLibCommon.RELOAD_IDS.keySet())
 		{
 			tab.add(r.toString());
-			tab.add(r.getResourceDomain() + ":*");
+			tab.add(r.getNamespace() + ":*");
 		}
 
 		tab = new ArrayList<>(tab);

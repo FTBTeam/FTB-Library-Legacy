@@ -11,7 +11,7 @@ public class ItemBase extends Item
 	public ItemBase(String mod, String id)
 	{
 		setRegistryName(mod, id);
-		setUnlocalizedName(mod + '.' + id);
+		setTranslationKey(mod + '.' + id);
 		setCreativeTab(CreativeTabs.MISC);
 	}
 }

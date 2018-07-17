@@ -1,19 +1,18 @@
 package com.feed_the_beast.ftblib.lib.block;
 
 import com.feed_the_beast.ftblib.lib.tile.TileBase;
-import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -31,7 +30,7 @@ public class BlockBase extends Block
 	{
 		super(material, color);
 		setRegistryName(mod, id);
-		setUnlocalizedName(mod + '.' + id);
+		setTranslationKey(mod + '.' + id);
 		setHardness(1.8F);
 		setCreativeTab(CreativeTabs.MISC);
 	}
@@ -42,25 +41,38 @@ public class BlockBase extends Block
 	}
 
 	@Override
-	public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player)
+	public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity tileEntity, ItemStack stack)
 	{
-		if (dropSpecial(state))
-		{
-			TileEntity tileEntity = world.getTileEntity(pos);
+		player.addStat(StatList.getBlockStats(this));
+		player.addExhaustion(0.005F);
 
-			if (tileEntity instanceof TileBase)
+		if (dropSpecial(state) && (player.capabilities.isCreativeMode || tileEntity instanceof TileBase && ((TileBase) tileEntity).shouldDrop()) || EnchantmentHelper.getEnchantmentLevel(Enchantments.SILK_TOUCH, stack) > 0 && canSilkHarvest(world, pos, state, player))
+		{
+			java.util.List<ItemStack> items = new java.util.ArrayList<>();
+			ItemStack itemstack = getSilkTouchDrop(state);
+
+			if (!itemstack.isEmpty())
 			{
-				((TileBase) tileEntity).destroyedByCreativePlayer = player.capabilities.isCreativeMode;
+				if (tileEntity instanceof TileBase)
+				{
+					((TileBase) tileEntity).writeToItem(itemstack);
+				}
+
+				items.add(itemstack);
+			}
+
+			net.minecraftforge.event.ForgeEventFactory.fireBlockHarvesting(items, world, pos, state, 0, 1F, true, player);
+
+			for (ItemStack item : items)
+			{
+				spawnAsEntity(world, pos, item);
 			}
 		}
-	}
-
-	@Override
-	public void dropBlockAsItemWithChance(World world, BlockPos pos, IBlockState state, float chance, int fortune)
-	{
-		if (!dropSpecial(state))
+		else
 		{
-			super.dropBlockAsItemWithChance(world, pos, state, chance, fortune);
+			harvesters.set(player);
+			dropBlockAsItem(world, pos, state, EnchantmentHelper.getEnchantmentLevel(Enchantments.FORTUNE, stack));
+			harvesters.set(null);
 		}
 	}
 
@@ -71,55 +83,13 @@ public class BlockBase extends Block
 		return isNormalCube(state, world, pos) ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
 	}
 
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state)
-	{
-		if (dropSpecial(state))
-		{
-			TileEntity tileEntity = world.getTileEntity(pos);
-
-			if (tileEntity instanceof TileBase)
-			{
-				TileBase tile = (TileBase) tileEntity;
-
-				if (!tile.destroyedByCreativePlayer || tile.shouldDrop())
-				{
-					ItemStack stack = createStack(state, tileEntity);
-
-					if (NBTUtils.hasBlockData(stack))
-					{
-						NBTTagCompound displayTag = new NBTTagCompound();
-						NBTTagList loreList = new NBTTagList();
-						loreList.appendTag(new NBTTagString("(+NBT)"));
-						displayTag.setTag("Lore", loreList);
-						stack.setTagInfo("display", displayTag);
-					}
-
-					spawnAsEntity(world, pos, stack);
-				}
-
-				if (tile.updateComparator())
-				{
-					world.updateComparatorOutputLevel(pos, state.getBlock());
-				}
-			}
-		}
-
-		super.breakBlock(world, pos, state);
-	}
-
 	public ItemStack createStack(IBlockState state, @Nullable TileEntity tile)
 	{
-		ItemStack stack = new ItemStack(this);
+		ItemStack stack = new ItemStack(this, 1, damageDropped(state));
 
 		if (dropSpecial(state) && tile instanceof TileBase)
 		{
-			NBTTagCompound nbt = ((TileBase) tile).createItemData();
-
-			if (!nbt.hasNoTags())
-			{
-				stack.setTagCompound(nbt);
-			}
+			((TileBase) tile).writeToItem(stack);
 		}
 
 		return stack;
@@ -128,13 +98,13 @@ public class BlockBase extends Block
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack)
 	{
-		if (world.isRemote && stack.hasTagCompound() && hasTileEntity(state) && NBTUtils.hasBlockData(stack))
+		if (hasTileEntity(state))
 		{
-			TileEntity tileEntity = world.getTileEntity(pos);
+			TileEntity tile = world.getTileEntity(pos);
 
-			if (tileEntity != null)
+			if (tile instanceof TileBase)
 			{
-				tileEntity.handleUpdateTag(NBTUtils.getBlockData(stack));
+				((TileBase) tile).readFromItem(stack);
 			}
 		}
 	}

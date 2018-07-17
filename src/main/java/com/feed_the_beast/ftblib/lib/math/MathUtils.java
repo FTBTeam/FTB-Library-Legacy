@@ -255,7 +255,7 @@ public class MathUtils
 	{
 		Vec3d start = entity.getPositionEyes(1F);
 		Vec3d look = entity.getLookVec();
-		Vec3d end = start.addVector(look.x * dist, look.y * dist, look.z * dist);
+		Vec3d end = start.add(look.x * dist, look.y * dist, look.z * dist);
 		return entity.world.rayTraceBlocks(start, end, useLiquids, !useLiquids, false);
 	}
 

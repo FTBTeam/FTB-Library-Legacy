@@ -35,7 +35,7 @@ public abstract class UniverseLoadedEvent extends UniverseEvent
 		public NBTTagCompound getData(String id)
 		{
 			NBTTagCompound tag = data.getCompoundTag(id);
-			return tag.hasNoTags() ? data.getCompoundTag(id + ":data") : tag;
+			return tag.isEmpty() ? data.getCompoundTag(id + ":data") : tag;
 		}
 	}
 
@@ -60,7 +60,7 @@ public abstract class UniverseLoadedEvent extends UniverseEvent
 		public NBTTagCompound getData(String id)
 		{
 			NBTTagCompound tag = data.getCompoundTag(id);
-			return tag.hasNoTags() ? data.getCompoundTag(id + ":data") : tag;
+			return tag.isEmpty() ? data.getCompoundTag(id + ":data") : tag;
 		}
 	}
 

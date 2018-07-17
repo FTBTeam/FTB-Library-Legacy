@@ -62,9 +62,9 @@ public class ServerReloadEvent extends UniverseEvent
 
 	public boolean reload(ResourceLocation id)
 	{
-		String ridd = reloadId.getResourceDomain();
-		String ridp = reloadId.getResourcePath();
-		return ridd.equals("*") || ridd.equals(reloadId.getResourceDomain()) && (ridp.equals("*") || ridp.equals(id.getResourcePath()));
+		String ridd = reloadId.getNamespace();
+		String ridp = reloadId.getPath();
+		return ridd.equals("*") || ridd.equals(reloadId.getNamespace()) && (ridp.equals("*") || ridp.equals(id.getPath()));
 	}
 
 	public void failedToReload(ResourceLocation id)

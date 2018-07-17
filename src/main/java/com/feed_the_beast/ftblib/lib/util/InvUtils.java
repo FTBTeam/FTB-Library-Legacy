@@ -45,7 +45,7 @@ public class InvUtils
 	@Nullable
 	public static NBTTagCompound nullIfEmpty(@Nullable NBTTagCompound nbt)
 	{
-		return nbt == null || nbt.hasNoTags() ? null : nbt;
+		return nbt == null || nbt.isEmpty() ? null : nbt;
 	}
 
 	public static void dropItem(World w, double x, double y, double z, double mx, double my, double mz, ItemStack item, int delay)
@@ -74,26 +74,6 @@ public class InvUtils
 	public static void dropItem(Entity e, ItemStack item)
 	{
 		dropItem(e.world, e.posX, e.posY, e.posZ, item, 0);
-	}
-
-	public static void giveItem(EntityPlayer player, ItemStack item)
-	{
-		if (!item.isEmpty())
-		{
-			if (player.inventory.addItemStackToInventory(item))
-			{
-				player.inventory.markDirty();
-
-				if (player.openContainer != null)
-				{
-					player.openContainer.detectAndSendChanges();
-				}
-			}
-			else
-			{
-				dropItem(player, item);
-			}
-		}
 	}
 
 	public static void dropAllItems(World world, double x, double y, double z, Iterable<ItemStack> items)
@@ -178,7 +158,7 @@ public class InvUtils
 			}
 		}
 
-		if (!list.hasNoTags())
+		if (!list.isEmpty())
 		{
 			nbt.setTag(key, list);
 		}
@@ -231,7 +211,7 @@ public class InvUtils
 	@Nullable
 	public static NBTTagCompound getTag(ItemStack stack)
 	{
-		return !stack.hasTagCompound() || stack.getTagCompound().hasNoTags() ? null : stack.getTagCompound();
+		return !stack.hasTagCompound() || stack.getTagCompound().isEmpty() ? null : stack.getTagCompound();
 	}
 
 	public static boolean stacksAreEqual(ItemStack stackA, ItemStack stackB)

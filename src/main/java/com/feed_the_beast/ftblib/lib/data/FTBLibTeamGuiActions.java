@@ -60,7 +60,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public void onAction(ForgePlayer player, NBTTagCompound data)
 		{
-			if (data.hasNoTags())
+			if (data.isEmpty())
 			{
 				new MessageMyTeamPlayerList(getId(), player, NO_ENEMIES_PREDICATE).sendTo(player.getPlayer());
 				return;
@@ -132,7 +132,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public void onAction(ForgePlayer player, NBTTagCompound data)
 		{
-			if (data.hasNoTags())
+			if (data.isEmpty())
 			{
 				new MessageMyTeamPlayerList(getId(), player, ALLIES_PREDICATE).sendTo(player.getPlayer());
 			}
@@ -157,7 +157,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public void onAction(ForgePlayer player, NBTTagCompound data)
 		{
-			if (data.hasNoTags())
+			if (data.isEmpty())
 			{
 				new MessageMyTeamPlayerList(getId(), player, MEMBERS_PREDICATE).sendTo(player.getPlayer());
 				return;
@@ -183,7 +183,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public void onAction(ForgePlayer player, NBTTagCompound data)
 		{
-			if (data.hasNoTags())
+			if (data.isEmpty())
 			{
 				new MessageMyTeamPlayerList(getId(), player, ENEMIES_PREDICATE).sendTo(player.getPlayer());
 			}
@@ -224,7 +224,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public void onAction(ForgePlayer player, NBTTagCompound data)
 		{
-			if (data.hasNoTags())
+			if (data.isEmpty())
 			{
 				new MessageMyTeamPlayerList(getId(), player, MEMBERS_PREDICATE).sendTo(player.getPlayer());
 			}

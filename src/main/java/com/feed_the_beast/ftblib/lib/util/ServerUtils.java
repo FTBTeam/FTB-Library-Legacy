@@ -111,7 +111,7 @@ public class ServerUtils
 
 	public static boolean isOP(EntityPlayerMP player)
 	{
-		return isOP(player.mcServer, player.getGameProfile());
+		return isOP(player.server, player.getGameProfile());
 	}
 
 	public static Collection<ICommand> getAllCommands(MinecraftServer server, ICommandSender sender)
@@ -136,7 +136,7 @@ public class ServerUtils
 			return SpawnType.CANT_SPAWN;
 		}
 
-		Chunk chunk = world.getChunkFromBlockCoords(pos);
+		Chunk chunk = world.getChunk(pos);
 
 		if (!WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntityLiving.SpawnPlacementType.ON_GROUND, world, pos) || chunk.getLightFor(EnumSkyBlock.BLOCK, pos) >= 8)
 		{

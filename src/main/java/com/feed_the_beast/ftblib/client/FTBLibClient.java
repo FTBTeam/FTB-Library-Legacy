@@ -163,13 +163,13 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 
 								group.getButtons().add(button);
 
-								if (sidebarButtonConfig.has(button.id.getResourceDomain()))
+								if (sidebarButtonConfig.has(button.id.getNamespace()))
 								{
-									JsonElement e = sidebarButtonConfig.get(button.id.getResourceDomain());
+									JsonElement e = sidebarButtonConfig.get(button.id.getNamespace());
 
-									if (e.isJsonObject() && e.getAsJsonObject().has(button.id.getResourcePath()))
+									if (e.isJsonObject() && e.getAsJsonObject().has(button.id.getPath()))
 									{
-										button.setConfig(e.getAsJsonObject().get(button.id.getResourcePath()).getAsBoolean());
+										button.setConfig(e.getAsJsonObject().get(button.id.getPath()).getAsBoolean());
 									}
 								}
 								else if (sidebarButtonConfig.has(button.id.toString()))
@@ -243,15 +243,15 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 		{
 			for (SidebarButton button : group.getButtons())
 			{
-				JsonObject o1 = o.getAsJsonObject(button.id.getResourceDomain());
+				JsonObject o1 = o.getAsJsonObject(button.id.getNamespace());
 
 				if (o1 == null)
 				{
 					o1 = new JsonObject();
-					o.add(button.id.getResourceDomain(), o1);
+					o.add(button.id.getNamespace(), o1);
 				}
 
-				o1.addProperty(button.id.getResourcePath(), button.getConfig());
+				o1.addProperty(button.id.getPath(), button.getConfig());
 			}
 		}
 
