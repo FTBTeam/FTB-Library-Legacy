@@ -98,7 +98,11 @@ public class ConfigString extends ConfigValue
 	@Override
 	public boolean setValueFromString(String text, boolean simulate)
 	{
-		setString(text);
+		if (!simulate)
+		{
+			setString(text);
+		}
+
 		return true;
 	}
 
@@ -140,6 +144,7 @@ public class ConfigString extends ConfigValue
 		charLimit = data.readUnsignedShort();
 	}
 
+	@Override
 	public boolean isEmpty()
 	{
 		return getString().isEmpty();

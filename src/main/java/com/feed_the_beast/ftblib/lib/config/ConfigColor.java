@@ -7,8 +7,6 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 
-import javax.annotation.Nullable;
-
 /**
  * @author LatvianModder
  */
@@ -44,7 +42,6 @@ public class ConfigColor extends ConfigValue
 		return value;
 	}
 
-	@Nullable
 	@Override
 	public Object getValue()
 	{

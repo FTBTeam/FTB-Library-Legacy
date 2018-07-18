@@ -16,12 +16,12 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public final class ConfigList extends ConfigValue implements Iterable<ConfigValue>
+public final class ConfigList<T extends ConfigValue> extends ConfigValue implements Iterable<T>
 {
 	public static final String ID = "list";
 	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
 
-	private final List<ConfigValue> list;
+	private final List<T> list;
 	private String valueId;
 
 	public ConfigList(String id)
@@ -30,16 +30,9 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 		valueId = id;
 	}
 
-	public ConfigList(Collection<ConfigValue> v)
+	public ConfigList(Collection<T> v)
 	{
 		this(ConfigNull.ID);
-		addAll(v);
-	}
-
-	public ConfigList(ConfigValue v0, ConfigValue... v)
-	{
-		this(ConfigNull.ID);
-		add(v0);
 		addAll(v);
 	}
 
@@ -50,7 +43,7 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 	}
 
 	@Override
-	public Object getValue()
+	public List<T> getValue()
 	{
 		return getList();
 	}
@@ -66,7 +59,7 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 		return !valueId.equals(ConfigNull.ID);
 	}
 
-	public void add(ConfigValue v)
+	public void add(T v)
 	{
 		if (v.isNull())
 		{
@@ -84,23 +77,23 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 		}
 	}
 
-	public void addAll(Collection<ConfigValue> v)
+	public void addAll(Collection<T> v)
 	{
-		for (ConfigValue v1 : v)
+		for (T v1 : v)
 		{
 			add(v1);
 		}
 	}
 
-	public void addAll(ConfigValue... v)
+	public void addAll(T... v)
 	{
-		for (ConfigValue v1 : v)
+		for (T v1 : v)
 		{
 			add(v1);
 		}
 	}
 
-	public Collection<ConfigValue> getList()
+	public List<T> getList()
 	{
 		return list;
 	}
@@ -146,7 +139,7 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 			return;
 		}
 
-		Collection<ConfigValue> list = getList();
+		Collection<T> list = getList();
 		data.writeShort(list.size());
 
 		for (ConfigValue s : list)
@@ -173,7 +166,7 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 		{
 			ConfigValue v = blank.copy();
 			v.readData(data);
-			add(v);
+			add((T) v);
 		}
 	}
 
@@ -212,7 +205,7 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 	@Override
 	public ConfigValue copy()
 	{
-		return new ConfigList(list);
+		return new ConfigList<>(list);
 	}
 
 	@Override
@@ -243,7 +236,7 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 		{
 			ConfigValue v = blank.copy();
 			v.fromJson(e);
-			add(v);
+			add((T) v);
 		}
 	}
 
@@ -261,8 +254,14 @@ public final class ConfigList extends ConfigValue implements Iterable<ConfigValu
 	}
 
 	@Override
-	public Iterator<ConfigValue> iterator()
+	public Iterator<T> iterator()
 	{
 		return list.iterator();
+	}
+
+	@Override
+	public boolean isEmpty()
+	{
+		return list.isEmpty();
 	}
 }

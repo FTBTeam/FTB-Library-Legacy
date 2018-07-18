@@ -5,11 +5,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
-import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
@@ -17,27 +17,20 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemStackSerializer
 {
-	public static ItemStack parseItem(String input)
+	public static ItemStack parseItemThrowingException(String input) throws Exception
 	{
 		input = input.trim();
-		if (input.isEmpty() || input.equals("-"))
+		if (input.isEmpty() || input.equals("-") || input.equals("minecraft:air"))
 		{
 			return ItemStack.EMPTY;
 		}
 		else if (input.startsWith("{") && input.endsWith("}"))
 		{
-			try
-			{
-				ItemStack stack = new ItemStack(JsonToNBT.getTagFromJson(input));
+			ItemStack stack = new ItemStack(JsonToNBT.getTagFromJson(input));
 
-				if (!stack.isEmpty())
-				{
-					return stack;
-				}
-			}
-			catch (NBTException e)
+			if (!stack.isEmpty())
 			{
-				e.printStackTrace();
+				return stack;
 			}
 		}
 
@@ -50,7 +43,7 @@ public class ItemStackSerializer
 
 		Item item = Item.REGISTRY.getObject(new ResourceLocation(s1[0]));
 
-		if (item == null)
+		if (item == null || item == Items.AIR)
 		{
 			return ItemStack.EMPTY;
 		}
@@ -71,30 +64,36 @@ public class ItemStackSerializer
 
 		if (s1.length >= 4)
 		{
-			try
-			{
-				itemstack.setTagCompound(JsonToNBT.getTagFromJson(s1[3]));
-			}
-			catch (Exception ex)
-			{
-			}
+			itemstack.setTagCompound(JsonToNBT.getTagFromJson(s1[3]));
 		}
 
 		return itemstack;
 	}
 
-	public static String toString(ItemStack is)
+	public static ItemStack parseItem(String input)
 	{
-		if (is.isEmpty())
+		try
 		{
-			return "-";
+			return parseItemThrowingException(input);
+		}
+		catch (Exception ex)
+		{
+			return ItemStack.EMPTY;
+		}
+	}
+
+	public static String toString(ItemStack stack)
+	{
+		if (stack.isEmpty())
+		{
+			return "minecraft:air";
 		}
 
-		StringBuilder builder = new StringBuilder(String.valueOf(Item.REGISTRY.getNameForObject(is.getItem())));
+		StringBuilder builder = new StringBuilder(String.valueOf(Item.REGISTRY.getNameForObject(stack.getItem())));
 
-		int count = is.getCount();
-		int meta = is.getMetadata();
-		NBTTagCompound tag = is.getTagCompound();
+		int count = stack.getCount();
+		int meta = stack.getMetadata();
+		NBTTagCompound tag = stack.getTagCompound();
 
 		if (count > 1 || meta != 0 || tag != null)
 		{
@@ -183,7 +182,7 @@ public class ItemStackSerializer
 		{
 			NBTBase nbt1 = JsonUtils.toNBT(json.get("nbt"));
 
-			if (nbt1 instanceof NBTTagCompound)
+			if (nbt1 instanceof NBTTagCompound && !nbt1.isEmpty())
 			{
 				nbt.setTag("tag", nbt1);
 			}

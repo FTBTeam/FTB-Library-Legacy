@@ -6,8 +6,8 @@ import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import com.google.gson.JsonElement;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-
-import javax.annotation.Nullable;
+import net.minecraft.nbt.JsonToNBT;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @author LatvianModder
@@ -22,7 +22,7 @@ public class ConfigItemStack extends ConfigValue
 	{
 	}
 
-	public ConfigItemStack(@Nullable ItemStack is)
+	public ConfigItemStack(ItemStack is)
 	{
 		value = is;
 	}
@@ -83,12 +83,11 @@ public class ConfigItemStack extends ConfigValue
 		return false;
 	}
 
-	public void setItem(@Nullable ItemStack is)
+	public void setItem(ItemStack is)
 	{
-		value = is;
+		value = is.isEmpty() ? ItemStack.EMPTY : is;
 	}
 
-	@Nullable
 	@Override
 	public Object getValue()
 	{
@@ -142,5 +141,43 @@ public class ConfigItemStack extends ConfigValue
 	public void readData(DataIn data)
 	{
 		setItem(data.readItemStack());
+	}
+
+	@Override
+	public boolean isEmpty()
+	{
+		return getItem().isEmpty();
+	}
+
+	@Override
+	public String getGuiText()
+	{
+		return getItem().serializeNBT().toString();
+	}
+
+	@Override
+	public boolean setValueFromString(String text, boolean simulate)
+	{
+		try
+		{
+			NBTTagCompound nbt = JsonToNBT.getTagFromJson(text);
+
+			if (nbt.hasKey("id"))
+			{
+				ItemStack stack = new ItemStack(nbt);
+
+				if (!simulate)
+				{
+					setItem(stack);
+				}
+
+				return true;
+			}
+		}
+		catch (Exception ex)
+		{
+		}
+
+		return false;
 	}
 }

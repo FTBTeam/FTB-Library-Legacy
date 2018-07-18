@@ -3,7 +3,6 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.util.math.MathHelper;
@@ -140,17 +139,21 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	@Override
 	public boolean setValueFromString(String text, boolean simulate)
 	{
-		if (MathUtils.canParseInt(text))
+		try
 		{
+			int val = Integer.parseInt(text);
+
 			if (!simulate)
 			{
-				setInt(Integer.parseInt(text));
+				setInt(val);
 			}
 
 			return true;
 		}
-
-		return false;
+		catch (Exception ex)
+		{
+			return false;
+		}
 	}
 
 	@Override

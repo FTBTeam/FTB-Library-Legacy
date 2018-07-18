@@ -3,7 +3,6 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -143,17 +142,21 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	@Override
 	public boolean setValueFromString(String text, boolean simulate)
 	{
-		if (MathUtils.canParseDouble(text))
+		try
 		{
+			double val = Double.parseDouble(text);
+
 			if (!simulate)
 			{
-				setDouble(Double.parseDouble(text));
+				setDouble(val);
 			}
 
 			return true;
 		}
-
-		return false;
+		catch (Exception ex)
+		{
+			return false;
+		}
 	}
 
 	@Override

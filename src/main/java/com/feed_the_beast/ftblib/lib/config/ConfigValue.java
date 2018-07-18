@@ -117,4 +117,9 @@ public abstract class ConfigValue implements IStringSerializable, IJsonSerializa
 	public abstract void writeData(DataOut data);
 
 	public abstract void readData(DataIn data);
+
+	public boolean isEmpty()
+	{
+		return !getBoolean();
+	}
 }

@@ -8,6 +8,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.IJsonSerializable;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
 import javax.annotation.Nullable;
@@ -47,7 +48,7 @@ public final class ConfigGroup implements IJsonSerializable
 
 	public ITextComponent getTitle()
 	{
-		return title;
+		return title == null ? new TextComponentString("") : title;
 	}
 
 	public ConfigGroup setSupergroup(String s)
