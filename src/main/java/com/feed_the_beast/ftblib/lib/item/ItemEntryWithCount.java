@@ -4,6 +4,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 
 /**
@@ -31,9 +32,9 @@ public class ItemEntryWithCount
 
 	public ItemEntryWithCount(NBTTagCompound nbt)
 	{
-		if (nbt.hasKey("I", Constants.NBT.TAG_STRING))
+		if (nbt.hasKey("I"))
 		{
-			Item item = Item.REGISTRY.getObjectById(nbt.getInteger("I"));
+			Item item = nbt.hasKey("I", Constants.NBT.TAG_INT) ? Item.REGISTRY.getObjectById(nbt.getInteger("I")) : Item.REGISTRY.getObject(new ResourceLocation(nbt.getString("I")));
 
 			if (item != null && item != Items.AIR)
 			{
@@ -63,7 +64,7 @@ public class ItemEntryWithCount
 		return count <= 0 || entry.isEmpty();
 	}
 
-	public NBTTagCompound serializeNBT()
+	public NBTTagCompound serializeNBT(boolean net)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
@@ -72,7 +73,14 @@ public class ItemEntryWithCount
 			return nbt;
 		}
 
-		nbt.setInteger("I", Item.REGISTRY.getIDForObject(entry.item));
+		if (net)
+		{
+			nbt.setInteger("I", Item.REGISTRY.getIDForObject(entry.item));
+		}
+		else
+		{
+			nbt.setString("I", Item.REGISTRY.getNameForObject(entry.item).toString());
+		}
 
 		if (count != 1)
 		{
@@ -107,5 +115,10 @@ public class ItemEntryWithCount
 	public ItemStack getStack(boolean copy)
 	{
 		return entry.getStack(count, copy);
+	}
+
+	public String toString()
+	{
+		return serializeNBT(false).toString();
 	}
 }
