@@ -2,11 +2,11 @@ package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
-import com.google.gson.JsonElement;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
-
-import javax.annotation.Nullable;
+import net.minecraft.util.text.TextComponentString;
 
 /**
  * @author LatvianModder
@@ -19,9 +19,10 @@ public class ConfigTextComponent extends ConfigValue
 
 	public ConfigTextComponent()
 	{
+		value = new TextComponentString("");
 	}
 
-	public ConfigTextComponent(@Nullable ITextComponent c)
+	public ConfigTextComponent(ITextComponent c)
 	{
 		value = c;
 	}
@@ -32,35 +33,38 @@ public class ConfigTextComponent extends ConfigValue
 		return ID;
 	}
 
-	@Nullable
 	public ITextComponent getText()
 	{
 		return value;
 	}
 
-	public void setText(@Nullable ITextComponent c)
+	public void setText(ITextComponent c)
 	{
 		value = c;
-	}
-
-	@Nullable
-	@Override
-	public Object getValue()
-	{
-		return getText();
 	}
 
 	@Override
 	public String getString()
 	{
-		ITextComponent c = getText();
-		return c == null ? "" : c.getFormattedText();
+		return JsonUtils.serializeTextComponent(getText()).toString();
 	}
 
 	@Override
-	public String toString()
+	public boolean setValueFromString(String string, boolean simulate)
 	{
-		return getSerializableElement().toString();
+		ITextComponent component = JsonUtils.deserializeTextComponent(DataReader.get(string).safeJson());
+
+		if (component != null)
+		{
+			if (!simulate)
+			{
+				setText(component);
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
@@ -82,15 +86,15 @@ public class ConfigTextComponent extends ConfigValue
 	}
 
 	@Override
-	public void fromJson(JsonElement e)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		setText(JsonUtils.deserializeTextComponent(e));
+		nbt.setTag(key, JsonUtils.toNBT(JsonUtils.serializeTextComponent(getText())));
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return JsonUtils.serializeTextComponent(getText());
+		setText(JsonUtils.deserializeTextComponent(JsonUtils.toJson(nbt.getTag(key))));
 	}
 
 	@Override
@@ -103,5 +107,11 @@ public class ConfigTextComponent extends ConfigValue
 	public void readData(DataIn data)
 	{
 		setText(data.readTextComponent());
+	}
+
+	@Override
+	public ITextComponent getStringForGUI()
+	{
+		return getText().createCopy();
 	}
 }

@@ -4,10 +4,12 @@ import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.common.util.Constants;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -40,12 +42,6 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	public String getName()
 	{
 		return ID;
-	}
-
-	@Override
-	public List<T> getValue()
-	{
-		return getList();
 	}
 
 	public void clear()
@@ -96,37 +92,6 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	public List<T> getList()
 	{
 		return list;
-	}
-
-	public boolean containsValue(@Nullable Object val)
-	{
-		if (list.isEmpty())
-		{
-			return false;
-		}
-
-		for (ConfigValue value : list)
-		{
-			if (value.getValue() == val)
-			{
-				return true;
-			}
-		}
-
-		if (val == null)
-		{
-			return false;
-		}
-
-		for (ConfigValue value : list)
-		{
-			if (val.equals(value.getValue()))
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 
 	@Override
@@ -215,42 +180,47 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	}
 
 	@Override
-	public void fromJson(JsonElement json)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		if (!hasValidId())
+		if (hasValidId() && !list.isEmpty())
 		{
-			return;
+			NBTTagList l = new NBTTagList();
+
+			for (T value : list)
+			{
+				NBTTagCompound nbt1 = new NBTTagCompound();
+				value.writeToNBT(nbt1, "value");
+				l.appendTag(nbt1);
+			}
+
+			nbt.setTag(key, l);
 		}
+	}
 
-		list.clear();
-		JsonArray a = json.getAsJsonArray();
+	@Override
+	public void readFromNBT(NBTTagCompound nbt, String key)
+	{
+		NBTTagList list = nbt.getTagList(key, Constants.NBT.TAG_COMPOUND);
 
-		if (a.size() == 0)
+		if (list.isEmpty())
 		{
 			return;
 		}
 
 		ConfigValue blank = FTBLibAPI.getConfigValueFromId(valueId);
 
-		for (JsonElement e : a)
+		for (int i = 0; i < list.tagCount(); i++)
 		{
 			ConfigValue v = blank.copy();
-			v.fromJson(e);
+			v.readFromNBT(list.getCompoundTagAt(i), "value");
 			add((T) v);
 		}
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public ITextComponent getStringForGUI()
 	{
-		JsonArray a = new JsonArray();
-
-		if (hasValidId())
-		{
-			list.forEach(v -> a.add(v.getSerializableElement()));
-		}
-
-		return a;
+		return new TextComponentString("...");
 	}
 
 	@Override

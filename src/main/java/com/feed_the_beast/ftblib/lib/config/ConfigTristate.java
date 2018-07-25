@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftblib.lib.config;
 
+import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import net.minecraft.nbt.NBTTagCompound;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -51,13 +50,6 @@ public class ConfigTristate extends ConfigValue
 		value = v;
 	}
 
-	@Nullable
-	@Override
-	public Object getValue()
-	{
-		return get();
-	}
-
 	@Override
 	public String getString()
 	{
@@ -89,22 +81,49 @@ public class ConfigTristate extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
 		set(EnumTristate.NAME_MAP.getNext(get()));
-		gui.onChanged(info.id, getSerializableElement());
 	}
 
 	@Override
-	public void fromJson(JsonElement json)
+	public boolean setValueFromString(String string, boolean simulate)
 	{
-		set(json.getAsString().equals("toggle") ? get().getOpposite() : EnumTristate.NAME_MAP.get(json.getAsString()));
+		if (string.equals("toggle"))
+		{
+			if (!simulate)
+			{
+				set(get().getOpposite());
+			}
+
+			return true;
+		}
+
+		EnumTristate tristate = EnumTristate.NAME_MAP.getNullable(string);
+
+		if (tristate != null)
+		{
+			if (!simulate)
+			{
+				set(tristate);
+			}
+
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		return new JsonPrimitive(get().getName());
+		nbt.setString(key, get().getName());
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound nbt, String key)
+	{
+		set(EnumTristate.NAME_MAP.get(key));
 	}
 
 	@Override

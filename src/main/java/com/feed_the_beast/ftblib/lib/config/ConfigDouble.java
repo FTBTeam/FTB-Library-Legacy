@@ -4,8 +4,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -53,12 +52,6 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	public void setDouble(double v)
 	{
 		value = v;
-	}
-
-	@Override
-	public Object getValue()
-	{
-		return getDouble();
 	}
 
 	public ConfigDouble setMin(double v)
@@ -120,9 +113,9 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	}
 
 	@Override
-	public void addInfo(ConfigValueInfo info, List<String> list)
+	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
-		super.addInfo(info, list);
+		super.addInfo(inst, list);
 
 		double m = getMin();
 
@@ -140,11 +133,11 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	}
 
 	@Override
-	public boolean setValueFromString(String text, boolean simulate)
+	public boolean setValueFromString(String string, boolean simulate)
 	{
 		try
 		{
-			double val = Double.parseDouble(text);
+			double val = Double.parseDouble(string);
 
 			if (!simulate)
 			{
@@ -160,15 +153,20 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	}
 
 	@Override
-	public void fromJson(JsonElement json)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		setDouble(json.getAsDouble());
+		value = getDouble();
+
+		if (value != 0D)
+		{
+			nbt.setDouble(key, value);
+		}
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return new JsonPrimitive(getDouble());
+		setDouble(nbt.getDouble(key));
 	}
 
 	@Override
@@ -191,5 +189,11 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	public double getAsDouble()
 	{
 		return getDouble();
+	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		setDouble(value.getDouble());
 	}
 }

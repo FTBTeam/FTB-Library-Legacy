@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.util;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagByteArray;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagIntArray;
@@ -22,6 +23,9 @@ import java.io.InputStream;
  */
 public class NBTUtils
 {
+	public static final NBTTagByte BYTE_0 = new NBTTagByte((byte) 0);
+	public static final NBTTagByte BYTE_1 = new NBTTagByte((byte) 1);
+
 	@SuppressWarnings("ConstantConditions")
 	public static void renameTag(NBTTagCompound nbt, String oldName, String newName)
 	{

@@ -50,7 +50,7 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTagCompound>, Comparable<ForgePlayer>, IHasCache
+public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTagCompound>, Comparable<ForgePlayer>, IHasCache, IConfigCallback
 {
 	private static FakePlayer playerForStats;
 
@@ -65,7 +65,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	private ConfigGroup cachedConfig;
 	private GameProfile cachedProfile;
 	public long lastTimeSeen;
-	private IConfigCallback cachedConfigCallback;
 	public boolean needsSaving;
 
 	public ForgePlayer(Universe u, UUID id, String name)
@@ -120,7 +119,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		cachedPlayerNBT = null;
 		cachedProfile = null;
 		cachedConfig = null;
-		cachedConfigCallback = null;
 		dataStorage.clearCache();
 	}
 
@@ -324,30 +322,17 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		if (cachedConfig == null)
 		{
-			cachedConfig = new ConfigGroup(new TextComponentTranslation("player_config"));
-			cachedConfig.setSupergroup("player_config");
+			cachedConfig = new ConfigGroup("player_config");
+			cachedConfig.setDisplayName(new TextComponentTranslation("player_config"));
 			ForgePlayerConfigEvent event = new ForgePlayerConfigEvent(this, cachedConfig);
 			event.post();
-			event.getConfig().setGroupName(FTBLib.MOD_ID, new TextComponentString(FTBLib.MOD_NAME));
-			event.getConfig().add(FTBLib.MOD_ID, "hide_team_notification", hideTeamNotification);
+
+			ConfigGroup main = cachedConfig.getGroup(FTBLib.MOD_ID);
+			main.setDisplayName(new TextComponentString(FTBLib.MOD_NAME));
+			main.add("hide_team_notification", hideTeamNotification);
 		}
 
 		return cachedConfig;
-	}
-
-	public IConfigCallback getConfigCallback()
-	{
-		if (cachedConfigCallback == null)
-		{
-			cachedConfigCallback = (group, sender, json) ->
-			{
-				group.fromJson(json);
-				clearCache();
-				markDirty();
-			};
-		}
-
-		return cachedConfigCallback;
 	}
 
 	public NBTTagCompound getPlayerNBT()
@@ -460,5 +445,12 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		}
 
 		return new File(team.universe.getWorldDirectory(), "data/ftb_lib/players/" + getName().toLowerCase() + "." + ext + ".dat");
+	}
+
+	@Override
+	public void onConfigSaved(ConfigGroup group, ICommandSender sender)
+	{
+		clearCache();
+		markDirty();
 	}
 }

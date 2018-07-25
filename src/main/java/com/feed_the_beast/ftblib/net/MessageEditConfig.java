@@ -15,7 +15,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class MessageEditConfig extends MessageToClient
 {
-	private static final IConfigCallback RX_CONFIG_TREE = (group, sender, json) -> new MessageEditConfigResponse(json.getAsJsonObject()).sendToServer();
+	private static final IConfigCallback RX_CONFIG_TREE = (group, sender) -> new MessageEditConfigResponse(group.serializeNBT()).sendToServer();
 
 	private ConfigGroup group;
 
@@ -38,13 +38,14 @@ public class MessageEditConfig extends MessageToClient
 	@Override
 	public void writeData(DataOut data)
 	{
+		data.writeString(group.getName());
 		group.writeData(data);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		group = new ConfigGroup(null);
+		group = new ConfigGroup(data.readString());
 		group.readData(data);
 	}
 

@@ -1,28 +1,30 @@
 package com.feed_the_beast.ftblib.lib.config;
 
+import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiSelectors;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.google.gson.JsonElement;
-import net.minecraft.util.IJsonSerializable;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author LatvianModder
  */
-public abstract class ConfigValue implements IStringSerializable, IJsonSerializable
+public abstract class ConfigValue implements IStringSerializable
 {
-	public abstract Object getValue();
-
 	public abstract String getString();
 
 	public abstract boolean getBoolean();
@@ -43,7 +45,7 @@ public abstract class ConfigValue implements IStringSerializable, IJsonSerializa
 
 	public boolean equalsValue(ConfigValue value)
 	{
-		return Objects.equals(getValue(), value.getValue());
+		return value == this || getString().equals(value.getString());
 	}
 
 	public Color4I getColor()
@@ -51,9 +53,9 @@ public abstract class ConfigValue implements IStringSerializable, IJsonSerializa
 		return Color4I.GRAY;
 	}
 
-	public void addInfo(ConfigValueInfo info, List<String> list)
+	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
-		list.add(TextFormatting.AQUA + "Def: " + info.defaultValue.getString());
+		list.add(TextFormatting.AQUA + "Def: " + inst.getDefaultValue().getStringForGUI().getFormattedText());
 	}
 
 	public List<String> getVariants()
@@ -66,35 +68,47 @@ public abstract class ConfigValue implements IStringSerializable, IJsonSerializa
 		return false;
 	}
 
-	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
 		GuiSelectors.selectJson(this, (value, set) ->
 		{
 			if (set)
 			{
-				fromJson(value.getSerializableElement());
-				gui.onChanged(info.id, getSerializableElement());
+				setValueFromOtherValue(value);
 			}
 
 			gui.openGui();
 		});
 	}
 
-	public boolean setValueFromString(String text, boolean simulate)
+	public boolean setValueFromString(String string, boolean simulate)
 	{
-		JsonElement json = DataReader.get(text).safeJson();
+		JsonElement json = DataReader.get(string).safeJson();
 
 		if (!json.isJsonNull())
 		{
 			if (!simulate)
 			{
-				fromJson(json);
+				NBTTagCompound nbt = new NBTTagCompound();
+				NBTBase nbt1 = JsonUtils.toNBT(json);
+
+				if (nbt1 != null)
+				{
+					nbt.setTag("x", nbt1);
+				}
+
+				readFromNBT(nbt, "x");
 			}
 
 			return true;
 		}
 
 		return false;
+	}
+
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		setValueFromString(value.getString(), false);
 	}
 
 	@Override
@@ -104,15 +118,19 @@ public abstract class ConfigValue implements IStringSerializable, IJsonSerializa
 	}
 
 	@Override
-	public String toString()
+	public final String toString()
 	{
 		return getString();
 	}
 
-	public String getGuiText()
+	public ITextComponent getStringForGUI()
 	{
-		return toString();
+		return new TextComponentString(getString());
 	}
+
+	public abstract void writeToNBT(NBTTagCompound nbt, String key);
+
+	public abstract void readFromNBT(NBTTagCompound nbt, String key);
 
 	public abstract void writeData(DataOut data);
 

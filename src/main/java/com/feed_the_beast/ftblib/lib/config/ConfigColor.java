@@ -4,8 +4,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.MutableColor4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @author LatvianModder
@@ -43,12 +42,6 @@ public class ConfigColor extends ConfigValue
 	}
 
 	@Override
-	public Object getValue()
-	{
-		return getColor();
-	}
-
-	@Override
 	public String getString()
 	{
 		return getColor().toString();
@@ -73,18 +66,18 @@ public class ConfigColor extends ConfigValue
 	}
 
 	@Override
-	public boolean setValueFromString(String text, boolean simulate)
+	public boolean setValueFromString(String string, boolean simulate)
 	{
 		try
 		{
-			if (text.indexOf(',') != -1)
+			if (string.indexOf(',') != -1)
 			{
-				if (text.length() < 5)
+				if (string.length() < 5)
 				{
 					return false;
 				}
 
-				String[] s = text.split(",");
+				String[] s = string.split(",");
 
 				if (s.length == 3 || s.length == 4)
 				{
@@ -106,16 +99,16 @@ public class ConfigColor extends ConfigValue
 			}
 			else
 			{
-				if (text.length() < 6)
+				if (string.length() < 6)
 				{
 					return false;
 				}
-				else if (text.startsWith("#"))
+				else if (string.startsWith("#"))
 				{
-					text = text.substring(1);
+					string = string.substring(1);
 				}
 
-				int hex = Integer.parseInt(text, 16);
+				int hex = Integer.parseInt(string, 16);
 
 				if (!simulate)
 				{
@@ -133,15 +126,15 @@ public class ConfigColor extends ConfigValue
 	}
 
 	@Override
-	public void fromJson(JsonElement json)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		getColor().set(0xFF000000 | json.getAsInt());
+		nbt.setInteger(key, getInt());
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return new JsonPrimitive(getInt());
+		getColor().set(0xFF000000 | nbt.getInteger(key));
 	}
 
 	@Override
@@ -154,5 +147,11 @@ public class ConfigColor extends ConfigValue
 	public void readData(DataIn data)
 	{
 		getColor().set(data.readInt());
+	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		getColor().set(value.getColor());
 	}
 }

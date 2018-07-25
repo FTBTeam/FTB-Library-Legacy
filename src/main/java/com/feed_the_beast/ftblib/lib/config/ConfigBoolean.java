@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftblib.lib.config;
 
+import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import com.google.gson.JsonElement;
+import net.minecraft.nbt.NBTTagCompound;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
@@ -57,13 +56,6 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 		return value;
 	}
 
-	@Nullable
-	@Override
-	public Object getValue()
-	{
-		return getBoolean();
-	}
-
 	@Override
 	public String getString()
 	{
@@ -101,29 +93,44 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
 		setBoolean(!getBoolean());
-		gui.onChanged(info.id, getSerializableElement());
 	}
 
 	@Override
-	public void fromJson(JsonElement json)
+	public boolean setValueFromString(String string, boolean simulate)
 	{
-		if (json.getAsString().equals("toggle"))
+		if (simulate)
+		{
+			return string.equals("true") || string.equals("false") || string.equals("toggle");
+		}
+
+		if (string.equals("toggle"))
 		{
 			setBoolean(!getBoolean());
 		}
 		else
 		{
-			setBoolean(json.getAsBoolean());
+			setBoolean(string.equals("true"));
+		}
+
+		return true;
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound nbt, String key)
+	{
+		if (getBoolean())
+		{
+			nbt.setBoolean(key, true);
 		}
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return getBoolean() ? JsonUtils.JSON_TRUE : JsonUtils.JSON_FALSE;
+		setBoolean(nbt.getBoolean(key));
 	}
 
 	@Override
@@ -142,5 +149,11 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 	public boolean getAsBoolean()
 	{
 		return getBoolean();
+	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		setBoolean(value.getBoolean());
 	}
 }

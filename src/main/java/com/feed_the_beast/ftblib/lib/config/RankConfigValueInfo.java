@@ -21,7 +21,7 @@ public final class RankConfigValueInfo implements Comparable<RankConfigValueInfo
 
 		if (defOP != null)
 		{
-			defaultOPValue.fromJson(defOP.getSerializableElement());
+			defaultOPValue.setValueFromOtherValue(defOP);
 		}
 	}
 
@@ -37,7 +37,7 @@ public final class RankConfigValueInfo implements Comparable<RankConfigValueInfo
 
 	public boolean equals(Object o)
 	{
-		return o == this || o instanceof ConfigValueInfo && node.equals(((ConfigValueInfo) o).id);
+		return o == this || o instanceof RankConfigValueInfo && node.equals(((RankConfigValueInfo) o).node);
 	}
 
 	@Override

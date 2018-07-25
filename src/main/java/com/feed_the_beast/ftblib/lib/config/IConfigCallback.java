@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.google.gson.JsonObject;
 import net.minecraft.command.ICommandSender;
 
 /**
@@ -8,7 +7,7 @@ import net.minecraft.command.ICommandSender;
  */
 public interface IConfigCallback
 {
-	IConfigCallback DEFAULT = (group, sender, json) -> group.fromJson(json);
+	IConfigCallback DEFAULT = (group, sender) -> {};
 
-	void saveConfig(ConfigGroup group, ICommandSender sender, JsonObject json);
+	void onConfigSaved(ConfigGroup group, ICommandSender sender);
 }

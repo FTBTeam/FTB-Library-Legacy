@@ -53,6 +53,6 @@ public class CmdSettings extends CmdEditConfigBase
 	@Override
 	public IConfigCallback getCallback(ICommandSender sender) throws CommandException
 	{
-		return CommandUtils.getForgePlayer(sender).team.getConfigCallback();
+		return CommandUtils.getForgePlayer(sender).team;
 	}
 }

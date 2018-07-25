@@ -3,12 +3,10 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.IntSupplier;
 
@@ -44,13 +42,6 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	public String getName()
 	{
 		return ID;
-	}
-
-	@Nullable
-	@Override
-	public Object getValue()
-	{
-		return getInt();
 	}
 
 	public ConfigInt setMin(int v)
@@ -117,9 +108,9 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	}
 
 	@Override
-	public void addInfo(ConfigValueInfo info, List<String> list)
+	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
-		super.addInfo(info, list);
+		super.addInfo(inst, list);
 
 		int m = getMin();
 
@@ -137,11 +128,11 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	}
 
 	@Override
-	public boolean setValueFromString(String text, boolean simulate)
+	public boolean setValueFromString(String string, boolean simulate)
 	{
 		try
 		{
-			int val = Integer.parseInt(text);
+			int val = Integer.parseInt(string);
 
 			if (!simulate)
 			{
@@ -157,15 +148,20 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	}
 
 	@Override
-	public void fromJson(JsonElement json)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		setInt(json.getAsInt());
+		value = getInt();
+
+		if (value != 0)
+		{
+			nbt.setDouble(key, value);
+		}
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return new JsonPrimitive(getInt());
+		setInt(nbt.getInteger(key));
 	}
 
 	@Override

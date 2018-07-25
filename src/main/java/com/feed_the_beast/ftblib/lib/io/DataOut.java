@@ -291,13 +291,34 @@ public class DataOut
 
 		if (primitive.isBoolean())
 		{
-			writeByte(4);
-			writeBoolean(primitive.getAsBoolean());
-			return 4;
+			if (primitive.getAsBoolean())
+			{
+				writeByte(11);
+				return 11;
+			}
+			else
+			{
+				writeByte(12);
+				return 12;
+			}
 		}
 		else if (primitive.isNumber())
 		{
-			Class<? extends Number> n = primitive.getAsNumber().getClass();
+			if (primitive == JsonUtils.JSON_ZERO)
+			{
+				writeByte(4);
+				return 4;
+			}
+
+			Number number = primitive.getAsNumber();
+
+			if (number.doubleValue() == 0D)
+			{
+				writeByte(4);
+				return 4;
+			}
+
+			Class<? extends Number> n = number.getClass();
 
 			if (n == Integer.class)
 			{
@@ -330,14 +351,22 @@ public class DataOut
 			}
 			else if (n == Double.class)
 			{
-				writeByte(10);
+				writeByte(4);
 				writeDouble(primitive.getAsDouble());
-				return 10;
+				return 4;
 			}
 		}
 
+		String string = primitive.getAsString();
+
+		if (string.isEmpty())
+		{
+			writeByte(13);
+			return 13;
+		}
+
 		writeByte(3);
-		writeString(primitive.getAsString());
+		writeString(string);
 		return 3;
 	}
 

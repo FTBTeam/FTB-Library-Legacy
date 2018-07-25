@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.events.IReloadHandler;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
+import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueProvider;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
@@ -113,6 +114,11 @@ public class FTBLibAPI
 
 	public static ConfigValue getConfigValueFromId(String id)
 	{
+		if (id.isEmpty())
+		{
+			return ConfigNull.INSTANCE;
+		}
+
 		ConfigValueProvider provider = FTBLibCommon.CONFIG_VALUE_PROVIDERS.get(id);
 		Objects.requireNonNull(provider, "Unknown Config ID: " + id);
 		return provider.get();

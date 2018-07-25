@@ -3,9 +3,9 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.util.JsonUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -55,12 +55,6 @@ public class ConfigString extends ConfigValue
 	}
 
 	@Override
-	public Object getValue()
-	{
-		return getString();
-	}
-
-	@Override
 	public boolean getBoolean()
 	{
 		return getString().equals("true");
@@ -84,32 +78,27 @@ public class ConfigString extends ConfigValue
 		return COLOR;
 	}
 
-	public String toString()
+	@Override
+	public ITextComponent getStringForGUI()
 	{
-		return '"' + getString() + '"';
+		return new TextComponentString('"' + getString() + '"');
 	}
 
 	@Override
-	public String getGuiText()
-	{
-		return getString();
-	}
-
-	@Override
-	public boolean setValueFromString(String text, boolean simulate)
+	public boolean setValueFromString(String string, boolean simulate)
 	{
 		if (!simulate)
 		{
-			setString(text);
+			setString(string);
 		}
 
 		return true;
 	}
 
 	@Override
-	public void addInfo(ConfigValueInfo info, List<String> list)
+	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
-		super.addInfo(info, list);
+		super.addInfo(inst, list);
 
 		if (charLimit > 0)
 		{
@@ -118,16 +107,20 @@ public class ConfigString extends ConfigValue
 	}
 
 	@Override
-	public void fromJson(JsonElement json)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		setString(json.getAsString());
+		value = getString();
+
+		if (!value.isEmpty())
+		{
+			nbt.setString(key, value);
+		}
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		String s = getString();
-		return s.isEmpty() ? JsonUtils.JSON_EMPTY_STRING : new JsonPrimitive(s);
+		setString(nbt.getString(key));
 	}
 
 	@Override

@@ -182,6 +182,19 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 		}
 	}
 
+	@Nullable
+	public E getNullable(@Nullable String s)
+	{
+		if (s == null || s.isEmpty() || s.charAt(0) == '-')
+		{
+			return null;
+		}
+		else
+		{
+			return map.get(s);
+		}
+	}
+
 	public E get(int index)
 	{
 		return index < 0 || index >= size() ? defaultValue : values.get(index);

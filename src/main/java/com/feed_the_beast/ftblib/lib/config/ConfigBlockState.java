@@ -3,10 +3,9 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -45,12 +44,6 @@ public class ConfigBlockState extends ConfigValue
 	}
 
 	@Override
-	public Object getValue()
-	{
-		return getBlockState();
-	}
-
-	@Override
 	public String getString()
 	{
 		return getBlockState().toString();
@@ -75,22 +68,17 @@ public class ConfigBlockState extends ConfigValue
 	}
 
 	@Override
-	public void fromJson(JsonElement o)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		value = CommonUtils.AIR_STATE;
-
-		if (o.isJsonPrimitive())
-		{
-			value = Block.REGISTRY.getObject(new ResourceLocation(o.getAsString())).getDefaultState();
-		}
-
-		setBlockState(value);
+		nbt.setString(key, Block.REGISTRY.getNameForObject(getBlockState().getBlock()).toString());
+		//TODO: Blockstate properties
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return new JsonPrimitive(Block.REGISTRY.getNameForObject(getBlockState().getBlock()).toString());
+		String id = nbt.getString(key);
+		setBlockState(id.isEmpty() ? CommonUtils.AIR_STATE : Block.REGISTRY.getObject(new ResourceLocation(id)).getDefaultState());
 	}
 
 	@Override
@@ -103,5 +91,18 @@ public class ConfigBlockState extends ConfigValue
 	public void readData(DataIn data)
 	{
 		setBlockState(data.readBlockState());
+	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		if (value instanceof ConfigBlockState)
+		{
+			setBlockState(((ConfigBlockState) value).getBlockState());
+		}
+		else
+		{
+			super.setValueFromOtherValue(value);
+		}
 	}
 }

@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public abstract class GuiBase extends Panel
+public abstract class GuiBase extends Panel implements IOpenableGui
 {
 	public static class PositionedTextData
 	{
@@ -178,11 +178,7 @@ public abstract class GuiBase extends Panel
 		return prevScreen;
 	}
 
-	public final void closeGui()
-	{
-		closeGui(true);
-	}
-
+	@Override
 	public final void closeGui(boolean openPrevScreen)
 	{
 		int mx = Mouse.getX();
@@ -309,14 +305,10 @@ public abstract class GuiBase extends Panel
 		return new GuiWrapper(this);
 	}
 
+	@Override
 	public final void openGui()
 	{
 		ClientUtils.MC.displayGuiScreen(getWrapper());
-	}
-
-	public final void openGuiLater()
-	{
-		ClientUtils.runLater(this::openGui);
 	}
 
 	@Override

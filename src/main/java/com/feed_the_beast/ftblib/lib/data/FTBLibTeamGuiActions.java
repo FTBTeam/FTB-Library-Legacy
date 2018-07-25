@@ -30,7 +30,7 @@ public class FTBLibTeamGuiActions
 		@Override
 		public void onAction(ForgePlayer player, NBTTagCompound data)
 		{
-			FTBLibAPI.editServerConfig(player.getPlayer(), player.team.getSettings(), player.team.getConfigCallback());
+			FTBLibAPI.editServerConfig(player.getPlayer(), player.team.getSettings(), player.team);
 		}
 	}.setTitle(new TextComponentTranslation("gui.settings"));
 

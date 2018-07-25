@@ -378,7 +378,11 @@ public class DataIn
 				return s.isEmpty() ? JsonUtils.JSON_EMPTY_STRING : new JsonPrimitive(s);
 			}
 			case 4:
-				return readBoolean() ? JsonUtils.JSON_TRUE : JsonUtils.JSON_FALSE;
+				return JsonUtils.JSON_ZERO;
+			case 11:
+				return JsonUtils.JSON_TRUE;
+			case 12:
+				return JsonUtils.JSON_FALSE;
 			case 5:
 				return new JsonPrimitive(readByte());
 			case 6:
@@ -391,6 +395,8 @@ public class DataIn
 				return new JsonPrimitive(readFloat());
 			case 10:
 				return new JsonPrimitive(readDouble());
+			case 13:
+				return JsonUtils.JSON_EMPTY_STRING;
 		}
 
 		return JsonNull.INSTANCE;

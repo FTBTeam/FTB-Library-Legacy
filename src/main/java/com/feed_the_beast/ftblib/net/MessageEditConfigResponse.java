@@ -5,21 +5,21 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToServer;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
-import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @author LatvianModder
  */
 public class MessageEditConfigResponse extends MessageToServer
 {
-	private JsonObject groupData;
+	private NBTTagCompound groupData;
 
 	public MessageEditConfigResponse()
 	{
 	}
 
-	public MessageEditConfigResponse(JsonObject json)
+	public MessageEditConfigResponse(NBTTagCompound json)
 	{
 		groupData = json;
 	}
@@ -33,13 +33,13 @@ public class MessageEditConfigResponse extends MessageToServer
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeJson(groupData);
+		data.writeNBT(groupData);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		groupData = data.readJson().getAsJsonObject();
+		groupData = data.readNBT();
 	}
 
 	@Override
@@ -50,7 +50,8 @@ public class MessageEditConfigResponse extends MessageToServer
 
 		if (c != null)
 		{
-			c.callback.saveConfig(c.group, player, groupData);
+			c.group.deserializeNBT(groupData);
+			c.callback.onConfigSaved(c.group, player);
 			FTBLibCommon.TEMP_SERVER_CONFIG.remove(player.getUniqueID());
 		}
 	}

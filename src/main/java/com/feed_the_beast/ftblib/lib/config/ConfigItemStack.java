@@ -2,12 +2,13 @@ package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
-import com.google.gson.JsonElement;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 
 /**
  * @author LatvianModder
@@ -33,54 +34,9 @@ public class ConfigItemStack extends ConfigValue
 		return ID;
 	}
 
-	public ItemStack getItem()
+	public ItemStack getStack()
 	{
 		return value;
-	}
-
-	/**
-	 * @param sizeMode 0 - ignore stack size, 1 - itemStack size must be equal, 2 - itemStack size must be equal or larger
-	 * @return stack that is equal to itemStack. null if none match
-	 */
-	public boolean matchesItem(ItemStack itemStack, int sizeMode)
-	{
-		ItemStack is = getItem();
-		boolean isempty = is.isEmpty();
-		boolean stackempty = itemStack.isEmpty();
-
-		if (isempty || stackempty)
-		{
-			return isempty == stackempty;
-		}
-
-		int issize = is.getCount();
-		int stackSize = itemStack.getCount();
-
-		Item item0 = itemStack.getItem();
-		int meta = itemStack.getMetadata();
-
-		if (is.getItem() == item0 && is.getMetadata() == meta)
-		{
-			switch (sizeMode)
-			{
-				case 1:
-					if (issize == stackSize)
-					{
-						return true;
-					}
-					break;
-				case 2:
-					if (issize <= stackSize)
-					{
-						return true;
-					}
-					break;
-				default:
-					return true;
-			}
-		}
-
-		return false;
 	}
 
 	public void setItem(ItemStack is)
@@ -89,16 +45,9 @@ public class ConfigItemStack extends ConfigValue
 	}
 
 	@Override
-	public Object getValue()
-	{
-		return getItem();
-	}
-
-	@Override
 	public String getString()
 	{
-		ItemStack is = getItem();
-		return is.getCount() + "x " + (is.isEmpty() ? "Air" : is.getDisplayName());
+		return getStack().serializeNBT().toString();
 	}
 
 	@Override
@@ -110,31 +59,45 @@ public class ConfigItemStack extends ConfigValue
 	@Override
 	public int getInt()
 	{
-		return getItem().getCount();
+		return getStack().getCount();
 	}
 
 	@Override
 	public ConfigItemStack copy()
 	{
-		return new ConfigItemStack(getItem());
+		return new ConfigItemStack(getStack());
 	}
 
 	@Override
-	public void fromJson(JsonElement o)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		setItem(ItemStackSerializer.deserialize(o));
+		value = getStack();
+
+		if (!value.isEmpty())
+		{
+			nbt.setTag(key, value.serializeNBT());
+		}
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return ItemStackSerializer.serialize(getItem(), false, true);
+		NBTTagCompound nbt1 = nbt.getCompoundTag(key);
+
+		if (nbt1.isEmpty())
+		{
+			setItem(ItemStack.EMPTY);
+		}
+		else
+		{
+			setItem(new ItemStack(nbt1));
+		}
 	}
 
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeItemStack(getItem());
+		data.writeItemStack(getStack());
 	}
 
 	@Override
@@ -146,24 +109,56 @@ public class ConfigItemStack extends ConfigValue
 	@Override
 	public boolean isEmpty()
 	{
-		return getItem().isEmpty();
+		return getStack().isEmpty();
 	}
 
 	@Override
-	public String getGuiText()
+	public ITextComponent getStringForGUI()
 	{
-		return getItem().serializeNBT().toString();
+		ItemStack stack = getStack();
+
+		if (stack.getCount() <= 1)
+		{
+			return new TextComponentString(stack.getDisplayName());
+		}
+
+		return new TextComponentString(stack.getCount() + "x " + stack.getDisplayName());
 	}
 
 	@Override
-	public boolean setValueFromString(String text, boolean simulate)
+	public boolean setValueFromString(String string, boolean simulate)
 	{
+		if (string.isEmpty())
+		{
+			return false;
+		}
+
+		if (string.charAt(0) != '{')
+		{
+			Item item = Item.REGISTRY.getObject(new ResourceLocation(string));
+
+			if (item != null)
+			{
+				if (!simulate)
+				{
+					setItem(new ItemStack(item));
+				}
+
+				return true;
+			}
+		}
+
 		try
 		{
-			NBTTagCompound nbt = JsonToNBT.getTagFromJson(text);
+			NBTTagCompound nbt = JsonToNBT.getTagFromJson(string);
 
 			if (nbt.hasKey("id"))
 			{
+				if (!nbt.hasKey("Count"))
+				{
+					nbt.setByte("Count", (byte) 1);
+				}
+
 				ItemStack stack = new ItemStack(nbt);
 
 				if (!simulate)

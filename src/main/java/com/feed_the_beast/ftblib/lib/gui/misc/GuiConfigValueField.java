@@ -90,7 +90,7 @@ public class GuiConfigValueField extends GuiBase
 		};
 
 		textBox.setPosAndSize(8, 8, width - 16, 16);
-		textBox.writeText(val.getGuiText());
+		textBox.writeText(val.getString());
 		textBox.setFocused(true);
 	}
 

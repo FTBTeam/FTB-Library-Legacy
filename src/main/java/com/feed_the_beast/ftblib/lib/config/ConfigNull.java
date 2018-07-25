@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftblib.lib.config;
 
+import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
+import net.minecraft.nbt.NBTTagCompound;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -27,13 +26,6 @@ public class ConfigNull extends ConfigValue
 	public String getName()
 	{
 		return ID;
-	}
-
-	@Override
-	@Nullable
-	public Object getValue()
-	{
-		return null;
 	}
 
 	@Override
@@ -73,24 +65,23 @@ public class ConfigNull extends ConfigValue
 	}
 
 	@Override
-	public void addInfo(ConfigValueInfo info, List<String> list)
+	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
 	}
 
 	@Override
-	public void fromJson(JsonElement json)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return JsonNull.INSTANCE;
 	}
 
 	@Override
@@ -110,7 +101,7 @@ public class ConfigNull extends ConfigValue
 	}
 
 	@Override
-	public boolean setValueFromString(String text, boolean simulate)
+	public boolean setValueFromString(String string, boolean simulate)
 	{
 		return false;
 	}

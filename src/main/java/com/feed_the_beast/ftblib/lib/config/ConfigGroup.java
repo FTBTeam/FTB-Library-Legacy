@@ -1,211 +1,294 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import net.minecraft.util.IJsonSerializable;
+import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
  */
-public final class ConfigGroup implements IJsonSerializable
+public final class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTagCompound>
 {
-	private ITextComponent title;
-	private String supergroup = "";
-	private final Map<Node, ConfigValueInstance> map;
-	private final Map<String, ITextComponent> groupNames;
-	public Consumer<ConfigGroup> readCallback = null;
+	public ConfigGroup parent;
+	private ITextComponent displayName;
+	private final Map<String, ConfigValueInstance> values;
+	private final Map<String, ConfigGroup> groups;
 
-	public ConfigGroup(@Nullable ITextComponent t, boolean linked)
+	public ConfigGroup(String id)
 	{
-		title = t;
-		map = linked ? new LinkedHashMap<>() : new HashMap<>();
-		groupNames = new HashMap<>();
+		super(id);
+		values = new HashMap<>();
+		groups = new HashMap<>();
 	}
 
-	public ConfigGroup(@Nullable ITextComponent t)
+	public ConfigGroup setDisplayName(ITextComponent t)
 	{
-		this(t, false);
-	}
-
-	public ConfigGroup setTitle(ITextComponent t)
-	{
-		title = t;
+		displayName = t;
 		return this;
 	}
 
-	public ITextComponent getTitle()
+	public ITextComponent getDisplayName()
 	{
-		return title == null ? new TextComponentString("") : title;
+		return displayName == null ? new TextComponentTranslation(getPath()) : displayName;
 	}
 
-	public ConfigGroup setSupergroup(String s)
+	@Nullable
+	public ConfigGroup getNullableGroup(String id)
 	{
-		supergroup = s;
-		return this;
+		return groups.get(id);
 	}
 
-	public ConfigGroup setGroupName(String group, ITextComponent name)
+	public ConfigGroup getGroup(String id)
 	{
-		groupNames.put(group, name);
-		return this;
+		int index = id.indexOf('.');
+
+		if (index == -1)
+		{
+			ConfigGroup g = groups.get(id);
+
+			if (g == null)
+			{
+				g = new ConfigGroup(id);
+				g.parent = this;
+				groups.put(g.getName(), g);
+			}
+
+			return g;
+		}
+
+		return getGroup(id.substring(0, index)).getGroup(id.substring(index + 1));
 	}
 
-	public ITextComponent getGroupName(String key)
+	public ConfigValueInstance add(ConfigValueInstance inst)
 	{
-		ITextComponent name = groupNames.get(key);
-		return name == null ? new TextComponentTranslation(supergroup.isEmpty() ? key : (supergroup + "." + key)) : name;
+		if (inst.getGroup() != this)
+		{
+			throw new IllegalArgumentException("Can't add to this group, parent doesn't match!");
+		}
+
+		values.put(inst.getName(), inst);
+		return inst;
 	}
 
-	public ITextComponent getDisplayName(ConfigValueInfo info)
+	public ConfigValueInstance add(String id, ConfigValue value)
 	{
-		return info.displayName == null ? new TextComponentTranslation(supergroup.isEmpty() ? info.id.toString() : (supergroup + "." + info.id)) : info.displayName;
+		int o = Math.min(values.size(), 127);
+		return add(new ConfigValueInstance(id, this, value)).setOrder((byte) o);
 	}
 
-	public ConfigValueInfo add(ConfigValueInfo info, ConfigValue value)
+	public boolean hasValue(String key)
 	{
-		map.put(info.id, new ConfigValueInstance(info, value));
-		return info;
+		return values.containsKey(key);
 	}
 
-	public ConfigValueInfo add(String group, String id, ConfigValue value)
+	public void removeValue(String key)
 	{
-		return add(new ConfigValueInfo(group, id, value), value);
+		values.remove(key);
 	}
 
-	public boolean has(Node key)
+	@Nullable
+	public ConfigValueInstance getValueInstance(String key)
 	{
-		return map.containsKey(key);
+		int index = key.indexOf('.');
+		return index == -1 ? values.get(key) : getGroup(key.substring(0, index)).values.get(key);
 	}
 
-	public void remove(Node key)
+	public ConfigValue getValue(String key)
 	{
-		map.remove(key);
+		ConfigValueInstance v = getValueInstance(key);
+		return (v == null) ? ConfigNull.INSTANCE : v.getValue();
 	}
 
-	public ConfigValue get(Node key)
+	public final Collection<ConfigValueInstance> getValues()
 	{
-		ConfigValueInstance v = map.get(key);
-		return (v == null) ? ConfigNull.INSTANCE : v.value;
+		return values.values();
 	}
 
-	public boolean isEmpty()
+	public final Collection<ConfigGroup> getGroups()
 	{
-		return map.isEmpty();
-	}
-
-	public final Map<Node, ConfigValueInstance> getMap()
-	{
-		return map;
+		return groups.values();
 	}
 
 	public ConfigGroup copy()
 	{
-		ConfigGroup g = new ConfigGroup(title.createCopy());
+		ConfigGroup g = new ConfigGroup(getName());
 
-		for (ConfigValueInstance instance : map.values())
+		if (displayName != null)
 		{
-			g.add(instance.info.copy(), instance.value.copy());
+			g.setDisplayName(displayName.createCopy());
+		}
+
+		for (ConfigValueInstance instance : getValues())
+		{
+			g.add(instance.copy(g));
 		}
 
 		return g;
 	}
 
-	public void writeData(DataOut net)
+	public String getPath()
 	{
-		net.writeTextComponent(title);
-		net.writeString(supergroup);
-
-		net.writeShort(map.size());
-
-		for (ConfigValueInstance instance : map.values())
+		if (parent == null)
 		{
-			net.writeString(instance.info.id.toString());
-			instance.info.writeData(net);
-			net.writeString(instance.value.getName());
-			instance.value.writeData(net);
+			return getName();
 		}
 
-		net.writeShort(groupNames.size());
-
-		for (Map.Entry<String, ITextComponent> entry : groupNames.entrySet())
-		{
-			net.writeString(entry.getKey());
-			net.writeTextComponent(entry.getValue());
-		}
+		return parent.getPath() + "." + getName();
 	}
 
-	public void readData(DataIn net)
+	public ITextComponent getDisplayNameOf(ConfigValueInstance inst)
 	{
-		title = net.readTextComponent();
-		supergroup = net.readString();
-
-		int s = net.readUnsignedShort();
-		map.clear();
-
-		while (--s >= 0)
-		{
-			ConfigValueInfo info = new ConfigValueInfo(Node.get(net.readString()));
-			info.readData(net);
-			ConfigValue value = FTBLibAPI.getConfigValueFromId(net.readString());
-			value.readData(net);
-			map.put(info.id, new ConfigValueInstance(info, value));
-		}
-
-		s = net.readUnsignedShort();
-		groupNames.clear();
-
-		while (--s >= 0)
-		{
-			String group = net.readString();
-			groupNames.put(group, net.readTextComponent());
-		}
+		return new TextComponentTranslation(inst.getPath());
 	}
 
-	@Override
-	public void fromJson(JsonElement json)
+	public ITextComponent getInfoOf(ConfigValueInstance inst)
 	{
-		JsonObject o = json.getAsJsonObject();
+		ITextComponent name = inst.getDisplayName();
 
-		for (ConfigValueInstance instance : map.values())
+		if (name instanceof TextComponentTranslation)
 		{
-			if (!instance.info.excluded)
+			return new TextComponentTranslation(((TextComponentTranslation) name).getKey() + ".tooltip");
+		}
+
+		return new TextComponentTranslation(inst.getPath() + ".tooltip");
+	}
+
+	public List<String> getValueKeyTree()
+	{
+		List<String> list = new ArrayList<>();
+		getValueKeyTree0(list, "");
+		return list;
+	}
+
+	private void getValueKeyTree0(List<String> list, String path)
+	{
+		for (ConfigValueInstance instance : getValues())
+		{
+			if (path.isEmpty())
 			{
-				JsonElement e = o.get(instance.info.id.toString());
-
-				if (e != null)
-				{
-					instance.value.fromJson(e);
-				}
+				list.add(instance.getName());
+			}
+			else
+			{
+				list.add(path + "." + instance.getName());
 			}
 		}
 	}
 
-	@Override
-	public JsonElement getSerializableElement()
+	public String toString()
 	{
-		JsonObject o = new JsonObject();
+		Map<String, String> map = new LinkedHashMap<>();
 
-		for (ConfigValueInstance instance : map.values())
+		for (ConfigGroup group : getGroups())
 		{
-			if (!instance.info.excluded)
+			map.put(group.getName(), group.toString());
+		}
+
+		for (ConfigValueInstance instance : getValues())
+		{
+			map.put(instance.getName(), instance.getValue().getString());
+		}
+
+		return parent == null ? (getName() + "#" + map) : map.toString();
+	}
+
+	@Override
+	public NBTTagCompound serializeNBT()
+	{
+		NBTTagCompound nbt = new NBTTagCompound();
+
+		for (ConfigValueInstance instance : getValues())
+		{
+			if (!instance.getExcluded())
 			{
-				o.add(instance.info.id.toString(), instance.value.getSerializableElement());
+				instance.getValue().writeToNBT(nbt, instance.getName());
 			}
 		}
 
-		return o;
+		for (ConfigGroup group : getGroups())
+		{
+			NBTTagCompound nbt1 = group.serializeNBT();
+
+			if (!nbt1.isEmpty())
+			{
+				nbt.setTag(group.getName(), nbt1);
+			}
+		}
+
+		return nbt;
+	}
+
+	@Override
+	public void deserializeNBT(NBTTagCompound nbt)
+	{
+		for (ConfigValueInstance instance : getValues())
+		{
+			if (!instance.getExcluded())
+			{
+				instance.getValue().readFromNBT(nbt, instance.getName());
+			}
+		}
+
+		for (ConfigGroup group : getGroups())
+		{
+			group.deserializeNBT(nbt.getCompoundTag(group.getName()));
+		}
+	}
+
+	public void writeData(DataOut data)
+	{
+		data.writeTextComponent(displayName);
+		data.writeShort(values.size());
+
+		for (ConfigValueInstance instance : getValues())
+		{
+			data.writeString(instance.getName());
+			instance.writeData(data);
+		}
+
+		data.writeShort(groups.size());
+
+		for (ConfigGroup group : getGroups())
+		{
+			data.writeString(group.getName());
+			group.writeData(data);
+		}
+	}
+
+	public void readData(DataIn data)
+	{
+		displayName = data.readTextComponent();
+
+		int s = data.readUnsignedShort();
+		values.clear();
+
+		while (--s >= 0)
+		{
+			ConfigValueInstance inst = new ConfigValueInstance(this, data);
+			values.put(inst.getName(), inst);
+		}
+
+		s = data.readUnsignedShort();
+		groups.clear();
+
+		while (--s >= 0)
+		{
+			ConfigGroup group = new ConfigGroup(data.readString());
+			group.parent = this;
+			group.readData(data);
+			groups.put(group.getName(), group);
+		}
 	}
 }

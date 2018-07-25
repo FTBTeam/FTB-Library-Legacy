@@ -4,8 +4,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -40,12 +39,6 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	public String getName()
 	{
 		return ID;
-	}
-
-	@Override
-	public Object getValue()
-	{
-		return getTimer();
 	}
 
 	public ConfigTimer setMax(Ticks v)
@@ -114,9 +107,9 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	}
 
 	@Override
-	public void addInfo(ConfigValueInfo info, List<String> list)
+	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
-		super.addInfo(info, list);
+		super.addInfo(inst, list);
 
 		Ticks max = getMax();
 
@@ -127,16 +120,16 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	}
 
 	@Override
-	public boolean setValueFromString(String text, boolean simulate)
+	public boolean setValueFromString(String string, boolean simulate)
 	{
-		if (text.isEmpty())
+		if (string.isEmpty())
 		{
 			return false;
 		}
 
 		try
 		{
-			value = Ticks.get(text);
+			value = Ticks.get(string);
 
 			if (!simulate)
 			{
@@ -152,23 +145,16 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	}
 
 	@Override
-	public void fromJson(JsonElement json)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		if (json.isJsonPrimitive() && json.getAsJsonPrimitive().isNumber())
-		{
-			setTimer(Ticks.get(json.getAsLong()));
-		}
-		else
-		{
-			setTimer(Ticks.NO_TICKS);
-			setValueFromString(json.getAsString(), false);
-		}
+		nbt.setString(key, getTimer().toString());
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return new JsonPrimitive(getTimer().toString());
+		setTimer(Ticks.NO_TICKS);
+		setValueFromString(nbt.getString(key), false);
 	}
 
 	@Override

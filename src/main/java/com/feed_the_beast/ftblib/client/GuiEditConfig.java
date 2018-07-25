@@ -2,11 +2,8 @@ package com.feed_the_beast.ftblib.client;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
-import com.feed_the_beast.ftblib.lib.config.ConfigValue;
-import com.feed_the_beast.ftblib.lib.config.ConfigValueInfo;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueInstance;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
-import com.feed_the_beast.ftblib.lib.config.IGuiEditConfig;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -23,9 +20,6 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.MutableColor4I;
 import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
@@ -33,12 +27,27 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
-public class GuiEditConfig extends GuiBase implements IGuiEditConfig
+public class GuiEditConfig extends GuiBase
 {
 	public static final Color4I COLOR_BACKGROUND = Color4I.rgba(0x99333333);
+	public static final Comparator<ConfigValueInstance> COMPARATOR = (o1, o2) -> {
+		int i = o1.getGroup().getPath().compareToIgnoreCase(o2.getGroup().getPath());
+
+		if (i == 0)
+		{
+			i = Byte.compare(o1.getOrder(), o2.getOrder());
+		}
+
+		if (i == 0)
+		{
+			i = o1.getDisplayName().getUnformattedText().compareToIgnoreCase(o2.getDisplayName().getUnformattedText());
+		}
+
+		return i;
+	};
 
 	public static Theme THEME = new Theme()
 	{
@@ -63,52 +72,17 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 	public class ButtonConfigGroup extends Button
 	{
-		public final String groupId;
-		public String title = "-", info = "";
+		public final ConfigGroup group;
+		public String title, info;
 		public boolean collapsed = false;
 
-		public ButtonConfigGroup(Panel panel, String id)
+		public ButtonConfigGroup(Panel panel, ConfigGroup g)
 		{
 			super(panel);
-			groupId = id;
-
-			if (!groupId.isEmpty())
-			{
-				StringBuilder current = new StringBuilder();
-				StringBuilder text = new StringBuilder();
-
-				String[] sa = groupId.split("\\.");
-
-				for (int i = 0; i < sa.length; i++)
-				{
-					if (i != 0)
-					{
-						current.append(".");
-					}
-
-					current.append(sa[i]);
-					String key = current.toString();
-
-					text.append(group.getGroupName(key).getFormattedText());
-
-					if (i != sa.length - 1)
-					{
-						text.append(" > ");
-					}
-				}
-
-				title = text.toString();
-				text.setLength(0);
-				text.append(groupId);
-				text.append(".info");
-				String infoKey = text.toString();
-
-				if (I18n.hasKey(infoKey))
-				{
-					info = I18n.format(infoKey);
-				}
-			}
-
+			group = g;
+			title = g.getDisplayName().getFormattedText();
+			String infoKey = g.getPath() + ".info";
+			info = I18n.hasKey(infoKey) ? I18n.format(infoKey) : "";
 			setCollapsed(collapsed);
 		}
 
@@ -154,35 +128,26 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	public class ButtonConfigEntry extends Button
 	{
 		public final ButtonConfigGroup group;
-		public final ConfigValueInfo info;
-		public final ConfigValue value;
+		public final ConfigValueInstance inst;
 		public String keyText;
-		public List<String> infoText;
+		private String valueString = null;
 
-		public ButtonConfigEntry(Panel panel, ButtonConfigGroup g, ConfigValueInfo i, ConfigValue e)
+		public ButtonConfigEntry(Panel panel, ButtonConfigGroup g, ConfigValueInstance i)
 		{
 			super(panel);
 			group = g;
-			info = i;
-			value = e;
-			ITextComponent keyLang = GuiEditConfig.this.group.getDisplayName(info);
-			keyText = keyLang.getFormattedText();
-			String infoText = keyLang instanceof TextComponentTranslation && I18n.hasKey(((TextComponentTranslation) keyLang).getKey() + ".tooltip") ? I18n.format(((TextComponentTranslation) keyLang).getKey() + ".tooltip") : "";
+			inst = i;
+			keyText = inst.getDisplayName().getFormattedText();
+		}
 
-			if (!infoText.isEmpty())
+		public String getValueString()
+		{
+			if (valueString == null)
 			{
-				this.infoText = new ArrayList<>();
-
-				for (String s : infoText.split("\\\\n"))
-				{
-					this.infoText.addAll(listFormattedStringToWidth(s, 230));
-				}
+				valueString = inst.getValue().getStringForGUI().getFormattedText();
 			}
 
-			if (this.infoText == null || this.infoText.isEmpty())
-			{
-				this.infoText = Collections.emptyList();
-			}
+			return valueString;
 		}
 
 		@Override
@@ -201,7 +166,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 			drawString(keyText, ax + 4, ay + 4, Bits.setFlag(0, SHADOW, mouseOver));
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
-			String s = value.toString();
+			String s = getValueString();
 			int slen = getStringWidth(s);
 
 			if (slen > 150)
@@ -210,7 +175,7 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 				slen = 152;
 			}
 
-			MutableColor4I textCol = value.getColor().mutable();
+			MutableColor4I textCol = inst.getValue().getColor().mutable();
 			textCol.setAlpha(255);
 
 			if (mouseOver)
@@ -230,10 +195,10 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		@Override
 		public void onClicked(MouseButton button)
 		{
-			if (getMouseY() >= 20 && !info.cantEdit)
+			if (getMouseY() >= 20 && inst.getCanEdit())
 			{
 				GuiHelper.playClickSound();
-				value.onClicked(GuiEditConfig.this, info, button);
+				inst.getValue().onClicked(GuiEditConfig.this, inst, button);
 			}
 		}
 
@@ -242,14 +207,22 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		{
 			if (getMouseY() > 18)
 			{
-				if (!infoText.isEmpty() && getMouseX() < getAX() + getStringWidth(keyText) + 10)
+				if (getMouseX() < getAX() + getStringWidth(keyText) + 10)
 				{
-					list.addAll(infoText);
+					ITextComponent infoText = inst.getInfo();
+
+					if (!(infoText instanceof TextComponentTranslation) || I18n.hasKey(((TextComponentTranslation) infoText).getKey()))
+					{
+						for (String s : infoText.getFormattedText().split("\\\n"))
+						{
+							list.add(s);
+						}
+					}
 				}
 
-				if (getMouseX() > getGui().width - (Math.min(150, getStringWidth(value.getString())) + 25))
+				if (getMouseX() > getGui().width - (Math.min(150, getStringWidth(getValueString())) + 25))
 				{
-					value.addInfo(info, list);
+					inst.getValue().addInfo(inst, list);
 				}
 			}
 		}
@@ -257,7 +230,6 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 
 	private final ConfigGroup group;
 	private final IConfigCallback callback;
-	private final JsonObject modifiedConfig;
 
 	private final String title;
 	private final List<Widget> configEntryButtons;
@@ -271,10 +243,9 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		group = g;
 		callback = c;
 
-		ITextComponent title0 = g.getTitle().createCopy();
+		ITextComponent title0 = g.getDisplayName().createCopy();
 		title0.getStyle().setBold(true);
 		title = title0.getFormattedText();
-		modifiedConfig = new JsonObject();
 
 		configEntryButtons = new ArrayList<>();
 
@@ -305,34 +276,23 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		};
 
 		List<ConfigValueInstance> list = new ArrayList<>();
-
-		for (ConfigValueInstance instance : group.getMap().values())
-		{
-			if (!instance.info.hidden)
-			{
-				list.add(instance);
-			}
-		}
+		collectAllConfigValues(group, list);
 
 		if (!list.isEmpty())
 		{
-			list.sort((o1, o2) ->
-			{
-				int i = o1.info.group.compareToIgnoreCase(o2.info.group);
-				return i == 0 ? group.getDisplayName(o1.info).getUnformattedText().compareToIgnoreCase(group.getDisplayName(o2.info).getUnformattedText()) : i;
-			});
+			list.sort(COMPARATOR);
 
 			ButtonConfigGroup group = null;
 
 			for (ConfigValueInstance instance : list)
 			{
-				if (group == null || !group.groupId.equalsIgnoreCase(instance.info.group))
+				if (group == null || !group.group.equals(instance.getGroup()))
 				{
-					group = new ButtonConfigGroup(configPanel, instance.info.group);
+					group = new ButtonConfigGroup(configPanel, instance.getGroup());
 					configEntryButtons.add(group);
 				}
 
-				configEntryButtons.add(new ButtonConfigEntry(configPanel, group, instance.info, instance.value.copy()));
+				configEntryButtons.add(new ButtonConfigEntry(configPanel, group, instance));
 			}
 		}
 
@@ -379,9 +339,33 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 		});
 	}
 
+	private void collectAllConfigValues(ConfigGroup group, List<ConfigValueInstance> list)
+	{
+		for (ConfigValueInstance instance : group.getValues())
+		{
+			if (!instance.getHidden())
+			{
+				list.add(instance);
+			}
+		}
+
+		for (ConfigGroup group1 : group.getGroups())
+		{
+			collectAllConfigValues(group1, list);
+		}
+	}
+
 	@Override
 	public boolean onInit()
 	{
+		for (Widget widget : configEntryButtons)
+		{
+			if (widget instanceof ButtonConfigEntry)
+			{
+				((ButtonConfigEntry) widget).valueString = null;
+			}
+		}
+
 		return setFullscreen();
 	}
 
@@ -412,9 +396,9 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	@Override
 	public void onClosed()
 	{
-		if (shouldClose == 1 && !modifiedConfig.entrySet().isEmpty())
+		if (shouldClose == 1)
 		{
-			callback.saveConfig(group, ClientUtils.MC.player, modifiedConfig);
+			callback.onConfigSaved(group, ClientUtils.MC.player);
 		}
 	}
 
@@ -430,20 +414,10 @@ public class GuiEditConfig extends GuiBase implements IGuiEditConfig
 	}
 
 	@Override
-	public void onChanged(Node key, JsonElement val)
-	{
-		modifiedConfig.add(key.toString(), val);
-	}
-
-	@Override
 	public void drawBackground()
 	{
 		COLOR_BACKGROUND.draw(0, 0, width, 20);
-		drawString(getTitle(), 6 - 1, 6, Color4I.DARK_GRAY, 0);
-		drawString(getTitle(), 6 + 1, 6, Color4I.DARK_GRAY, 0);
-		drawString(getTitle(), 6, 6 - 1, Color4I.DARK_GRAY, 0);
-		drawString(getTitle(), 6, 6 + 1, Color4I.DARK_GRAY, 0);
-		drawString(getTitle(), 6, 6);
+		drawString(getTitle(), 6, 6, SHADOW);
 	}
 
 	@Override

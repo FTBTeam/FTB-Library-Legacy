@@ -19,6 +19,7 @@ import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -42,7 +43,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class ForgeTeam extends FinalIDObject implements IStringSerializable, INBTSerializable<NBTTagCompound>, IHasCache
+public class ForgeTeam extends FinalIDObject implements IStringSerializable, INBTSerializable<NBTTagCompound>, IHasCache, IConfigCallback
 {
 	public final Universe universe;
 	public final TeamType type;
@@ -58,7 +59,6 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	public final Map<ForgePlayer, EnumTeamStatus> players;
 	private ConfigGroup cachedConfig;
 	private ITextComponent cachedTitle;
-	private IConfigCallback cachedConfigCallback;
 	private Icon cachedIcon;
 	public boolean needsSaving;
 
@@ -194,7 +194,6 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		cachedTitle = null;
 		cachedIcon = null;
 		cachedConfig = null;
-		cachedConfigCallback = null;
 		dataStorage.clearCache();
 	}
 
@@ -628,35 +627,23 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	{
 		if (cachedConfig == null)
 		{
-			cachedConfig = new ConfigGroup(new TextComponentTranslation("gui.settings"));
-			cachedConfig.setSupergroup("team_config");
+			cachedConfig = new ConfigGroup("team_config");
+			cachedConfig.setDisplayName(new TextComponentTranslation("gui.settings"));
 			ForgeTeamConfigEvent event = new ForgeTeamConfigEvent(this, cachedConfig);
 			event.post();
 
-			event.getConfig().setGroupName(FTBLib.MOD_ID, new TextComponentString(FTBLib.MOD_NAME));
-			event.getConfig().add(FTBLib.MOD_ID, "free_to_join", freeToJoin);
-			event.getConfig().add("ftblib.display", "color", color);
-			event.getConfig().add("ftblib.display", "fake_player_status", fakePlayerStatus);
-			event.getConfig().add("ftblib.display", "title", title);
-			event.getConfig().add("ftblib.display", "desc", desc);
+			ConfigGroup main = cachedConfig.getGroup(FTBLib.MOD_ID);
+			main.setDisplayName(new TextComponentString(FTBLib.MOD_NAME));
+			main.add("free_to_join", freeToJoin);
+
+			ConfigGroup display = main.getGroup("display");
+			display.add("color", color);
+			display.add("fake_player_status", fakePlayerStatus);
+			display.add("title", title);
+			display.add("desc", desc);
 		}
 
 		return cachedConfig;
-	}
-
-	public IConfigCallback getConfigCallback()
-	{
-		if (cachedConfigCallback == null)
-		{
-			cachedConfigCallback = (group, sender, json) ->
-			{
-				group.fromJson(json);
-				clearCache();
-				markDirty();
-			};
-		}
-
-		return cachedConfigCallback;
 	}
 
 	public boolean isValid()
@@ -695,5 +682,12 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		}
 
 		return new File(universe.getWorldDirectory(), "data/ftb_lib/teams/" + getName() + "." + ext + ".dat");
+	}
+
+	@Override
+	public void onConfigSaved(ConfigGroup group, ICommandSender sender)
+	{
+		clearCache();
+		markDirty();
 	}
 }

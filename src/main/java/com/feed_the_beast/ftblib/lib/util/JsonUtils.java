@@ -61,6 +61,7 @@ public class JsonUtils
 	public static final JsonPrimitive JSON_TRUE = new JsonPrimitive(true);
 	public static final JsonPrimitive JSON_FALSE = new JsonPrimitive(false);
 	public static final JsonPrimitive JSON_EMPTY_STRING = new JsonPrimitive("");
+	public static final JsonPrimitive JSON_ZERO = new JsonPrimitive(0);
 	public static final JsonContext MINECRAFT_JSON_CONTEXT = new JsonContext("minecraft");
 
 	public static boolean isNull(@Nullable JsonElement element)

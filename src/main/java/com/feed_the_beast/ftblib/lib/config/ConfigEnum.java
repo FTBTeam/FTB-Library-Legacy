@@ -1,16 +1,15 @@
 package com.feed_the_beast.ftblib.lib.config;
 
+import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -62,8 +61,6 @@ public class ConfigEnum<E> extends ConfigValue
 		return nameMap;
 	}
 
-	@Override
-	@Nonnull
 	public E getValue()
 	{
 		return value;
@@ -85,9 +82,10 @@ public class ConfigEnum<E> extends ConfigValue
 		return getNameMap().getName(getValue());
 	}
 
-	public String toString()
+	@Override
+	public ITextComponent getStringForGUI()
 	{
-		return getNameMap().getDisplayName(null, getValue()).getFormattedText();
+		return getNameMap().getDisplayName(null, getValue());
 	}
 
 	@Override
@@ -116,9 +114,9 @@ public class ConfigEnum<E> extends ConfigValue
 	}
 
 	@Override
-	public void addInfo(ConfigValueInfo info, List<String> list)
+	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
-		list.add(TextFormatting.AQUA + "Def: " + getNameMap().getDisplayName(null, CommonUtils.cast(info.defaultValue.getValue())).getFormattedText());
+		list.add(TextFormatting.AQUA + "Def: " + getNameMap().getDisplayName(null, getNameMap().get(inst.getDefaultValue().getString())).getFormattedText());
 	}
 
 	@Override
@@ -128,15 +126,15 @@ public class ConfigEnum<E> extends ConfigValue
 	}
 
 	@Override
-	public void fromJson(JsonElement json)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		setValue(json.getAsString());
+		nbt.setString(key, getString());
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return new JsonPrimitive(getString());
+		setValue(nbt.getString(key));
 	}
 
 	@Override
@@ -168,9 +166,15 @@ public class ConfigEnum<E> extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
 		onClicked(button);
-		gui.onChanged(info.id, getSerializableElement());
+		gui.openGui();
+	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		setValue(value.getString());
 	}
 }

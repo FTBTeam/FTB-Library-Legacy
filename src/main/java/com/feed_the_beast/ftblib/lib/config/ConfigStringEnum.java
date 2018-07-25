@@ -1,14 +1,15 @@
 package com.feed_the_beast.ftblib.lib.config;
 
+import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonPrimitive;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -48,12 +49,6 @@ public class ConfigStringEnum extends ConfigValue
 		return ConfigEnum.ID;
 	}
 
-	@Override
-	public final Object getValue()
-	{
-		return getString();
-	}
-
 	public void setString(String v)
 	{
 		value = v;
@@ -65,10 +60,11 @@ public class ConfigStringEnum extends ConfigValue
 		return value;
 	}
 
-	public String toString()
+	@Override
+	public ITextComponent getStringForGUI()
 	{
 		ITextComponent textComponent = customNames.get(getString());
-		return textComponent == null ? getString() : textComponent.getFormattedText();
+		return textComponent == null ? new TextComponentString(getString()) : textComponent.createCopy();
 	}
 
 	public void setCustomName(String key, @Nullable ITextComponent component)
@@ -133,10 +129,10 @@ public class ConfigStringEnum extends ConfigValue
 	}
 
 	@Override
-	public void addInfo(ConfigValueInfo info, List<String> list)
+	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
-		ITextComponent component = customNames.get(info.defaultValue.getString());
-		list.add(TextFormatting.AQUA + "Def: " + (component == null ? info.defaultValue.getString() : component.getFormattedText()));
+		ITextComponent component = customNames.get(inst.getDefaultValue().getString());
+		list.add(TextFormatting.AQUA + "Def: " + (component == null ? inst.getDefaultValue() : component.getFormattedText()));
 	}
 
 	@Override
@@ -146,22 +142,22 @@ public class ConfigStringEnum extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IGuiEditConfig gui, ConfigValueInfo info, MouseButton button)
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
 		setString(keys.get(MathUtils.mod(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
-		gui.onChanged(info.id, getSerializableElement());
+		gui.openGui();
 	}
 
 	@Override
-	public void fromJson(JsonElement json)
+	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		setString(json.getAsString());
+		nbt.setString(key, getString());
 	}
 
 	@Override
-	public JsonElement getSerializableElement()
+	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		return new JsonPrimitive(getString());
+		setString(nbt.getString(key));
 	}
 
 	@Override
