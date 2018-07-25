@@ -241,9 +241,14 @@ public class Widget implements IGuiWrapper
 		return getFont().FONT_HEIGHT;
 	}
 
-	public final String trimStringToWidth(String text, int width, boolean reverse)
+	public final String trimStringToWidth(String text, int width)
 	{
-		return text.isEmpty() ? "" : getFont().trimStringToWidth(text, width, reverse);
+		return text.isEmpty() ? "" : getFont().trimStringToWidth(text, width, false);
+	}
+
+	public final String trimStringToWidthReverse(String text, int width)
+	{
+		return text.isEmpty() ? "" : getFont().trimStringToWidth(text, width, true);
 	}
 
 	public final List<String> listFormattedStringToWidth(String text, int width)

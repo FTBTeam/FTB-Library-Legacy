@@ -1,9 +1,12 @@
 package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
+import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
+import com.feed_the_beast.ftblib.lib.gui.misc.GuiEditConfigList;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
@@ -25,18 +28,12 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
 
 	private final List<T> list;
-	private String valueId;
+	private String type;
 
 	public ConfigList(String id)
 	{
 		list = new ArrayList<>();
-		valueId = id;
-	}
-
-	public ConfigList(Collection<T> v)
-	{
-		this(ConfigNull.ID);
-		addAll(v);
+		type = id;
 	}
 
 	@Override
@@ -45,30 +42,29 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 		return ID;
 	}
 
+	public String getType()
+	{
+		return type;
+	}
+
 	public void clear()
 	{
 		list.clear();
-		valueId = ConfigNull.ID;
 	}
 
 	private boolean hasValidId()
 	{
-		return !valueId.equals(ConfigNull.ID);
+		return !type.equals(ConfigNull.ID);
+	}
+
+	public boolean canAdd(ConfigValue value)
+	{
+		return !value.isNull() && type.equals(value.getName());
 	}
 
 	public ConfigList<T> add(T v)
 	{
-		if (v.isNull())
-		{
-			return this;
-		}
-
-		if (valueId.equals(ConfigNull.ID))
-		{
-			valueId = v.getName();
-			list.add(v);
-		}
-		else if (v.getName().equals(valueId))
+		if (canAdd(v))
 		{
 			list.add(v);
 		}
@@ -94,9 +90,9 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeString(valueId);
+		data.writeString(type);
 
-		if (valueId.equals(ConfigNull.ID))
+		if (!hasValidId())
 		{
 			return;
 		}
@@ -114,15 +110,15 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	public void readData(DataIn data)
 	{
 		clear();
-		valueId = data.readString();
+		type = data.readString();
 
-		if (valueId.equals(ConfigNull.ID))
+		if (!hasValidId())
 		{
 			return;
 		}
 
 		int s = data.readUnsignedShort();
-		ConfigValue blank = FTBLibAPI.getConfigValueFromId(valueId);
+		ConfigValue blank = FTBLibAPI.getConfigValueFromId(type);
 
 		while (--s >= 0)
 		{
@@ -165,9 +161,16 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	}
 
 	@Override
-	public ConfigValue copy()
+	public ConfigList<T> copy()
 	{
-		return new ConfigList<>(list);
+		ConfigList<T> l = new ConfigList<>(type);
+
+		for (T value : list)
+		{
+			l.add((T) value.copy());
+		}
+
+		return l;
 	}
 
 	@Override
@@ -197,6 +200,8 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	@Override
 	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
+		clear();
+
 		NBTTagList list = nbt.getTagList(key, Constants.NBT.TAG_COMPOUND);
 
 		if (list.isEmpty())
@@ -204,7 +209,7 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 			return;
 		}
 
-		ConfigValue blank = FTBLibAPI.getConfigValueFromId(valueId);
+		ConfigValue blank = FTBLibAPI.getConfigValueFromId(type);
 
 		for (int i = 0; i < list.tagCount(); i++)
 		{
@@ -256,6 +261,12 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	}
 
 	@Override
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
+	{
+		new GuiEditConfigList(inst).openGui();
+	}
+
+	@Override
 	public ITextComponent getStringForGUI()
 	{
 		return new TextComponentString("...");
@@ -278,7 +289,7 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	{
 		list.clear();
 
-		if (value instanceof ConfigList && valueId.equals(((ConfigList) value).valueId))
+		if (value instanceof ConfigList && type.equals(((ConfigList) value).type))
 		{
 			for (T v : (ConfigList<T>) value)
 			{

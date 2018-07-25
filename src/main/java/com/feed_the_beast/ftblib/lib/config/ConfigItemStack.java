@@ -2,11 +2,9 @@ package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import net.minecraft.item.Item;
+import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
@@ -115,14 +113,14 @@ public class ConfigItemStack extends ConfigValue
 	@Override
 	public ITextComponent getStringForGUI()
 	{
-		ItemStack stack = getStack();
+		value = getStack();
 
-		if (stack.getCount() <= 1)
+		if (value.getCount() <= 1)
 		{
-			return new TextComponentString(stack.getDisplayName());
+			return new TextComponentString(value.getDisplayName());
 		}
 
-		return new TextComponentString(stack.getCount() + "x " + stack.getDisplayName());
+		return new TextComponentString(value.getCount() + "x " + value.getDisplayName());
 	}
 
 	@Override
@@ -133,47 +131,21 @@ public class ConfigItemStack extends ConfigValue
 			return false;
 		}
 
-		if (string.charAt(0) != '{')
-		{
-			Item item = Item.REGISTRY.getObject(new ResourceLocation(string));
-
-			if (item != null)
-			{
-				if (!simulate)
-				{
-					setItem(new ItemStack(item));
-				}
-
-				return true;
-			}
-		}
-
 		try
 		{
-			NBTTagCompound nbt = JsonToNBT.getTagFromJson(string);
+			ItemStack stack = ItemStackSerializer.parseItemThrowingException(string);
 
-			if (nbt.hasKey("id"))
+			if (!simulate)
 			{
-				if (!nbt.hasKey("Count"))
-				{
-					nbt.setByte("Count", (byte) 1);
-				}
-
-				ItemStack stack = new ItemStack(nbt);
-
-				if (!simulate)
-				{
-					setItem(stack);
-				}
-
-				return true;
+				setItem(stack);
 			}
+
+			return true;
 		}
 		catch (Exception ex)
 		{
+			return false;
 		}
-
-		return false;
 	}
 
 	@Override

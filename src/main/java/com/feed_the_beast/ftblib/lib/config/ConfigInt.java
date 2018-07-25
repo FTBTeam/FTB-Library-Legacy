@@ -33,7 +33,7 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 
 	public ConfigInt(int v, int min, int max)
 	{
-		this(v);
+		this(MathHelper.clamp(v, min, max));
 		minValue = min;
 		maxValue = max;
 	}

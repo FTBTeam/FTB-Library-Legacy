@@ -24,14 +24,16 @@ public class ItemStackSerializer
 		{
 			return ItemStack.EMPTY;
 		}
-		else if (input.startsWith("{") && input.endsWith("}"))
+		else if (input.startsWith("{"))
 		{
-			ItemStack stack = new ItemStack(JsonToNBT.getTagFromJson(input));
+			NBTTagCompound nbt = JsonToNBT.getTagFromJson(input);
 
-			if (!stack.isEmpty())
+			if (nbt.getByte("Count") <= 0)
 			{
-				return stack;
+				nbt.setByte("Count", (byte) 1);
 			}
+
+			return new ItemStack(nbt);
 		}
 
 		String[] s1 = input.split(" ", 4);
@@ -43,7 +45,12 @@ public class ItemStackSerializer
 
 		Item item = Item.REGISTRY.getObject(new ResourceLocation(s1[0]));
 
-		if (item == null || item == Items.AIR)
+		if (item == null)
+		{
+			throw new NullPointerException("Unknown item: " + s1[0]);
+		}
+
+		if (item == Items.AIR)
 		{
 			return ItemStack.EMPTY;
 		}

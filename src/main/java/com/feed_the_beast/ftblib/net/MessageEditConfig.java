@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftblib.net;
 
-import com.feed_the_beast.ftblib.client.GuiEditConfig;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
+import com.feed_the_beast.ftblib.lib.gui.misc.GuiEditConfig;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;

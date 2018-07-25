@@ -48,10 +48,10 @@ public final class ConfigValueInstance extends FinalIDObject
 		value.readData(data);
 		defaultValue = FTBLibAPI.getConfigValueFromId(data.readString());
 		defaultValue.readData(data);
-		flags = data.readUnsignedByte();
+		flags = data.readUnsignedShort();
+		order = data.readByte();
 		displayName = Bits.getFlag(flags, HAS_NAME) ? data.readTextComponent() : null;
 		info = Bits.getFlag(flags, HAS_INFO) ? data.readTextComponent() : null;
-		order = data.readByte();
 	}
 
 	public ConfigGroup getGroup()
@@ -161,7 +161,8 @@ public final class ConfigValueInstance extends FinalIDObject
 		value.writeData(data);
 		data.writeString(defaultValue.getName());
 		defaultValue.writeData(data);
-		data.writeByte(flags);
+		data.writeShort(flags);
+		data.writeByte(order);
 
 		if (displayName != null)
 		{
@@ -172,8 +173,6 @@ public final class ConfigValueInstance extends FinalIDObject
 		{
 			data.writeTextComponent(info);
 		}
-
-		data.writeByte(order);
 	}
 
 	public ConfigValueInstance copy(ConfigGroup g)

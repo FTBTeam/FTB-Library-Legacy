@@ -147,12 +147,12 @@ public class TextBox extends Widget
 		}
 
 		int j = width - 10;
-		String s = trimStringToWidth(text.substring(lineScrollOffset), j, false);
+		String s = trimStringToWidth(text.substring(lineScrollOffset), j);
 		int k = s.length() + lineScrollOffset;
 
 		if (position == lineScrollOffset)
 		{
-			lineScrollOffset -= trimStringToWidth(text, j, true).length();
+			lineScrollOffset -= trimStringToWidthReverse(text, j).length();
 		}
 
 		if (position > k)
@@ -284,8 +284,8 @@ public class TextBox extends Widget
 				if (isFocused)
 				{
 					int i = getMouseX() - getAX();
-					String s = trimStringToWidth(text.substring(lineScrollOffset), width, false);
-					setCursorPosition(trimStringToWidth(s, i, false).length() + lineScrollOffset);
+					String s = trimStringToWidth(text.substring(lineScrollOffset), width);
+					setCursorPosition(trimStringToWidth(s, i).length() + lineScrollOffset);
 				}
 			}
 			else if (getText().length() > 0)
@@ -472,7 +472,7 @@ public class TextBox extends Widget
 		Color4I col = validText ? (textColor.isEmpty() ? getTheme().getContentColor(WidgetType.NORMAL) : textColor).withAlpha(drawGhostText ? 120 : 255) : Color4I.RED;
 		int j = cursorPosition - lineScrollOffset;
 		int k = selectionEnd - lineScrollOffset;
-		String s = trimStringToWidth(textToDraw.substring(lineScrollOffset), width, false);
+		String s = trimStringToWidth(textToDraw.substring(lineScrollOffset), width);
 		int textX = ax + 4;
 		int textY = ay + (height - 8) / 2;
 		int textX1 = textX;

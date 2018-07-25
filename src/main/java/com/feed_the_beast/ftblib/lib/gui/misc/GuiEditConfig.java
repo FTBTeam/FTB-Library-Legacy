@@ -1,4 +1,4 @@
-package com.feed_the_beast.ftblib.client;
+package com.feed_the_beast.ftblib.lib.gui.misc;
 
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
@@ -79,6 +79,7 @@ public class GuiEditConfig extends GuiBase
 		public ButtonConfigGroup(Panel panel, ConfigGroup g)
 		{
 			super(panel);
+			setHeight(16);
 			group = g;
 			title = g.getDisplayName().getFormattedText();
 			String infoKey = g.getPath() + ".info";
@@ -125,7 +126,7 @@ public class GuiEditConfig extends GuiBase
 		}
 	}
 
-	public class ButtonConfigEntry extends Button
+	private class ButtonConfigEntry extends Button
 	{
 		public final ButtonConfigGroup group;
 		public final ConfigValueInstance inst;
@@ -135,6 +136,7 @@ public class GuiEditConfig extends GuiBase
 		public ButtonConfigEntry(Panel panel, ButtonConfigGroup g, ConfigValueInstance i)
 		{
 			super(panel);
+			setHeight(16);
 			group = g;
 			inst = i;
 			keyText = inst.getDisplayName().getFormattedText();
@@ -171,7 +173,7 @@ public class GuiEditConfig extends GuiBase
 
 			if (slen > 150)
 			{
-				s = trimStringToWidth(s, 150, false) + "...";
+				s = trimStringToWidth(s, 150) + "...";
 				slen = 152;
 			}
 
@@ -268,7 +270,7 @@ public class GuiEditConfig extends GuiBase
 			{
 				for (Widget w : widgets)
 				{
-					w.setPosAndSize(0, 0, width - 16, 16);
+					w.setWidth(width - 16);
 				}
 
 				scroll.setMaxValue(align(WidgetLayout.VERTICAL));

@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 
 	public ConfigDouble(double v, double mn, double mx)
 	{
-		value = v;
+		this(MathHelper.clamp(v, mn, mx));
 		min = mn;
 		max = mx;
 	}
