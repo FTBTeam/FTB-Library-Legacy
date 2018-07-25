@@ -142,4 +142,10 @@ public class ConfigString extends ConfigValue
 	{
 		return getString().isEmpty();
 	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		setString(value.getString());
+	}
 }

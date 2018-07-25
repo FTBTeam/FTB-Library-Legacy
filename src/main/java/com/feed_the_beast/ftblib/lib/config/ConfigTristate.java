@@ -137,4 +137,17 @@ public class ConfigTristate extends ConfigValue
 	{
 		set(EnumTristate.NAME_MAP.get(data.readUnsignedByte()));
 	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		if (value instanceof ConfigTristate)
+		{
+			set(((ConfigTristate) value).get());
+		}
+		else
+		{
+			super.setValueFromOtherValue(value);
+		}
+	}
 }

@@ -114,4 +114,17 @@ public class ConfigTextComponent extends ConfigValue
 	{
 		return getText().createCopy();
 	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		if (value instanceof ConfigTextComponent)
+		{
+			setText(((ConfigTextComponent) value).getText().createCopy());
+		}
+		else
+		{
+			super.setValueFromOtherValue(value);
+		}
+	}
 }

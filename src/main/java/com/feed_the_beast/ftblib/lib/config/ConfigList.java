@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
@@ -218,6 +219,47 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	}
 
 	@Override
+	public void addInfo(ConfigValueInstance inst, List<String> l)
+	{
+		if (list.isEmpty())
+		{
+			l.add(TextFormatting.AQUA + "Value: []");
+		}
+		else
+		{
+			l.add(TextFormatting.AQUA + "Value: [");
+
+			for (T value : list)
+			{
+				l.add("  " + value.getStringForGUI().getFormattedText());
+			}
+
+			l.add(TextFormatting.AQUA + "]");
+		}
+
+		if (inst.getDefaultValue() instanceof ConfigList)
+		{
+			ConfigList<T> val = (ConfigList<T>) inst.getDefaultValue();
+
+			if (val.list.isEmpty())
+			{
+				l.add(TextFormatting.AQUA + "Default: []");
+			}
+			else
+			{
+				l.add(TextFormatting.AQUA + "Default: [");
+
+				for (T value : val.list)
+				{
+					l.add("  " + value.getStringForGUI().getFormattedText());
+				}
+
+				l.add(TextFormatting.AQUA + "]");
+			}
+		}
+	}
+
+	@Override
 	public ITextComponent getStringForGUI()
 	{
 		return new TextComponentString("...");
@@ -233,5 +275,19 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	public boolean isEmpty()
 	{
 		return list.isEmpty();
+	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		list.clear();
+
+		if (value instanceof ConfigList && valueId.equals(((ConfigList) value).valueId))
+		{
+			for (T v : (ConfigList<T>) value)
+			{
+				add((T) v.copy());
+			}
+		}
 	}
 }

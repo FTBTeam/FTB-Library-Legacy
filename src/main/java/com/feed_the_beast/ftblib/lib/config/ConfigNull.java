@@ -105,4 +105,9 @@ public class ConfigNull extends ConfigValue
 	{
 		return false;
 	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+	}
 }

@@ -115,7 +115,7 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 
 		if (max.hasTicks())
 		{
-			list.add(TextFormatting.AQUA + "Max: " + max);
+			list.add(TextFormatting.AQUA + "Max: " + TextFormatting.RESET + max);
 		}
 	}
 
@@ -175,5 +175,11 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	public long getAsLong()
 	{
 		return getTimer().ticks();
+	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		setTimer(value.getTimer());
 	}
 }

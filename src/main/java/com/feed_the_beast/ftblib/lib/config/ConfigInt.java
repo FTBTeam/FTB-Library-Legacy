@@ -116,14 +116,14 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 
 		if (m != Integer.MIN_VALUE)
 		{
-			list.add(TextFormatting.AQUA + "Min: " + m);
+			list.add(TextFormatting.AQUA + "Min: " + TextFormatting.RESET + m);
 		}
 
 		m = getMax();
 
 		if (m != Integer.MAX_VALUE)
 		{
-			list.add(TextFormatting.AQUA + "Max: " + m);
+			list.add(TextFormatting.AQUA + "Max: " + TextFormatting.RESET + m);
 		}
 	}
 

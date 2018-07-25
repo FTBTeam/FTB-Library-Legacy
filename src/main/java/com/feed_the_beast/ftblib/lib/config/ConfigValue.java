@@ -55,7 +55,7 @@ public abstract class ConfigValue implements IStringSerializable
 
 	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
-		list.add(TextFormatting.AQUA + "Def: " + inst.getDefaultValue().getStringForGUI().getFormattedText());
+		list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + inst.getDefaultValue().getStringForGUI().getFormattedText());
 	}
 
 	public List<String> getVariants()
