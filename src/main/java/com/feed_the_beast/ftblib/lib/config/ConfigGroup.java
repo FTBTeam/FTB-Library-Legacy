@@ -82,10 +82,17 @@ public final class ConfigGroup extends FinalIDObject implements INBTSerializable
 		return inst;
 	}
 
-	public ConfigValueInstance add(String id, ConfigValue value)
+	public <T extends ConfigValue> ConfigValueInstance add(String id, T value, @Nullable T def)
 	{
-		int o = Math.min(values.size(), 127);
-		return add(new ConfigValueInstance(id, this, value)).setOrder((byte) o);
+		ConfigValueInstance instance = add(new ConfigValueInstance(id, this, value));
+		instance.setOrder((byte) Math.min(values.size(), 127));
+
+		if (def != null)
+		{
+			instance.setDefaultValue(def);
+		}
+
+		return instance;
 	}
 
 	public boolean hasValue(String key)

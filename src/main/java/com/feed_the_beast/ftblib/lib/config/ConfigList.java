@@ -56,11 +56,11 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 		return !valueId.equals(ConfigNull.ID);
 	}
 
-	public void add(T v)
+	public ConfigList<T> add(T v)
 	{
 		if (v.isNull())
 		{
-			return;
+			return this;
 		}
 
 		if (valueId.equals(ConfigNull.ID))
@@ -72,22 +72,18 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 		{
 			list.add(v);
 		}
+
+		return this;
 	}
 
-	public void addAll(Collection<T> v)
+	public ConfigList<T> addAll(Collection<T> v)
 	{
 		for (T v1 : v)
 		{
 			add(v1);
 		}
-	}
 
-	public void addAll(T... v)
-	{
-		for (T v1 : v)
-		{
-			add(v1);
-		}
+		return this;
 	}
 
 	public List<T> getList()

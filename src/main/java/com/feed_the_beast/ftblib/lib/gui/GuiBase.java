@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
+import com.feed_the_beast.ftblib.lib.gui.misc.YesNoCallback;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.NetUtils;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Style;
@@ -440,5 +442,25 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 			default:
 				return false;
 		}
+	}
+
+	public void openYesNoFull(String title, String desc, YesNoCallback callback)
+	{
+		ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) ->
+		{
+			openGui();
+			callback.onButtonClicked(result);
+			refreshWidgets();
+		}, title, desc, 0));
+	}
+
+	public final void openYesNo(String title, String desc, Runnable callback)
+	{
+		openYesNoFull(title, desc, result -> {
+			if (result)
+			{
+				callback.run();
+			}
+		});
 	}
 }

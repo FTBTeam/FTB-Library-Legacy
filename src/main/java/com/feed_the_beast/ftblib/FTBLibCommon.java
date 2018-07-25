@@ -13,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigItemStack;
 import com.feed_the_beast.ftblib.lib.config.ConfigList;
+import com.feed_the_beast.ftblib.lib.config.ConfigNBT;
 import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigStringEnum;
@@ -131,6 +132,7 @@ public class FTBLibCommon
 		registry.registerConfigValueProvider(ConfigItemStack.ID, ConfigItemStack::new);
 		registry.registerConfigValueProvider(ConfigTextComponent.ID, ConfigTextComponent::new);
 		registry.registerConfigValueProvider(ConfigTimer.ID, ConfigTimer::new);
+		registry.registerConfigValueProvider(ConfigNBT.ID, ConfigNBT::new);
 
 		registry.registerServerReloadHandler(new ResourceLocation(FTBLib.MOD_ID, "config"), reloadEvent -> FTBLibConfig.sync());
 

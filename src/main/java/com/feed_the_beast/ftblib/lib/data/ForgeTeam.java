@@ -634,13 +634,13 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 			ConfigGroup main = cachedConfig.getGroup(FTBLib.MOD_ID);
 			main.setDisplayName(new TextComponentString(FTBLib.MOD_NAME));
-			main.add("free_to_join", freeToJoin);
+			main.add("free_to_join", freeToJoin, new ConfigBoolean(false));
 
 			ConfigGroup display = main.getGroup("display");
-			display.add("color", color);
-			display.add("fake_player_status", fakePlayerStatus);
-			display.add("title", title);
-			display.add("desc", desc);
+			display.add("color", color, new ConfigEnum<>(EnumTeamColor.NAME_MAP));
+			display.add("fake_player_status", fakePlayerStatus, new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS));
+			display.add("title", title, new ConfigString(""));
+			display.add("desc", desc, new ConfigString(""));
 		}
 
 		return cachedConfig;

@@ -74,7 +74,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		firstLogin = new HashSet<>();
 		dataStorage = new NBTDataStorage();
 		team = u.getTeam("");
-		hideTeamNotification = new ConfigBoolean();
+		hideTeamNotification = new ConfigBoolean(false);
 		new ForgePlayerDataEvent(this, dataStorage::add).post();
 		needsSaving = false;
 	}
@@ -329,7 +329,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 
 			ConfigGroup main = cachedConfig.getGroup(FTBLib.MOD_ID);
 			main.setDisplayName(new TextComponentString(FTBLib.MOD_NAME));
-			main.add("hide_team_notification", hideTeamNotification);
+			main.add("hide_team_notification", hideTeamNotification, new ConfigBoolean(false));
 		}
 
 		return cachedConfig;

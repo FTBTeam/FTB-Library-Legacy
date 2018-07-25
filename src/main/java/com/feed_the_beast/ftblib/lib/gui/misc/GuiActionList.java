@@ -1,13 +1,11 @@
 package com.feed_the_beast.ftblib.lib.gui.misc;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.data.Action;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
@@ -36,15 +34,7 @@ public class GuiActionList extends GuiButtonListBase
 
 			if (action.requiresConfirm)
 			{
-				ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) ->
-				{
-					getGui().openGui();
-
-					if (result)
-					{
-						callback.accept(action.id);
-					}
-				}, action.title.getFormattedText() + "?", "", 0)); //LANG
+				openYesNo(action.title.getFormattedText() + "?", "", () -> callback.accept(action.id));
 			}
 			else
 			{
