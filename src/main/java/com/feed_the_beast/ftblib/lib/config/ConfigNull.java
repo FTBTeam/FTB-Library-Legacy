@@ -49,7 +49,7 @@ public class ConfigNull extends ConfigValue
 	@Override
 	public ConfigNull copy()
 	{
-		return INSTANCE;
+		return this;
 	}
 
 	@Override

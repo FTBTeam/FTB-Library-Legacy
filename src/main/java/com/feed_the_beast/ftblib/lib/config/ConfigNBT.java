@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
@@ -19,7 +18,6 @@ import java.util.List;
 public class ConfigNBT extends ConfigValue
 {
 	public static final String ID = "nbt";
-	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
 
 	private NBTTagCompound value;
 
@@ -78,12 +76,6 @@ public class ConfigNBT extends ConfigValue
 	}
 
 	@Override
-	public Color4I getColor()
-	{
-		return COLOR;
-	}
-
-	@Override
 	public ITextComponent getStringForGUI()
 	{
 		return new TextComponentString(getNBT() == null ? "null" : "{...}");
@@ -124,9 +116,9 @@ public class ConfigNBT extends ConfigValue
 	{
 		list.add(TextFormatting.AQUA + "Value: " + TextFormatting.RESET + NBTUtils.getColoredNBTString(getNBT()));
 
-		if (inst.getValue() instanceof ConfigNBT)
+		if (inst.getDefaultValue() instanceof ConfigNBT)
 		{
-			list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + NBTUtils.getColoredNBTString(((ConfigNBT) inst.getValue()).getNBT()));
+			list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + NBTUtils.getColoredNBTString(((ConfigNBT) inst.getDefaultValue()).getNBT()));
 		}
 	}
 

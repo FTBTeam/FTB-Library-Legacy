@@ -16,10 +16,10 @@ public final class ConfigValueInstance extends FinalIDObject
 {
 	private static final int HAS_NAME = 1;
 	private static final int HIDDEN = 2;
-	private static final int CANT_EDIT = 3;
-	private static final int USE_SCROLL_BAR = 4;
-	private static final int EXCLUDED = 5;
-	private static final int HAS_INFO = 6;
+	private static final int CANT_EDIT = 4;
+	private static final int USE_SCROLL_BAR = 8;
+	private static final int EXCLUDED = 16;
+	private static final int HAS_INFO = 32;
 
 	private final ConfigGroup group;
 	private final ConfigValue value;
@@ -33,7 +33,7 @@ public final class ConfigValueInstance extends FinalIDObject
 		super(id);
 		group = g;
 		value = v;
-		defaultValue = value.copy();
+		defaultValue = ConfigNull.INSTANCE;
 		flags = 0;
 		displayName = null;
 		info = null;
@@ -66,8 +66,16 @@ public final class ConfigValueInstance extends FinalIDObject
 
 	public ConfigValueInstance setDefaultValue(ConfigValue def)
 	{
-		defaultValue = value.copy();
-		defaultValue.setValueFromOtherValue(def);
+		if (def.isNull())
+		{
+			defaultValue = ConfigNull.INSTANCE;
+		}
+		else
+		{
+			defaultValue = value.copy();
+			defaultValue.setValueFromOtherValue(def);
+		}
+
 		return this;
 	}
 

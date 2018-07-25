@@ -131,8 +131,11 @@ public class ConfigStringEnum extends ConfigValue
 	@Override
 	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
-		ITextComponent component = customNames.get(inst.getDefaultValue().getString());
-		list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + (component == null ? inst.getDefaultValue() : component.getFormattedText()));
+		if (!inst.getDefaultValue().isNull())
+		{
+			ITextComponent component = customNames.get(inst.getDefaultValue().getString());
+			list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + (component == null ? inst.getDefaultValue() : component.getFormattedText()));
+		}
 	}
 
 	@Override

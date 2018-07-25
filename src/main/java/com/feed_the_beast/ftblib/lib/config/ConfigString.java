@@ -9,6 +9,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * @author LatvianModder
@@ -19,7 +20,7 @@ public class ConfigString extends ConfigValue
 	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
 
 	private String value;
-	private int charLimit;
+	private String regex;
 
 	public ConfigString()
 	{
@@ -28,13 +29,13 @@ public class ConfigString extends ConfigValue
 
 	public ConfigString(String v)
 	{
-		this(v, 0);
+		this(v, "");
 	}
 
-	public ConfigString(String v, int limit)
+	public ConfigString(String v, String r)
 	{
 		value = v;
-		charLimit = limit;
+		regex = r;
 	}
 
 	@Override
@@ -54,6 +55,16 @@ public class ConfigString extends ConfigValue
 		value = v;
 	}
 
+	public String getRegex()
+	{
+		return regex;
+	}
+
+	public void setRegex(String v)
+	{
+		regex = v;
+	}
+
 	@Override
 	public boolean getBoolean()
 	{
@@ -67,9 +78,15 @@ public class ConfigString extends ConfigValue
 	}
 
 	@Override
+	public double getDouble()
+	{
+		return Double.parseDouble(getString());
+	}
+
+	@Override
 	public ConfigString copy()
 	{
-		return new ConfigString(getString(), charLimit);
+		return new ConfigString(getString(), getRegex());
 	}
 
 	@Override
@@ -87,6 +104,11 @@ public class ConfigString extends ConfigValue
 	@Override
 	public boolean setValueFromString(String string, boolean simulate)
 	{
+		if (!getRegex().isEmpty() && !Pattern.compile(getRegex()).matcher(string).matches())
+		{
+			return false;
+		}
+
 		if (!simulate)
 		{
 			setString(string);
@@ -100,9 +122,9 @@ public class ConfigString extends ConfigValue
 	{
 		super.addInfo(inst, list);
 
-		if (charLimit > 0)
+		if (!getRegex().isEmpty())
 		{
-			list.add(TextFormatting.AQUA + "Char Limit: " + charLimit);
+			list.add(TextFormatting.AQUA + "Regex: " + getRegex());
 		}
 	}
 
@@ -127,14 +149,14 @@ public class ConfigString extends ConfigValue
 	public void writeData(DataOut data)
 	{
 		data.writeString(getString());
-		data.writeShort(charLimit);
+		data.writeString(getRegex());
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
 		setString(data.readString());
-		charLimit = data.readUnsignedShort();
+		setRegex(data.readString());
 	}
 
 	@Override

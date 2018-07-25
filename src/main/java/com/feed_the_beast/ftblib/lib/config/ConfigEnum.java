@@ -116,7 +116,10 @@ public class ConfigEnum<E> extends ConfigValue
 	@Override
 	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
-		list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + getNameMap().getDisplayName(null, getNameMap().get(inst.getDefaultValue().getString())).getFormattedText());
+		if (!inst.getDefaultValue().isNull())
+		{
+			list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + getNameMap().getDisplayName(null, getNameMap().get(inst.getDefaultValue().getString())).getFormattedText());
+		}
 	}
 
 	@Override

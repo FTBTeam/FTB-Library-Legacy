@@ -140,6 +140,11 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 		{
 			double val = Double.parseDouble(string);
 
+			if (val < getMin() || val > getMax())
+			{
+				return false;
+			}
+
 			if (!simulate)
 			{
 				setDouble(val);

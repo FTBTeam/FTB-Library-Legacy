@@ -19,8 +19,8 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	public static final Color4I COLOR = Color4I.rgb(0xAA5AE8);
 
 	private int value;
-	private int minValue = Integer.MIN_VALUE;
-	private int maxValue = Integer.MAX_VALUE;
+	private int min = Integer.MIN_VALUE;
+	private int max = Integer.MAX_VALUE;
 
 	public ConfigInt()
 	{
@@ -31,11 +31,11 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 		value = v;
 	}
 
-	public ConfigInt(int v, int min, int max)
+	public ConfigInt(int v, int mn, int mx)
 	{
-		this(MathHelper.clamp(v, min, max));
-		minValue = min;
-		maxValue = max;
+		this(MathHelper.clamp(v, mn, mx));
+		min = mn;
+		max = mx;
 	}
 
 	@Override
@@ -46,24 +46,24 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 
 	public ConfigInt setMin(int v)
 	{
-		minValue = v;
+		min = v;
 		return this;
 	}
 
 	public ConfigInt setMax(int v)
 	{
-		maxValue = v;
+		max = v;
 		return this;
 	}
 
 	public int getMin()
 	{
-		return minValue;
+		return min;
 	}
 
 	public int getMax()
 	{
-		return maxValue;
+		return max;
 	}
 
 	public void setInt(int v)
@@ -133,6 +133,11 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 		try
 		{
 			int val = Integer.parseInt(string);
+
+			if (val < getMin() || val > getMax())
+			{
+				return false;
+			}
 
 			if (!simulate)
 			{
