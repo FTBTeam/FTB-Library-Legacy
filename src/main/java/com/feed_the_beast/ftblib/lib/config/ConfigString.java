@@ -8,6 +8,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -20,7 +21,7 @@ public class ConfigString extends ConfigValue
 	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
 
 	private String value;
-	private String regex;
+	private Pattern pattern;
 
 	public ConfigString()
 	{
@@ -29,13 +30,13 @@ public class ConfigString extends ConfigValue
 
 	public ConfigString(String v)
 	{
-		this(v, "");
+		this(v, null);
 	}
 
-	public ConfigString(String v, String r)
+	public ConfigString(String v, @Nullable Pattern p)
 	{
 		value = v;
-		regex = r;
+		pattern = p;
 	}
 
 	@Override
@@ -55,14 +56,15 @@ public class ConfigString extends ConfigValue
 		value = v;
 	}
 
-	public String getRegex()
+	@Nullable
+	public Pattern getPattern()
 	{
-		return regex;
+		return pattern;
 	}
 
-	public void setRegex(String v)
+	public void setPattern(@Nullable Pattern p)
 	{
-		regex = v;
+		pattern = p;
 	}
 
 	@Override
@@ -86,7 +88,7 @@ public class ConfigString extends ConfigValue
 	@Override
 	public ConfigString copy()
 	{
-		return new ConfigString(getString(), getRegex());
+		return new ConfigString(getString(), getPattern());
 	}
 
 	@Override
@@ -104,7 +106,7 @@ public class ConfigString extends ConfigValue
 	@Override
 	public boolean setValueFromString(String string, boolean simulate)
 	{
-		if (!getRegex().isEmpty() && !Pattern.compile(getRegex()).matcher(string).matches())
+		if (getPattern() != null && !getPattern().matcher(string).matches())
 		{
 			return false;
 		}
@@ -122,9 +124,9 @@ public class ConfigString extends ConfigValue
 	{
 		super.addInfo(inst, list);
 
-		if (!getRegex().isEmpty())
+		if (getPattern() != null)
 		{
-			list.add(TextFormatting.AQUA + "Regex: " + TextFormatting.RESET + getRegex());
+			list.add(TextFormatting.AQUA + "Regex: " + TextFormatting.RESET + getPattern().pattern());
 		}
 	}
 
@@ -149,14 +151,15 @@ public class ConfigString extends ConfigValue
 	public void writeData(DataOut data)
 	{
 		data.writeString(getString());
-		data.writeString(getRegex());
+		data.writeString(getPattern() == null ? "" : getPattern().pattern());
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
 		setString(data.readString());
-		setRegex(data.readString());
+		String p = data.readString();
+		setPattern(p.isEmpty() ? null : Pattern.compile(p));
 	}
 
 	@Override
