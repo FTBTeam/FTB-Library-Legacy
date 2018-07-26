@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftblib.lib.gui.misc;
 
+import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
+import com.feed_the_beast.ftblib.lib.config.ConfigValueInstance;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -11,19 +13,20 @@ import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
-public class GuiConfigValueField extends GuiBase
+public class GuiEditConfigValue extends GuiBase
 {
-	private final ConfigValue defValue, value;
-	private final IGuiFieldCallback callback;
+	private final ConfigValueInstance inst;
+	private final ConfigValue value;
+	private final IConfigValueEditCallback callback;
 
 	private final Button buttonCancel, buttonAccept;
 	private final TextBox textBox;
 
-	GuiConfigValueField(ConfigValue val, IGuiFieldCallback c)
+	public GuiEditConfigValue(ConfigValueInstance val, IConfigValueEditCallback c)
 	{
-		setSize(200, 54);
-		defValue = val.copy();
-		value = val.copy();
+		setSize(230, 54);
+		inst = val;
+		value = inst.getValue().copy();
 		callback = c;
 
 		int bsize = width / 2 - 10;
@@ -34,7 +37,7 @@ public class GuiConfigValueField extends GuiBase
 			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
-				callback.onCallback(defValue, false);
+				callback.onCallback(inst.getValue(), false);
 			}
 
 			@Override
@@ -71,6 +74,12 @@ public class GuiConfigValueField extends GuiBase
 		textBox = new TextBox(this)
 		{
 			@Override
+			public boolean allowInput()
+			{
+				return inst.getCanEdit();
+			}
+
+			@Override
 			public boolean isValid(String txt)
 			{
 				return value.setValueFromString(txt, true);
@@ -90,8 +99,14 @@ public class GuiConfigValueField extends GuiBase
 		};
 
 		textBox.setPosAndSize(8, 8, width - 16, 16);
-		textBox.writeText(val.getString());
+		textBox.setText(value.getString());
+		textBox.setCursorPosition(textBox.getText().length());
 		textBox.setFocused(true);
+	}
+
+	public GuiEditConfigValue(String name, ConfigValue val, IConfigValueEditCallback c)
+	{
+		this(new ConfigValueInstance(name, ConfigGroup.DEFAULT, val), c);
 	}
 
 	@Override

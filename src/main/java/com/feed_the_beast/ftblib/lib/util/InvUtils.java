@@ -111,9 +111,9 @@ public class InvUtils
 		return !is.isEmpty() && is.getItem().getHarvestLevel(is, ToolType.WRENCH.getName(), null, null) >= ToolLevel.BASIC.ordinal();
 	}
 
-	public static void transferItems(IItemHandler from, IItemHandler to, int amount, Predicate<ItemStack> filter)
+	public static void transferItems(@Nullable IItemHandler from, @Nullable IItemHandler to, int amount, Predicate<ItemStack> filter)
 	{
-		if (amount <= 0)
+		if (amount <= 0 || from == null || to == null)
 		{
 			return;
 		}

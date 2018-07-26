@@ -27,7 +27,7 @@ public abstract class GuiButtonListBase extends GuiBase
 			@Override
 			public void add(Widget widget)
 			{
-				if (!hasSearchBox || getFilterText(widget).toLowerCase().contains(textBox.getText().toLowerCase()))
+				if (!hasSearchBox || textBox.getText().isEmpty() || getFilterText(widget).contains(textBox.getText().toLowerCase()))
 				{
 					super.add(widget);
 				}
@@ -121,7 +121,7 @@ public abstract class GuiButtonListBase extends GuiBase
 
 	public String getFilterText(Widget widget)
 	{
-		return widget.getTitle();
+		return widget.getTitle().toLowerCase();
 	}
 
 	@Override

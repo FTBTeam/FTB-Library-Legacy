@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
-import com.feed_the_beast.ftblib.lib.gui.misc.GuiSelectors;
+import com.feed_the_beast.ftblib.lib.gui.misc.GuiEditConfigValue;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
@@ -73,7 +73,7 @@ public abstract class ConfigValue implements IStringSerializable
 
 	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
-		GuiSelectors.selectJson(this, (value, set) ->
+		new GuiEditConfigValue(inst, (value, set) ->
 		{
 			if (set)
 			{
@@ -81,7 +81,7 @@ public abstract class ConfigValue implements IStringSerializable
 			}
 
 			gui.openGui();
-		});
+		}).openGui();
 	}
 
 	public boolean setValueFromString(String string, boolean simulate)

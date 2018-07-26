@@ -92,6 +92,11 @@ public class TextBox extends Widget
 
 	public void writeText(String textToWrite)
 	{
+		if (!textToWrite.isEmpty() && !allowInput())
+		{
+			return;
+		}
+
 		String s = "";
 		String s1 = ChatAllowedCharacters.filterAllowedCharacters(textToWrite);
 		int i = cursorPosition < selectionEnd ? cursorPosition : selectionEnd;
@@ -219,9 +224,14 @@ public class TextBox extends Widget
 		return i;
 	}
 
+	public boolean allowInput()
+	{
+		return true;
+	}
+
 	public void deleteWords(int num)
 	{
-		if (!text.isEmpty())
+		if (!text.isEmpty() && allowInput())
 		{
 			if (selectionEnd != cursorPosition)
 			{
@@ -236,7 +246,7 @@ public class TextBox extends Widget
 
 	public void deleteFromCursor(int num)
 	{
-		if (text.isEmpty())
+		if (text.isEmpty() || !allowInput())
 		{
 			return;
 		}
@@ -288,7 +298,7 @@ public class TextBox extends Widget
 					setCursorPosition(trimStringToWidth(s, i).length() + lineScrollOffset);
 				}
 			}
-			else if (getText().length() > 0)
+			else if (button.isRight() && getText().length() > 0 && allowInput())
 			{
 				setText("");
 			}

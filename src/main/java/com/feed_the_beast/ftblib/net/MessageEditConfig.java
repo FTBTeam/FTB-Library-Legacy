@@ -38,15 +38,13 @@ public class MessageEditConfig extends MessageToClient
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeString(group.getName());
-		group.writeData(data);
+		ConfigGroup.SERIALIZER.write(data, group);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		group = new ConfigGroup(data.readString());
-		group.readData(data);
+		group = ConfigGroup.DESERIALIZER.read(data);
 	}
 
 	@Override

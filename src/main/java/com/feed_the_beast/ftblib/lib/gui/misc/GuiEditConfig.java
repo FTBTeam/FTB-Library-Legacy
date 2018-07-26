@@ -82,31 +82,41 @@ public class GuiEditConfig extends GuiBase
 			setHeight(16);
 			group = g;
 
-			List<ConfigGroup> groups = new ArrayList<>();
-
-			ConfigGroup g0 = g;
-
-			do
+			if (group.parent != null)
 			{
-				groups.add(g0);
-				g0 = g0.parent;
-			}
-			while (g0 != null);
+				List<ConfigGroup> groups = new ArrayList<>();
 
-			StringBuilder builder = new StringBuilder();
+				g = group;
 
-			for (int i = groups.size() - 1; i >= 0; i--)
-			{
-				builder.append(groups.get(i).getDisplayName().getFormattedText());
-
-				if (i != 0)
+				do
 				{
-					builder.append(" > ");
+					groups.add(g);
+					g = g.parent;
 				}
+				while (g != null);
+
+				groups.remove(groups.size() - 1);
+
+				StringBuilder builder = new StringBuilder();
+
+				for (int i = groups.size() - 1; i >= 0; i--)
+				{
+					builder.append(groups.get(i).getDisplayName().getFormattedText());
+
+					if (i != 0)
+					{
+						builder.append(" > ");
+					}
+				}
+
+				title = builder.toString();
+			}
+			else
+			{
+				title = I18n.format("stat.generalButton");
 			}
 
-			title = builder.toString();
-			String infoKey = g.getPath() + ".info";
+			String infoKey = group.getPath() + ".info";
 			info = I18n.hasKey(infoKey) ? I18n.format(infoKey) : "";
 			setCollapsed(collapsed);
 		}
@@ -221,7 +231,7 @@ public class GuiEditConfig extends GuiBase
 		@Override
 		public void onClicked(MouseButton button)
 		{
-			if (getMouseY() >= 20 && inst.getCanEdit())
+			if (getMouseY() >= 20)
 			{
 				GuiHelper.playClickSound();
 				inst.getValue().onClicked(GuiEditConfig.this, inst, button);
@@ -264,6 +274,7 @@ public class GuiEditConfig extends GuiBase
 	private final Button buttonAccept, buttonCancel, buttonCollapseAll, buttonExpandAll;
 	private final PanelScrollBar scroll;
 	private int shouldClose = 0;
+	private int groupSize = 0;
 
 	public GuiEditConfig(ConfigGroup g, IConfigCallback c)
 	{
@@ -317,9 +328,15 @@ public class GuiEditConfig extends GuiBase
 				{
 					group = new ButtonConfigGroup(configPanel, instance.getGroup());
 					configEntryButtons.add(group);
+					groupSize++;
 				}
 
 				configEntryButtons.add(new ButtonConfigEntry(configPanel, group, instance));
+			}
+
+			if (groupSize == 1)
+			{
+				configEntryButtons.remove(group);
 			}
 		}
 
@@ -401,8 +418,13 @@ public class GuiEditConfig extends GuiBase
 	{
 		add(buttonAccept);
 		add(buttonCancel);
-		add(buttonExpandAll);
-		add(buttonCollapseAll);
+
+		if (groupSize > 1)
+		{
+			add(buttonExpandAll);
+			add(buttonCollapseAll);
+		}
+
 		add(configPanel);
 		add(scroll);
 	}
@@ -416,8 +438,12 @@ public class GuiEditConfig extends GuiBase
 
 		buttonAccept.setPos(width - 18, 2);
 		buttonCancel.setPos(width - 38, 2);
-		buttonExpandAll.setPos(width - 58, 2);
-		buttonCollapseAll.setPos(width - 78, 2);
+
+		if (groupSize > 1)
+		{
+			buttonExpandAll.setPos(width - 58, 2);
+			buttonCollapseAll.setPos(width - 78, 2);
+		}
 	}
 
 	@Override

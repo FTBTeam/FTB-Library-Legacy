@@ -22,9 +22,11 @@ public class ConfigFluid extends ConfigValue
 	public static final String ID = "fluid";
 
 	private Fluid value;
+	private Fluid defaultFluid;
 
-	public ConfigFluid(@Nullable Fluid fluid)
+	public ConfigFluid(@Nullable Fluid fluid, @Nullable Fluid def)
 	{
+		defaultFluid = def;
 		value = fluid == null ? getDefaultFluid() : fluid;
 	}
 
@@ -55,7 +57,12 @@ public class ConfigFluid extends ConfigValue
 	@Nullable
 	public Fluid getDefaultFluid()
 	{
-		return null;
+		return defaultFluid;
+	}
+
+	public void setDefaultFluid(@Nullable Fluid fluid)
+	{
+		defaultFluid = fluid;
 	}
 
 	@Override
@@ -73,7 +80,7 @@ public class ConfigFluid extends ConfigValue
 	@Override
 	public ConfigFluid copy()
 	{
-		return new ConfigFluid(getFluid());
+		return new ConfigFluid(getFluid(), getDefaultFluid());
 	}
 
 	@Override
@@ -120,31 +127,39 @@ public class ConfigFluid extends ConfigValue
 	@Override
 	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
-		new GuiSelectFluid(this::setFluid).openGui();
+		new GuiSelectFluid(this, gui).openGui();
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		nbt.setString(key, getString());
+		value = getFluid();
+		nbt.setString(key, value == null ? "" : value.getName());
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		setValueFromString(nbt.getString(key), false);
+		String s = nbt.getString(key);
+		setFluid(s.isEmpty() ? null : FluidRegistry.getFluid(s));
 	}
 
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeString(getString());
+		defaultFluid = getDefaultFluid();
+		data.writeString(defaultFluid == null ? "" : defaultFluid.getName());
+		value = getFluid();
+		data.writeString(value == null ? "" : value.getName());
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		setValueFromString(data.readString(), false);
+		String s = data.readString();
+		setDefaultFluid(s.isEmpty() ? null : FluidRegistry.getFluid(s));
+		s = data.readString();
+		setFluid(s.isEmpty() ? null : FluidRegistry.getFluid(s));
 	}
 
 	@Override

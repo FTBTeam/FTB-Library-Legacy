@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
+import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 
 import java.util.List;
@@ -75,9 +76,18 @@ public class TextField extends Widget
 			return;
 		}
 
+		boolean centered = Bits.getFlag(textFlags, CENTERED);
+
 		for (int i = 0; i < text.length; i++)
 		{
-			drawString(text[i], ax, ay + i * 10 + 1, textFlags);
+			if (centered)
+			{
+				drawString(text[i], ax + width / 2, ay + i * 10 + 1, textFlags);
+			}
+			else
+			{
+				drawString(text[i], ax, ay + i * 10 + 1, textFlags);
+			}
 		}
 	}
 }

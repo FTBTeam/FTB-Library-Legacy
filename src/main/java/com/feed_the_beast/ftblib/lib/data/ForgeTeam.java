@@ -627,7 +627,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	{
 		if (cachedConfig == null)
 		{
-			cachedConfig = new ConfigGroup("team_config");
+			cachedConfig = ConfigGroup.newGroup("team_config");
 			cachedConfig.setDisplayName(new TextComponentTranslation("gui.settings"));
 			ForgeTeamConfigEvent event = new ForgeTeamConfigEvent(this, cachedConfig);
 			event.post();

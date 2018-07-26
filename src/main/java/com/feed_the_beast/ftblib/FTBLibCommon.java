@@ -139,7 +139,7 @@ public class FTBLibCommon
 		registry.registerConfigValueProvider(ConfigTextComponent.ID, () -> new ConfigTextComponent(new TextComponentString("")));
 		registry.registerConfigValueProvider(ConfigTimer.ID, () -> new ConfigTimer(Ticks.NO_TICKS));
 		registry.registerConfigValueProvider(ConfigNBT.ID, () -> new ConfigNBT(null));
-		registry.registerConfigValueProvider(ConfigFluid.ID, () -> new ConfigFluid(null));
+		registry.registerConfigValueProvider(ConfigFluid.ID, () -> new ConfigFluid(null, null));
 
 		registry.registerServerReloadHandler(new ResourceLocation(FTBLib.MOD_ID, "config"), reloadEvent -> FTBLibConfig.sync());
 

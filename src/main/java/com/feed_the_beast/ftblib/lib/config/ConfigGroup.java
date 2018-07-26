@@ -19,14 +19,68 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public final class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTagCompound>
+public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTagCompound>
 {
+	public static final ConfigGroup DEFAULT = newGroup("default");
+
+	public static final DataOut.Serializer<ConfigGroup> SERIALIZER = (data, object) ->
+	{
+		data.writeString(object.getName());
+		data.writeTextComponent(object.displayName);
+		data.writeShort(object.values.size());
+
+		for (ConfigValueInstance instance : object.getValues())
+		{
+			data.writeString(instance.getName());
+			instance.writeData(data);
+		}
+
+		data.writeShort(object.groups.size());
+
+		for (ConfigGroup group : object.getGroups())
+		{
+			ConfigGroup.SERIALIZER.write(data, group);
+		}
+	};
+
+	public static final DataIn.Deserializer<ConfigGroup> DESERIALIZER = data ->
+	{
+		ConfigGroup group = newGroup(data.readString());
+		group.displayName = data.readTextComponent();
+
+		int s = data.readUnsignedShort();
+		group.values.clear();
+
+		while (--s >= 0)
+		{
+			ConfigValueInstance inst = new ConfigValueInstance(group, data);
+			group.values.put(inst.getName(), inst);
+		}
+
+		s = data.readUnsignedShort();
+		group.groups.clear();
+
+		while (--s >= 0)
+		{
+			ConfigGroup group1 = ConfigGroup.DESERIALIZER.read(data);
+			group1.parent = group;
+			group.groups.put(group1.getName(), group1);
+		}
+
+		return group;
+	};
+
+	public static ConfigGroup newGroup(String name)
+	{
+		return new ConfigGroup(name);
+	}
+
 	public ConfigGroup parent;
 	private ITextComponent displayName;
 	private final Map<String, ConfigValueInstance> values;
 	private final Map<String, ConfigGroup> groups;
 
-	public ConfigGroup(String id)
+	private ConfigGroup(String id)
 	{
 		super(id);
 		values = new HashMap<>();
@@ -251,51 +305,6 @@ public final class ConfigGroup extends FinalIDObject implements INBTSerializable
 		for (ConfigGroup group : getGroups())
 		{
 			group.deserializeNBT(nbt.getCompoundTag(group.getName()));
-		}
-	}
-
-	public void writeData(DataOut data)
-	{
-		data.writeTextComponent(displayName);
-		data.writeShort(values.size());
-
-		for (ConfigValueInstance instance : getValues())
-		{
-			data.writeString(instance.getName());
-			instance.writeData(data);
-		}
-
-		data.writeShort(groups.size());
-
-		for (ConfigGroup group : getGroups())
-		{
-			data.writeString(group.getName());
-			group.writeData(data);
-		}
-	}
-
-	public void readData(DataIn data)
-	{
-		displayName = data.readTextComponent();
-
-		int s = data.readUnsignedShort();
-		values.clear();
-
-		while (--s >= 0)
-		{
-			ConfigValueInstance inst = new ConfigValueInstance(this, data);
-			values.put(inst.getName(), inst);
-		}
-
-		s = data.readUnsignedShort();
-		groups.clear();
-
-		while (--s >= 0)
-		{
-			ConfigGroup group = new ConfigGroup(data.readString());
-			group.parent = this;
-			group.readData(data);
-			groups.put(group.getName(), group);
 		}
 	}
 }

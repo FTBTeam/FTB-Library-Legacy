@@ -1,8 +1,11 @@
 package com.feed_the_beast.ftblib.lib.config;
 
+import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
+import com.feed_the_beast.ftblib.lib.gui.misc.GuiSelectItemStack;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
+import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -117,6 +120,12 @@ public class ConfigItemStack extends ConfigValue
 		}
 
 		return new TextComponentString(value.getCount() + "x " + value.getDisplayName());
+	}
+
+	@Override
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
+	{
+		new GuiSelectItemStack(inst, gui).openGui();
 	}
 
 	@Override

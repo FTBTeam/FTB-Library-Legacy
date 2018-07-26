@@ -322,7 +322,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		if (cachedConfig == null)
 		{
-			cachedConfig = new ConfigGroup("player_config");
+			cachedConfig = ConfigGroup.newGroup("player_config");
 			cachedConfig.setDisplayName(new TextComponentTranslation("player_config"));
 			ForgePlayerConfigEvent event = new ForgePlayerConfigEvent(this, cachedConfig);
 			event.post();
