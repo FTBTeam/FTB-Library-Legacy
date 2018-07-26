@@ -23,10 +23,6 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 
 	private boolean value;
 
-	public ConfigBoolean()
-	{
-	}
-
 	public ConfigBoolean(boolean v)
 	{
 		value = v;

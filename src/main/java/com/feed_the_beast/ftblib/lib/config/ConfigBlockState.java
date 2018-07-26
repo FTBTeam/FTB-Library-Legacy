@@ -17,11 +17,6 @@ public class ConfigBlockState extends ConfigValue
 
 	private IBlockState value;
 
-	public ConfigBlockState()
-	{
-		this(CommonUtils.AIR_STATE);
-	}
-
 	public ConfigBlockState(IBlockState state)
 	{
 		value = state;

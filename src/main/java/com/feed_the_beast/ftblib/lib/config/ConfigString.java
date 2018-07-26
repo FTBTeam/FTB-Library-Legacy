@@ -124,7 +124,7 @@ public class ConfigString extends ConfigValue
 
 		if (!getRegex().isEmpty())
 		{
-			list.add(TextFormatting.AQUA + "Regex: " + getRegex());
+			list.add(TextFormatting.AQUA + "Regex: " + TextFormatting.RESET + getRegex());
 		}
 	}
 

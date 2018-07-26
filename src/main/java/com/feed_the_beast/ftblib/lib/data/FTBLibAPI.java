@@ -112,7 +112,7 @@ public class FTBLibAPI
 		new MessageEditConfig(group).sendTo(player);
 	}
 
-	public static ConfigValue getConfigValueFromId(String id)
+	public static ConfigValue createConfigValueFromId(String id)
 	{
 		if (id.isEmpty())
 		{

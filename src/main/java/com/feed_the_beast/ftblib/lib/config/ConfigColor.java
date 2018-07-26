@@ -15,10 +15,6 @@ public class ConfigColor extends ConfigValue
 
 	private final MutableColor4I value = Color4I.WHITE.mutable();
 
-	public ConfigColor()
-	{
-	}
-
 	public ConfigColor(Color4I v)
 	{
 		value.set(v, 255);

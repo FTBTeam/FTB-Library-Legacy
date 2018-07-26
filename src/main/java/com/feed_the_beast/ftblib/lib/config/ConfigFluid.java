@@ -23,11 +23,6 @@ public class ConfigFluid extends ConfigValue
 
 	private Fluid value;
 
-	public ConfigFluid()
-	{
-		this(null);
-	}
-
 	public ConfigFluid(@Nullable Fluid fluid)
 	{
 		value = fluid == null ? getDefaultFluid() : fluid;

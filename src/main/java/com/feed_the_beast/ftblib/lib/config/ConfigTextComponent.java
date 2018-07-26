@@ -6,7 +6,6 @@ import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 
 /**
  * @author LatvianModder
@@ -16,11 +15,6 @@ public class ConfigTextComponent extends ConfigValue
 	public static final String ID = "text_component";
 
 	private ITextComponent value;
-
-	public ConfigTextComponent()
-	{
-		value = new TextComponentString("");
-	}
 
 	public ConfigTextComponent(ITextComponent c)
 	{

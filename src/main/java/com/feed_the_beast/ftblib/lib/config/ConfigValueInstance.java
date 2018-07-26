@@ -44,9 +44,9 @@ public final class ConfigValueInstance extends FinalIDObject
 	{
 		super(data.readString());
 		group = g;
-		value = FTBLibAPI.getConfigValueFromId(data.readString());
+		value = FTBLibAPI.createConfigValueFromId(data.readString());
 		value.readData(data);
-		defaultValue = FTBLibAPI.getConfigValueFromId(data.readString());
+		defaultValue = FTBLibAPI.createConfigValueFromId(data.readString());
 		defaultValue.readData(data);
 		flags = data.readUnsignedShort();
 		order = data.readByte();

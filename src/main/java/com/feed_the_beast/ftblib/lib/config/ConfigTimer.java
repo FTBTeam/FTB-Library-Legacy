@@ -20,10 +20,6 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	private Ticks value;
 	private Ticks maxValue = Ticks.NO_TICKS;
 
-	public ConfigTimer()
-	{
-	}
-
 	public ConfigTimer(Ticks v)
 	{
 		value = v;

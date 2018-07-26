@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigList;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueInstance;
-import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -12,12 +11,10 @@ import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.SimpleButton;
-import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.MutableColor4I;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.renderer.GlStateManager;
@@ -119,6 +116,46 @@ public class GuiEditConfigList extends GuiBase
 		}
 	}
 
+	public class ButtonAddValue extends Button
+	{
+		public ButtonAddValue(Panel panel)
+		{
+			super(panel);
+			setHeight(16);
+			setTitle("+ " + I18n.format("gui.add"));
+		}
+
+		@Override
+		public void draw()
+		{
+			boolean mouseOver = getMouseY() >= 20 && isMouseOver();
+
+			int ax = getAX();
+			int ay = getAY();
+
+			if (mouseOver)
+			{
+				Color4I.WHITE.withAlpha(33).draw(ax, ay, width, height);
+			}
+
+			drawString(getTitle(), ax + 4, ay + 4, getTheme().getContentColor(getWidgetType()), SHADOW);
+			GlStateManager.color(1F, 1F, 1F, 1F);
+		}
+
+		@Override
+		public void onClicked(MouseButton button)
+		{
+			GuiHelper.playClickSound();
+			configList.add(configList.getType().copy());
+			parent.refreshWidgets();
+		}
+
+		@Override
+		public void addMouseOverText(List<String> list)
+		{
+		}
+	}
+
 	private final ConfigValueInstance originalConfigList;
 	private final ConfigList<ConfigValue> configList;
 
@@ -148,21 +185,7 @@ public class GuiEditConfigList extends GuiBase
 					add(new ButtonConfigValue(this, new ConfigValueInstance(Integer.toString(i), group, configList.getList().get(i))));
 				}
 
-				add(new SimpleTextButton(this, "+ " + I18n.format("gui.add"), Icon.EMPTY)
-				{
-					@Override
-					public void onClicked(MouseButton button)
-					{
-						configList.add(FTBLibAPI.getConfigValueFromId(configList.getType()));
-						parent.refreshWidgets();
-					}
-
-					@Override
-					public Icon getButtonBackground()
-					{
-						return Icon.EMPTY;
-					}
-				}.setPosAndSize(0, 0, 0, 16));
+				add(new ButtonAddValue(this));
 			}
 
 			@Override

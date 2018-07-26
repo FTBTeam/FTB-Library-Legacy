@@ -21,11 +21,6 @@ public class ConfigNBT extends ConfigValue
 
 	private NBTTagCompound value;
 
-	public ConfigNBT()
-	{
-		this(null);
-	}
-
 	public ConfigNBT(@Nullable NBTTagCompound nbt)
 	{
 		value = nbt;

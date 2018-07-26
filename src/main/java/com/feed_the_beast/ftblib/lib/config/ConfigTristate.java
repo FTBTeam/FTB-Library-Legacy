@@ -18,11 +18,6 @@ public class ConfigTristate extends ConfigValue
 
 	private EnumTristate value;
 
-	public ConfigTristate()
-	{
-		value = EnumTristate.DEFAULT;
-	}
-
 	public ConfigTristate(EnumTristate v)
 	{
 		value = v;

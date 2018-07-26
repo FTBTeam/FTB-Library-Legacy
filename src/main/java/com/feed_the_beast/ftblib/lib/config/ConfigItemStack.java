@@ -17,10 +17,6 @@ public class ConfigItemStack extends ConfigValue
 
 	private ItemStack value;
 
-	public ConfigItemStack()
-	{
-	}
-
 	public ConfigItemStack(ItemStack is)
 	{
 		value = is;

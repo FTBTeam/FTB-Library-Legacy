@@ -22,10 +22,6 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	private double min = Double.NEGATIVE_INFINITY;
 	private double max = Double.POSITIVE_INFINITY;
 
-	public ConfigDouble()
-	{
-	}
-
 	public ConfigDouble(double v)
 	{
 		value = v;

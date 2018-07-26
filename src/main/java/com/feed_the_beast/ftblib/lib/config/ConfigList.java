@@ -28,12 +28,12 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
 
 	private final List<T> list;
-	private String type;
+	private T type;
 
-	public ConfigList(String id)
+	public ConfigList(T t)
 	{
 		list = new ArrayList<>();
-		type = id;
+		type = t;
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 		return ID;
 	}
 
-	public String getType()
+	public ConfigValue getType()
 	{
 		return type;
 	}
@@ -54,12 +54,12 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 
 	private boolean hasValidId()
 	{
-		return !type.equals(ConfigNull.ID);
+		return !type.isNull();
 	}
 
 	public boolean canAdd(ConfigValue value)
 	{
-		return !value.isNull() && type.equals(value.getName());
+		return !value.isNull() && hasValidId() && type.getName().equals(value.getName());
 	}
 
 	public ConfigList<T> add(T v)
@@ -90,7 +90,8 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeString(type);
+		data.writeString(type.getName());
+		type.writeData(data);
 
 		if (!hasValidId())
 		{
@@ -110,7 +111,8 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	public void readData(DataIn data)
 	{
 		clear();
-		type = data.readString();
+		type = (T) FTBLibAPI.createConfigValueFromId(data.readString());
+		type.readData(data);
 
 		if (!hasValidId())
 		{
@@ -118,13 +120,12 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 		}
 
 		int s = data.readUnsignedShort();
-		ConfigValue blank = FTBLibAPI.getConfigValueFromId(type);
 
 		while (--s >= 0)
 		{
-			ConfigValue v = blank.copy();
+			T v = (T) type.copy();
 			v.readData(data);
-			add((T) v);
+			add(v);
 		}
 	}
 
@@ -163,7 +164,7 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	@Override
 	public ConfigList<T> copy()
 	{
-		ConfigList<T> l = new ConfigList<>(type);
+		ConfigList<T> l = new ConfigList<>((T) type.copy());
 
 		for (T value : list)
 		{
@@ -209,19 +210,19 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 			return;
 		}
 
-		ConfigValue blank = FTBLibAPI.getConfigValueFromId(type);
-
 		for (int i = 0; i < list.tagCount(); i++)
 		{
-			ConfigValue v = blank.copy();
+			T v = (T) type.copy();
 			v.readFromNBT(list.getCompoundTagAt(i), "value");
-			add((T) v);
+			add(v);
 		}
 	}
 
 	@Override
 	public void addInfo(ConfigValueInstance inst, List<String> l)
 	{
+		l.add(TextFormatting.AQUA + "Type: " + TextFormatting.RESET + type.getName());
+
 		if (list.isEmpty())
 		{
 			l.add(TextFormatting.AQUA + "Value: []");

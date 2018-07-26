@@ -30,11 +30,6 @@ public class ConfigStringEnum extends ConfigValue
 	private final Map<String, ITextComponent> customNames;
 	private final Map<String, Color4I> customColors;
 
-	public ConfigStringEnum()
-	{
-		this(Collections.emptyList(), "");
-	}
-
 	public ConfigStringEnum(Collection<String> k, String v)
 	{
 		keys = new ArrayList<>(k);
