@@ -19,7 +19,7 @@ public abstract class StringJoiner
 		}
 		else if (string.equals(WithString.WITH_COMMA_AND_SPACE.s))
 		{
-			return WithString.WITH_NOTHING;
+			return WithString.WITH_COMMA_AND_SPACE;
 		}
 
 		return new WithString(string);
