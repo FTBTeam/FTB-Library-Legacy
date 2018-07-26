@@ -143,7 +143,6 @@ public class ConfigStringEnum extends ConfigValue
 	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
 		setString(keys.get(MathUtils.mod(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
-		gui.openGui();
 	}
 
 	@Override

@@ -81,7 +81,31 @@ public class GuiEditConfig extends GuiBase
 			super(panel);
 			setHeight(16);
 			group = g;
-			title = g.getDisplayName().getFormattedText();
+
+			List<ConfigGroup> groups = new ArrayList<>();
+
+			ConfigGroup g0 = g;
+
+			do
+			{
+				groups.add(g0);
+				g0 = g0.parent;
+			}
+			while (g0 != null);
+
+			StringBuilder builder = new StringBuilder();
+
+			for (int i = groups.size() - 1; i >= 0; i--)
+			{
+				builder.append(groups.get(i).getDisplayName().getFormattedText());
+
+				if (i != 0)
+				{
+					builder.append(" > ");
+				}
+			}
+
+			title = builder.toString();
 			String infoKey = g.getPath() + ".info";
 			info = I18n.hasKey(infoKey) ? I18n.format(infoKey) : "";
 			setCollapsed(collapsed);
@@ -201,6 +225,7 @@ public class GuiEditConfig extends GuiBase
 			{
 				GuiHelper.playClickSound();
 				inst.getValue().onClicked(GuiEditConfig.this, inst, button);
+				valueString = null;
 			}
 		}
 
