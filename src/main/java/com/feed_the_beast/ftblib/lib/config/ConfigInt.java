@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.google.gson.JsonElement;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
@@ -189,5 +190,20 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	public int getAsInt()
 	{
 		return getInt();
+	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		setInt(value.getInt());
+	}
+
+	@Override
+	public void setValueFromJson(JsonElement json)
+	{
+		if (json.isJsonPrimitive())
+		{
+			setInt(json.getAsInt());
+		}
 	}
 }

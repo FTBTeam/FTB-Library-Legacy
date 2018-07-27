@@ -114,6 +114,14 @@ public abstract class ConfigValue implements IStringSerializable
 		setValueFromString(value.getString(), false);
 	}
 
+	public void setValueFromJson(JsonElement json)
+	{
+		if (json.isJsonPrimitive())
+		{
+			setValueFromString(json.getAsString(), false);
+		}
+	}
+
 	@Override
 	public boolean equals(Object o)
 	{

@@ -2,7 +2,9 @@ package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
+import com.google.gson.JsonElement;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -164,6 +166,15 @@ public class ConfigNBT extends ConfigValue
 		else
 		{
 			super.setValueFromOtherValue(value);
+		}
+	}
+
+	@Override
+	public void setValueFromJson(JsonElement json)
+	{
+		if (json.isJsonObject())
+		{
+			setNBT((NBTTagCompound) JsonUtils.toNBT(json));
 		}
 	}
 }

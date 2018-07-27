@@ -1,12 +1,15 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 /**
  * @author LatvianModder
  */
 public abstract class StringJoiner
 {
+	private static final Function<Object, String> DEFAULT_STRING_GETTER = String::valueOf;
+
 	public static StringJoiner with(String string)
 	{
 		if (string.isEmpty())
@@ -168,11 +171,11 @@ public abstract class StringJoiner
 		return joinStrings(objects, 0, objects.length);
 	}
 
-	public String join(Iterable objects)
+	public <T> String join(Iterable<T> objects, Function<T, String> stringGetter)
 	{
 		if (objects instanceof Collection)
 		{
-			Collection c = (Collection) objects;
+			Collection<T> c = (Collection<T>) objects;
 
 			if (c.isEmpty())
 			{
@@ -180,14 +183,14 @@ public abstract class StringJoiner
 			}
 			else if (c.size() == 1)
 			{
-				return String.valueOf(c.iterator().next());
+				return stringGetter.apply(c.iterator().next());
 			}
 		}
 
 		StringBuilder builder = new StringBuilder();
 		boolean first = true;
 
-		for (Object object : objects)
+		for (T object : objects)
 		{
 			if (first)
 			{
@@ -198,9 +201,14 @@ public abstract class StringJoiner
 				append(builder);
 			}
 
-			builder.append(object);
+			builder.append(stringGetter.apply(object));
 		}
 
 		return builder.toString();
+	}
+
+	public String join(Iterable iterable)
+	{
+		return join(iterable, DEFAULT_STRING_GETTER);
 	}
 }

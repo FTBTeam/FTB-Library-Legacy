@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
+import com.google.gson.JsonElement;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -175,8 +176,35 @@ public class ConfigEnum<E> extends ConfigValue
 	}
 
 	@Override
+	public boolean setValueFromString(String string, boolean simulate)
+	{
+		E val = getNameMap().getNullable(string);
+
+		if (val != null)
+		{
+			if (!simulate)
+			{
+				setValue(val);
+			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	@Override
 	public void setValueFromOtherValue(ConfigValue value)
 	{
 		setValue(value.getString());
+	}
+
+	@Override
+	public void setValueFromJson(JsonElement json)
+	{
+		if (json.isJsonPrimitive())
+		{
+			setValue(json.getAsString());
+		}
 	}
 }

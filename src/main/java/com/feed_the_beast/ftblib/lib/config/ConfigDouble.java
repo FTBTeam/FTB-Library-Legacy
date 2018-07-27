@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.google.gson.JsonElement;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
@@ -197,5 +198,14 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	public void setValueFromOtherValue(ConfigValue value)
 	{
 		setDouble(value.getDouble());
+	}
+
+	@Override
+	public void setValueFromJson(JsonElement json)
+	{
+		if (json.isJsonPrimitive())
+		{
+			setDouble(json.getAsDouble());
+		}
 	}
 }

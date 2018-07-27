@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -369,5 +370,11 @@ public abstract class Panel extends Widget
 		}
 
 		setOffset(false);
+	}
+
+	@Nullable
+	public Widget getWidget(int index)
+	{
+		return index < 0 || index >= widgets.size() ? null : widgets.get(index);
 	}
 }

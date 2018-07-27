@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import com.google.gson.JsonElement;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
@@ -295,6 +296,22 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 			for (T v : (ConfigList<T>) value)
 			{
 				add((T) v.copy());
+			}
+		}
+	}
+
+	@Override
+	public void setValueFromJson(JsonElement json)
+	{
+		list.clear();
+
+		if (json.isJsonArray())
+		{
+			for (JsonElement e : json.getAsJsonArray())
+			{
+				T value = (T) type.copy();
+				value.setValueFromJson(e);
+				list.add(value);
 			}
 		}
 	}
