@@ -620,8 +620,7 @@ public class JsonUtils
 		{
 			JsonPrimitive a = o.getAsJsonPrimitive("action");
 			HoverEvent.Action action = a == null ? null : HoverEvent.Action.getValueByCanonicalName(a.getAsString());
-			JsonPrimitive v = o.getAsJsonPrimitive("value");
-			ITextComponent t = v == null ? null : deserializeTextComponent(v);
+			ITextComponent t = deserializeTextComponent(o.get("value"));
 
 			if (action != null && t != null && action.shouldAllowInChat())
 			{
