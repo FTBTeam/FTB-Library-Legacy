@@ -37,20 +37,13 @@ public class ItemStackSerializer
 		}
 
 		String[] s1 = input.split(" ", 4);
-
-		if (s1.length == 0)
-		{
-			return ItemStack.EMPTY;
-		}
-
 		Item item = Item.REGISTRY.getObject(new ResourceLocation(s1[0]));
 
 		if (item == null)
 		{
 			throw new NullPointerException("Unknown item: " + s1[0]);
 		}
-
-		if (item == Items.AIR)
+		else if (item == Items.AIR)
 		{
 			return ItemStack.EMPTY;
 		}

@@ -62,9 +62,13 @@ public abstract class Button extends Widget
 	@Override
 	public boolean mousePressed(MouseButton button)
 	{
-		if (isMouseOver() && getWidgetType() != WidgetType.DISABLED)
+		if (isMouseOver())
 		{
-			onClicked(button);
+			if (getWidgetType() != WidgetType.DISABLED)
+			{
+				onClicked(button);
+			}
+
 			return true;
 		}
 

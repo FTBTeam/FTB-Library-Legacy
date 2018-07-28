@@ -19,10 +19,22 @@ public class ConfigItemStack extends ConfigValue
 	public static final String ID = "item_stack";
 
 	private ItemStack value;
+	private boolean singleItemOnly;
+
+	public ConfigItemStack(ItemStack is, boolean b)
+	{
+		value = is;
+		singleItemOnly = b;
+
+		if (singleItemOnly && value.getCount() > 1)
+		{
+			value.setCount(1);
+		}
+	}
 
 	public ConfigItemStack(ItemStack is)
 	{
-		value = is;
+		this(is, false);
 	}
 
 	@Override
@@ -39,6 +51,21 @@ public class ConfigItemStack extends ConfigValue
 	public void setStack(ItemStack is)
 	{
 		value = is.isEmpty() ? ItemStack.EMPTY : is;
+
+		if (getSingleItemOnly() && value.getCount() > 1)
+		{
+			value.setCount(1);
+		}
+	}
+
+	public boolean getSingleItemOnly()
+	{
+		return singleItemOnly;
+	}
+
+	public void setSingleItemOnly(boolean v)
+	{
+		singleItemOnly = v;
 	}
 
 	@Override
@@ -62,7 +89,7 @@ public class ConfigItemStack extends ConfigValue
 	@Override
 	public ConfigItemStack copy()
 	{
-		return new ConfigItemStack(getStack());
+		return new ConfigItemStack(getStack(), getSingleItemOnly());
 	}
 
 	@Override
@@ -95,12 +122,14 @@ public class ConfigItemStack extends ConfigValue
 	public void writeData(DataOut data)
 	{
 		data.writeItemStack(getStack());
+		data.writeBoolean(getSingleItemOnly());
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
 		setStack(data.readItemStack());
+		setSingleItemOnly(data.readBoolean());
 	}
 
 	@Override
@@ -142,6 +171,11 @@ public class ConfigItemStack extends ConfigValue
 		try
 		{
 			ItemStack stack = ItemStackSerializer.parseItemThrowingException(string);
+
+			if (stack.getCount() > 1 && getSingleItemOnly())
+			{
+				return false;
+			}
 
 			if (!simulate)
 			{

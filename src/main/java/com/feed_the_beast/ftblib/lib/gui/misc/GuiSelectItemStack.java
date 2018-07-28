@@ -153,7 +153,7 @@ public class GuiSelectItemStack extends GuiBase
 		@Override
 		public String getTitle()
 		{
-			return I18n.format("ftblib.select_item.list_mode", TextFormatting.GRAY + (allItems ? I18n.format("ftblib.select_item.list_mode.all") : I18n.format("ftblib.select_item.list_mode.inv")));
+			return I18n.format("ftblib.select_item.list_mode", TextFormatting.GRAY + (allItems ? I18n.format("ftblib.select_item.list_mode.all") : I18n.format("ftblib.select_item.list_mode.inv"))) + TextFormatting.DARK_GRAY + " [" + (panelStacks.widgets.size() - 1) + "]";
 		}
 
 		@Override
@@ -202,7 +202,7 @@ public class GuiSelectItemStack extends GuiBase
 		public void onClicked(MouseButton button)
 		{
 			GuiHelper.playClickSound();
-			new GuiEditConfigValue("itemstack", new ConfigItemStack(selected.copy()), this).openGui();
+			new GuiEditConfigValue("itemstack", new ConfigItemStack(selected.copy(), ((ConfigItemStack) value.getValue()).getSingleItemOnly()), this).openGui();
 		}
 
 		@Override
@@ -222,6 +222,12 @@ public class GuiSelectItemStack extends GuiBase
 		public ButtonCount(Panel panel)
 		{
 			super(panel, I18n.format("ftblib.select_item.count"), ItemIcon.getItemIcon(new ItemStack(Items.PAPER)));
+		}
+
+		@Override
+		public WidgetType getWidgetType()
+		{
+			return ((ConfigItemStack) value.getValue()).getSingleItemOnly() ? WidgetType.DISABLED : super.getWidgetType();
 		}
 
 		@Override

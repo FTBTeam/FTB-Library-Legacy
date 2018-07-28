@@ -224,7 +224,7 @@ public abstract class Panel extends Widget
 	@Override
 	public void addMouseOverText(List<String> list)
 	{
-		if (getOnlyInteractWithWidgetsInside() && !isMouseOver())
+		if (!shouldAddMouseOverText() || getOnlyInteractWithWidgetsInside() && !isMouseOver())
 		{
 			return;
 		}
@@ -242,7 +242,14 @@ public abstract class Panel extends Widget
 
 				if (GuiBase.renderDebugBoxes)
 				{
-					list.add(TextFormatting.DARK_GRAY + widget.getClass().getSimpleName() + ": " + widget.width + "x" + widget.height);
+					String s = widget.getClass().getSimpleName();
+
+					if (s.isEmpty())
+					{
+						s = widget.getClass().getSuperclass().getSimpleName();
+					}
+
+					list.add(TextFormatting.DARK_GRAY + s + ": " + widget.width + "x" + widget.height);
 				}
 			}
 		}

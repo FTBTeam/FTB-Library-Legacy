@@ -153,7 +153,7 @@ public class Widget implements IGuiWrapper
 		{
 			return true;
 		}
-		else if (parent != null && !parent.isMouseOver())
+		else if (!parent.isMouseOver())
 		{
 			return false;
 		}

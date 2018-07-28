@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftblib.lib.gui.misc.YesNoCallback;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.NetUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanStack;
 import net.minecraft.client.gui.FontRenderer;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.event.ClickEvent;
@@ -62,6 +64,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	private final BooleanStack fontUnicode;
 	private Theme theme;
 	public static boolean renderDebugBoxes = false;
+	public Panel contextMenu = null;
 
 	public GuiBase()
 	{
@@ -256,6 +259,28 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		super.draw();
 	}
 
+	public void openContextMenu(Panel panel)
+	{
+		int x = getMouseX() - getAX();
+		int y = getMouseY() - getAY();
+
+		if (contextMenu != null)
+		{
+			x = contextMenu.posX;
+			y = contextMenu.posY;
+			contextMenu.onClosed();
+		}
+
+		contextMenu = panel;
+		contextMenu.refreshWidgets();
+		contextMenu.setPos(x, y);
+	}
+
+	public void openContextMenu(List<ContextMenuItem> menu)
+	{
+		openContextMenu(new ContextMenu(this, menu));
+	}
+
 	@Override
 	protected final void drawPanelBackground(int ax, int ay)
 	{
@@ -273,29 +298,75 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 
 	public void drawForeground()
 	{
+		if (contextMenu != null)
+		{
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(0F, 0F, 800F);
+			contextMenu.draw();
+			GlStateManager.popMatrix();
+		}
+
 		List<String> tempTextList = new ArrayList<>(0);
 		addMouseOverText(tempTextList);
 		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, getFont());
 	}
 
 	@Override
-	public boolean keyPressed(int key, char keyChar)
+	public void updateMouseOver(int mouseX, int mouseY)
 	{
-		boolean b = super.keyPressed(key, keyChar);
+		super.updateMouseOver(mouseX, mouseY);
 
-		if (!b && FTBLibConfig.debugging.gui_widget_bounds && key == Keyboard.KEY_B)
+		if (contextMenu != null)
 		{
-			renderDebugBoxes = !renderDebugBoxes;
-			b = true;
+			setOffset(true);
+			contextMenu.updateMouseOver(mouseX, mouseY);
+			setOffset(false);
+		}
+	}
+
+	@Override
+	public boolean mousePressed(MouseButton button)
+	{
+		if (contextMenu != null)
+		{
+			setOffset(true);
+			boolean b = contextMenu.mousePressed(button);
+			contextMenu = null;
+			setOffset(false);
+
+			if (b)
+			{
+				return true;
+			}
 		}
 
-		return b;
+		return super.mousePressed(button);
+	}
+
+	@Override
+	public boolean keyPressed(int key, char keyChar)
+	{
+		if (contextMenu != null)
+		{
+			return false;
+		}
+		else if (super.keyPressed(key, keyChar))
+		{
+			return true;
+		}
+		else if (FTBLibConfig.debugging.gui_widget_bounds && key == Keyboard.KEY_B)
+		{
+			renderDebugBoxes = !renderDebugBoxes;
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
 	public boolean shouldAddMouseOverText()
 	{
-		return true;
+		return contextMenu == null;
 	}
 
 	public GuiScreen getWrapper()
