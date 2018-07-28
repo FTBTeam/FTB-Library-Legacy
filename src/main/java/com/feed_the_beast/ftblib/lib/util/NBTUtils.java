@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util;
 
+import com.feed_the_beast.ftblib.lib.io.ByteCounterOutputStream;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
@@ -13,6 +14,7 @@ import net.minecraft.world.storage.ThreadedFileIOBase;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -267,6 +269,29 @@ public class NBTUtils
 			}
 			default:
 				return builder.append(TextFormatting.GRAY).append(nbt.toString());
+		}
+	}
+
+	public static long getSizeInBytes(NBTTagCompound nbt, boolean compressed)
+	{
+		try
+		{
+			ByteCounterOutputStream byteCounter = new ByteCounterOutputStream();
+
+			if (compressed)
+			{
+				CompressedStreamTools.writeCompressed(nbt, byteCounter);
+			}
+			else
+			{
+				CompressedStreamTools.write(nbt, new DataOutputStream(byteCounter));
+			}
+
+			return byteCounter.getSize();
+		}
+		catch (Exception ex)
+		{
+			return -1L;
 		}
 	}
 }
