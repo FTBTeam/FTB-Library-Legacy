@@ -5,7 +5,7 @@ import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 
 public abstract class Button extends Widget
 {
-	private String title = "";
+	protected String title = "";
 	protected Icon icon = Icon.EMPTY;
 
 	public Button(Panel panel)
@@ -47,12 +47,16 @@ public abstract class Button extends Widget
 	@Override
 	public Icon getIcon()
 	{
-		if (icon.isEmpty())
-		{
-			return getButtonBackground();
-		}
-
 		return icon;
+	}
+
+	@Override
+	public void draw()
+	{
+		int ax = getAX();
+		int ay = getAY();
+		getButtonBackground().draw(ax, ay, width, height);
+		getIcon().draw(ax + (width - 16) / 2, ay + (height - 16) / 2, 16, 16);
 	}
 
 	@Override

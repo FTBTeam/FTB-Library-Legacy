@@ -25,7 +25,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 
@@ -216,7 +215,7 @@ public class InvUtils
 
 	public static boolean stacksAreEqual(ItemStack stackA, ItemStack stackB)
 	{
-		return stackA == stackB || stackA.getItem() == stackB.getItem() && stackA.getMetadata() == stackB.getMetadata() && Objects.equals(getTag(stackA), getTag(stackB));
+		return stackA == stackB || stackA.getItem() == stackB.getItem() && stackA.getMetadata() == stackB.getMetadata() && ItemStack.areItemStackShareTagsEqual(stackA, stackB);
 	}
 
 	public static Set<String> getOreNames(@Nullable Set<String> l, ItemStack is)

@@ -88,6 +88,12 @@ public class CheckBoxList extends Button
 		return 2;
 	}
 
+	@Override
+	public Icon getButtonBackground()
+	{
+		return Icon.EMPTY;
+	}
+
 	public Icon getCheckboxBackground()
 	{
 		return getTheme().getCheckboxBackground(radioButtons);
@@ -137,17 +143,11 @@ public class CheckBoxList extends Button
 	}
 
 	@Override
-	public Icon getIcon()
-	{
-		return Icon.EMPTY;
-	}
-
-	@Override
 	public void draw()
 	{
 		int ax = getAX();
 		int ay = getAY();
-		getIcon().draw(ax, ay, width, height);
+		getButtonBackground().draw(ax, ay, width, height);
 		Icon bg = getCheckboxBackground();
 
 		for (int i = 0; i < entries.size(); i++)

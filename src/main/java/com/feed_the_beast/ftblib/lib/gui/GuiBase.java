@@ -210,10 +210,6 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		return key == Keyboard.KEY_ESCAPE || ClientUtils.MC.gameSettings.keyBindInventory.isActiveAndMatches(key);
 	}
 
-	public void onClosed()
-	{
-	}
-
 	public boolean doesGuiPauseGame()
 	{
 		return false;

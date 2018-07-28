@@ -109,7 +109,7 @@ public class GuiChunkSelectorBase extends GuiBase
 		}
 	}
 
-	public final int startX, startZ;
+	public int startX, startZ;
 	private final MapButton mapButtons[];
 	private final Panel panelButtons;
 	public int currentSelectionMode = -1;
@@ -178,6 +178,22 @@ public class GuiChunkSelectorBase extends GuiBase
 	@Override
 	public void drawBackground()
 	{
+		int currentStartX = MathUtils.chunk(ClientUtils.MC.player.posX) - ChunkSelectorMap.TILES_GUI2;
+		int currentStartZ = MathUtils.chunk(ClientUtils.MC.player.posZ) - ChunkSelectorMap.TILES_GUI2;
+
+		if (currentStartX != startX || currentStartZ != startZ)
+		{
+			startX = currentStartX;
+			startZ = currentStartZ;
+
+			for (int i = 0; i < mapButtons.length; i++)
+			{
+				mapButtons[i] = new MapButton(this, i);
+			}
+
+			ChunkSelectorMap.getMap().resetMap(startX, startZ);
+		}
+
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		Color4I.BLACK.draw(posX - 2, posY - 2, width + 4, height + 4);
 

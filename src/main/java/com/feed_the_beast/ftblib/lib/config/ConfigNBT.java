@@ -113,7 +113,7 @@ public class ConfigNBT extends ConfigValue
 	{
 		list.add(TextFormatting.AQUA + "Value: " + TextFormatting.RESET + NBTUtils.getColoredNBTString(getNBT()));
 
-		if (inst.getDefaultValue() instanceof ConfigNBT)
+		if (inst.getCanEdit() && inst.getDefaultValue() instanceof ConfigNBT)
 		{
 			list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + NBTUtils.getColoredNBTString(((ConfigNBT) inst.getDefaultValue()).getNBT()));
 		}

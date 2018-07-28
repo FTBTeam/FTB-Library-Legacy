@@ -17,7 +17,7 @@ public abstract class GuiButtonListBase extends GuiBase
 	private final Panel panelButtons;
 	private final PanelScrollBar scrollBar;
 	private String title = "";
-	private TextBox textBox;
+	private TextBox searchBox;
 	private boolean hasSearchBox;
 
 	public GuiButtonListBase()
@@ -27,7 +27,7 @@ public abstract class GuiButtonListBase extends GuiBase
 			@Override
 			public void add(Widget widget)
 			{
-				if (!hasSearchBox || textBox.getText().isEmpty() || getFilterText(widget).contains(textBox.getText().toLowerCase()))
+				if (!hasSearchBox || searchBox.getText().isEmpty() || getFilterText(widget).contains(searchBox.getText().toLowerCase()))
 				{
 					super.add(widget);
 				}
@@ -42,7 +42,6 @@ public abstract class GuiButtonListBase extends GuiBase
 			@Override
 			public void alignWidgets()
 			{
-				int size = 0;
 				setY(hasSearchBox ? 23 : 9);
 				int prevWidth = width;
 
@@ -80,7 +79,7 @@ public abstract class GuiButtonListBase extends GuiBase
 
 				if (hasSearchBox)
 				{
-					textBox.setPosAndSize(8, 6, getGui().width - 16, 12);
+					searchBox.setPosAndSize(8, 6, getGui().width - 16, 12);
 				}
 			}
 
@@ -97,7 +96,7 @@ public abstract class GuiButtonListBase extends GuiBase
 		scrollBar.setCanAlwaysScroll(true);
 		scrollBar.setScrollStep(20);
 
-		textBox = new TextBox(this)
+		searchBox = new TextBox(this)
 		{
 			@Override
 			public void onTextChanged()
@@ -106,7 +105,7 @@ public abstract class GuiButtonListBase extends GuiBase
 			}
 		};
 
-		textBox.ghostText = I18n.format("gui.search_box");
+		searchBox.ghostText = I18n.format("gui.search_box");
 		hasSearchBox = false;
 	}
 
@@ -132,7 +131,7 @@ public abstract class GuiButtonListBase extends GuiBase
 
 		if (hasSearchBox)
 		{
-			add(textBox);
+			add(searchBox);
 		}
 	}
 

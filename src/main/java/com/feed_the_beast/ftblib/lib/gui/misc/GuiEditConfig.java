@@ -58,6 +58,12 @@ public class GuiEditConfig extends GuiBase
 		}
 
 		@Override
+		public Icon getButton(WidgetType type)
+		{
+			return Icon.EMPTY;
+		}
+
+		@Override
 		public Icon getScrollBarBackground(WidgetType type)
 		{
 			return Color4I.BLACK.withAlpha(70);
@@ -173,7 +179,17 @@ public class GuiEditConfig extends GuiBase
 			setHeight(16);
 			group = g;
 			inst = i;
-			keyText = inst.getDisplayName().getFormattedText();
+
+			if (!inst.getCanEdit())
+			{
+				ITextComponent c = inst.getDisplayName().createCopy();
+				c.getStyle().setColor(TextFormatting.GRAY);
+				keyText = c.getFormattedText();
+			}
+			else
+			{
+				keyText = inst.getDisplayName().getFormattedText();
+			}
 		}
 
 		public String getValueString()
@@ -449,6 +465,8 @@ public class GuiEditConfig extends GuiBase
 	@Override
 	public void onClosed()
 	{
+		super.onClosed();
+
 		if (shouldClose == 1)
 		{
 			callback.onConfigSaved(group, ClientUtils.MC.player);

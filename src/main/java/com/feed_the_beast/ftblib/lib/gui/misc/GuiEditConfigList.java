@@ -92,7 +92,7 @@ public class GuiEditConfigList extends GuiBase
 			{
 				if (originalConfigList.getCanEdit())
 				{
-					configList.getList().remove(inst.getValue());
+					configList.list.remove(inst.getValue());
 					parent.refreshWidgets();
 				}
 			}
@@ -146,7 +146,7 @@ public class GuiEditConfigList extends GuiBase
 		public void onClicked(MouseButton button)
 		{
 			GuiHelper.playClickSound();
-			configList.add(configList.getType().copy());
+			configList.add(configList.type);
 			parent.refreshWidgets();
 		}
 
@@ -178,12 +178,15 @@ public class GuiEditConfigList extends GuiBase
 			@Override
 			public void addWidgets()
 			{
-				for (int i = 0; i < configList.getList().size(); i++)
+				for (int i = 0; i < configList.list.size(); i++)
 				{
-					add(new ButtonConfigValue(this, new ConfigValueInstance(Integer.toString(i), ConfigGroup.DEFAULT, configList.getList().get(i))));
+					add(new ButtonConfigValue(this, new ConfigValueInstance(Integer.toString(i), ConfigGroup.DEFAULT, configList.list.get(i))));
 				}
 
-				add(new ButtonAddValue(this));
+				if (originalConfigList.getCanEdit())
+				{
+					add(new ButtonAddValue(this));
+				}
 			}
 
 			@Override

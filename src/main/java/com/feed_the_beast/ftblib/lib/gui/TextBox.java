@@ -41,6 +41,13 @@ public class TextBox extends Widget
 	{
 		isFocused = v;
 		validText = isValid(text);
+		Keyboard.enableRepeatEvents(isFocused);
+	}
+
+	@Override
+	public void onClosed()
+	{
+		Keyboard.enableRepeatEvents(false);
 	}
 
 	public final String getText()

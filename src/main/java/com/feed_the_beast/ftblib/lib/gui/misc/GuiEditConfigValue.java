@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.TextBox;
+import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -63,6 +64,12 @@ public class GuiEditConfigValue extends GuiBase
 			}
 
 			@Override
+			public WidgetType getWidgetType()
+			{
+				return inst.getCanEdit() ? super.getWidgetType() : WidgetType.DISABLED;
+			}
+
+			@Override
 			public boolean renderTitleInCenter()
 			{
 				return true;
@@ -94,7 +101,10 @@ public class GuiEditConfigValue extends GuiBase
 			@Override
 			public void onEnterPressed()
 			{
-				buttonAccept.onClicked(MouseButton.LEFT);
+				if (inst.getCanEdit())
+				{
+					buttonAccept.onClicked(MouseButton.LEFT);
+				}
 			}
 		};
 

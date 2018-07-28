@@ -372,6 +372,15 @@ public abstract class Panel extends Widget
 		setOffset(false);
 	}
 
+	@Override
+	public void onClosed()
+	{
+		for (Widget widget : widgets)
+		{
+			widget.onClosed();
+		}
+	}
+
 	@Nullable
 	public Widget getWidget(int index)
 	{

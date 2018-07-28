@@ -38,12 +38,6 @@ public abstract class SimpleTextButton extends Button
 	}
 
 	@Override
-	public Icon getIcon()
-	{
-		return icon;
-	}
-
-	@Override
 	public void draw()
 	{
 		int ax = getAX();

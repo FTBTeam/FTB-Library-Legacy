@@ -16,7 +16,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,8 +27,8 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	public static final String ID = "list";
 	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
 
-	private final List<T> list;
-	private T type;
+	public final List<T> list;
+	public T type;
 
 	public ConfigList(T t)
 	{
@@ -43,16 +42,6 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 		return ID;
 	}
 
-	public ConfigValue getType()
-	{
-		return type;
-	}
-
-	public void clear()
-	{
-		list.clear();
-	}
-
 	private boolean hasValidId()
 	{
 		return !type.isNull();
@@ -63,29 +52,16 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 		return !value.isNull() && hasValidId() && type.getName().equals(value.getName());
 	}
 
-	public ConfigList<T> add(T v)
+	public ConfigList<T> add(ConfigValue v)
 	{
 		if (canAdd(v))
 		{
-			list.add(v);
+			ConfigValue v1 = type.copy();
+			v1.setValueFromOtherValue(v);
+			list.add((T) v1);
 		}
 
 		return this;
-	}
-
-	public ConfigList<T> addAll(Collection<T> v)
-	{
-		for (T v1 : v)
-		{
-			add(v1);
-		}
-
-		return this;
-	}
-
-	public List<T> getList()
-	{
-		return list;
 	}
 
 	@Override
@@ -99,7 +75,6 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 			return;
 		}
 
-		Collection<T> list = getList();
 		data.writeShort(list.size());
 
 		for (ConfigValue s : list)
@@ -111,7 +86,7 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	@Override
 	public void readData(DataIn data)
 	{
-		clear();
+		list.clear();
 		type = (T) FTBLibAPI.createConfigValueFromId(data.readString());
 		type.readData(data);
 
@@ -124,9 +99,9 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 
 		while (--s >= 0)
 		{
-			T v = (T) type.copy();
+			ConfigValue v = type.copy();
 			v.readData(data);
-			add(v);
+			list.add((T) v);
 		}
 	}
 
@@ -169,7 +144,7 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 
 		for (T value : list)
 		{
-			l.add((T) value.copy());
+			l.list.add((T) value.copy());
 		}
 
 		return l;
@@ -202,20 +177,20 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	@Override
 	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		clear();
+		list.clear();
 
-		NBTTagList list = nbt.getTagList(key, Constants.NBT.TAG_COMPOUND);
+		NBTTagList l = nbt.getTagList(key, Constants.NBT.TAG_COMPOUND);
 
-		if (list.isEmpty())
+		if (l.isEmpty())
 		{
 			return;
 		}
 
-		for (int i = 0; i < list.tagCount(); i++)
+		for (int i = 0; i < l.tagCount(); i++)
 		{
-			T v = (T) type.copy();
-			v.readFromNBT(list.getCompoundTagAt(i), "value");
-			add(v);
+			ConfigValue v = type.copy();
+			v.readFromNBT(l.getCompoundTagAt(i), "value");
+			list.add((T) v);
 		}
 	}
 
@@ -240,7 +215,7 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 			l.add(TextFormatting.AQUA + "]");
 		}
 
-		if (inst.getDefaultValue() instanceof ConfigList)
+		if (inst.getCanEdit() && inst.getDefaultValue() instanceof ConfigList)
 		{
 			ConfigList<T> val = (ConfigList<T>) inst.getDefaultValue();
 
@@ -287,15 +262,17 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	}
 
 	@Override
-	public void setValueFromOtherValue(ConfigValue value)
+	public void setValueFromOtherValue(ConfigValue ovalue)
 	{
 		list.clear();
 
-		if (value instanceof ConfigList && type.equals(((ConfigList) value).type))
+		if (ovalue instanceof ConfigList && type.equals(((ConfigList) ovalue).type))
 		{
-			for (T v : (ConfigList<T>) value)
+			for (ConfigValue v : (ConfigList<?>) ovalue)
 			{
-				add((T) v.copy());
+				ConfigValue value = type.copy();
+				value.setValueFromOtherValue(v);
+				list.add((T) value);
 			}
 		}
 	}
@@ -309,9 +286,9 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 		{
 			for (JsonElement e : json.getAsJsonArray())
 			{
-				T value = (T) type.copy();
+				ConfigValue value = type.copy();
 				value.setValueFromJson(e);
-				list.add(value);
+				list.add((T) value);
 			}
 		}
 	}

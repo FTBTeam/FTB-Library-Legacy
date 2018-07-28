@@ -105,7 +105,7 @@ public class GuiCreateTeam extends GuiBase
 				}
 
 				@Override
-				public Icon getIcon()
+				public Icon getButtonBackground()
 				{
 					return getTheme().getGui(WidgetType.NORMAL).withTint(col.getColor().withAlpha(color == col || isMouseOver() ? 200 : 100));
 				}

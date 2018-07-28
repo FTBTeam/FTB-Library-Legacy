@@ -36,7 +36,7 @@ public class ConfigItemStack extends ConfigValue
 		return value;
 	}
 
-	public void setItem(ItemStack is)
+	public void setStack(ItemStack is)
 	{
 		value = is.isEmpty() ? ItemStack.EMPTY : is;
 	}
@@ -83,11 +83,11 @@ public class ConfigItemStack extends ConfigValue
 
 		if (nbt1.isEmpty())
 		{
-			setItem(ItemStack.EMPTY);
+			setStack(ItemStack.EMPTY);
 		}
 		else
 		{
-			setItem(new ItemStack(nbt1));
+			setStack(new ItemStack(nbt1));
 		}
 	}
 
@@ -100,7 +100,7 @@ public class ConfigItemStack extends ConfigValue
 	@Override
 	public void readData(DataIn data)
 	{
-		setItem(data.readItemStack());
+		setStack(data.readItemStack());
 	}
 
 	@Override
@@ -125,7 +125,10 @@ public class ConfigItemStack extends ConfigValue
 	@Override
 	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
-		new GuiSelectItemStack(inst, gui).openGui();
+		if (inst.getCanEdit())
+		{
+			new GuiSelectItemStack(inst, gui).openGui();
+		}
 	}
 
 	@Override
@@ -142,7 +145,7 @@ public class ConfigItemStack extends ConfigValue
 
 			if (!simulate)
 			{
-				setItem(stack);
+				setStack(stack);
 			}
 
 			return true;
@@ -158,7 +161,7 @@ public class ConfigItemStack extends ConfigValue
 	{
 		if (value instanceof ConfigItemStack)
 		{
-			setItem(((ConfigItemStack) value).getStack().copy());
+			setStack(((ConfigItemStack) value).getStack().copy());
 		}
 		else
 		{

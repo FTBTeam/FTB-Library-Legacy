@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
@@ -22,6 +23,7 @@ public class GuiSelectFluid extends GuiButtonListBase
 
 	public GuiSelectFluid(ConfigFluid v, IOpenableGui c)
 	{
+		setTitle(I18n.format("ftblib.select_fluid.gui"));
 		setHasSearchBox(true);
 		value = v;
 		callbackGui = c;
@@ -32,7 +34,7 @@ public class GuiSelectFluid extends GuiButtonListBase
 	{
 		if (value.getDefaultFluid() == null)
 		{
-			panel.add(new SimpleTextButton(panel, "None", GuiIcons.BARRIER)
+			panel.add(new SimpleTextButton(panel, I18n.format("ftblib.select_fluid.none"), GuiIcons.BARRIER)
 			{
 				@Override
 				public void onClicked(MouseButton button)

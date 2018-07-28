@@ -356,6 +356,10 @@ public class Widget implements IGuiWrapper
 		return list;
 	}
 
+	public void onClosed()
+	{
+	}
+
 	public static String getClipboardString()
 	{
 		return GuiScreen.getClipboardString();
