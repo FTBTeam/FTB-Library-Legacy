@@ -58,7 +58,7 @@ public class ContextMenu extends Panel
 		}
 	}
 
-	public static class CSeperator extends Widget
+	public static class CSeperator extends Button
 	{
 		public CSeperator(Panel panel)
 		{
@@ -72,6 +72,11 @@ public class ContextMenu extends Panel
 			int x = getAX();
 			int y = getAY();
 			Color4I.WHITE.withAlpha(130).draw(x + 2, y + 2, parent.width - 4, 1);
+		}
+
+		@Override
+		public void onClicked(MouseButton button)
+		{
 		}
 	}
 
