@@ -71,7 +71,7 @@ public class ContextMenu extends Panel
 		{
 			int x = getAX();
 			int y = getAY();
-			Color4I.WHITE.withAlpha(130).draw(x + 2, y + 2, parent.width - 4, 1);
+			Color4I.WHITE.withAlpha(130).draw(x + 2, y + 2, parent.width - 10, 1);
 		}
 
 		@Override
@@ -87,7 +87,7 @@ public class ContextMenu extends Panel
 	{
 		super(panel);
 		items = i;
-		background = getTheme().getGui(WidgetType.NORMAL).withBorder(-3).withTint(Color4I.BLACK.withAlpha(90));
+		background = getTheme().getGui(WidgetType.NORMAL).withTint(Color4I.BLACK.withAlpha(90));
 	}
 
 	@Override
@@ -117,9 +117,12 @@ public class ContextMenu extends Panel
 
 		for (Widget widget : widgets)
 		{
+			widget.setX(3);
 			widget.setWidth(width);
 		}
 
-		setHeight(align(WidgetLayout.VERTICAL));
+		setWidth(width + 6);
+
+		setHeight(align(new WidgetLayout.Vertical(3, 1, 3)));
 	}
 }

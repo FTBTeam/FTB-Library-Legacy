@@ -409,6 +409,10 @@ public class GuiSelectItemStack extends GuiBase
 					{
 						item.getSubItems(CreativeTabs.SEARCH, list);
 					}
+
+					list.add(new ItemStack(Blocks.COMMAND_BLOCK));
+					list.add(new ItemStack(Blocks.BARRIER));
+					list.add(new ItemStack(Blocks.STRUCTURE_VOID));
 				}
 				else
 				{

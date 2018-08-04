@@ -261,8 +261,10 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 
 	public void openContextMenu(Panel panel)
 	{
-		int x = getMouseX() - getAX();
-		int y = getMouseY() - getAY();
+		int ax = getAX();
+		int ay = getAY();
+		int x = getMouseX() - ax;
+		int y = getMouseY() - ay;
 
 		if (contextMenu != null)
 		{
@@ -273,6 +275,8 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 
 		contextMenu = panel;
 		contextMenu.refreshWidgets();
+		x = Math.min(x, screen.getScaledWidth() - contextMenu.width - ax) - 3;
+		y = Math.min(y, screen.getScaledHeight() - contextMenu.height - ay) - 3;
 		contextMenu.setPos(x, y);
 	}
 

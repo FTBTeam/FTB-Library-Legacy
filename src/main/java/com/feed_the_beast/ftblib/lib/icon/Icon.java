@@ -5,7 +5,9 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,6 +32,12 @@ public abstract class Icon
 		@Override
 		@SideOnly(Side.CLIENT)
 		public void draw(int x, int y, int w, int h, Color4I col)
+		{
+		}
+
+		@Override
+		@SideOnly(Side.CLIENT)
+		public void draw3D(World world, Color4I col)
 		{
 		}
 
@@ -185,6 +193,15 @@ public abstract class Icon
 	public final void draw(int x, int y, int w, int h)
 	{
 		draw(x, y, w, h, EMPTY);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public void draw3D(World world, Color4I col)
+	{
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(1D / 16D, 1D / 16D, 1D);
+		draw(-8, -8, 16, 16);
+		GlStateManager.popMatrix();
 	}
 
 	public JsonElement getJson()

@@ -2,10 +2,18 @@ package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraftforge.client.ForgeHooksClient;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
@@ -69,6 +77,7 @@ public class ItemIcon extends Icon
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
 		if (!GuiHelper.drawItem(getStack(), x, y, w / 16D, h / 16D, true, col))
@@ -79,6 +88,18 @@ public class ItemIcon extends Icon
 		{
 			GuiHelper.setupDrawing();
 		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void draw3D(World world, Color4I col)
+	{
+		GlStateManager.pushMatrix();
+		GlStateManager.scale(1F, -1F, -0.02F);
+		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(stack, world, ClientUtils.MC.player);
+		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
+		ClientUtils.MC.getRenderItem().renderItem(stack, bakedmodel);
+		GlStateManager.popMatrix();
 	}
 
 	public String toString()

@@ -23,7 +23,7 @@ public class ConfigItemStack extends ConfigValue
 
 	public ConfigItemStack(ItemStack is, boolean b)
 	{
-		value = is;
+		value = is.isEmpty() ? ItemStack.EMPTY : is;
 		singleItemOnly = b;
 
 		if (singleItemOnly && value.getCount() > 1)

@@ -7,10 +7,13 @@ import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public abstract class Panel extends Widget
 {
+	public static final Comparator<Widget> WIDGET_TITLE_COMPARATOR = (o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle());
+
 	public final List<Widget> widgets;
 	private int scrollX = 0, scrollY = 0;
 	private int offsetX = 0, offsetY = 0;

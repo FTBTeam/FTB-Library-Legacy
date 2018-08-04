@@ -121,4 +121,10 @@ public class ConfigTextComponent extends ConfigValue
 			super.setValueFromOtherValue(value);
 		}
 	}
+
+	@Override
+	public boolean isEmpty()
+	{
+		return getText().getUnformattedText().isEmpty();
+	}
 }
