@@ -96,9 +96,9 @@ public class ItemIcon extends Icon
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1F, -1F, -0.02F);
-		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(stack, world, ClientUtils.MC.player);
+		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(getStack(), world, ClientUtils.MC.player);
 		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
-		ClientUtils.MC.getRenderItem().renderItem(stack, bakedmodel);
+		ClientUtils.MC.getRenderItem().renderItem(getStack(), bakedmodel);
 		GlStateManager.popMatrix();
 	}
 
