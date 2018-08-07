@@ -92,7 +92,7 @@ public class ConfigEnum<E> extends ConfigValue
 	@Override
 	public boolean getBoolean()
 	{
-		return getValue() != getNameMap().defaultValue;
+		return !isDefault();
 	}
 
 	@Override
@@ -206,5 +206,10 @@ public class ConfigEnum<E> extends ConfigValue
 		{
 			setValue(json.getAsString());
 		}
+	}
+
+	public boolean isDefault()
+	{
+		return getValue() == getNameMap().defaultValue;
 	}
 }

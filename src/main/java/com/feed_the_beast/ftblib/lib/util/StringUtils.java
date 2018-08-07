@@ -304,14 +304,14 @@ public class StringUtils
 
 	public static String formatDouble0(double value)
 	{
-		long lvalue = (long) value;
-		return lvalue == value ? Long.toString(lvalue) : DOUBLE_FORMATTER_0.format(value);
+		String s = DOUBLE_FORMATTER_0.format(value);
+		return s.endsWith(".00") ? s.substring(0, s.length() - 2) : s;
 	}
 
 	public static String formatDouble00(double value)
 	{
-		long lvalue = (long) value;
-		return lvalue == value ? Long.toString(lvalue) : DOUBLE_FORMATTER_00.format(value);
+		String s = DOUBLE_FORMATTER_00.format(value);
+		return s.endsWith(".00") ? s.substring(0, s.length() - 3) : s;
 	}
 
 	public static String formatDouble(double value, boolean fancy)

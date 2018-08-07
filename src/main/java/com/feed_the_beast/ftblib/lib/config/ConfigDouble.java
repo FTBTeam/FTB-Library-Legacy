@@ -7,6 +7,8 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -77,7 +79,14 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	@Override
 	public String getString()
 	{
-		return Double.toString(getDouble());
+		String s = Double.toString(getDouble());
+		return s.endsWith(".0") ? s.substring(0, s.length() - 2) : s;
+	}
+
+	@Override
+	public ITextComponent getStringForGUI()
+	{
+		return new TextComponentString(StringUtils.formatDouble(getDouble(), true));
 	}
 
 	@Override
@@ -119,23 +128,46 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 
 		if (m != Double.NEGATIVE_INFINITY)
 		{
-			list.add(TextFormatting.AQUA + "Min: " + StringUtils.formatDouble(m));
+			list.add(TextFormatting.AQUA + "Min: " + TextFormatting.RESET + StringUtils.formatDouble(m));
 		}
 
 		m = getMax();
 
 		if (m != Double.POSITIVE_INFINITY)
 		{
-			list.add(TextFormatting.AQUA + "Max: " + StringUtils.formatDouble(m));
+			list.add(TextFormatting.AQUA + "Max: " + TextFormatting.RESET + StringUtils.formatDouble(m));
 		}
 	}
 
 	@Override
 	public boolean setValueFromString(String string, boolean simulate)
 	{
+		if (string.isEmpty())
+		{
+			return false;
+		}
+
 		try
 		{
-			double val = Double.parseDouble(string);
+			double multiplier = 1D;
+
+			if (string.endsWith("K"))
+			{
+				multiplier = 1000D;
+				string = string.substring(0, string.length() - 1);
+			}
+			else if (string.endsWith("M"))
+			{
+				multiplier = 1000000D;
+				string = string.substring(0, string.length() - 1);
+			}
+			else if (string.endsWith("B"))
+			{
+				multiplier = 1000000000D;
+				string = string.substring(0, string.length() - 1);
+			}
+
+			double val = Double.parseDouble(string.trim()) * multiplier;
 
 			if (val < getMin() || val > getMax())
 			{
