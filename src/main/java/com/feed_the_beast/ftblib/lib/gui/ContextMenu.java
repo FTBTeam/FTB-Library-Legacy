@@ -13,13 +13,15 @@ public class ContextMenu extends Panel
 {
 	public static class CButton extends Button
 	{
+		public final ContextMenu contextMenu;
 		public final ContextMenuItem item;
 
-		public CButton(Panel panel, ContextMenuItem i)
+		public CButton(ContextMenu panel, ContextMenuItem i)
 		{
 			super(panel, i.title, i.icon);
+			contextMenu = panel;
 			item = i;
-			setSize(getStringWidth(item.title) + 14, 12);
+			setSize(getStringWidth(item.title) + (contextMenu.hasIcons ? 14 : 4), 12);
 		}
 
 		@Override
@@ -38,8 +40,16 @@ public class ContextMenu extends Panel
 		{
 			int x = getAX();
 			int y = getAY();
-			getIcon().draw(x + 1, y + 2, 8, 8);
-			drawString(getTitle(), x + 11, y + 2, getTheme().getContentColor(getWidgetType()), SHADOW);
+
+			if (contextMenu.hasIcons)
+			{
+				getIcon().draw(x + 1, y + 2, 8, 8);
+				drawString(getTitle(), x + 11, y + 2, getTheme().getContentColor(getWidgetType()), SHADOW);
+			}
+			else
+			{
+				drawString(getTitle(), x + 2, y + 2, getTheme().getContentColor(getWidgetType()), SHADOW);
+			}
 		}
 
 		@Override
@@ -81,13 +91,24 @@ public class ContextMenu extends Panel
 	}
 
 	private final List<ContextMenuItem> items;
+	public boolean hasIcons;
 	public Icon background;
 
 	public ContextMenu(Panel panel, List<ContextMenuItem> i)
 	{
 		super(panel);
 		items = i;
+		hasIcons = false;
 		background = getTheme().getGui(WidgetType.NORMAL).withTint(Color4I.BLACK.withAlpha(90));
+
+		for (ContextMenuItem item : items)
+		{
+			if (!item.icon.isEmpty())
+			{
+				hasIcons = true;
+				break;
+			}
+		}
 	}
 
 	@Override

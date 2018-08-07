@@ -45,8 +45,11 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	protected final void mouseClicked(int mouseX, int mouseY, int button) throws IOException
 	{
 		wrappedGui.updateMouseOver(mouseX, mouseY);
-		wrappedGui.mousePressed(MouseButton.get(button));
-		super.mouseClicked(mouseX, mouseY, button);
+
+		if (!wrappedGui.mousePressed(MouseButton.get(button)))
+		{
+			super.mouseClicked(mouseX, mouseY, button);
+		}
 	}
 
 	@Override
@@ -138,7 +141,12 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 		GlStateManager.translate(-guiLeft, -guiTop, 0D);
 		GuiHelper.setupDrawing();
 		wrappedGui.drawForeground();
-		renderHoveredToolTip(mx, my);
+
+		if (wrappedGui.contextMenu == null)
+		{
+			renderHoveredToolTip(mx, my);
+		}
+
 		GlStateManager.popMatrix();
 
 		if (wrappedGui.fixUnicode)

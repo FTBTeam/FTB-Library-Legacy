@@ -334,8 +334,9 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		if (contextMenu != null)
 		{
 			setOffset(true);
-			boolean b = contextMenu.mousePressed(button);
+			Panel cm = contextMenu;
 			contextMenu = null;
+			boolean b = cm.mousePressed(button);
 			setOffset(false);
 
 			if (b)

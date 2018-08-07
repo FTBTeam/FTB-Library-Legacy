@@ -10,7 +10,7 @@ public class ContextMenuItem
 	public static final ContextMenuItem SEPARATOR = new ContextMenuItem("", Icon.EMPTY, () -> {})
 	{
 		@Override
-		public Widget createWidget(Panel panel)
+		public Widget createWidget(ContextMenu panel)
 		{
 			return new ContextMenu.CSeperator(panel);
 		}
@@ -41,7 +41,7 @@ public class ContextMenuItem
 		return this;
 	}
 
-	public Widget createWidget(Panel panel)
+	public Widget createWidget(ContextMenu panel)
 	{
 		return new ContextMenu.CButton(panel, this);
 	}
