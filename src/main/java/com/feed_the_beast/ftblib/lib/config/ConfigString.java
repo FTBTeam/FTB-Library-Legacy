@@ -86,6 +86,12 @@ public class ConfigString extends ConfigValue
 	}
 
 	@Override
+	public long getLong()
+	{
+		return Long.parseLong(getString());
+	}
+
+	@Override
 	public ConfigString copy()
 	{
 		return new ConfigString(getString(), getPattern());

@@ -33,6 +33,11 @@ public abstract class ConfigValue implements IStringSerializable
 
 	public double getDouble()
 	{
+		return getLong();
+	}
+
+	public long getLong()
+	{
 		return getInt();
 	}
 

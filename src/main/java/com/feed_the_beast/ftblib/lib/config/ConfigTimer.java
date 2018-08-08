@@ -79,7 +79,7 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	}
 
 	@Override
-	public double getDouble()
+	public long getLong()
 	{
 		return getTimer().ticks();
 	}

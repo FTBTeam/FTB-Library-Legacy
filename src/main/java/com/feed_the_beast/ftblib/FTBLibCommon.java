@@ -14,6 +14,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigItemStack;
 import com.feed_the_beast.ftblib.lib.config.ConfigList;
+import com.feed_the_beast.ftblib.lib.config.ConfigLong;
 import com.feed_the_beast.ftblib.lib.config.ConfigNBT;
 import com.feed_the_beast.ftblib.lib.config.ConfigNull;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
@@ -131,6 +132,7 @@ public class FTBLibCommon
 		registry.registerConfigValueProvider(ConfigTristate.ID, () -> new ConfigTristate(EnumTristate.DEFAULT));
 		registry.registerConfigValueProvider(ConfigInt.ID, () -> new ConfigInt(0));
 		registry.registerConfigValueProvider(ConfigDouble.ID, () -> new ConfigDouble(0D));
+		registry.registerConfigValueProvider(ConfigLong.ID, () -> new ConfigLong(0L));
 		registry.registerConfigValueProvider(ConfigString.ID, () -> new ConfigString(""));
 		registry.registerConfigValueProvider(ConfigColor.ID, () -> new ConfigColor(Color4I.WHITE));
 		registry.registerConfigValueProvider(ConfigEnum.ID, () -> new ConfigStringEnum(Collections.emptyList(), ""));
