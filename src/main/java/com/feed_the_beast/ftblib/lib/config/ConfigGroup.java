@@ -307,4 +307,20 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 			group.deserializeNBT(nbt.getCompoundTag(group.getName()));
 		}
 	}
+
+	public void deserializeEditedNBT(NBTTagCompound nbt)
+	{
+		for (ConfigValueInstance instance : getValues())
+		{
+			if (!instance.getExcluded() && instance.getCanEdit())
+			{
+				instance.getValue().readFromNBT(nbt, instance.getName());
+			}
+		}
+
+		for (ConfigGroup group : getGroups())
+		{
+			group.deserializeEditedNBT(nbt.getCompoundTag(group.getName()));
+		}
+	}
 }

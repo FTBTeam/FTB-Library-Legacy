@@ -92,7 +92,10 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 	@Override
 	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
-		setBoolean(!getBoolean());
+		if (inst.getCanEdit())
+		{
+			setBoolean(!getBoolean());
+		}
 	}
 
 	@Override

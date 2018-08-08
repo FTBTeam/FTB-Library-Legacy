@@ -50,7 +50,7 @@ public class MessageEditConfigResponse extends MessageToServer
 
 		if (c != null)
 		{
-			c.group.deserializeNBT(groupData);
+			c.group.deserializeEditedNBT(groupData);
 			c.callback.onConfigSaved(c.group, player);
 			FTBLibCommon.TEMP_SERVER_CONFIG.remove(player.getUniqueID());
 		}

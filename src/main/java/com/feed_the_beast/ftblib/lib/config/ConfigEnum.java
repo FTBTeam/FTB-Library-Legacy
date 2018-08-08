@@ -172,7 +172,10 @@ public class ConfigEnum<E> extends ConfigValue
 	@Override
 	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
-		onClicked(button);
+		if (inst.getCanEdit())
+		{
+			onClicked(button);
+		}
 	}
 
 	@Override

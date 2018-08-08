@@ -78,7 +78,10 @@ public class ConfigTristate extends ConfigValue
 	@Override
 	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
-		set(EnumTristate.NAME_MAP.getNext(get()));
+		if (inst.getCanEdit())
+		{
+			set(EnumTristate.NAME_MAP.getNext(get()));
+		}
 	}
 
 	@Override

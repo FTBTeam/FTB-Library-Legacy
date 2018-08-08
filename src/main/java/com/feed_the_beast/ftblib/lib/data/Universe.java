@@ -350,11 +350,11 @@ public class Universe implements IHasCache
 
 			if (files != null && files.length > 0)
 			{
-				for (File f : files)
+				for (File file : files)
 				{
-					if (f.getName().endsWith(".dat"))
+					if (file.getName().indexOf('.') == file.getName().lastIndexOf('.'))
 					{
-						NBTTagCompound nbt = NBTUtils.readNBT(f);
+						NBTTagCompound nbt = NBTUtils.readNBT(file);
 
 						if (nbt != null)
 						{
@@ -362,8 +362,8 @@ public class Universe implements IHasCache
 
 							if (uuidString.isEmpty())
 							{
-								uuidString = FileUtils.getBaseName(f);
-								FileUtils.delete(f);
+								uuidString = FileUtils.getBaseName(file);
+								FileUtils.delete(file);
 							}
 
 							UUID uuid = StringUtils.fromString(uuidString);
@@ -392,7 +392,7 @@ public class Universe implements IHasCache
 			{
 				for (File file : files)
 				{
-					if (file.getName().endsWith(".dat"))
+					if (file.getName().indexOf('.') == file.getName().lastIndexOf('.'))
 					{
 						NBTTagCompound nbt = NBTUtils.readNBT(file);
 

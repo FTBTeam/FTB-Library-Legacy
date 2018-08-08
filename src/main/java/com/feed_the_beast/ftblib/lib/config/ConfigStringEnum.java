@@ -142,7 +142,10 @@ public class ConfigStringEnum extends ConfigValue
 	@Override
 	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
-		setString(keys.get(MathUtils.mod(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
+		if (inst.getCanEdit())
+		{
+			setString(keys.get(MathUtils.mod(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
+		}
 	}
 
 	@Override
