@@ -77,7 +77,6 @@ public class GuiSelectTeam extends GuiButtonListBase
 			{
 				ClientUtils.execClientCommand("/team join " + team.getName());
 				getGui().closeGui();
-				ClientUtils.execClientCommand("/team gui");
 			}
 			else if (team.type != PublicTeamData.Type.ENEMY && team.type != PublicTeamData.Type.REQUESTING_INVITE)
 			{
@@ -123,6 +122,7 @@ public class GuiSelectTeam extends GuiButtonListBase
 	public GuiSelectTeam(Collection<PublicTeamData> teams0, boolean c)
 	{
 		setTitle(I18n.format("team_action.ftblib.select_team"));
+		setHasSearchBox(true);
 		teams = new ArrayList<>(teams0);
 		teams.sort(null);
 		canCreate = c;

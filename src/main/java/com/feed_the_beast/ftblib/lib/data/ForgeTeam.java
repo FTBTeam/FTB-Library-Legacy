@@ -371,6 +371,10 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		{
 			return fakePlayerStatus.getValue();
 		}
+		else if (type == TeamType.SERVER && getName().equals("singleplayer"))
+		{
+			return EnumTeamStatus.MOD;
+		}
 
 		EnumTeamStatus status = players.get(player);
 		return status == null ? EnumTeamStatus.NONE : status;

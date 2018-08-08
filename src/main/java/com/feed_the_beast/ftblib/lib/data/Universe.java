@@ -18,6 +18,7 @@ import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
+import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
@@ -633,11 +634,12 @@ public class Universe implements IHasCache
 
 				if (!team.isValid())
 				{
-					team = new ForgeTeam(this, "singleplayer", TeamType.PLAYER);
+					team = new ForgeTeam(this, "singleplayer", TeamType.SERVER);
 					team.setFreeToJoin(true);
-					team.owner = p;
 					teams.put(team.getName(), team);
 					p.team = team;
+					team.setTitle(p.getName());
+					team.setIcon(new PlayerHeadIcon(p.getId()).toString());
 					team.markDirty();
 					sendTeamCreatedEvent = true;
 				}
