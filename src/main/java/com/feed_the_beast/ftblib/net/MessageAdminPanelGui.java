@@ -24,12 +24,6 @@ public class MessageAdminPanelGui extends MessageToServer
 	}
 
 	@Override
-	public boolean hasData()
-	{
-		return false;
-	}
-
-	@Override
 	public void onMessage(EntityPlayerMP player)
 	{
 		List<Action.Inst> actions = new ArrayList<>();

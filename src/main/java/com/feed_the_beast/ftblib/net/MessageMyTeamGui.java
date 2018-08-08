@@ -20,12 +20,6 @@ public class MessageMyTeamGui extends MessageToServer
 	}
 
 	@Override
-	public boolean hasData()
-	{
-		return false;
-	}
-
-	@Override
 	public void onMessage(EntityPlayerMP player)
 	{
 		if (!FTBLibGameRules.canCreateTeam(player.world) && !FTBLibGameRules.canJoinTeam(player.world))

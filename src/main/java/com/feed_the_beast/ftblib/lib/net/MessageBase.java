@@ -13,27 +13,16 @@ public abstract class MessageBase implements IMessage
 
 	public abstract NetworkWrapper getWrapper();
 
-	public boolean hasData()
-	{
-		return true;
-	}
-
 	@Override
 	public final void toBytes(ByteBuf buf)
 	{
-		if (hasData())
-		{
-			writeData(new DataOut(buf));
-		}
+		writeData(new DataOut(buf));
 	}
 
 	@Override
 	public final void fromBytes(ByteBuf buf)
 	{
-		if (hasData())
-		{
-			readData(new DataIn(buf));
-		}
+		readData(new DataIn(buf));
 	}
 
 	public void writeData(DataOut data)
