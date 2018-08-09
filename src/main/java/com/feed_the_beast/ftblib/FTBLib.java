@@ -32,7 +32,7 @@ import java.util.Map;
 		name = FTBLib.MOD_NAME,
 		version = FTBLib.VERSION,
 		acceptedMinecraftVersions = "[1.12,)",
-		dependencies = "required-after:forge@[14.23.3.2697,);after:" + OtherMods.BAUBLES + ";after:" + OtherMods.JEI + ";after:" + OtherMods.NEI + ";after:" + OtherMods.MC_MULTIPART + ";after:" + OtherMods.CHISELS_AND_BITS + ";after:" + OtherMods.ICHUN_UTIL
+		dependencies = "required-after:forge@[14.23.4.2732,);after:" + OtherMods.BAUBLES + ";after:" + OtherMods.JEI + ";after:" + OtherMods.NEI + ";after:" + OtherMods.MC_MULTIPART + ";after:" + OtherMods.CHISELS_AND_BITS + ";after:" + OtherMods.ICHUN_UTIL
 )
 public class FTBLib
 {
