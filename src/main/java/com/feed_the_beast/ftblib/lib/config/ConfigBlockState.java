@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.google.gson.JsonElement;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
@@ -41,7 +42,7 @@ public class ConfigBlockState extends ConfigValue
 	@Override
 	public String getString()
 	{
-		return getBlockState().toString();
+		return CommonUtils.getNameFromState(getBlockState());
 	}
 
 	@Override
@@ -89,6 +90,23 @@ public class ConfigBlockState extends ConfigValue
 	}
 
 	@Override
+	public boolean isEmpty()
+	{
+		return getBlockState() == CommonUtils.AIR_STATE;
+	}
+
+	@Override
+	public boolean setValueFromString(String string, boolean simulate)
+	{
+		if (!simulate)
+		{
+			setBlockState(CommonUtils.getStateFromName(string));
+		}
+
+		return true;
+	}
+
+	@Override
 	public void setValueFromOtherValue(ConfigValue value)
 	{
 		if (value instanceof ConfigBlockState)
@@ -98,6 +116,15 @@ public class ConfigBlockState extends ConfigValue
 		else
 		{
 			super.setValueFromOtherValue(value);
+		}
+	}
+
+	@Override
+	public void setValueFromJson(JsonElement json)
+	{
+		if (json.isJsonPrimitive())
+		{
+			setBlockState(CommonUtils.getStateFromName(json.getAsString()));
 		}
 	}
 }

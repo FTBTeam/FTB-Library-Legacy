@@ -102,6 +102,12 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	}
 
 	@Override
+	public long getLong()
+	{
+		return (long) getDouble();
+	}
+
+	@Override
 	public ConfigDouble copy()
 	{
 		return new ConfigDouble(getDouble());
@@ -145,6 +151,25 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 		if (string.isEmpty())
 		{
 			return false;
+		}
+
+		if (string.equals("+Inf"))
+		{
+			if (!simulate)
+			{
+				setDouble(Double.POSITIVE_INFINITY);
+			}
+
+			return true;
+		}
+		else if (string.equals("-Inf"))
+		{
+			if (!simulate)
+			{
+				setDouble(Double.NEGATIVE_INFINITY);
+			}
+
+			return true;
 		}
 
 		try
