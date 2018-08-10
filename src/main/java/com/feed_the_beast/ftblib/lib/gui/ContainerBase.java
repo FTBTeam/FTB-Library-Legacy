@@ -104,5 +104,4 @@ public abstract class ContainerBase extends Container
 
 		return stack;
 	}
-
 }

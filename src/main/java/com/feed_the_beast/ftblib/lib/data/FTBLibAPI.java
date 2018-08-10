@@ -149,4 +149,15 @@ public class FTBLibAPI
 		ForgePlayer p2 = Universe.get().getPlayer(player2);
 		return p2 != null && p2.hasTeam() && p1.team.equalsTeam(p2.team);
 	}
+
+	public static String getTeam(UUID player)
+	{
+		if (!Universe.loaded())
+		{
+			return "";
+		}
+
+		ForgePlayer p = Universe.get().getPlayer(player);
+		return p == null ? "" : p.team.getName();
+	}
 }
