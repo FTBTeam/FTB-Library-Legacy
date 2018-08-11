@@ -16,6 +16,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -241,6 +242,26 @@ public class DataOut
 			{
 				throw new EncoderException(ex);
 			}
+		}
+	}
+
+	public void writeNBTBase(@Nullable NBTBase nbt)
+	{
+		if (nbt == null)
+		{
+			writeByte(0);
+		}
+		else if (nbt instanceof NBTTagCompound)
+		{
+			writeByte(1);
+			writeNBT((NBTTagCompound) nbt);
+		}
+		else
+		{
+			writeByte(2);
+			NBTTagCompound nbt1 = new NBTTagCompound();
+			nbt1.setTag("_", nbt);
+			writeNBT(nbt1);
 		}
 	}
 

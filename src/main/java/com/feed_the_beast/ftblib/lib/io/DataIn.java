@@ -21,6 +21,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTSizeTracker;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -295,6 +296,23 @@ public class DataIn
 		{
 			throw new EncoderException(ex);
 		}
+	}
+
+	@Nullable
+	public NBTBase readNBTBase()
+	{
+		int i = readByte();
+
+		if (i == 0)
+		{
+			return null;
+		}
+		else if (i == 1)
+		{
+			return readNBT();
+		}
+
+		return readNBT().getTag("_");
 	}
 
 	public <T extends IForgeRegistryEntry<T>> T readRegistryEntry(IForgeRegistry<T> registry)
