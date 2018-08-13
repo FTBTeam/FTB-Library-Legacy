@@ -5,12 +5,14 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.DoubleSupplier;
 
@@ -146,7 +148,7 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	}
 
 	@Override
-	public boolean setValueFromString(String string, boolean simulate)
+	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
 		if (string.isEmpty())
 		{

@@ -6,8 +6,10 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.google.gson.JsonElement;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
@@ -99,7 +101,7 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 	}
 
 	@Override
-	public boolean setValueFromString(String string, boolean simulate)
+	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
 		if (simulate)
 		{

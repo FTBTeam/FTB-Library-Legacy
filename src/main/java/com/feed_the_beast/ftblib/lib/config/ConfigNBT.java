@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.google.gson.JsonElement;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -79,7 +80,7 @@ public class ConfigNBT extends ConfigValue
 	}
 
 	@Override
-	public boolean setValueFromString(String string, boolean simulate)
+	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
 		if (string.equals("null"))
 		{

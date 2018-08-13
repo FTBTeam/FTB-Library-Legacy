@@ -103,7 +103,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 		{
 			String valueString = String.valueOf(StringUtils.joinSpaceUntilEnd(1, args));
 
-			if (!instance.getValue().setValueFromString(valueString, true))
+			if (!instance.getValue().setValueFromString(sender, valueString, true))
 			{
 				return;
 			}
@@ -113,7 +113,7 @@ public abstract class CmdEditConfigBase extends CmdBase
 				FTBLib.LOGGER.info("Setting " + instance.getPath() + " to " + valueString);
 			}
 
-			instance.getValue().setValueFromString(valueString, false);
+			instance.getValue().setValueFromString(sender, valueString, false);
 			getCallback(sender).onConfigSaved(group, sender);
 			Notification.of(Notification.VANILLA_STATUS, FTBLib.lang(sender, "ftblib.lang.config_command.set", instance.getDisplayName(), group.getValue(args[0]).toString())).send(server, getCommandSenderAsPlayer(sender));
 		}

@@ -6,8 +6,11 @@ import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -96,7 +99,7 @@ public class ConfigBlockState extends ConfigValue
 	}
 
 	@Override
-	public boolean setValueFromString(String string, boolean simulate)
+	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
 		if (!simulate)
 		{

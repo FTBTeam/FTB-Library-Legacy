@@ -4,7 +4,10 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.MutableColor4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
+
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -62,7 +65,7 @@ public class ConfigColor extends ConfigValue
 	}
 
 	@Override
-	public boolean setValueFromString(String string, boolean simulate)
+	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
 		try
 		{

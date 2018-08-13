@@ -4,9 +4,11 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.function.LongSupplier;
 
@@ -116,7 +118,7 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	}
 
 	@Override
-	public boolean setValueFromString(String string, boolean simulate)
+	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
 		if (string.isEmpty())
 		{
@@ -150,7 +152,7 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
 		setTimer(Ticks.NO_TICKS);
-		setValueFromString(nbt.getString(key), false);
+		setValueFromString(null, nbt.getString(key), false);
 	}
 
 	@Override

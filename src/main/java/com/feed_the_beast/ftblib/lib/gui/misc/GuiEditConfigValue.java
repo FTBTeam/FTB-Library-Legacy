@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui.misc;
 
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueInstance;
@@ -57,7 +58,7 @@ public class GuiEditConfigValue extends GuiBase
 			{
 				GuiHelper.playClickSound();
 
-				if (value.setValueFromString(textBox.getText(), false))
+				if (value.setValueFromString(ClientUtils.MC.player, textBox.getText(), false))
 				{
 					callback.onCallback(value, true);
 				}
@@ -89,7 +90,7 @@ public class GuiEditConfigValue extends GuiBase
 			@Override
 			public boolean isValid(String txt)
 			{
-				return value.setValueFromString(txt, true);
+				return value.setValueFromString(ClientUtils.MC.player, txt, true);
 			}
 
 			@Override

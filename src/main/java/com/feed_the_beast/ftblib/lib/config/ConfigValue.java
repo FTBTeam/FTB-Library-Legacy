@@ -10,6 +10,7 @@ import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.google.gson.JsonElement;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
@@ -17,6 +18,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 
@@ -89,7 +91,7 @@ public abstract class ConfigValue implements IStringSerializable
 		}).openGui();
 	}
 
-	public boolean setValueFromString(String string, boolean simulate)
+	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
 		JsonElement json = DataReader.get(string).safeJson();
 
@@ -116,14 +118,14 @@ public abstract class ConfigValue implements IStringSerializable
 
 	public void setValueFromOtherValue(ConfigValue value)
 	{
-		setValueFromString(value.getString(), false);
+		setValueFromString(null, value.getString(), false);
 	}
 
 	public void setValueFromJson(JsonElement json)
 	{
 		if (json.isJsonPrimitive())
 		{
-			setValueFromString(json.getAsString(), false);
+			setValueFromString(null, json.getAsString(), false);
 		}
 	}
 

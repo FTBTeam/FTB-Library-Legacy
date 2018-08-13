@@ -4,8 +4,11 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
+
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -44,7 +47,7 @@ public class ConfigTextComponent extends ConfigValue
 	}
 
 	@Override
-	public boolean setValueFromString(String string, boolean simulate)
+	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
 		ITextComponent component = JsonUtils.deserializeTextComponent(DataReader.get(string).safeJson());
 
