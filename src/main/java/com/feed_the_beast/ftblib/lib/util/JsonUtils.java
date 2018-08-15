@@ -450,7 +450,7 @@ public class JsonUtils
 				}
 				else
 				{
-					component = new TextComponentTranslation(s, CommonUtils.NO_OBJECTS);
+					component = new TextComponentTranslation(s);
 				}
 			}
 			else if (json.has("score"))

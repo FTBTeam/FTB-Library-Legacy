@@ -3,8 +3,8 @@ package com.feed_the_beast.ftblib.lib.icon;
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
@@ -336,30 +336,30 @@ public class Color4I extends Icon
 		if (a < 255)
 		{
 			chars = new char[9];
-			chars[1] = CommonUtils.HEX[(a & 0xF0) >> 4];
-			chars[2] = CommonUtils.HEX[a & 0xF];
+			chars[1] = StringUtils.HEX[(a & 0xF0) >> 4];
+			chars[2] = StringUtils.HEX[a & 0xF];
 			int r = redi();
-			chars[3] = CommonUtils.HEX[(r & 0xF0) >> 4];
-			chars[4] = CommonUtils.HEX[r & 0xF];
+			chars[3] = StringUtils.HEX[(r & 0xF0) >> 4];
+			chars[4] = StringUtils.HEX[r & 0xF];
 			int g = greeni();
-			chars[5] = CommonUtils.HEX[(g & 0xF0) >> 4];
-			chars[6] = CommonUtils.HEX[g & 0xF];
+			chars[5] = StringUtils.HEX[(g & 0xF0) >> 4];
+			chars[6] = StringUtils.HEX[g & 0xF];
 			int b = bluei();
-			chars[7] = CommonUtils.HEX[(b & 0xF0) >> 4];
-			chars[8] = CommonUtils.HEX[b & 0xF];
+			chars[7] = StringUtils.HEX[(b & 0xF0) >> 4];
+			chars[8] = StringUtils.HEX[b & 0xF];
 		}
 		else
 		{
 			chars = new char[7];
 			int r = redi();
-			chars[1] = CommonUtils.HEX[(r & 0xF0) >> 4];
-			chars[2] = CommonUtils.HEX[r & 0xF];
+			chars[1] = StringUtils.HEX[(r & 0xF0) >> 4];
+			chars[2] = StringUtils.HEX[r & 0xF];
 			int g = greeni();
-			chars[3] = CommonUtils.HEX[(g & 0xF0) >> 4];
-			chars[4] = CommonUtils.HEX[g & 0xF];
+			chars[3] = StringUtils.HEX[(g & 0xF0) >> 4];
+			chars[4] = StringUtils.HEX[g & 0xF];
 			int b = bluei();
-			chars[5] = CommonUtils.HEX[(b & 0xF0) >> 4];
-			chars[6] = CommonUtils.HEX[b & 0xF];
+			chars[5] = StringUtils.HEX[(b & 0xF0) >> 4];
+			chars[6] = StringUtils.HEX[b & 0xF];
 		}
 
 		chars[0] = '#';

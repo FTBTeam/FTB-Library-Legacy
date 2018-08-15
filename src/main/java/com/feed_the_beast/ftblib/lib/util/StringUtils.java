@@ -24,6 +24,7 @@ public class StringUtils
 	public static final char FORMATTING_CHAR = '\u00a7';
 	public static final String FORMATTING = "" + FORMATTING_CHAR;
 	public static final String[] EMPTY_ARRAY = { };
+	public static final char[] HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
 	public static final int FLAG_ID_ALLOW_EMPTY = 1;
 	public static final int FLAG_ID_FIX = 2;

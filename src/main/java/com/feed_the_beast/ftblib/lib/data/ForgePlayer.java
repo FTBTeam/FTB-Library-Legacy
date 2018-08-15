@@ -10,7 +10,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -137,7 +136,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		if (isFake())
 		{
-			return CommonUtils.FAKE_PLAYER_PROFILE;
+			return ServerUtils.FAKE_PLAYER_PROFILE;
 		}
 		else if (isOnline())
 		{
@@ -310,7 +309,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		if (playerForStats == null)
 		{
-			playerForStats = new FakePlayer(team.universe.world, CommonUtils.FAKE_PLAYER_PROFILE);
+			playerForStats = new FakePlayer(team.universe.world, ServerUtils.FAKE_PLAYER_PROFILE);
 		}
 
 		playerForStats.setWorld(team.universe.world);

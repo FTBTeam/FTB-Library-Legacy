@@ -2,7 +2,7 @@ package com.feed_the_beast.ftblib.lib.io;
 
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -404,7 +404,7 @@ public class DataOut
 
 	public void writeBlockState(IBlockState state)
 	{
-		writeInt(state == CommonUtils.AIR_STATE ? 0 : Block.getStateId(state));
+		writeInt(state == BlockUtils.AIR_STATE ? 0 : Block.getStateId(state));
 	}
 
 	public void writeIcon(@Nullable Icon icon)

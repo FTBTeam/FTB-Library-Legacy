@@ -2,7 +2,7 @@ package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -45,13 +45,13 @@ public class ConfigBlockState extends ConfigValue
 	@Override
 	public String getString()
 	{
-		return CommonUtils.getNameFromState(getBlockState());
+		return BlockUtils.getNameFromState(getBlockState());
 	}
 
 	@Override
 	public boolean getBoolean()
 	{
-		return getBlockState() != CommonUtils.AIR_STATE;
+		return getBlockState() != BlockUtils.AIR_STATE;
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class ConfigBlockState extends ConfigValue
 	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
 		String id = nbt.getString(key);
-		setBlockState(id.isEmpty() ? CommonUtils.AIR_STATE : Block.REGISTRY.getObject(new ResourceLocation(id)).getDefaultState());
+		setBlockState(id.isEmpty() ? BlockUtils.AIR_STATE : Block.REGISTRY.getObject(new ResourceLocation(id)).getDefaultState());
 	}
 
 	@Override
@@ -95,7 +95,7 @@ public class ConfigBlockState extends ConfigValue
 	@Override
 	public boolean isEmpty()
 	{
-		return getBlockState() == CommonUtils.AIR_STATE;
+		return getBlockState() == BlockUtils.AIR_STATE;
 	}
 
 	@Override
@@ -103,7 +103,7 @@ public class ConfigBlockState extends ConfigValue
 	{
 		if (!simulate)
 		{
-			setBlockState(CommonUtils.getStateFromName(string));
+			setBlockState(BlockUtils.getStateFromName(string));
 		}
 
 		return true;
@@ -127,7 +127,7 @@ public class ConfigBlockState extends ConfigValue
 	{
 		if (json.isJsonPrimitive())
 		{
-			setBlockState(CommonUtils.getStateFromName(json.getAsString()));
+			setBlockState(BlockUtils.getStateFromName(json.getAsString()));
 		}
 	}
 }

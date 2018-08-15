@@ -36,9 +36,10 @@ import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftblib.net.FTBLibNetHandler;
 import net.minecraft.item.ItemStack;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -89,8 +90,11 @@ public class FTBLibCommon
 
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		FTBLib.LOGGER.info("Loading FTBLib, DevEnv:" + CommonUtils.DEV_ENV);
-		CommonUtils.init(event.getModConfigurationDirectory());
+		if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment"))
+		{
+			FTBLib.LOGGER.info("Loading FTBLib in development environment");
+		}
+
 		FTBLibNetHandler.init();
 
 		FTBLibPreInitRegistryEvent.Registry registry = new FTBLibPreInitRegistryEvent.Registry()
@@ -136,7 +140,7 @@ public class FTBLibCommon
 		registry.registerConfigValueProvider(ConfigString.ID, () -> new ConfigString(""));
 		registry.registerConfigValueProvider(ConfigColor.ID, () -> new ConfigColor(Color4I.WHITE));
 		registry.registerConfigValueProvider(ConfigEnum.ID, () -> new ConfigStringEnum(Collections.emptyList(), ""));
-		registry.registerConfigValueProvider(ConfigBlockState.ID, () -> new ConfigBlockState(CommonUtils.AIR_STATE));
+		registry.registerConfigValueProvider(ConfigBlockState.ID, () -> new ConfigBlockState(BlockUtils.AIR_STATE));
 		registry.registerConfigValueProvider(ConfigItemStack.ID, () -> new ConfigItemStack(ItemStack.EMPTY));
 		registry.registerConfigValueProvider(ConfigTextComponent.ID, () -> new ConfigTextComponent(new TextComponentString("")));
 		registry.registerConfigValueProvider(ConfigTimer.ID, () -> new ConfigTimer(Ticks.NO_TICKS));

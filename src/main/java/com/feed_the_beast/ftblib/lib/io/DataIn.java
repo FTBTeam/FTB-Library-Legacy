@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.lib.io;
 
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonArray;
@@ -435,7 +436,7 @@ public class DataIn
 	public IBlockState readBlockState()
 	{
 		int id = readInt();
-		return id == 0 ? CommonUtils.AIR_STATE : Block.getStateById(id);
+		return id == 0 ? BlockUtils.AIR_STATE : Block.getStateById(id);
 	}
 
 	public Icon readIcon()

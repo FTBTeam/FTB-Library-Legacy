@@ -1,0 +1,119 @@
+package com.feed_the_beast.ftblib.lib.util;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
+import java.util.Map;
+
+/**
+ * @author LatvianModder
+ */
+public class BlockUtils
+{
+	public static final int UPDATE = 1;
+	public static final int SEND_TO_CLIENTS = 2;
+	public static final int NO_RERENDER = 4;
+	public static final int RERENDER_MAIN_THREAD = 8;
+	public static final int NO_OBSERVERS = 16;
+
+	public static final int DEFAULT = UPDATE | SEND_TO_CLIENTS;
+	public static final int DEFAULT_AND_RERENDER = DEFAULT | RERENDER_MAIN_THREAD;
+
+	public static final IBlockState AIR_STATE = Blocks.AIR.getDefaultState();
+
+	public static String getNameFromState(IBlockState state)
+	{
+		if (state == AIR_STATE)
+		{
+			return "minecraft:air";
+		}
+
+
+		StringBuilder builder = new StringBuilder();
+		builder.append(Block.REGISTRY.getNameForObject(state.getBlock()));
+
+		if (state != state.getBlock().getDefaultState() && !state.getProperties().isEmpty())
+		{
+			builder.append('[');
+			boolean first = true;
+
+			for (Map.Entry<IProperty<?>, Comparable<?>> entry : state.getProperties().entrySet())
+			{
+				if (first)
+				{
+					first = false;
+				}
+				else
+				{
+					builder.append(',');
+				}
+
+				builder.append(entry.getKey().getName());
+				builder.append('=');
+				builder.append(entry.getKey().getName(CommonUtils.cast(entry.getValue())));
+			}
+
+			builder.append(']');
+		}
+		return builder.toString();
+	}
+
+	public static IBlockState getStateFromName(String name, IBlockState def)
+	{
+		if (name.isEmpty())
+		{
+			return def;
+		}
+
+		int p = name.indexOf('[');
+		String stateName = p == -1 ? name : name.substring(0, p);
+		IBlockState state = Block.REGISTRY.getObject(new ResourceLocation(stateName)).getDefaultState();
+
+		if (state == AIR_STATE)
+		{
+			return def;
+		}
+
+		if (p >= 0)
+		{
+			for (String property : name.substring(p + 1, name.length() - 1).split(","))
+			{
+				String[] p1 = property.split("=", 2);
+				IProperty<?> property1 = state.getBlock().getBlockState().getProperty(p1[0]);
+
+				if (property1 != null)
+				{
+					com.google.common.base.Optional<?> propValue = property1.parseValue(p1[1]);
+
+					if (propValue.isPresent())
+					{
+						state = state.withProperty(property1, CommonUtils.cast(propValue.get()));
+					}
+				}
+			}
+		}
+
+		return state;
+	}
+
+	public static IBlockState getStateFromName(String name)
+	{
+		return getStateFromName(name, AIR_STATE);
+	}
+
+	public static void notifyBlockUpdate(World world, BlockPos pos, @Nullable IBlockState state)
+	{
+		if (state == null)
+		{
+			state = world.getBlockState(pos);
+		}
+
+		world.notifyBlockUpdate(pos, state, state, DEFAULT_AND_RERENDER);
+	}
+}

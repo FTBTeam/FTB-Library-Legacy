@@ -34,6 +34,8 @@ import java.util.UUID;
  */
 public class ServerUtils
 {
+	public static final GameProfile FAKE_PLAYER_PROFILE = new GameProfile(StringUtils.fromString("069be1413c1b45c3b3b160d3f9fcd236"), "FakeForgePlayer");
+
 	public enum SpawnType
 	{
 		CANT_SPAWN,

@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftblib.lib.tile;
 
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
+import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -172,7 +172,7 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 
 			if (notifyBlock())
 			{
-				CommonUtils.notifyBlockUpdate(world, pos, getBlockState());
+				BlockUtils.notifyBlockUpdate(world, pos, getBlockState());
 			}
 
 			if (updateComparator() && getBlockType() != Blocks.AIR)
@@ -207,7 +207,7 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 		{
 			if (world == null)
 			{
-				return CommonUtils.AIR_STATE;
+				return BlockUtils.AIR_STATE;
 			}
 
 			currentState = createState(world.getBlockState(getPos()));

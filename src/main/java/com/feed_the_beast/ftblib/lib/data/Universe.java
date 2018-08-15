@@ -21,7 +21,6 @@ import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
@@ -421,7 +420,7 @@ public class Universe implements IHasCache
 			}
 		};
 
-		fakePlayer = new ForgePlayer(this, CommonUtils.FAKE_PLAYER_PROFILE.getId(), CommonUtils.FAKE_PLAYER_PROFILE.getName())
+		fakePlayer = new ForgePlayer(this, ServerUtils.FAKE_PLAYER_PROFILE.getId(), ServerUtils.FAKE_PLAYER_PROFILE.getName())
 		{
 			@Override
 			public void markDirty()
@@ -712,7 +711,7 @@ public class Universe implements IHasCache
 		{
 			return null;
 		}
-		else if (id.equals(CommonUtils.FAKE_PLAYER_PROFILE.getId()))
+		else if (id.equals(ServerUtils.FAKE_PLAYER_PROFILE.getId()))
 		{
 			return fakePlayer;
 		}
@@ -736,7 +735,7 @@ public class Universe implements IHasCache
 		{
 			return getPlayer(id);
 		}
-		else if (s.equals(CommonUtils.FAKE_PLAYER_PROFILE.getName().toLowerCase()))
+		else if (s.equals(ServerUtils.FAKE_PLAYER_PROFILE.getName().toLowerCase()))
 		{
 			return fakePlayer;
 		}
