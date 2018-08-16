@@ -147,7 +147,7 @@ public class StringUtils
 
 		if (Bits.getFlag(flags, FLAG_ID_ONLY_UNDERLINE))
 		{
-			boolean allowPeriod = Bits.getFlag(flags, FLAG_ID_ONLY_UNDERLINE_OR_PERIOD);
+			boolean allowPeriod = Bits.getFlag(flags, 16);
 
 			char[] chars = id.toCharArray();
 

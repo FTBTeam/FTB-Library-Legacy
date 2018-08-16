@@ -67,7 +67,7 @@ public class GuiEditConfigValue extends GuiBase
 			@Override
 			public WidgetType getWidgetType()
 			{
-				return inst.getCanEdit() ? super.getWidgetType() : WidgetType.DISABLED;
+				return inst.getCanEdit() && textBox.isTextValid() ? super.getWidgetType() : WidgetType.DISABLED;
 			}
 
 			@Override

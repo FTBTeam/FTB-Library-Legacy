@@ -163,7 +163,7 @@ public class ConfigEnum<E> extends ConfigValue
 	@Override
 	public void readData(DataIn data)
 	{
-		throw new IllegalStateException("Can't read Abstract Enum Property!");
+		throw new IllegalStateException("Can't read Abstract Enum property!");
 	}
 
 	public void onClicked(MouseButton button)

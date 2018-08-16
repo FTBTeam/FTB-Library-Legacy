@@ -595,4 +595,9 @@ public class TextBox extends Widget
 	{
 		return true;
 	}
+
+	public final boolean isTextValid()
+	{
+		return validText;
+	}
 }
