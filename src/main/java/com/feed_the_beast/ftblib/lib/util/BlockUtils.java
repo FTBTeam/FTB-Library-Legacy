@@ -4,6 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,6 +28,7 @@ public class BlockUtils
 	public static final int DEFAULT_AND_RERENDER = DEFAULT | RERENDER_MAIN_THREAD;
 
 	public static final IBlockState AIR_STATE = Blocks.AIR.getDefaultState();
+	public static final String DATA_TAG = "BlockEntityTag";
 
 	public static String getNameFromState(IBlockState state)
 	{
@@ -33,7 +36,6 @@ public class BlockUtils
 		{
 			return "minecraft:air";
 		}
-
 
 		StringBuilder builder = new StringBuilder();
 		builder.append(Block.REGISTRY.getNameForObject(state.getBlock()));
@@ -115,5 +117,29 @@ public class BlockUtils
 		}
 
 		world.notifyBlockUpdate(pos, state, state, DEFAULT_AND_RERENDER);
+	}
+
+	public static boolean hasData(ItemStack stack)
+	{
+		NBTTagCompound nbt = stack.getTagCompound();
+		return nbt != null && nbt.hasKey(DATA_TAG);
+	}
+
+	public static NBTTagCompound getData(ItemStack stack)
+	{
+		NBTTagCompound nbt = stack.getTagCompound();
+		return nbt != null ? nbt.getCompoundTag(DATA_TAG) : new NBTTagCompound();
+	}
+
+	public static void removeData(ItemStack stack)
+	{
+		NBTTagCompound nbt = stack.getTagCompound();
+
+		if (nbt != null)
+		{
+			nbt.removeTag(DATA_TAG);
+			nbt.getCompoundTag("display").removeTag("Lore");
+			stack.setTagCompound(NBTUtils.minimize(nbt));
+		}
 	}
 }

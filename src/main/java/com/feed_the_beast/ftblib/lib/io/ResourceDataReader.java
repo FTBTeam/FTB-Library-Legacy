@@ -3,8 +3,6 @@ package com.feed_the_beast.ftblib.lib.io;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.client.resources.IResource;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -16,7 +14,6 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-@SideOnly(Side.CLIENT)
 public class ResourceDataReader extends DataReader
 {
 	public final IResource resource;

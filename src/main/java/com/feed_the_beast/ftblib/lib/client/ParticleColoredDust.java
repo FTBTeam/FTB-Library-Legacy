@@ -2,13 +2,10 @@ package com.feed_the_beast.ftblib.lib.client;
 
 import net.minecraft.client.particle.ParticleRedstone;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
  */
-@SideOnly(Side.CLIENT)
 public class ParticleColoredDust extends ParticleRedstone
 {
 	public ParticleColoredDust(World worldIn, double xCoordIn, double yCoordIn, double zCoordIn, float red, float green, float blue, float alpha)

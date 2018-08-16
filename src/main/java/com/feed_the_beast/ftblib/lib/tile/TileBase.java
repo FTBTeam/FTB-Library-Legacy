@@ -2,7 +2,6 @@ package com.feed_the_beast.ftblib.lib.tile;
 
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
-import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -239,16 +238,16 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 	public void writeToItem(ItemStack stack)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		writeData(nbt, EnumSaveType.NET_FULL);
+		writeData(nbt, EnumSaveType.ITEM);
 
 		if (!nbt.isEmpty())
 		{
-			stack.setTagInfo("BlockEntityTag", nbt);
+			stack.setTagInfo(BlockUtils.DATA_TAG, nbt);
 		}
 	}
 
 	public void readFromItem(ItemStack stack)
 	{
-		readData(NBTUtils.getBlockData(stack), EnumSaveType.NET_FULL);
+		readData(BlockUtils.getData(stack), EnumSaveType.ITEM);
 	}
 }

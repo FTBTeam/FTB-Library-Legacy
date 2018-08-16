@@ -4,6 +4,8 @@ import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
@@ -32,6 +34,7 @@ public class IconWithOutline extends Icon
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
 		icon.draw(x + 1, y + 1, w - 2, h - 2, col);

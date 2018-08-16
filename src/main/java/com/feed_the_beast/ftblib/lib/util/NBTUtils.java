@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.io.ByteCounterOutputStream;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagByte;
@@ -83,30 +82,6 @@ public class NBTUtils
 			{
 				return null;
 			}
-		}
-	}
-
-	public static boolean hasBlockData(ItemStack stack)
-	{
-		NBTTagCompound nbt = stack.getTagCompound();
-		return nbt != null && nbt.hasKey("BlockEntityTag");
-	}
-
-	public static NBTTagCompound getBlockData(ItemStack stack)
-	{
-		NBTTagCompound nbt = stack.getTagCompound();
-		return nbt != null ? nbt.getCompoundTag("BlockEntityTag") : new NBTTagCompound();
-	}
-
-	public static void removeBlockData(ItemStack stack)
-	{
-		NBTTagCompound nbt = stack.getTagCompound();
-
-		if (nbt != null)
-		{
-			nbt.removeTag("BlockEntityTag");
-			nbt.getCompoundTag("display").removeTag("Lore");
-			stack.setTagCompound(minimize(nbt));
 		}
 	}
 

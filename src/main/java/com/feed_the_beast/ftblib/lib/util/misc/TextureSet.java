@@ -1,21 +1,16 @@
 package com.feed_the_beast.ftblib.lib.util.misc;
 
-import com.feed_the_beast.ftblib.lib.client.SpriteSet;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * @author LatvianModder
@@ -90,19 +85,5 @@ public class TextureSet
 		}
 
 		return list;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public SpriteSet getSpriteSet(Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
-	{
-		for (ResourceLocation id : textures)
-		{
-			if (id != null)
-			{
-				return new SpriteSet(this, bakedTextureGetter);
-			}
-		}
-
-		return SpriteSet.EMPTY;
 	}
 }

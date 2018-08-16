@@ -7,7 +7,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -37,7 +36,7 @@ public abstract class Icon
 
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void draw3D(World world, Color4I col)
+		public void draw3D(Color4I col)
 		{
 		}
 
@@ -196,11 +195,11 @@ public abstract class Icon
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void draw3D(World world, Color4I col)
+	public void draw3D(Color4I col)
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1D / 16D, 1D / 16D, 1D);
-		draw(-8, -8, 16, 16);
+		draw(-8, -8, 16, 16, col);
 		GlStateManager.popMatrix();
 	}
 

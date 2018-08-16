@@ -56,6 +56,7 @@ public class PartIcon extends ImageIcon
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
 		bindTexture();

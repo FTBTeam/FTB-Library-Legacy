@@ -2,6 +2,8 @@ package com.feed_the_beast.ftblib.lib.icon;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,6 +61,7 @@ public class CombinedIcon extends Icon
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
 		for (Icon icon : list)

@@ -11,8 +11,6 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @author LatvianModder
@@ -23,14 +21,12 @@ public class BuiltinChunkMap extends ChunkSelectorMap
 	public static final double UV = (double) TILES_GUI / (double) TILES_TEX;
 
 	@Override
-	@SideOnly(Side.CLIENT)
 	public void resetMap(int startX, int startZ)
 	{
 		ThreadReloadChunkSelector.reloadArea(ClientUtils.MC.world, startX, startZ);
 	}
 
 	@Override
-	@SideOnly(Side.CLIENT)
 	public void drawMap(GuiBase gui, int ax, int ay, int startX, int startZ)
 	{
 		ThreadReloadChunkSelector.updateTexture();

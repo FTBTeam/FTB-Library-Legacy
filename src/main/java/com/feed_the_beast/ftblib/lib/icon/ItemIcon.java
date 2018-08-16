@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -92,11 +91,11 @@ public class ItemIcon extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw3D(World world, Color4I col)
+	public void draw3D(Color4I col)
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1F, -1F, -0.02F);
-		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(getStack(), world, ClientUtils.MC.player);
+		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(getStack(), ClientUtils.MC.world, ClientUtils.MC.player);
 		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
 		ClientUtils.MC.getRenderItem().renderItem(getStack(), bakedmodel);
 		GlStateManager.popMatrix();

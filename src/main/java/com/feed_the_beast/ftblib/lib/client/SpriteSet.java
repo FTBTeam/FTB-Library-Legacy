@@ -29,6 +29,19 @@ public class SpriteSet
 		}
 	};
 
+	public static SpriteSet of(TextureSet set, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter)
+	{
+		for (ResourceLocation id : set.textures)
+		{
+			if (id != null)
+			{
+				return new SpriteSet(set, bakedTextureGetter);
+			}
+		}
+
+		return SpriteSet.EMPTY;
+	}
+
 	private final TextureAtlasSprite sprites[];
 
 	private SpriteSet()

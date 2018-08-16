@@ -32,7 +32,6 @@ import java.util.UUID;
  */
 public class PlayerHeadIcon extends ImageIcon
 {
-	@SideOnly(Side.CLIENT)
 	private static class ThreadLoadSkin extends SimpleTexture
 	{
 		private final PlayerHeadIcon icon;
