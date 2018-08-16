@@ -6,7 +6,6 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,13 +25,9 @@ import javax.annotation.Nullable;
  */
 public class BlockBase extends Block
 {
-	public BlockBase(String mod, String id, Material material, MapColor color)
+	public BlockBase(Material material, MapColor color)
 	{
 		super(material, color);
-		setRegistryName(mod, id);
-		setTranslationKey(mod + '.' + id);
-		setHardness(1.8F);
-		setCreativeTab(CreativeTabs.MISC);
 	}
 
 	public boolean dropSpecial(IBlockState state)
