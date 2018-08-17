@@ -19,4 +19,5 @@ public interface OtherMods
 	String REFINED_STORAGE = "refinedstorage";
 	String FTBGUIDES = "ftbguides";
 	String IC2 = "ic2";
+	String FTBQUESTS = "ftbquests";
 }
