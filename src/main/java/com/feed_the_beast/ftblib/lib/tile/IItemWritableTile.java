@@ -15,4 +15,9 @@ public interface IItemWritableTile
 	{
 		writeToItem(stack);
 	}
+
+	default boolean canBeWrenched()
+	{
+		return true;
+	}
 }

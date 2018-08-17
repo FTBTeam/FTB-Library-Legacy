@@ -478,7 +478,8 @@ public class GuiEditConfig extends GuiBase
 	{
 		if (super.onClosedByKey(key))
 		{
-			buttonCancel.onClicked(MouseButton.LEFT);
+			shouldClose = 2;
+			closeGui();
 		}
 
 		return false;
