@@ -21,7 +21,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class TileBase extends TileEntity implements IWorldNameable, IChangeCallback
+public abstract class TileBase extends TileEntity implements IWorldNameable, IChangeCallback, IItemWritableTile
 {
 	private boolean isDirty = true;
 	private IBlockState currentState;
@@ -133,13 +133,6 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 		markDirty();
 	}
 
-	public boolean shouldDrop()
-	{
-		NBTTagCompound nbt = new NBTTagCompound();
-		writeData(nbt, EnumSaveType.SAVE);
-		return !nbt.isEmpty();
-	}
-
 	public final void checkIfDirty()
 	{
 		if (isDirty)
@@ -215,11 +208,6 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 		return currentState;
 	}
 
-	public final boolean isServerSide()
-	{
-		return world != null && !world.isRemote;
-	}
-
 	public void notifyNeighbors()
 	{
 		world.notifyNeighborsOfStateChange(getPos(), getBlockType(), false);
@@ -235,6 +223,7 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 		return new BlockDimPos(pos, hasWorld() ? world.provider.getDimension() : 0);
 	}
 
+	@Override
 	public void writeToItem(ItemStack stack)
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -246,6 +235,7 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 		}
 	}
 
+	@Override
 	public void readFromItem(ItemStack stack)
 	{
 		readData(BlockUtils.getData(stack), EnumSaveType.ITEM);
