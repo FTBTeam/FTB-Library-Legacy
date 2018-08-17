@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.command.CmdAddFakePlayer;
 import com.feed_the_beast.ftblib.command.CmdMySettings;
 import com.feed_the_beast.ftblib.command.CmdReload;
 import com.feed_the_beast.ftblib.command.team.CmdTeam;
-import com.feed_the_beast.ftblib.lib.OtherMods;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import net.minecraft.command.CommandException;
@@ -32,7 +31,7 @@ import java.util.Map;
 		name = FTBLib.MOD_NAME,
 		version = FTBLib.VERSION,
 		acceptedMinecraftVersions = "[1.12,)",
-		dependencies = "required-after:forge@[14.23.4.2732,);after:" + OtherMods.BAUBLES + ";after:" + OtherMods.JEI + ";after:" + OtherMods.NEI + ";after:" + OtherMods.MC_MULTIPART + ";after:" + OtherMods.CHISELS_AND_BITS + ";after:" + OtherMods.ICHUN_UTIL
+		dependencies = "required-after:forge@[14.23.4.2732,)"
 )
 public class FTBLib
 {
