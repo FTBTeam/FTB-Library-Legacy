@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiSelectTeamValue;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
@@ -50,9 +49,11 @@ public class ConfigTeamClient extends ConfigString
 	@Override
 	public ITextComponent getStringForGUI()
 	{
-		if (Universe.loaded())
+		TeamInst inst = map.get(getString());
+
+		if (inst != null)
 		{
-			return Universe.get().getTeam(getString()).getTitle();
+			return inst.title.createCopy();
 		}
 
 		return super.getStringForGUI();
@@ -77,7 +78,7 @@ public class ConfigTeamClient extends ConfigString
 	@Override
 	public Color4I getColor()
 	{
-		return ConfigEnum.COLOR;
+		return Color4I.LIGHT_GREEN;
 	}
 
 	@Override
