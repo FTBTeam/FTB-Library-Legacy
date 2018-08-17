@@ -4,6 +4,8 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.command.client.CmdClientConfig;
+import com.feed_the_beast.ftblib.command.client.CmdPrintItem;
+import com.feed_the_beast.ftblib.command.client.CmdPrintState;
 import com.feed_the_beast.ftblib.command.client.CmdSimulateButton;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.client.ParticleColoredDust;
@@ -210,6 +212,12 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 
 		ClientCommandHandler.instance.registerCommand(new CmdClientConfig());
 		ClientCommandHandler.instance.registerCommand(new CmdSimulateButton());
+
+		if (FTBLibConfig.debugging.special_commands)
+		{
+			ClientCommandHandler.instance.registerCommand(new CmdPrintItem());
+			ClientCommandHandler.instance.registerCommand(new CmdPrintState());
+		}
 	}
 
 	@Override

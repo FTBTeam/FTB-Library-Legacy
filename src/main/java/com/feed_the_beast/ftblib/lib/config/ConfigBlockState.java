@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nullable;
 
@@ -69,15 +68,15 @@ public class ConfigBlockState extends ConfigValue
 	@Override
 	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		nbt.setString(key, Block.REGISTRY.getNameForObject(getBlockState().getBlock()).toString());
-		//TODO: Blockstate properties
+		value = getBlockState();
+		nbt.setInteger(key, value == BlockUtils.AIR_STATE ? 0 : Block.getStateId(value));
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		String id = nbt.getString(key);
-		setBlockState(id.isEmpty() ? BlockUtils.AIR_STATE : Block.REGISTRY.getObject(new ResourceLocation(id)).getDefaultState());
+		int id = nbt.getInteger(key);
+		setBlockState(id == 0 ? BlockUtils.AIR_STATE : Block.getStateById(id));
 	}
 
 	@Override
