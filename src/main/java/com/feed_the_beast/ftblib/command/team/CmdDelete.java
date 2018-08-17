@@ -54,6 +54,11 @@ public class CmdDelete extends CmdBase
 			}
 		}
 
-		team.removeMember(team.owner);
+		if (team.owner != null)
+		{
+			team.removeMember(team.owner);
+		}
+
+		team.delete();
 	}
 }

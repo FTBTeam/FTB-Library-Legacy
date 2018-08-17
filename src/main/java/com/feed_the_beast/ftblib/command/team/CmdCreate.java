@@ -26,7 +26,7 @@ public class CmdCreate extends CmdBase
 		super("create", Level.ALL);
 	}
 
-	private static boolean isValidTeamID(String s)
+	public static boolean isValidTeamID(String s)
 	{
 		if (!s.isEmpty())
 		{

@@ -20,6 +20,7 @@ public class CmdTeam extends CmdTreeBase
 		addSubcommand(new CmdStatus());
 		addSubcommand(new CmdRequestInvite());
 		addSubcommand(new CmdDelete());
+		addSubcommand(new CmdCreateServerTeam());
 		addSubcommand(new CmdTreeHelp(this));
 	}
 }

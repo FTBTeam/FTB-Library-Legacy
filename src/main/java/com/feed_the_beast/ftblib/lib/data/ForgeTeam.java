@@ -524,10 +524,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 			if (type.isPlayer)
 			{
-				File folder = new File(universe.getWorldDirectory(), "data/ftb_lib/teams/");
-				new ForgeTeamDeletedEvent(this, folder).post();
-				universe.teams.remove(getName());
-				FileUtils.delete(new File(folder, getName() + ".dat"));
+				delete();
 			}
 			else
 			{
@@ -550,6 +547,16 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		player.markDirty();
 		markDirty();
 		return true;
+	}
+
+	public void delete()
+	{
+		File folder = new File(universe.getWorldDirectory(), "data/ftb_lib/teams/");
+		new ForgeTeamDeletedEvent(this, folder).post();
+		universe.teams.remove(getName());
+		FileUtils.delete(new File(folder, getName() + ".dat"));
+		universe.markDirty();
+		universe.clearCache();
 	}
 
 	public List<ForgePlayer> getMembers()
