@@ -9,6 +9,7 @@ import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.relauncher.Side;
@@ -93,12 +94,16 @@ public class ItemIcon extends Icon
 	@SideOnly(Side.CLIENT)
 	public void draw3D(Color4I col)
 	{
+		ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		ClientUtils.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1F, -1F, -0.02F);
 		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(getStack(), ClientUtils.MC.world, ClientUtils.MC.player);
 		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
 		ClientUtils.MC.getRenderItem().renderItem(getStack(), bakedmodel);
 		GlStateManager.popMatrix();
+		ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		ClientUtils.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 	}
 
 	public String toString()

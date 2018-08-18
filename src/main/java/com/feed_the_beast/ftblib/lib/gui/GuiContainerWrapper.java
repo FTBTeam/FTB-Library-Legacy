@@ -17,11 +17,18 @@ import java.io.IOException;
 public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 {
 	private GuiBase wrappedGui;
+	private boolean drawSlots = true;
 
 	public GuiContainerWrapper(GuiBase g, Container c)
 	{
 		super(c);
 		wrappedGui = g;
+	}
+
+	public GuiContainerWrapper disableSlotDrawing()
+	{
+		drawSlots = false;
+		return this;
 	}
 
 	@Override
@@ -114,11 +121,14 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 		wrappedGui.getIcon().draw(guiLeft, guiTop, xSize, ySize);
 		wrappedGui.drawBackground();
 
-		Icon icon = wrappedGui.getTheme().getContainerSlot();
-
-		for (Slot slot : inventorySlots.inventorySlots)
+		if (drawSlots)
 		{
-			icon.draw(guiLeft + slot.xPos, guiTop + slot.yPos, 16, 16);
+			Icon icon = wrappedGui.getTheme().getContainerSlot();
+
+			for (Slot slot : inventorySlots.inventorySlots)
+			{
+				icon.draw(guiLeft + slot.xPos, guiTop + slot.yPos, 16, 16);
+			}
 		}
 
 		wrappedGui.draw();
