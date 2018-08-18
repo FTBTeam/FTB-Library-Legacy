@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.tile;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -16,7 +17,7 @@ public interface IItemWritableTile
 		writeToItem(stack);
 	}
 
-	default boolean canBeWrenched()
+	default boolean canBeWrenched(EntityPlayer player)
 	{
 		return true;
 	}
