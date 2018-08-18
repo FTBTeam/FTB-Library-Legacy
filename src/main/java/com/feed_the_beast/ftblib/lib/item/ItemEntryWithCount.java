@@ -3,9 +3,12 @@ package com.feed_the_beast.ftblib.lib.item;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagIntArray;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.util.Constants;
 
 /**
  * @author LatvianModder
@@ -32,30 +35,62 @@ public class ItemEntryWithCount
 
 	public ItemEntryWithCount(NBTTagCompound nbt)
 	{
-		if (nbt.hasKey("I"))
-		{
-			Item item = nbt.hasKey("I", Constants.NBT.TAG_INT) ? Item.REGISTRY.getObjectById(nbt.getInteger("I")) : Item.REGISTRY.getObject(new ResourceLocation(nbt.getString("I")));
+		NBTBase id = nbt.getTag("I");
 
-			if (item != null && item != Items.AIR)
-			{
-				int size = nbt.getInteger("S");
-				int meta = nbt.getShort("M");
-				NBTTagCompound tag = (NBTTagCompound) nbt.getTag("N");
-				NBTTagCompound caps = (NBTTagCompound) nbt.getTag("C");
-				entry = new ItemEntry(item, meta, tag, caps);
-				count = size == 0 ? 1 : size;
-			}
-			else
-			{
-				entry = ItemEntry.EMPTY;
-				count = 0;
-			}
-		}
-		else
+		if (id == null)
 		{
 			ItemStack stack = new ItemStack(nbt);
 			entry = ItemEntry.get(stack);
 			count = nbt.hasKey("RealCount") ? nbt.getInteger("RealCount") : stack.getCount();
+			return;
+		}
+
+		if (id instanceof NBTTagIntArray)
+		{
+			int[] ai = ((NBTTagIntArray) id).getIntArray();
+
+			if (ai.length > 0)
+			{
+				Item item = Item.REGISTRY.getObjectById(ai[0]);
+
+				if (item != null && item != Items.AIR)
+				{
+					count = 1;
+					int meta = 0;
+
+					if (ai.length >= 2)
+					{
+						count = ai[1];
+					}
+
+					if (ai.length >= 3)
+					{
+						meta = ai[2];
+					}
+
+					NBTTagCompound tag = (NBTTagCompound) nbt.getTag("N");
+					NBTTagCompound caps = (NBTTagCompound) nbt.getTag("C");
+					entry = new ItemEntry(item, meta, tag, caps);
+					return;
+				}
+			}
+		}
+
+		Item item = id instanceof NBTTagString ? Item.REGISTRY.getObject(new ResourceLocation(((NBTTagString) id).getString())) : Item.REGISTRY.getObjectById(((NBTPrimitive) id).getInt());
+
+		if (item != null && item != Items.AIR)
+		{
+			int meta = nbt.getShort("M");
+			NBTTagCompound tag = (NBTTagCompound) nbt.getTag("N");
+			NBTTagCompound caps = (NBTTagCompound) nbt.getTag("C");
+			entry = new ItemEntry(item, meta, tag, caps);
+			count = nbt.getInteger("S");
+			count = count <= 0 ? 1 : count;
+		}
+		else
+		{
+			entry = ItemEntry.EMPTY;
+			count = 0;
 		}
 	}
 
@@ -64,7 +99,7 @@ public class ItemEntryWithCount
 		return count <= 0 || entry.isEmpty();
 	}
 
-	public NBTTagCompound serializeNBT(boolean net)
+	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
 
@@ -73,30 +108,22 @@ public class ItemEntryWithCount
 			return nbt;
 		}
 
-		if (net)
+		if (count > 1 || entry.metadata > 0)
 		{
-			nbt.setInteger("I", Item.REGISTRY.getIDForObject(entry.item));
+			int ai[] = new int[entry.metadata > 0 ? 3 : 2];
+			ai[0] = Item.REGISTRY.getIDForObject(entry.item);
+			ai[1] = count;
+
+			if (entry.metadata > 0)
+			{
+				ai[2] = entry.metadata;
+			}
+
+			nbt.setIntArray("I", ai);
 		}
 		else
 		{
-			nbt.setString("I", Item.REGISTRY.getNameForObject(entry.item).toString());
-		}
-
-		if (count != 1)
-		{
-			if (count <= 127)
-			{
-				nbt.setByte("S", (byte) count);
-			}
-			else
-			{
-				nbt.setInteger("S", count);
-			}
-		}
-
-		if (entry.metadata != 0)
-		{
-			nbt.setShort("M", (short) entry.metadata);
+			nbt.setInteger("I", Item.REGISTRY.getIDForObject(entry.item));
 		}
 
 		if (entry.nbt != null)
@@ -119,6 +146,6 @@ public class ItemEntryWithCount
 
 	public String toString()
 	{
-		return serializeNBT(false).toString();
+		return serializeNBT().toString();
 	}
 }
