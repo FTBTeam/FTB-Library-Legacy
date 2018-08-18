@@ -62,6 +62,11 @@ public class GuiEditConfigValue extends GuiBase
 				{
 					callback.onCallback(value, true);
 				}
+
+				if (getGui().parent instanceof GuiBase)
+				{
+					getGui().parent.openContextMenu(null);
+				}
 			}
 
 			@Override

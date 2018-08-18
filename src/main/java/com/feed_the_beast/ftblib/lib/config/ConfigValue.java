@@ -80,7 +80,7 @@ public abstract class ConfigValue implements IStringSerializable
 
 	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
-		new GuiEditConfigValue(inst, (value, set) ->
+		gui.openContextMenu(new GuiEditConfigValue(inst, (value, set) ->
 		{
 			if (set)
 			{
@@ -88,7 +88,7 @@ public abstract class ConfigValue implements IStringSerializable
 			}
 
 			gui.openGui();
-		}).openGui();
+		}));
 	}
 
 	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)

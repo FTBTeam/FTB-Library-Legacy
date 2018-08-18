@@ -91,12 +91,19 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 
 	public final void initGui()
 	{
-		screen = new ScaledResolution(ClientUtils.MC);
+		if (parent instanceof GuiBase)
+		{
+			screen = parent.getScreen();
+		}
+		else
+		{
+			screen = new ScaledResolution(ClientUtils.MC);
+		}
 
 		if (onInit())
 		{
 			super.refreshWidgets();
-			fixUnicode = screen.getScaleFactor() % 2 == 1;
+			fixUnicode = getScreen().getScaleFactor() % 2 == 1;
 			alignWidgets();
 			onPostInit();
 		}
@@ -121,13 +128,13 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	@Override
 	public int getAX()
 	{
-		return (screen.getScaledWidth() - width) / 2;
+		return (getScreen().getScaledWidth() - width) / 2;
 	}
 
 	@Override
 	public int getAY()
 	{
-		return (screen.getScaledHeight() - height) / 2;
+		return (getScreen().getScaledHeight() - height) / 2;
 	}
 
 	@Override
@@ -259,12 +266,10 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		super.draw();
 	}
 
-	public void openContextMenu(Panel panel)
+	@Override
+	public void openContextMenu(@Nullable Panel panel)
 	{
-		int ax = getAX();
-		int ay = getAY();
-		int x = getMouseX() - ax;
-		int y = getMouseY() - ay;
+		int x = 0, y = 0;
 
 		if (contextMenu != null)
 		{
@@ -273,11 +278,32 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 			contextMenu.onClosed();
 		}
 
+		if (panel == null)
+		{
+			contextMenu = null;
+			return;
+		}
+
+		int ax = getAX();
+		int ay = getAY();
+
+		if (contextMenu == null)
+		{
+			x = getMouseX() - ax;
+			y = getMouseY() - ay;
+		}
+
 		contextMenu = panel;
+		contextMenu.parent = this;
 		contextMenu.refreshWidgets();
 		x = Math.min(x, screen.getScaledWidth() - contextMenu.width - ax) - 3;
 		y = Math.min(y, screen.getScaledHeight() - contextMenu.height - ay) - 3;
 		contextMenu.setPos(x, y);
+
+		if (contextMenu instanceof GuiBase)
+		{
+			((GuiBase) contextMenu).initGui();
+		}
 	}
 
 	public void openContextMenu(List<ContextMenuItem> menu)
@@ -306,7 +332,19 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		{
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0F, 0F, 800F);
+
+			if (contextMenu instanceof GuiBase)
+			{
+				((GuiBase) contextMenu).drawBackground();
+			}
+
 			contextMenu.draw();
+
+			if (contextMenu instanceof GuiBase)
+			{
+				((GuiBase) contextMenu).drawForeground();
+			}
+
 			GlStateManager.popMatrix();
 		}
 
@@ -351,9 +389,9 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	@Override
 	public boolean keyPressed(int key, char keyChar)
 	{
-		if (contextMenu != null)
+		if (contextMenu != null && contextMenu.keyPressed(key, keyChar))
 		{
-			return false;
+			return true;
 		}
 		else if (super.keyPressed(key, keyChar))
 		{
@@ -388,6 +426,11 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	@Override
 	public final ScaledResolution getScreen()
 	{
+		if (screen == null)
+		{
+			return parent.getScreen();
+		}
+
 		return screen;
 	}
 

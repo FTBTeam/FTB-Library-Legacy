@@ -24,7 +24,7 @@ public class Widget implements IGuiWrapper
 	protected static final int UNICODE = 8;
 	protected static final int MOUSE_OVER = 16;
 
-	public final Panel parent;
+	public Panel parent;
 	public int posX, posY, width, height;
 	private boolean isMouseOver;
 
