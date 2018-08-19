@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public final class ConfigList<T extends ConfigValue> extends ConfigValue implements Iterable<T>
+public class ConfigList<T extends ConfigValue> extends ConfigValue implements Iterable<T>
 {
 	public static final String ID = "list";
 	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
@@ -67,6 +67,8 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	@Override
 	public void writeData(DataOut data)
 	{
+		writeToList();
+
 		data.writeString(type.getName());
 		type.writeData(data);
 
@@ -103,6 +105,8 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 			v.readData(data);
 			list.add((T) v);
 		}
+
+		readFromList();
 	}
 
 	@Override
@@ -159,6 +163,8 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 	@Override
 	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
+		writeToList();
+
 		if (hasValidId() && !list.isEmpty())
 		{
 			NBTTagList l = new NBTTagList();
@@ -192,6 +198,8 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 			v.readFromNBT(l.getCompoundTagAt(i), "value");
 			list.add((T) v);
 		}
+
+		readFromList();
 	}
 
 	@Override
@@ -275,6 +283,8 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 				list.add((T) value);
 			}
 		}
+
+		readFromList();
 	}
 
 	@Override
@@ -291,5 +301,15 @@ public final class ConfigList<T extends ConfigValue> extends ConfigValue impleme
 				list.add((T) value);
 			}
 		}
+
+		readFromList();
+	}
+
+	public void readFromList()
+	{
+	}
+
+	public void writeToList()
+	{
 	}
 }
