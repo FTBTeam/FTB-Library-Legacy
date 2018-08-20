@@ -311,7 +311,7 @@ public class StringUtils
 
 	public static String formatDouble00(double value)
 	{
-		String s = DOUBLE_FORMATTER_00.format(value);
+		String s = String.format("%.2f", value);
 		return s.endsWith(".00") ? s.substring(0, s.length() - 3) : s;
 	}
 
@@ -321,53 +321,29 @@ public class StringUtils
 		{
 			return "NaN";
 		}
-		else if (value == Double.POSITIVE_INFINITY)
+		else if (value == Double.POSITIVE_INFINITY || value == Long.MAX_VALUE)
 		{
 			return "+Inf";
 		}
-		else if (value == Double.NEGATIVE_INFINITY)
+		else if (value == Double.NEGATIVE_INFINITY || value == Long.MIN_VALUE)
 		{
 			return "-Inf";
-		}
-		else if (!fancy)
-		{
-			return formatDouble00(value);
 		}
 		else if (value == 0D)
 		{
 			return "0";
 		}
-		else if (value >= 100000000000D)
+		else if (!fancy)
 		{
-			return value / 1000000000D + "B";
-		}
-		else if (value >= 10000000000D)
-		{
-			return formatDouble0(value / 1000000000D) + "B";
+			return formatDouble00(value);
 		}
 		else if (value >= 1000000000D)
 		{
 			return formatDouble00(value / 1000000000D) + "B";
 		}
-		else if (value >= 100000000D)
-		{
-			return value / 1000000D + "M";
-		}
-		else if (value >= 10000000D)
-		{
-			return formatDouble0(value / 1000000D) + "M";
-		}
 		else if (value >= 1000000D)
 		{
 			return formatDouble00(value / 1000000D) + "M";
-		}
-		else if (value >= 100000D)
-		{
-			return value / 1000D + "K";
-		}
-		else if (value >= 10000D)
-		{
-			return formatDouble0(value / 1000D) + "K";
 		}
 		else if (value >= 1000D)
 		{

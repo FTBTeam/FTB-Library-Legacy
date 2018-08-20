@@ -7,6 +7,8 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -73,6 +75,12 @@ public class ConfigLong extends ConfigValue implements LongSupplier
 	public long getMax()
 	{
 		return max;
+	}
+
+	@Override
+	public ITextComponent getStringForGUI()
+	{
+		return new TextComponentString(StringUtils.formatDouble(getLong(), true));
 	}
 
 	@Override
