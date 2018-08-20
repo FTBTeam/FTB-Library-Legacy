@@ -90,20 +90,26 @@ public class ItemIcon extends Icon
 		}
 	}
 
-	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw3D(Color4I col)
+	public static void drawItem3D(ItemStack stack)
 	{
 		ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		ClientUtils.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1F, -1F, -0.02F);
-		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(getStack(), ClientUtils.MC.world, ClientUtils.MC.player);
+		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(stack, ClientUtils.MC.world, ClientUtils.MC.player);
 		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
-		ClientUtils.MC.getRenderItem().renderItem(getStack(), bakedmodel);
+		ClientUtils.MC.getRenderItem().renderItem(stack, bakedmodel);
 		GlStateManager.popMatrix();
 		ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 		ClientUtils.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void draw3D(Color4I col)
+	{
+		drawItem3D(getStack());
 	}
 
 	public String toString()

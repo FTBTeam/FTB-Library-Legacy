@@ -72,6 +72,16 @@ public class IconAnimation extends Icon
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
+	public void draw3D(Color4I col)
+	{
+		if (!list.isEmpty())
+		{
+			list.get((int) ((System.currentTimeMillis() / 1000L) % list.size())).draw3D(col);
+		}
+	}
+
+	@Override
 	public JsonElement getJson()
 	{
 		JsonObject json = new JsonObject();
