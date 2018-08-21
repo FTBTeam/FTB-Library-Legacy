@@ -30,14 +30,15 @@ import java.util.Map;
 		modid = FTBLib.MOD_ID,
 		name = FTBLib.MOD_NAME,
 		version = FTBLib.VERSION,
-		acceptedMinecraftVersions = "[1.12,)",
-		dependencies = "required-after:forge@[14.23.4.2732,)"
+		acceptableRemoteVersions = "*",
+		dependencies = "required-after:forge@[0.0.0.forge,)"
 )
 public class FTBLib
 {
 	public static final String MOD_ID = "ftblib";
 	public static final String MOD_NAME = "FTBLib";
-	public static final String VERSION = "@VERSION@";
+	public static final String VERSION = "0.0.0.ftblib";
+	public static final String THIS_DEP = "required-after:" + MOD_ID + "@[" + VERSION + ",)";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 	public static final String KEY_CATEGORY = "key.categories.ftbmods";
 
