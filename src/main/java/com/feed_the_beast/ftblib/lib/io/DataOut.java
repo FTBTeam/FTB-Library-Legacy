@@ -14,6 +14,7 @@ import io.netty.handler.codec.EncoderException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
@@ -53,6 +54,7 @@ public class DataOut
 	public static final Serializer<JsonElement> JSON = DataOut::writeJson;
 	public static final Serializer<ITextComponent> TEXT_COMPONENT = DataOut::writeTextComponent;
 	public static final Serializer<ResourceLocation> RESOURCE_LOCATION = DataOut::writeResourceLocation;
+	public static final Serializer<ItemStack> ITEM_STACK = DataOut::writeItemStack;
 
 	public static final DataOut.Serializer<ChunkPos> CHUNK_POS = (data, pos) ->
 	{
@@ -211,19 +213,14 @@ public class DataOut
 	{
 		if (stack.isEmpty() || stack.getItem().getRegistryName() == null)
 		{
-			writeString("");
+			writeInt(0);
 			return;
 		}
 
-		writeString(stack.getItem().getRegistryName().toString());
+		writeInt(Item.getIdFromItem(stack.getItem()));
 		writeByte(stack.getCount());
 		writeShort(stack.getMetadata());
 		writeNBT(stack.getItem().isDamageable() || stack.getItem().getShareTag() ? stack.getItem().getNBTShareTag(stack) : null);
-	}
-
-	public void writeItemStackFull(ItemStack stack)
-	{
-		writeNBT(stack.isEmpty() ? null : stack.serializeNBT());
 	}
 
 	public void writeNBT(@Nullable NBTTagCompound nbt)

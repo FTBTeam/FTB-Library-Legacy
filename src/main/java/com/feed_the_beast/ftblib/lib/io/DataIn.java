@@ -64,6 +64,7 @@ public class DataIn
 	public static final Deserializer<JsonElement> JSON = DataIn::readJson;
 	public static final Deserializer<ITextComponent> TEXT_COMPONENT = DataIn::readTextComponent;
 	public static final Deserializer<ResourceLocation> RESOURCE_LOCATION = DataIn::readResourceLocation;
+	public static final Deserializer<ItemStack> ITEM_STACK = DataIn::readItemStack;
 
 	public static final DataIn.Deserializer<ChunkPos> CHUNK_POS = data ->
 	{
@@ -249,14 +250,14 @@ public class DataIn
 
 	public ItemStack readItemStack()
 	{
-		String id = readString();
+		int id = readInt();
 
-		if (id.isEmpty())
+		if (id == 0)
 		{
 			return ItemStack.EMPTY;
 		}
 
-		Item item = Item.getByNameOrId(id);
+		Item item = Item.getItemById(id);
 
 		if (item == null || item == Items.AIR)
 		{
@@ -268,12 +269,6 @@ public class DataIn
 		ItemStack stack = new ItemStack(item, size, meta);
 		stack.getItem().readNBTShareTag(stack, readNBT());
 		return stack;
-	}
-
-	public ItemStack readItemStackFull()
-	{
-		NBTTagCompound nbt = readNBT();
-		return nbt == null ? ItemStack.EMPTY : new ItemStack(nbt);
 	}
 
 	@Nullable

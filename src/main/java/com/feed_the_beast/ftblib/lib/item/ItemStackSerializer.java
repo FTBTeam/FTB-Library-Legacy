@@ -89,6 +89,13 @@ public class ItemStackSerializer
 			return "minecraft:air";
 		}
 
+		NBTTagCompound nbt = stack.serializeNBT();
+
+		if (nbt.hasKey("ForgeCaps"))
+		{
+			return nbt.toString();
+		}
+
 		StringBuilder builder = new StringBuilder(String.valueOf(Item.REGISTRY.getNameForObject(stack.getItem())));
 
 		int count = stack.getCount();
