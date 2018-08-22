@@ -1,8 +1,6 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.ATHelper;
-import com.feed_the_beast.ftblib.lib.item.ToolLevel;
-import com.feed_the_beast.ftblib.lib.item.ToolType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -105,11 +102,6 @@ public class InvUtils
 		}
 	}
 
-	public static boolean isWrench(ItemStack is)
-	{
-		return !is.isEmpty() && is.getItem().getHarvestLevel(is, ToolType.WRENCH.getName(), null, null) >= ToolLevel.BASIC.ordinal();
-	}
-
 	public static void transferItems(@Nullable IItemHandler from, @Nullable IItemHandler to, int amount, Predicate<ItemStack> filter)
 	{
 		if (amount <= 0 || from == null || to == null)
@@ -163,59 +155,9 @@ public class InvUtils
 		}
 	}
 
-	public static void readItemHandler(NBTTagCompound nbt, String key, IItemHandlerModifiable itemHandler)
-	{
-		NBTTagList list = nbt.getTagList(key, Constants.NBT.TAG_COMPOUND);
-
-		int slots = itemHandler.getSlots();
-		for (int i = 0; i < slots; i++)
-		{
-			itemHandler.setStackInSlot(i, ItemStack.EMPTY);
-		}
-
-		for (int i = 0; i < list.tagCount(); i++)
-		{
-			NBTTagCompound nbt1 = list.getCompoundTagAt(i);
-			ItemStack stack = new ItemStack(nbt1);
-
-			if (!stack.isEmpty())
-			{
-				itemHandler.setStackInSlot(nbt1.getInteger("Slot"), stack);
-			}
-		}
-	}
-
-	public static int getFirstItemIndex(IItemHandler handler, ItemStack filter)
-	{
-		boolean filterEmpty = filter.isEmpty();
-		int slots = handler.getSlots();
-
-		for (int i = 0; i < slots; i++)
-		{
-			ItemStack stack = handler.getStackInSlot(i);
-			boolean stackEmpty = stack.isEmpty();
-
-			if (filterEmpty == stackEmpty)
-			{
-				if (filterEmpty || filter.getItem() == stack.getItem() && filter.getMetadata() == stack.getMetadata() && ItemStack.areItemStackTagsEqual(filter, stack))
-				{
-					return i;
-				}
-			}
-		}
-
-		return -1;
-	}
-
-	@Nullable
-	public static NBTTagCompound getTag(ItemStack stack)
-	{
-		return !stack.hasTagCompound() || stack.getTagCompound().isEmpty() ? null : stack.getTagCompound();
-	}
-
 	public static boolean stacksAreEqual(ItemStack stackA, ItemStack stackB)
 	{
-		return stackA == stackB || stackA.getItem() == stackB.getItem() && stackA.getMetadata() == stackB.getMetadata() && ItemStack.areItemStackShareTagsEqual(stackA, stackB);
+		return stackA == stackB || stackA.getItem() == stackB.getItem() && stackA.getMetadata() == stackB.getMetadata() && ItemStack.areItemStackTagsEqual(stackA, stackB);
 	}
 
 	public static Set<String> getOreNames(@Nullable Set<String> l, ItemStack is)
@@ -245,21 +187,6 @@ public class InvUtils
 		return Collections.emptySet();
 	}
 
-	public static boolean itemHasOre(ItemStack is, String s)
-	{
-		int[] ai = OreDictionary.getOreIDs(is);
-
-		for (int i : ai)
-		{
-			if (s.equals(OreDictionary.getOreName(i)))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	public static void forceUpdate(Container container)
 	{
 		for (int i = 0; i < container.inventorySlots.size(); ++i)
@@ -278,20 +205,5 @@ public class InvUtils
 	public static void forceUpdate(EntityPlayer player)
 	{
 		forceUpdate(player.inventoryContainer);
-	}
-
-	public static boolean hasItems(IItemHandler handler)
-	{
-		int s = handler.getSlots();
-
-		for (int i = 0; i < s; i++)
-		{
-			if (!handler.getStackInSlot(i).isEmpty())
-			{
-				return true;
-			}
-		}
-
-		return false;
 	}
 }

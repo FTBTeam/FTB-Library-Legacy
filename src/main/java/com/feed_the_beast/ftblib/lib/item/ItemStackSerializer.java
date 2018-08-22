@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class ItemStackSerializer
@@ -206,6 +207,61 @@ public class ItemStackSerializer
 		}
 
 		ItemStack stack = new ItemStack(nbt);
+		return stack.isEmpty() ? ItemStack.EMPTY : stack;
+	}
+
+	public static NBTTagCompound write(ItemStack stack)
+	{
+		if (stack.isEmpty())
+		{
+			return new NBTTagCompound();
+		}
+
+		NBTTagCompound nbt = stack.serializeNBT();
+
+		if (!nbt.hasKey("ForgeCaps") && !nbt.hasKey("tag"))
+		{
+			NBTTagCompound nbt1 = new NBTTagCompound();
+			nbt1.setString("item", ItemStackSerializer.toString(stack));
+			return nbt1;
+		}
+
+		if (nbt.getByte("Count") == 1)
+		{
+			nbt.removeTag("Count");
+		}
+
+		if (nbt.getShort("Damage") == 0)
+		{
+			nbt.removeTag("Damage");
+		}
+
+		return nbt;
+	}
+
+	public static ItemStack read(NBTTagCompound nbt)
+	{
+		if (nbt.isEmpty())
+		{
+			return ItemStack.EMPTY;
+		}
+
+		ItemStack stack;
+
+		if (nbt.hasKey("item", Constants.NBT.TAG_STRING))
+		{
+			stack = ItemStackSerializer.parseItem(nbt.getString("item"));
+		}
+		else
+		{
+			if (!nbt.hasKey("Count"))
+			{
+				nbt.setByte("Count", (byte) 1);
+			}
+
+			stack = new ItemStack(nbt);
+		}
+
 		return stack.isEmpty() ? ItemStack.EMPTY : stack;
 	}
 }
