@@ -99,7 +99,7 @@ public class ContextMenu extends Panel
 		super(panel);
 		items = i;
 		hasIcons = false;
-		background = getTheme().getGui(WidgetType.NORMAL).withTint(Color4I.BLACK.withAlpha(90));
+		background = getTheme().getContextMenuBackground();
 
 		for (ContextMenuItem item : items)
 		{

@@ -116,4 +116,9 @@ public class Theme
 	{
 		return selected ? TAB_H_SELECTED : TAB_H_UNSELECTED;
 	}
+
+	public Icon getContextMenuBackground()
+	{
+		return getGui(WidgetType.NORMAL).withTint(Color4I.BLACK.withAlpha(90));
+	}
 }
