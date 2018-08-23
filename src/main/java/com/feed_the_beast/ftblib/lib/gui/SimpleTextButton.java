@@ -44,7 +44,8 @@ public abstract class SimpleTextButton extends Button
 		int ay = getAY();
 
 		getButtonBackground().draw(ax, ay, width, height);
-		int off = (height - 16) / 2;
+		int iconSize = height >= 16 ? 16 : 8;
+		int off = (height - iconSize) / 2;
 		Icon icon = getIcon();
 		String title = getTitle();
 		int textX = ax;
@@ -52,7 +53,7 @@ public abstract class SimpleTextButton extends Button
 
 		if (renderTitleInCenter())
 		{
-			textX += (width - getStringWidth(title) - (icon.isEmpty() ? 0 : off + 16)) / 2;
+			textX += (width - getStringWidth(title) - (icon.isEmpty() ? 0 : off + iconSize)) / 2;
 		}
 		else
 		{
@@ -61,8 +62,8 @@ public abstract class SimpleTextButton extends Button
 
 		if (!icon.isEmpty())
 		{
-			icon.draw(ax + off, ay + off, 16, 16);
-			textX += off + 16;
+			icon.draw(ax + off, ay + off, iconSize, iconSize);
+			textX += off + iconSize;
 		}
 
 		drawString(title, textX, textY, getTheme().getContentColor(getWidgetType()), SHADOW);
