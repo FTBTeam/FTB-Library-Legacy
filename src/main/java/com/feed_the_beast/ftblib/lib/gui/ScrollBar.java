@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.util.math.MathHelper;
@@ -93,7 +92,7 @@ public class ScrollBar extends Widget
 	{
 		if (isMouseOver())
 		{
-			grab = (plane.isVertical ? (getMouseY() - (getAY() + getValueI(height - getSliderSize()))) : (getMouseX() - (getAX() + getValueI(width - getSliderSize()))));
+			grab = (plane.isVertical ? (getMouseY() - (getY() + getValueI(height - getSliderSize()))) : (getMouseX() - (getX() + getValueI(width - getSliderSize()))));
 			return true;
 		}
 
@@ -121,7 +120,7 @@ public class ScrollBar extends Widget
 			list.add(t.isEmpty() ? Integer.toString(getValue()) : (t + ": " + getValue()));
 		}
 
-		if (GuiBase.renderDebugBoxes)
+		if (Theme.renderDebugBoxes)
 		{
 			list.add(TextFormatting.DARK_GRAY + "Size: " + getSliderSize());
 			list.add(TextFormatting.DARK_GRAY + "Max: " + getMaxValue());
@@ -135,10 +134,8 @@ public class ScrollBar extends Widget
 	}
 
 	@Override
-	public void draw()
+	public void draw(Theme theme, int x, int y, int w, int h)
 	{
-		int ax = getAX();
-		int ay = getAY();
 		int sliderSize = getSliderSize();
 
 		if (sliderSize > 0)
@@ -151,11 +148,11 @@ public class ScrollBar extends Widget
 				{
 					if (plane.isVertical)
 					{
-						v = (int) ((getMouseY() - (ay + grab)) * getMaxValue() / (double) (height - sliderSize));
+						v = (int) ((getMouseY() - (y + grab)) * getMaxValue() / (double) (height - sliderSize));
 					}
 					else
 					{
-						v = (int) ((getMouseX() - (ax + grab)) * getMaxValue() / (double) (width - sliderSize));
+						v = (int) ((getMouseX() - (x + grab)) * getMaxValue() / (double) (width - sliderSize));
 					}
 				}
 				else
@@ -167,30 +164,29 @@ public class ScrollBar extends Widget
 			setValue(v);
 		}
 
-		getBackground().draw(ax, ay, width, height);
+		drawBackground(theme, x, y, width, height);
 
 		if (sliderSize > 0)
 		{
 			if (plane.isVertical)
 			{
-				getIcon().draw(ax, ay + getValueI(height - sliderSize), width, sliderSize);
+				drawScrollBar(theme, x, y + getValueI(height - sliderSize), width, sliderSize);
 			}
 			else
 			{
-				getIcon().draw(ax + getValueI(width - sliderSize), ay, sliderSize, height);
+				drawScrollBar(theme, x + getValueI(width - sliderSize), y, sliderSize, height);
 			}
 		}
 	}
 
-	public Icon getBackground()
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
-		return getTheme().getScrollBarBackground(getWidgetType());
+		theme.drawScrollBarBackground(x, y, w, h, getWidgetType());
 	}
 
-	@Override
-	public Icon getIcon()
+	public void drawScrollBar(Theme theme, int x, int y, int w, int h)
 	{
-		return getTheme().getScrollBar(WidgetType.mouseOver(grab != -10000), plane.isVertical);
+		theme.drawScrollBar(x, y, w, h, WidgetType.mouseOver(grab != -10000), plane.isVertical);
 	}
 
 	public void onMoved()

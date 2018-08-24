@@ -62,7 +62,8 @@ public abstract class Panel extends Widget
 	public void refreshWidgets()
 	{
 		widgets.clear();
-		pushFontUnicode(getUnicode());
+		Theme theme = getGui().getTheme();
+		theme.pushFontUnicode(getUnicode());
 
 		try
 		{
@@ -88,7 +89,7 @@ public abstract class Panel extends Widget
 		}
 
 		alignWidgets();
-		popFontUnicode();
+		theme.popFontUnicode();
 	}
 
 	public void add(Widget widget)
@@ -115,15 +116,15 @@ public abstract class Panel extends Widget
 	}
 
 	@Override
-	public int getAX()
+	public int getX()
 	{
-		return super.getAX() + offsetX;
+		return super.getX() + offsetX;
 	}
 
 	@Override
-	public int getAY()
+	public int getY()
 	{
-		return super.getAY() + offsetY;
+		return super.getY() + offsetY;
 	}
 
 	public void setOffset(boolean flag)
@@ -165,31 +166,28 @@ public abstract class Panel extends Widget
 	}
 
 	@Override
-	public void draw()
+	public void draw(Theme theme, int x, int y, int w, int h)
 	{
 		boolean renderInside = getOnlyRenderWidgetsInside();
-		pushFontUnicode(getUnicode());
+		theme.pushFontUnicode(getUnicode());
 
-		int ax = getAX();
-		int ay = getAY();
-
-		drawPanelBackground(ax, ay);
+		drawBackground(theme, x, y, w, h);
 
 		if (renderInside)
 		{
-			GuiHelper.pushScissor(getScreen(), ax, ay, width, height);
+			GuiHelper.pushScissor(getScreen(), x, y, w, h);
 		}
 
 		setOffset(true);
-		drawOffsetPanelBackground(ax + offsetX, ay + offsetY);
+		drawOffsetBackground(theme, x + offsetX, y + offsetY, w, h);
 
 		for (int i = 0; i < widgets.size(); i++)
 		{
 			Widget widget = widgets.get(i);
 
-			if (widget.shouldDraw() && (!renderInside || widget.collidesWith(ax, ay, width, height)))
+			if (widget.shouldDraw() && (!renderInside || widget.collidesWith(x, y, w, h)))
 			{
-				drawWidget(widget, i, ax + offsetX, ay + offsetY, width, height);
+				drawWidget(theme, widget, i, x + offsetX, y + offsetY, w, h);
 			}
 		}
 
@@ -200,27 +198,31 @@ public abstract class Panel extends Widget
 			GuiHelper.popScissor(getScreen());
 		}
 
-		popFontUnicode();
+		theme.popFontUnicode();
 	}
 
-	protected void drawPanelBackground(int ax, int ay)
-	{
-		getIcon().draw(ax, ay, width, height);
-	}
-
-	protected void drawOffsetPanelBackground(int ax, int ay)
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
 	}
 
-	protected void drawWidget(Widget widget, int index, int ax, int ay, int w, int h)
+	public void drawOffsetBackground(Theme theme, int x, int y, int w, int h)
 	{
-		widget.draw();
+	}
 
-		if (GuiBase.renderDebugBoxes)
+	public void drawWidget(Theme theme, Widget widget, int index, int x, int y, int w, int h)
+	{
+		int wx = widget.getX();
+		int wy = widget.getY();
+		int ww = widget.width;
+		int wh = widget.height;
+
+		widget.draw(theme, wx, wy, ww, wh);
+
+		if (Theme.renderDebugBoxes)
 		{
 			Color4I col = Color4I.rgb(java.awt.Color.HSBtoRGB((widget.hashCode() & 255) / 255F, 1F, 1F));
-			GuiHelper.drawHollowRect(widget.getAX(), widget.getAY(), widget.width, widget.height, col.withAlpha(150), false);
-			col.withAlpha(30).draw(widget.getAX() + 1, widget.getAY() + 1, widget.width - 2, widget.height - 2);
+			GuiHelper.drawHollowRect(wx, wy, ww, wh, col.withAlpha(150), false);
+			col.withAlpha(30).draw(wx + 1, wy + 1, ww - 2, wh - 2);
 		}
 	}
 
@@ -232,7 +234,8 @@ public abstract class Panel extends Widget
 			return;
 		}
 
-		pushFontUnicode(getUnicode());
+		Theme theme = getGui().getTheme();
+		theme.pushFontUnicode(getUnicode());
 		setOffset(true);
 
 		for (int i = widgets.size() - 1; i >= 0; i--)
@@ -243,7 +246,7 @@ public abstract class Panel extends Widget
 			{
 				widget.addMouseOverText(list);
 
-				if (GuiBase.renderDebugBoxes)
+				if (Theme.renderDebugBoxes)
 				{
 					String s = widget.getClass().getSimpleName();
 
@@ -258,7 +261,7 @@ public abstract class Panel extends Widget
 		}
 
 		setOffset(false);
-		popFontUnicode();
+		theme.popFontUnicode();
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public abstract class SimpleTextButton extends Button
 	public SimpleTextButton setTitle(String txt)
 	{
 		super.setTitle(txt);
-		setWidth(getStringWidth(getTitle()) + (getIcon().isEmpty() ? 8 : 28));
+		setWidth(getGui().getTheme().getStringWidth(getTitle()) + (icon.isEmpty() ? 8 : 28));
 		return this;
 	}
 
@@ -31,29 +31,25 @@ public abstract class SimpleTextButton extends Button
 	@Override
 	public void addMouseOverText(List<String> list)
 	{
-		if (getStringWidth(getTitle()) + (getIcon().isEmpty() ? 8 : 28) > width)
+		if (getGui().getTheme().getStringWidth(getTitle()) + (icon.isEmpty() ? 8 : 28) > width)
 		{
 			list.add(getTitle());
 		}
 	}
 
 	@Override
-	public void draw()
+	public void draw(Theme theme, int x, int y, int w, int h)
 	{
-		int ax = getAX();
-		int ay = getAY();
-
-		getButtonBackground().draw(ax, ay, width, height);
-		int iconSize = height >= 16 ? 16 : 8;
-		int off = (height - iconSize) / 2;
-		Icon icon = getIcon();
+		drawBackground(theme, x, y, w, h);
+		int s = h >= 16 ? 16 : 8;
+		int off = (h - s) / 2;
 		String title = getTitle();
-		int textX = ax;
-		int textY = ay + (height - getFontHeight() + 1) / 2;
+		int textX = x;
+		int textY = y + (h - theme.getFontHeight() + 1) / 2;
 
 		if (renderTitleInCenter())
 		{
-			textX += (width - getStringWidth(title) - (icon.isEmpty() ? 0 : off + iconSize)) / 2;
+			textX += (w - theme.getStringWidth(title) - (icon.isEmpty() ? 0 : off + s)) / 2;
 		}
 		else
 		{
@@ -62,10 +58,10 @@ public abstract class SimpleTextButton extends Button
 
 		if (!icon.isEmpty())
 		{
-			icon.draw(ax + off, ay + off, iconSize, iconSize);
-			textX += off + iconSize;
+			icon.draw(x + off, y + off, s, s);
+			textX += off + s;
 		}
 
-		drawString(title, textX, textY, getTheme().getContentColor(getWidgetType()), SHADOW);
+		theme.drawString(title, textX, textY, theme.getContentColor(getWidgetType()), Theme.SHADOW);
 	}
 }

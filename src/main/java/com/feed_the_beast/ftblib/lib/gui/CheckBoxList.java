@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -89,26 +88,25 @@ public class CheckBoxList extends Button
 	}
 
 	@Override
-	public Icon getButtonBackground()
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
-		return Icon.EMPTY;
 	}
 
-	public Icon getCheckboxBackground()
+	public void drawCheckboxBackground(Theme theme, int x, int y, int w, int h)
 	{
-		return getTheme().getCheckboxBackground(radioButtons);
+		theme.drawCheckboxBackground(x, y, w, h, radioButtons);
 	}
 
-	public Icon getCheckboxIcon(int index, int value)
+	public void getCheckboxIcon(Theme theme, int x, int y, int w, int h, int index, int value)
 	{
-		return getTheme().getCheckbox(WidgetType.mouseOver(isMouseOver()), value != 0, radioButtons);
+		theme.drawCheckbox(x, y, w, h, WidgetType.mouseOver(isMouseOver()), value != 0, radioButtons);
 	}
 
 	public void addBox(CheckBoxEntry checkBox)
 	{
 		checkBox.checkBoxList = this;
 		entries.add(checkBox);
-		setWidth(Math.max(width, getStringWidth(checkBox.name)));
+		setWidth(Math.max(width, getGui().getTheme().getStringWidth(checkBox.name)));
 		setHeight(height + 11);
 	}
 
@@ -122,7 +120,7 @@ public class CheckBoxList extends Button
 	@Override
 	public void onClicked(MouseButton button)
 	{
-		int y = getMouseY() - getAY();
+		int y = getMouseY() - getY();
 
 		if (y % 11 == 10)
 		{
@@ -143,20 +141,17 @@ public class CheckBoxList extends Button
 	}
 
 	@Override
-	public void draw()
+	public void draw(Theme theme, int x, int y, int w, int h)
 	{
-		int ax = getAX();
-		int ay = getAY();
-		getButtonBackground().draw(ax, ay, width, height);
-		Icon bg = getCheckboxBackground();
+		drawBackground(theme, x, y, w, h);
 
 		for (int i = 0; i < entries.size(); i++)
 		{
 			CheckBoxEntry entry = entries.get(i);
-			int y = ay + i * 11 + 1;
-			bg.draw(ax, y, 10, 10);
-			getCheckboxIcon(i, entry.value).draw(ax + 1, y + 1, 8, 8);
-			drawString(entry.name, ax + 12, y + 1);
+			int ey = y + i * 11 + 1;
+			drawCheckboxBackground(theme, x, ey, 10, 10);
+			getCheckboxIcon(theme, x + 1, ey + 1, 8, 8, i, entry.value);
+			theme.drawString(entry.name, x + 12, ey + 1);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 	}

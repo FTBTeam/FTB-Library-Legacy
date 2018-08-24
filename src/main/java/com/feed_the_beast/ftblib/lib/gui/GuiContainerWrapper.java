@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -36,8 +35,8 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	{
 		super.initGui();
 		wrappedGui.initGui();
-		guiLeft = wrappedGui.getAX();
-		guiTop = wrappedGui.getAY();
+		guiLeft = wrappedGui.getX();
+		guiTop = wrappedGui.getY();
 		xSize = wrappedGui.width;
 		ySize = wrappedGui.height;
 	}
@@ -116,22 +115,21 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 			GuiHelper.setFixUnicode(true);
 		}
 
+		Theme theme = wrappedGui.getTheme();
 		GuiHelper.setupDrawing();
 		drawDefaultBackground();
-		wrappedGui.getIcon().draw(guiLeft, guiTop, xSize, ySize);
-		wrappedGui.drawBackground();
+		GuiHelper.setupDrawing();
+		wrappedGui.draw(theme, guiLeft, guiTop, xSize, ySize);
 
 		if (drawSlots)
 		{
-			Icon icon = wrappedGui.getTheme().getContainerSlot();
+			GuiHelper.setupDrawing();
 
 			for (Slot slot : inventorySlots.inventorySlots)
 			{
-				icon.draw(guiLeft + slot.xPos, guiTop + slot.yPos, 16, 16);
+				theme.drawContainerSlot(guiLeft + slot.xPos, guiTop + slot.yPos, 16, 16);
 			}
 		}
-
-		wrappedGui.draw();
 
 		if (wrappedGui.fixUnicode)
 		{
@@ -150,7 +148,8 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(-guiLeft, -guiTop, 0D);
 		GuiHelper.setupDrawing();
-		wrappedGui.drawForeground();
+
+		wrappedGui.drawForeground(wrappedGui.getTheme(), guiLeft, guiTop, xSize, ySize);
 
 		if (wrappedGui.contextMenu == null)
 		{

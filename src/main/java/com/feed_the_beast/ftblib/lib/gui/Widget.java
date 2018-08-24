@@ -1,29 +1,15 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
-import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Widget implements IGuiWrapper
 {
-	protected static final int DARK = 1;
-	protected static final int SHADOW = 2;
-	protected static final int CENTERED = 4;
-	protected static final int UNICODE = 8;
-	protected static final int MOUSE_OVER = 16;
-
 	public Panel parent;
 	public int posX, posY, width, height;
 	private boolean isMouseOver;
@@ -37,11 +23,6 @@ public class Widget implements IGuiWrapper
 	public GuiBase getGui()
 	{
 		return parent.getGui();
-	}
-
-	public Theme getTheme()
-	{
-		return parent.getTheme();
 	}
 
 	public void setX(int v)
@@ -85,25 +66,25 @@ public class Widget implements IGuiWrapper
 		return this;
 	}
 
-	public int getAX()
+	public int getX()
 	{
-		return parent.getAX() + posX;
+		return parent.getX() + posX;
 	}
 
-	public int getAY()
+	public int getY()
 	{
-		return parent.getAY() + posY;
+		return parent.getY() + posY;
 	}
 
 	public boolean collidesWith(int x, int y, int w, int h)
 	{
-		int ay = getAY();
+		int ay = getY();
 		if (ay >= y + h || ay + height <= y)
 		{
 			return false;
 		}
 
-		int ax = getAX();
+		int ax = getX();
 		return ax < x + w && ax + width > x;
 	}
 
@@ -120,11 +101,6 @@ public class Widget implements IGuiWrapper
 	public String getTitle()
 	{
 		return "";
-	}
-
-	public Icon getIcon()
-	{
-		return Icon.EMPTY;
 	}
 
 	public WidgetType getWidgetType()
@@ -158,8 +134,8 @@ public class Widget implements IGuiWrapper
 			return false;
 		}
 
-		int ax = getAX();
-		int ay = getAY();
+		int ax = getX();
+		int ay = getY();
 		return mouseX >= ax && mouseY >= ay && mouseX < ax + width && mouseY < ay + height;
 	}
 
@@ -173,9 +149,8 @@ public class Widget implements IGuiWrapper
 		return isEnabled() && isMouseOver();
 	}
 
-	public void draw()
+	public void draw(Theme theme, int x, int y, int w, int h)
 	{
-		getIcon().draw(getAX(), getAY(), width, height);
 	}
 
 	public boolean mousePressed(MouseButton button)
@@ -216,88 +191,6 @@ public class Widget implements IGuiWrapper
 		return parent.getMouseY();
 	}
 
-	public final boolean isMouseButtonDown(MouseButton button)
-	{
-		return Mouse.isButtonDown(button.id);
-	}
-
-	public final boolean isKeyDown(int key)
-	{
-		return Keyboard.isKeyDown(key);
-	}
-
-	public FontRenderer getFont()
-	{
-		return parent.getFont();
-	}
-
-	public final int getStringWidth(String text)
-	{
-		return getFont().getStringWidth(text);
-	}
-
-	public final int getFontHeight()
-	{
-		return getFont().FONT_HEIGHT;
-	}
-
-	public final String trimStringToWidth(String text, int width)
-	{
-		return text.isEmpty() ? "" : getFont().trimStringToWidth(text, width, false);
-	}
-
-	public final String trimStringToWidthReverse(String text, int width)
-	{
-		return text.isEmpty() ? "" : getFont().trimStringToWidth(text, width, true);
-	}
-
-	public final List<String> listFormattedStringToWidth(String text, int width)
-	{
-		if (width <= 0 || text.isEmpty())
-		{
-			return Collections.emptyList();
-		}
-
-		return getFont().listFormattedStringToWidth(text, width);
-	}
-
-	public final int drawString(String text, int x, int y, Color4I color, int flags)
-	{
-		if (text.isEmpty() || color.isEmpty())
-		{
-			return 0;
-		}
-
-		if (Bits.getFlag(flags, CENTERED))
-		{
-			x -= getStringWidth(text) / 2;
-		}
-
-		int i = getFont().drawString(text, x, y, color.rgba(), Bits.getFlag(flags, SHADOW));
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		return i;
-	}
-
-	public final int drawString(String text, int x, int y, int flags)
-	{
-		return drawString(text, x, y, getTheme().getContentColor(WidgetType.mouseOver(Bits.getFlag(flags, MOUSE_OVER))), flags);
-	}
-
-	public final int drawString(String text, int x, int y)
-	{
-		return drawString(text, x, y, getTheme().getContentColor(WidgetType.NORMAL), 0);
-	}
-
-	public void pushFontUnicode(boolean flag)
-	{
-		parent.pushFontUnicode(flag);
-	}
-
-	public void popFontUnicode()
-	{
-		parent.popFontUnicode();
-	}
-
 	public boolean handleClick(String scheme, String path)
 	{
 		return parent.handleClick(scheme, path);
@@ -315,49 +208,18 @@ public class Widget implements IGuiWrapper
 		return handleClick(click.substring(0, index), click.substring(index + 1));
 	}
 
-	public List<GuiBase.PositionedTextData> createDataFrom(ITextComponent component, int width)
-	{
-		if (width <= 0 || component.getUnformattedText().isEmpty())
-		{
-			return Collections.emptyList();
-		}
-
-		List<GuiBase.PositionedTextData> list = new ArrayList<>();
-
-		int line = 0;
-		int currentWidth = 0;
-
-		for (ITextComponent t : component.createCopy())
-		{
-			String text = t.getUnformattedComponentText();
-			int textWidth = getStringWidth(text);
-
-			while (textWidth > 0)
-			{
-				int w = textWidth;
-				if (w > width - currentWidth)
-				{
-					w = width - currentWidth;
-				}
-
-				list.add(new GuiBase.PositionedTextData(currentWidth, line * 10, w, 10, t.getStyle()));
-
-				currentWidth += w;
-				textWidth -= w;
-
-				if (currentWidth >= width)
-				{
-					currentWidth = 0;
-					line++;
-				}
-			}
-		}
-
-		return list;
-	}
-
 	public void onClosed()
 	{
+	}
+
+	public static boolean isMouseButtonDown(MouseButton button)
+	{
+		return Mouse.isButtonDown(button.id);
+	}
+
+	public static boolean isKeyDown(int key)
+	{
+		return Keyboard.isKeyDown(key);
 	}
 
 	public static String getClipboardString()

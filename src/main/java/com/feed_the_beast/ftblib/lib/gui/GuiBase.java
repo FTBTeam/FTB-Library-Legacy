@@ -5,12 +5,8 @@ import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftblib.lib.gui.misc.YesNoCallback;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.NetUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
-import it.unimi.dsi.fastutil.booleans.BooleanStack;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
@@ -55,15 +51,11 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		}
 	}
 
-	private final FontRenderer font;
 	private int mouseX, mouseY;
 	private boolean refreshWidgets;
 	private ScaledResolution screen;
 	public boolean fixUnicode;
 	private GuiScreen prevScreen;
-	private final BooleanStack fontUnicode;
-	private Theme theme;
-	public static boolean renderDebugBoxes = false;
 	public Panel contextMenu = null;
 
 	public GuiBase()
@@ -73,9 +65,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		setSize(176, 166);
 		setOnlyRenderWidgetsInside(false);
 		setOnlyInteractWithWidgetsInside(false);
-		font = createFont();
 		prevScreen = ClientUtils.MC.currentScreen;
-		fontUnicode = new BooleanArrayList();
 	}
 
 	@Override
@@ -109,30 +99,19 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		}
 	}
 
-	@Override
 	public Theme getTheme()
-	{
-		if (theme == null)
-		{
-			theme = createTheme();
-		}
-
-		return theme;
-	}
-
-	protected Theme createTheme()
 	{
 		return Theme.DEFAULT;
 	}
 
 	@Override
-	public int getAX()
+	public int getX()
 	{
 		return (getScreen().getScaledWidth() - width) / 2;
 	}
 
 	@Override
-	public int getAY()
+	public int getY()
 	{
 		return (getScreen().getScaledHeight() - height) / 2;
 	}
@@ -226,17 +205,6 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	}
 
 	@Override
-	public FontRenderer getFont()
-	{
-		return font;
-	}
-
-	protected FontRenderer createFont()
-	{
-		return ClientUtils.MC.fontRenderer;
-	}
-
-	@Override
 	public final void refreshWidgets()
 	{
 		refreshWidgets = true;
@@ -253,17 +221,16 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 			refreshWidgets = false;
 		}
 
-		posX = getAX();
-		posY = getAY();
+		posX = getX();
+		posY = getY();
 
 		updateMouseOver(mouseX, mouseY);
 	}
 
 	@Override
-	public final void draw()
+	public final void draw(Theme theme, int x, int y, int w, int h)
 	{
-		GuiHelper.setupDrawing();
-		super.draw();
+		super.draw(theme, x, y, w, h);
 	}
 
 	@Override
@@ -284,8 +251,8 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 			return;
 		}
 
-		int ax = getAX();
-		int ay = getAY();
+		int ax = getX();
+		int ay = getY();
 
 		if (contextMenu == null)
 		{
@@ -312,8 +279,9 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	}
 
 	@Override
-	protected final void drawPanelBackground(int ax, int ay)
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
+		theme.drawGui(x, y, w, h, WidgetType.NORMAL);
 	}
 
 	public boolean drawDefaultBackground()
@@ -321,28 +289,23 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		return true;
 	}
 
-	public void drawBackground()
-	{
-		getTheme().getGui(WidgetType.NORMAL).draw(getAX(), getAY(), width, height);
-	}
-
-	public void drawForeground()
+	public void drawForeground(Theme theme, int x, int y, int w, int h)
 	{
 		if (contextMenu != null)
 		{
 			GlStateManager.pushMatrix();
 			GlStateManager.translate(0F, 0F, 800F);
 
+			int cx = contextMenu.getX();
+			int cy = contextMenu.getY();
+			int cw = contextMenu.width;
+			int ch = contextMenu.height;
+
+			contextMenu.draw(theme, cx, cy, cw, ch);
+
 			if (contextMenu instanceof GuiBase)
 			{
-				((GuiBase) contextMenu).drawBackground();
-			}
-
-			contextMenu.draw();
-
-			if (contextMenu instanceof GuiBase)
-			{
-				((GuiBase) contextMenu).drawForeground();
+				((GuiBase) contextMenu).drawForeground(theme, cx, cy, cw, ch);
 			}
 
 			GlStateManager.popMatrix();
@@ -350,7 +313,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 
 		List<String> tempTextList = new ArrayList<>(0);
 		addMouseOverText(tempTextList);
-		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, getFont());
+		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, theme.getFont());
 	}
 
 	@Override
@@ -399,7 +362,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		}
 		else if (FTBLibConfig.debugging.gui_widget_bounds && key == Keyboard.KEY_B)
 		{
-			renderDebugBoxes = !renderDebugBoxes;
+			Theme.renderDebugBoxes = !Theme.renderDebugBoxes;
 			return true;
 		}
 
@@ -455,9 +418,9 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	{
 		if (widget == this)
 		{
-			return isMouseOver(getAX(), getAY(), width, height);
+			return isMouseOver(getX(), getY(), width, height);
 		}
-		else if (isMouseOver(widget.getAX(), widget.getAY(), widget.width, widget.height))
+		else if (isMouseOver(widget.getX(), widget.getY(), widget.width, widget.height))
 		{
 			boolean offset = widget.parent.isOffset();
 			widget.parent.setOffset(false);
@@ -467,25 +430,6 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		}
 
 		return false;
-	}
-
-	@Override
-	public void pushFontUnicode(boolean flag)
-	{
-		fontUnicode.push(getFont().getUnicodeFlag());
-		getFont().setUnicodeFlag(flag);
-	}
-
-	@Override
-	public void popFontUnicode()
-	{
-		getFont().setUnicodeFlag(fontUnicode.pop());
-	}
-
-	@Override
-	public Icon getIcon()
-	{
-		return Icon.EMPTY;
 	}
 
 	@Override

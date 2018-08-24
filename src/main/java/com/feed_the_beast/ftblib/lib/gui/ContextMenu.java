@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public class ContextMenu extends Panel
 			super(panel, i.title, i.icon);
 			contextMenu = panel;
 			item = i;
-			setSize(getStringWidth(item.title) + (contextMenu.hasIcons ? 14 : 4), 12);
+			setSize(panel.getGui().getTheme().getStringWidth(item.title) + (contextMenu.hasIcons ? 14 : 4), 12);
 		}
 
 		@Override
@@ -36,19 +35,16 @@ public class ContextMenu extends Panel
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
-			int x = getAX();
-			int y = getAY();
-
 			if (contextMenu.hasIcons)
 			{
-				getIcon().draw(x + 1, y + 2, 8, 8);
-				drawString(getTitle(), x + 11, y + 2, getTheme().getContentColor(getWidgetType()), SHADOW);
+				drawIcon(theme, x + 1, y + 2, 8, 8);
+				theme.drawString(getTitle(), x + 11, y + 2, theme.getContentColor(getWidgetType()), Theme.SHADOW);
 			}
 			else
 			{
-				drawString(getTitle(), x + 2, y + 2, getTheme().getContentColor(getWidgetType()), SHADOW);
+				theme.drawString(getTitle(), x + 2, y + 2, theme.getContentColor(getWidgetType()), Theme.SHADOW);
 			}
 		}
 
@@ -77,10 +73,8 @@ public class ContextMenu extends Panel
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
-			int x = getAX();
-			int y = getAY();
 			Color4I.WHITE.withAlpha(130).draw(x + 2, y + 2, parent.width - 10, 1);
 		}
 
@@ -92,14 +86,12 @@ public class ContextMenu extends Panel
 
 	private final List<ContextMenuItem> items;
 	public boolean hasIcons;
-	public Icon background;
 
 	public ContextMenu(Panel panel, List<ContextMenuItem> i)
 	{
 		super(panel);
 		items = i;
 		hasIcons = false;
-		background = getTheme().getContextMenuBackground();
 
 		for (ContextMenuItem item : items)
 		{
@@ -121,12 +113,6 @@ public class ContextMenu extends Panel
 	}
 
 	@Override
-	public Icon getIcon()
-	{
-		return background;
-	}
-
-	@Override
 	public void alignWidgets()
 	{
 		setWidth(0);
@@ -145,5 +131,11 @@ public class ContextMenu extends Panel
 		setWidth(width + 6);
 
 		setHeight(align(new WidgetLayout.Vertical(3, 1, 3)));
+	}
+
+	@Override
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
+	{
+		theme.drawContextMenuBackground(x, y, w, h);
 	}
 }

@@ -1,9 +1,20 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.ImageIcon;
 import com.feed_the_beast.ftblib.lib.icon.PartIcon;
+import com.feed_the_beast.ftblib.lib.io.Bits;
+import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
+import it.unimi.dsi.fastutil.booleans.BooleanStack;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.text.ITextComponent;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author LatvianModder
@@ -11,6 +22,13 @@ import com.feed_the_beast.ftblib.lib.icon.PartIcon;
 public class Theme
 {
 	public static final Theme DEFAULT = new Theme();
+	public static boolean renderDebugBoxes = false;
+
+	public static final int DARK = 1;
+	public static final int SHADOW = 2;
+	public static final int CENTERED = 4;
+	public static final int UNICODE = 8;
+	public static final int MOUSE_OVER = 16;
 
 	private static final Color4I CONTENT_COLOR_MOUSE_OVER = Color4I.rgb(16777120);
 	private static final Color4I CONTENT_COLOR_DISABLED = Color4I.rgb(10526880);
@@ -35,17 +53,15 @@ public class Theme
 	private static final Icon SLOT = new PartIcon(TEXTURE_BEACON, 35, 136, 256, 256, 3, 12, 12, true);
 	private static final Icon SLOT_MOUSE_OVER = SLOT.combineWith(Color4I.WHITE.withAlpha(33));
 
-	private static final Icon SCROLL_BAR = WIDGET.withBorder(1);
-	private static final Icon SCROLL_BAR_MOUSE_OVER = WIDGET_MOUSE_OVER.withBorder(1);
 	private static final Icon SCROLL_BAR_BG = SLOT;
 	private static final Icon SCROLL_BAR_BG_DISABLED = SCROLL_BAR_BG.withTint(Color4I.BLACK.withAlpha(100));
 
 	private static final Icon TEXT_BOX = new PartIcon(TEXTURE_ENCHANTING_TABLE, 0, 185, 256, 256, 6, 96, 7, false);
 
-	private static final Icon CONTAINER_SLOT = SLOT.withBorder(-1);
-
 	private static final Icon TAB_H_UNSELECTED = TEXTURE_RECIPE_BOOK.withUVfromCoords(150, 2, 35, 26, 256, 256);
 	private static final Icon TAB_H_SELECTED = TEXTURE_RECIPE_BOOK.withUVfromCoords(188, 2, 35, 26, 256, 256);
+
+	private final BooleanStack fontUnicode = new BooleanArrayList();
 
 	public Color4I getContentColor(WidgetType type)
 	{
@@ -57,68 +73,186 @@ public class Theme
 		return CONTENT_COLOR_DARK;
 	}
 
-	public Icon getGui(WidgetType type)
+	public void drawGui(int x, int y, int w, int h, WidgetType type)
 	{
-		return type == WidgetType.MOUSE_OVER ? GUI_MOUSE_OVER : GUI;
+		(type == WidgetType.MOUSE_OVER ? GUI_MOUSE_OVER : GUI).draw(x, y, w, h);
 	}
 
-	public Icon getWidget(WidgetType type)
+	public void drawWidget(int x, int y, int w, int h, WidgetType type)
 	{
-		return type == WidgetType.MOUSE_OVER ? WIDGET_MOUSE_OVER : type == WidgetType.DISABLED ? WIDGET_DISABLED : WIDGET;
+		(type == WidgetType.MOUSE_OVER ? WIDGET_MOUSE_OVER : type == WidgetType.DISABLED ? WIDGET_DISABLED : WIDGET).draw(x, y, w, h);
 	}
 
-	public Icon getSlot(WidgetType type)
+	public void drawSlot(int x, int y, int w, int h, WidgetType type)
 	{
-		return type == WidgetType.MOUSE_OVER ? SLOT_MOUSE_OVER : SLOT;
+		(type == WidgetType.MOUSE_OVER ? SLOT_MOUSE_OVER : SLOT).draw(x, y, w, h);
 	}
 
-	public Icon getContainerSlot()
+	public void drawContainerSlot(int x, int y, int w, int h)
 	{
-		return CONTAINER_SLOT;
+		SLOT.draw(x - 1, y - 1, w + 2, h + 2);
 	}
 
-	public Icon getButton(WidgetType type)
+	public void drawButton(int x, int y, int w, int h, WidgetType type)
 	{
-		return type == WidgetType.MOUSE_OVER ? BUTTON_MOUSE_OVER : type == WidgetType.DISABLED ? BUTTON_DISABLED : BUTTON;
+		(type == WidgetType.MOUSE_OVER ? BUTTON_MOUSE_OVER : type == WidgetType.DISABLED ? BUTTON_DISABLED : BUTTON).draw(x, y, w, h);
 	}
 
-	public Icon getScrollBarBackground(WidgetType type)
+	public void drawScrollBarBackground(int x, int y, int w, int h, WidgetType type)
 	{
-		return type == WidgetType.DISABLED ? SCROLL_BAR_BG_DISABLED : SCROLL_BAR_BG;
+		(type == WidgetType.DISABLED ? SCROLL_BAR_BG_DISABLED : SCROLL_BAR_BG).draw(x, y, w, h);
 	}
 
-	public Icon getScrollBar(WidgetType type, boolean vertical)
+	public void drawScrollBar(int x, int y, int w, int h, WidgetType type, boolean vertical)
 	{
-		return type == WidgetType.MOUSE_OVER ? SCROLL_BAR_MOUSE_OVER : SCROLL_BAR;
+		(type == WidgetType.MOUSE_OVER ? WIDGET_MOUSE_OVER : WIDGET).draw(x + 1, y + 1, w - 2, h - 2);
 	}
 
-	public Icon getTextBox()
+	public void drawTextBox(int x, int y, int w, int h)
 	{
-		return TEXT_BOX;
+		TEXT_BOX.draw(x, y, w, h);
 	}
 
-	public Icon getCheckboxBackground(boolean radioButton)
+	public void drawCheckboxBackground(int x, int y, int w, int h, boolean radioButton)
 	{
-		return getSlot(WidgetType.NORMAL);
+		drawSlot(x, y, w, h, WidgetType.NORMAL);
 	}
 
-	public Icon getCheckbox(WidgetType type, boolean selected, boolean radioButton)
+	public void drawCheckbox(int x, int y, int w, int h, WidgetType type, boolean selected, boolean radioButton)
 	{
-		return selected ? getWidget(type) : Icon.EMPTY;
+		if (selected)
+		{
+			drawWidget(x, y, w, h, type);
+		}
 	}
 
-	public Icon getPanelBackground()
+	public void drawPanelBackground(int x, int y, int w, int h)
 	{
-		return getContainerSlot();
+		drawContainerSlot(x, y, w, h);
 	}
 
-	public Icon getHorizontalTab(boolean selected)
+	public void drawHorizontalTab(int x, int y, int w, int h, boolean selected)
 	{
-		return selected ? TAB_H_SELECTED : TAB_H_UNSELECTED;
+		(selected ? TAB_H_SELECTED : TAB_H_UNSELECTED).draw(x, y, w, h);
 	}
 
-	public Icon getContextMenuBackground()
+	public void drawContextMenuBackground(int x, int y, int w, int h)
 	{
-		return getGui(WidgetType.NORMAL).withTint(Color4I.BLACK.withAlpha(90));
+		drawGui(x, y, w, h, WidgetType.NORMAL);
+		Color4I.BLACK.withAlpha(90).draw(x, y, w, h);
+	}
+
+	public FontRenderer getFont()
+	{
+		return ClientUtils.MC.fontRenderer;
+	}
+
+	public final int getStringWidth(String text)
+	{
+		return getFont().getStringWidth(text);
+	}
+
+	public final int getFontHeight()
+	{
+		return getFont().FONT_HEIGHT;
+	}
+
+	public final String trimStringToWidth(String text, int width)
+	{
+		return text.isEmpty() ? "" : getFont().trimStringToWidth(text, width, false);
+	}
+
+	public final String trimStringToWidthReverse(String text, int width)
+	{
+		return text.isEmpty() ? "" : getFont().trimStringToWidth(text, width, true);
+	}
+
+	public final List<String> listFormattedStringToWidth(String text, int width)
+	{
+		if (width <= 0 || text.isEmpty())
+		{
+			return Collections.emptyList();
+		}
+
+		return getFont().listFormattedStringToWidth(text, width);
+	}
+
+	public final int drawString(String text, int x, int y, Color4I color, int flags)
+	{
+		if (text.isEmpty() || color.isEmpty())
+		{
+			return 0;
+		}
+
+		if (Bits.getFlag(flags, CENTERED))
+		{
+			x -= getStringWidth(text) / 2;
+		}
+
+		int i = getFont().drawString(text, x, y, color.rgba(), Bits.getFlag(flags, SHADOW));
+		GlStateManager.color(1F, 1F, 1F, 1F);
+		return i;
+	}
+
+	public final int drawString(String text, int x, int y, int flags)
+	{
+		return drawString(text, x, y, getContentColor(WidgetType.mouseOver(Bits.getFlag(flags, MOUSE_OVER))), flags);
+	}
+
+	public final int drawString(String text, int x, int y)
+	{
+		return drawString(text, x, y, getContentColor(WidgetType.NORMAL), 0);
+	}
+
+	public void pushFontUnicode(boolean flag)
+	{
+		fontUnicode.push(getFont().getUnicodeFlag());
+		getFont().setUnicodeFlag(flag);
+	}
+
+	public void popFontUnicode()
+	{
+		getFont().setUnicodeFlag(fontUnicode.pop());
+	}
+
+	public List<GuiBase.PositionedTextData> createDataFrom(ITextComponent component, int width)
+	{
+		if (width <= 0 || component.getUnformattedText().isEmpty())
+		{
+			return Collections.emptyList();
+		}
+
+		List<GuiBase.PositionedTextData> list = new ArrayList<>();
+
+		int line = 0;
+		int currentWidth = 0;
+
+		for (ITextComponent t : component.createCopy())
+		{
+			String text = t.getUnformattedComponentText();
+			int textWidth = getStringWidth(text);
+
+			while (textWidth > 0)
+			{
+				int w = textWidth;
+				if (w > width - currentWidth)
+				{
+					w = width - currentWidth;
+				}
+
+				list.add(new GuiBase.PositionedTextData(currentWidth, line * 10, w, 10, t.getStyle()));
+
+				currentWidth += w;
+				textWidth -= w;
+
+				if (currentWidth >= width)
+				{
+					currentWidth = 0;
+					line++;
+				}
+			}
+		}
+
+		return list;
 	}
 }

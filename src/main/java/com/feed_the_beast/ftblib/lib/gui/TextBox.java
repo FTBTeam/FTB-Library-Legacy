@@ -159,12 +159,13 @@ public class TextBox extends Widget
 		}
 
 		int j = width - 10;
-		String s = trimStringToWidth(text.substring(lineScrollOffset), j);
+		Theme theme = getGui().getTheme();
+		String s = theme.trimStringToWidth(text.substring(lineScrollOffset), j);
 		int k = s.length() + lineScrollOffset;
 
 		if (position == lineScrollOffset)
 		{
-			lineScrollOffset -= trimStringToWidthReverse(text, j).length();
+			lineScrollOffset -= theme.trimStringToWidthReverse(text, j).length();
 		}
 
 		if (position > k)
@@ -300,9 +301,10 @@ public class TextBox extends Widget
 			{
 				if (isFocused)
 				{
-					int i = getMouseX() - getAX();
-					String s = trimStringToWidth(text.substring(lineScrollOffset), width);
-					setCursorPosition(trimStringToWidth(s, i).length() + lineScrollOffset);
+					int i = getMouseX() - getX();
+					Theme theme = getGui().getTheme();
+					String s = theme.trimStringToWidth(text.substring(lineScrollOffset), width);
+					setCursorPosition(theme.trimStringToWidth(s, i).length() + lineScrollOffset);
 				}
 			}
 			else if (button.isRight() && getText().length() > 0 && allowInput())
@@ -477,21 +479,19 @@ public class TextBox extends Widget
 	}
 
 	@Override
-	public void draw()
+	public void draw(Theme theme, int x, int y, int w, int h)
 	{
-		int ax = getAX();
-		int ay = getAY();
-		getIcon().draw(ax, ay, width, height);
+		drawTextBox(theme, x, y, w, h);
 		boolean drawGhostText = !isFocused() && text.isEmpty() && !ghostText.isEmpty();
 		String textToDraw = drawGhostText ? (TextFormatting.ITALIC + ghostText) : text;
-		GuiHelper.pushScissor(getScreen(), ax, ay, width, height);
+		GuiHelper.pushScissor(getScreen(), x, y, w, h);
 
-		Color4I col = validText ? (textColor.isEmpty() ? getTheme().getContentColor(WidgetType.NORMAL) : textColor).withAlpha(drawGhostText ? 120 : 255) : Color4I.RED;
+		Color4I col = validText ? (textColor.isEmpty() ? theme.getContentColor(WidgetType.NORMAL) : textColor).withAlpha(drawGhostText ? 120 : 255) : Color4I.RED;
 		int j = cursorPosition - lineScrollOffset;
 		int k = selectionEnd - lineScrollOffset;
-		String s = trimStringToWidth(textToDraw.substring(lineScrollOffset), width);
-		int textX = ax + 4;
-		int textY = ay + (height - 8) / 2;
+		String s = theme.trimStringToWidth(textToDraw.substring(lineScrollOffset), w);
+		int textX = x + 4;
+		int textY = y + (h - 8) / 2;
 		int textX1 = textX;
 
 		if (k > s.length())
@@ -502,7 +502,7 @@ public class TextBox extends Widget
 		if (!s.isEmpty())
 		{
 			String s1 = j > 0 && j <= s.length() ? s.substring(0, j) : s;
-			textX1 = drawString(s1, textX, textY, col, 0);
+			textX1 = theme.drawString(s1, textX, textY, col, 0);
 		}
 
 		boolean drawCursor = cursorPosition < textToDraw.length() || textToDraw.length() >= charLimit;
@@ -510,7 +510,7 @@ public class TextBox extends Widget
 
 		if (j <= 0 || j > s.length())
 		{
-			cursorX = j > 0 ? textX + width : textX;
+			cursorX = j > 0 ? textX + w : textX;
 		}
 		else if (drawCursor)
 		{
@@ -520,26 +520,26 @@ public class TextBox extends Widget
 
 		if (j > 0 && j < s.length())
 		{
-			drawString(s.substring(j), textX1, textY, col, 0);
+			theme.drawString(s.substring(j), textX1, textY, col, 0);
 		}
 
 		if (j >= 0 && j <= s.length() && isFocused() && Minecraft.getSystemTime() % 1000L > 500L)
 		{
 			if (drawCursor)
 			{
-				col.draw(cursorX, textY - 1, 1, getFontHeight() + 2);
+				col.draw(cursorX, textY - 1, 1, theme.getFontHeight() + 2);
 			}
 			else
 			{
-				col.draw(cursorX, textY + getFontHeight() - 2, 5, 1);
+				col.draw(cursorX, textY + theme.getFontHeight() - 2, 5, 1);
 			}
 		}
 
 		if (k != j)
 		{
-			int l1 = textX + getStringWidth(s.substring(0, k));
+			int l1 = textX + theme.getStringWidth(s.substring(0, k));
 
-			int startX = cursorX, startY = textY - 1, endX = l1 - 1, endY = textY + 1 + getFontHeight();
+			int startX = cursorX, startY = textY - 1, endX = l1 - 1, endY = textY + 1 + theme.getFontHeight();
 
 			if (startX < endX)
 			{
@@ -555,14 +555,14 @@ public class TextBox extends Widget
 				endY = j12;
 			}
 
-			if (endX > ax + width)
+			if (endX > x + w)
 			{
-				endX = ax + width;
+				endX = x + w;
 			}
 
-			if (startX > ax + width)
+			if (startX > x + w)
 			{
-				startX = ax + width;
+				startX = x + w;
 			}
 
 			Tessellator tessellator = Tessellator.getInstance();
@@ -585,10 +585,9 @@ public class TextBox extends Widget
 		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
 
-	@Override
-	public Icon getIcon()
+	public void drawTextBox(Theme theme, int x, int y, int w, int h)
 	{
-		return getTheme().getTextBox();
+		theme.drawTextBox(x, y, w, h);
 	}
 
 	public boolean isValid(String txt)

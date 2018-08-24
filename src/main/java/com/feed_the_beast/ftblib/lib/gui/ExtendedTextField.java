@@ -45,7 +45,7 @@ public class ExtendedTextField extends TextField
 			}
 
 			super.setText(textComponent.getFormattedText());
-			textData = createDataFrom(textComponent, width);
+			textData = getGui().getTheme().createDataFrom(textComponent, width);
 		}
 
 		return this;
@@ -54,8 +54,8 @@ public class ExtendedTextField extends TextField
 	@Nullable
 	private GuiBase.PositionedTextData getDataAtMouse()
 	{
-		int ax = getAX();
-		int ay = getAY();
+		int ax = getX();
+		int ay = getY();
 
 		for (GuiBase.PositionedTextData data : textData)
 		{
@@ -97,7 +97,7 @@ public class ExtendedTextField extends TextField
 	}
 
 	@Override
-	public void draw()
+	public void draw(Theme theme, int x, int y, int w, int h)
 	{
 		if (lastUpdate != -1L)
 		{
@@ -111,6 +111,6 @@ public class ExtendedTextField extends TextField
 			}
 		}
 
-		super.draw();
+		super.draw(theme, x, y, w, h);
 	}
 }

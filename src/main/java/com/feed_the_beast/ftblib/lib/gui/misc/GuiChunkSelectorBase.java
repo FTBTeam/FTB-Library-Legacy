@@ -6,10 +6,10 @@ import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -92,11 +92,8 @@ public class GuiChunkSelectorBase extends GuiBase
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
-			int ax = getAX();
-			int ay = getAY();
-
 			if (!isSelected && gui.currentSelectionMode != -1 && gui.isMouseOver(this))
 			{
 				isSelected = true;
@@ -104,7 +101,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 			if (isSelected || gui.isMouseOver(this))
 			{
-				Color4I.WHITE.withAlpha(33).draw(ax, ay, TILE_SIZE, TILE_SIZE);
+				Color4I.WHITE.withAlpha(33).draw(x, y, TILE_SIZE, TILE_SIZE);
 			}
 		}
 	}
@@ -176,7 +173,7 @@ public class GuiChunkSelectorBase extends GuiBase
 	}
 
 	@Override
-	public void drawBackground()
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
 		int currentStartX = MathUtils.chunk(ClientUtils.MC.player.posX) - ChunkSelectorMap.TILES_GUI2;
 		int currentStartZ = MathUtils.chunk(ClientUtils.MC.player.posZ) - ChunkSelectorMap.TILES_GUI2;
@@ -195,15 +192,15 @@ public class GuiChunkSelectorBase extends GuiBase
 		}
 
 		GlStateManager.color(1F, 1F, 1F, 1F);
-		Color4I.BLACK.draw(posX - 2, posY - 2, width + 4, height + 4);
+		Color4I.BLACK.draw(x - 2, y - 2, w + 4, h + 4);
 
-		ChunkSelectorMap.getMap().drawMap(this, posX, posY, startX, startZ);
+		ChunkSelectorMap.getMap().drawMap(this, x, y, startX, startZ);
 
 		GlStateManager.color(1F, 1F, 1F, 1F);
 
 		for (MapButton mapButton : mapButtons)
 		{
-			mapButton.draw();
+			mapButton.draw(theme, mapButton.getX(), mapButton.getY(), mapButton.width, mapButton.height);
 		}
 
 		GlStateManager.disableTexture2D();
@@ -211,7 +208,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
-		buffer.setTranslation(mapButtons[0].getAX(), mapButtons[0].getAY(), 0D);
+		buffer.setTranslation(mapButtons[0].getX(), mapButtons[0].getY(), 0D);
 		//GlStateManager.color(1F, 1F, 1F, GuiScreen.isCtrlKeyDown() ? 0.2F : 0.7F);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 
@@ -250,16 +247,16 @@ public class GuiChunkSelectorBase extends GuiBase
 	}
 
 	@Override
-	public void drawForeground()
+	public void drawForeground(Theme theme, int x, int y, int w, int h)
 	{
-		int lineSpacing = getFontHeight() + 1;
+		int lineSpacing = theme.getFontHeight() + 1;
 		List<String> tempTextList = new ArrayList<>();
 		addCornerText(tempTextList, Corner.BOTTOM_RIGHT);
 
 		for (int i = 0; i < tempTextList.size(); i++)
 		{
 			String s = tempTextList.get(i);
-			drawString(s, getScreen().getScaledWidth() - getStringWidth(s) - 2, getScreen().getScaledHeight() - (tempTextList.size() - i) * lineSpacing, SHADOW);
+			theme.drawString(s, getScreen().getScaledWidth() - theme.getStringWidth(s) - 2, getScreen().getScaledHeight() - (tempTextList.size() - i) * lineSpacing, Theme.SHADOW);
 		}
 
 		tempTextList.clear();
@@ -268,7 +265,7 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		for (int i = 0; i < tempTextList.size(); i++)
 		{
-			drawString(tempTextList.get(i), 2, getScreen().getScaledHeight() - (tempTextList.size() - i) * lineSpacing, SHADOW);
+			theme.drawString(tempTextList.get(i), 2, getScreen().getScaledHeight() - (tempTextList.size() - i) * lineSpacing, Theme.SHADOW);
 		}
 
 		tempTextList.clear();
@@ -277,10 +274,10 @@ public class GuiChunkSelectorBase extends GuiBase
 
 		for (int i = 0; i < tempTextList.size(); i++)
 		{
-			drawString(tempTextList.get(i), 2, 2 + i * lineSpacing, SHADOW);
+			theme.drawString(tempTextList.get(i), 2, 2 + i * lineSpacing, Theme.SHADOW);
 		}
 
-		super.drawForeground();
+		super.drawForeground(theme, x, y, w, h);
 	}
 
 	public int getSelectionMode(MouseButton button)
@@ -306,11 +303,5 @@ public class GuiChunkSelectorBase extends GuiBase
 
 	public void addButtonText(MapButton button, List<String> list)
 	{
-	}
-
-	@Override
-	public Icon getIcon()
-	{
-		return Icon.EMPTY;
 	}
 }

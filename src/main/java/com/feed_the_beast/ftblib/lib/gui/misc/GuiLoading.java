@@ -3,8 +3,8 @@ package com.feed_the_beast.ftblib.lib.gui.misc;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -38,7 +38,7 @@ public class GuiLoading extends GuiBase
 	}
 
 	@Override
-	public void drawBackground()
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
 		if (!startedLoading)
 		{
@@ -48,15 +48,12 @@ public class GuiLoading extends GuiBase
 
 		if (isLoading())
 		{
-			int ax = getAX();
-			int ay = getAY();
+			GuiHelper.drawHollowRect(x + width / 2 - 48, y + height / 2 - 8, 96, 16, Color4I.WHITE, true);
 
-			GuiHelper.drawHollowRect(ax + width / 2 - 48, ay + height / 2 - 8, 96, 16, Color4I.WHITE, true);
-
-			int x = ax + width / 2 - 48;
-			int y = ay + height / 2 - 8;
-			int w = 96;
-			int h = 16;
+			int x1 = x + width / 2 - 48;
+			int y1 = y + height / 2 - 8;
+			int w1 = 96;
+			int h1 = 16;
 
 			Color4I col = Color4I.WHITE;
 			GlStateManager.disableTexture2D();
@@ -64,30 +61,30 @@ public class GuiLoading extends GuiBase
 			BufferBuilder buffer = tessellator.getBuffer();
 			buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 
-			GuiHelper.addRectToBuffer(buffer, x, y + 1, 1, h - 2, col);
-			GuiHelper.addRectToBuffer(buffer, x + w - 1, y + 1, 1, h - 2, col);
-			GuiHelper.addRectToBuffer(buffer, x + 1, y, w - 2, 1, col);
-			GuiHelper.addRectToBuffer(buffer, x + 1, y + h - 1, w - 2, 1, col);
+			GuiHelper.addRectToBuffer(buffer, x1, y1 + 1, 1, h1 - 2, col);
+			GuiHelper.addRectToBuffer(buffer, x1 + w1 - 1, y1 + 1, 1, h1 - 2, col);
+			GuiHelper.addRectToBuffer(buffer, x1 + 1, y1, w1 - 2, 1, col);
+			GuiHelper.addRectToBuffer(buffer, x1 + 1, y1 + h1 - 1, w1 - 2, 1, col);
 
-			x += 1;
-			y += 1;
-			w -= 2;
-			h -= 2;
+			x1 += 1;
+			y1 += 1;
+			w1 -= 2;
+			h1 -= 2;
 
 			timer += ClientUtils.MC.getTickLength();
-			timer = timer % (h * 2F);
+			timer = timer % (h1 * 2F);
 
-			for (int oy = 0; oy < h; oy++)
+			for (int oy = 0; oy < h1; oy++)
 			{
-				for (int ox = 0; ox < w; ox++)
+				for (int ox = 0; ox < w1; ox++)
 				{
 					int index = ox + oy + (int) timer;
 
-					if (index % (h * 2) < h)
+					if (index % (h1 * 2) < h1)
 					{
-						col = Color4I.WHITE.withAlpha(200 - (index % h) * 9);
+						col = Color4I.WHITE.withAlpha(200 - (index % h1) * 9);
 
-						GuiHelper.addRectToBuffer(buffer, x + ox, y + oy, 1, 1, col);
+						GuiHelper.addRectToBuffer(buffer, x1 + ox, y1 + oy, 1, 1, col);
 					}
 				}
 			}
@@ -103,7 +100,7 @@ public class GuiLoading extends GuiBase
 
 				for (int i = 0; i < s1.length; i++)
 				{
-					drawString(s1[i], ax + width / 2, ay - 26 + i * 12, CENTERED);
+					theme.drawString(s1[i], x + width / 2, y - 26 + i * 12, Theme.CENTERED);
 				}
 			}
 		}
@@ -141,11 +138,5 @@ public class GuiLoading extends GuiBase
 
 	public void finishLoading()
 	{
-	}
-
-	@Override
-	public Icon getIcon()
-	{
-		return Icon.EMPTY;
 	}
 }

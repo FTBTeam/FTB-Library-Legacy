@@ -39,24 +39,22 @@ public abstract class Button extends Widget
 		return this;
 	}
 
-	public Icon getButtonBackground()
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
-		return getTheme().getButton(getWidgetType());
+		theme.drawButton(x, y, w, h, getWidgetType());
+	}
+
+	public void drawIcon(Theme theme, int x, int y, int w, int h)
+	{
+		icon.draw(x, y, w, h);
 	}
 
 	@Override
-	public Icon getIcon()
+	public void draw(Theme theme, int x, int y, int w, int h)
 	{
-		return icon;
-	}
-
-	@Override
-	public void draw()
-	{
-		int ax = getAX();
-		int ay = getAY();
-		getButtonBackground().draw(ax, ay, width, height);
-		getIcon().draw(ax + (width - 16) / 2, ay + (height - 16) / 2, 16, 16);
+		int s = h >= 16 ? 16 : 8;
+		drawBackground(theme, x, y, w, h);
+		drawIcon(theme, x + (w - s) / 2, y + (h - s) / 2, s, s);
 	}
 
 	@Override

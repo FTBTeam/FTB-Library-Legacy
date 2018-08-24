@@ -16,7 +16,6 @@ import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.MutableColor4I;
 import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
@@ -52,27 +51,25 @@ public class GuiEditConfig extends GuiBase
 	public static Theme THEME = new Theme()
 	{
 		@Override
-		public Icon getGui(WidgetType type)
+		public void drawGui(int x, int y, int w, int h, WidgetType type)
 		{
-			return Icon.EMPTY;
 		}
 
 		@Override
-		public Icon getButton(WidgetType type)
+		public void drawButton(int x, int y, int w, int h, WidgetType type)
 		{
-			return Icon.EMPTY;
 		}
 
 		@Override
-		public Icon getScrollBarBackground(WidgetType type)
+		public void drawScrollBarBackground(int x, int y, int w, int h, WidgetType type)
 		{
-			return Color4I.BLACK.withAlpha(70);
+			Color4I.BLACK.withAlpha(70).draw(x, y, w, h);
 		}
 
 		@Override
-		public Icon getScrollBar(WidgetType type, boolean vertical)
+		public void drawScrollBar(int x, int y, int w, int h, WidgetType type, boolean vertical)
 		{
-			return getContentColor(WidgetType.NORMAL).withAlpha(100).withOutline(Color4I.GRAY.withAlpha(100), false);
+			getContentColor(WidgetType.NORMAL).withAlpha(100).withOutline(Color4I.GRAY.withAlpha(100), false).draw(x, y, w, h);
 		}
 	};
 
@@ -134,18 +131,15 @@ public class GuiEditConfig extends GuiBase
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
-			int ax = getAX();
-			int ay = getAY();
-
-			COLOR_BACKGROUND.draw(ax, ay, width, height);
-			drawString(getTitle(), ax + 3, ay + 4);
+			COLOR_BACKGROUND.draw(x, y, w, h);
+			theme.drawString(getTitle(), x + 3, y + 4);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
 			if (isMouseOver())
 			{
-				Color4I.WHITE.withAlpha(33).draw(ax, ay, width, height);
+				Color4I.WHITE.withAlpha(33).draw(x, y, w, h);
 			}
 		}
 
@@ -203,27 +197,24 @@ public class GuiEditConfig extends GuiBase
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
 			boolean mouseOver = getMouseY() >= 20 && isMouseOver();
 
-			int ax = getAX();
-			int ay = getAY();
-
 			if (mouseOver)
 			{
-				Color4I.WHITE.withAlpha(33).draw(ax, ay, width, height);
+				Color4I.WHITE.withAlpha(33).draw(x, y, w, h);
 			}
 
-			drawString(keyText, ax + 4, ay + 4, Bits.setFlag(0, SHADOW, mouseOver));
+			theme.drawString(keyText, x + 4, y + 4, Bits.setFlag(0, Theme.SHADOW, mouseOver));
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
 			String s = getValueString();
-			int slen = getStringWidth(s);
+			int slen = theme.getStringWidth(s);
 
 			if (slen > 150)
 			{
-				s = trimStringToWidth(s, 150) + "...";
+				s = theme.trimStringToWidth(s, 150) + "...";
 				slen = 152;
 			}
 
@@ -234,13 +225,13 @@ public class GuiEditConfig extends GuiBase
 			{
 				textCol.addBrightness(60);
 
-				if (getMouseX() > ax + width - slen - 9)
+				if (getMouseX() > x + w - slen - 9)
 				{
-					Color4I.WHITE.withAlpha(33).draw(ax + width - slen - 8, ay, slen + 8, height);
+					Color4I.WHITE.withAlpha(33).draw(x + w - slen - 8, y, slen + 8, h);
 				}
 			}
 
-			drawString(s, getGui().width - (slen + 20), ay + 4, textCol, 0);
+			theme.drawString(s, getGui().width - (slen + 20), y + 4, textCol, 0);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 
@@ -260,7 +251,9 @@ public class GuiEditConfig extends GuiBase
 		{
 			if (getMouseY() > 18)
 			{
-				if (getMouseX() < getAX() + getStringWidth(keyText) + 10)
+				Theme theme = getGui().getTheme();
+
+				if (getMouseX() < getX() + theme.getStringWidth(keyText) + 10)
 				{
 					ITextComponent infoText = inst.getInfo();
 
@@ -273,7 +266,7 @@ public class GuiEditConfig extends GuiBase
 					}
 				}
 
-				if (getMouseX() > getGui().width - (Math.min(150, getStringWidth(getValueString())) + 25))
+				if (getMouseX() > getGui().width - (Math.min(150, theme.getStringWidth(getValueString())) + 25))
 				{
 					inst.getValue().addInfo(inst, list);
 				}
@@ -486,10 +479,10 @@ public class GuiEditConfig extends GuiBase
 	}
 
 	@Override
-	public void drawBackground()
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
-		COLOR_BACKGROUND.draw(0, 0, width, 20);
-		drawString(getTitle(), 6, 6, SHADOW);
+		COLOR_BACKGROUND.draw(0, 0, w, 20);
+		theme.drawString(getTitle(), 6, 6, Theme.SHADOW);
 	}
 
 	@Override
@@ -499,7 +492,7 @@ public class GuiEditConfig extends GuiBase
 	}
 
 	@Override
-	public Theme createTheme()
+	public Theme getTheme()
 	{
 		return THEME;
 	}

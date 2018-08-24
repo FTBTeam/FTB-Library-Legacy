@@ -3,9 +3,9 @@ package com.feed_the_beast.ftblib.client;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.resources.I18n;
 
@@ -48,9 +48,10 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 		}
 
 		@Override
-		public Icon getButtonBackground()
+		public void drawBackground(Theme theme, int x, int y, int w, int h)
 		{
-			return super.getButtonBackground().combineWith(sidebarButton.getConfig() ? (sidebarButton.isAvailable() ? COLOR_ENABLED : COLOR_UNAVAILABLE) : COLOR_DISABLED);
+			super.drawBackground(theme, x, y, w, h);
+			(sidebarButton.getConfig() ? (sidebarButton.isAvailable() ? COLOR_ENABLED : COLOR_UNAVAILABLE) : COLOR_DISABLED).draw(x, y, w, h);
 		}
 
 		@Override

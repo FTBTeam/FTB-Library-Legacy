@@ -4,9 +4,9 @@ import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.TextBox;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
-import com.feed_the_beast.ftblib.lib.icon.Icon;
 import net.minecraft.client.resources.I18n;
 
 /**
@@ -84,9 +84,9 @@ public abstract class GuiButtonListBase extends GuiBase
 			}
 
 			@Override
-			public Icon getIcon()
+			public void drawBackground(Theme theme, int x, int y, int w, int h)
 			{
-				return getTheme().getPanelBackground();
+				theme.drawPanelBackground(x, y, w, h);
 			}
 		};
 
@@ -155,15 +155,15 @@ public abstract class GuiButtonListBase extends GuiBase
 	}
 
 	@Override
-	public void drawBackground()
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
-		super.drawBackground();
+		super.drawBackground(theme, x, y, w, h);
 
 		String title = getTitle();
 
 		if (!title.isEmpty())
 		{
-			drawString(title, getAX() + (width - getStringWidth(title)) / 2, getAY() - getFontHeight() - 2, SHADOW);
+			theme.drawString(title, getX() + (width - theme.getStringWidth(title)) / 2, getY() - theme.getFontHeight() - 2, Theme.SHADOW);
 		}
 	}
 }

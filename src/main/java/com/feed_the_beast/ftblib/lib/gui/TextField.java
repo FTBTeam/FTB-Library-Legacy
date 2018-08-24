@@ -28,11 +28,12 @@ public class TextField extends Widget
 
 	public TextField setText(String txt)
 	{
+		Theme theme = getGui().getTheme();
 		text = null;
 
 		if (!txt.isEmpty())
 		{
-			text = autoSizeWidth ? txt.split("\n") : listFormattedStringToWidth(txt, width).toArray(StringUtils.EMPTY_ARRAY);
+			text = autoSizeWidth ? txt.split("\n") : theme.listFormattedStringToWidth(txt, width).toArray(StringUtils.EMPTY_ARRAY);
 		}
 
 		if (text == null || text.length == 0)
@@ -46,13 +47,13 @@ public class TextField extends Widget
 
 			for (String s : text)
 			{
-				setWidth(Math.max(width, getStringWidth(s)));
+				setWidth(Math.max(width, theme.getStringWidth(s)));
 			}
 		}
 
 		if (autoSizeHeight)
 		{
-			setHeight(Math.max(text.length, 1) * (getFontHeight() + 1));
+			setHeight(Math.max(text.length, 1) * (theme.getFontHeight() + 1));
 		}
 
 		return this;
@@ -63,30 +64,31 @@ public class TextField extends Widget
 	{
 	}
 
-	@Override
-	public void draw()
+	public void drawTextField(Theme theme, int x, int y, int w, int h)
 	{
-		int ay = getAY();
-		int ax = getAX();
+	}
 
-		getIcon().draw(ax, ay, width, height);
+	@Override
+	public void draw(Theme theme, int x, int y, int w, int h)
+	{
+		drawTextField(theme, x, y, w, h);
 
 		if (text.length == 0)
 		{
 			return;
 		}
 
-		boolean centered = Bits.getFlag(textFlags, CENTERED);
+		boolean centered = Bits.getFlag(textFlags, Theme.CENTERED);
 
 		for (int i = 0; i < text.length; i++)
 		{
 			if (centered)
 			{
-				drawString(text[i], ax + width / 2, ay + i * 10 + 1, textFlags);
+				theme.drawString(text[i], x + w / 2, y + i * 10 + 1, textFlags);
 			}
 			else
 			{
-				drawString(text[i], ax, ay + i * 10 + 1, textFlags);
+				theme.drawString(text[i], x, y + i * 10 + 1, textFlags);
 			}
 		}
 	}

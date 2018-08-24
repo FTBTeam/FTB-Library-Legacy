@@ -7,7 +7,7 @@ import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.TextBox;
-import com.feed_the_beast.ftblib.lib.gui.WidgetType;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
@@ -105,9 +105,10 @@ public class GuiCreateTeam extends GuiBase
 				}
 
 				@Override
-				public Icon getButtonBackground()
+				public void drawBackground(Theme theme, int x, int y, int w, int h)
 				{
-					return getTheme().getGui(WidgetType.NORMAL).withTint(col.getColor().withAlpha(color == col || isMouseOver() ? 200 : 100));
+					theme.drawPanelBackground(x, y, w, h);
+					col.getColor().withAlpha(color == col || isMouseOver() ? 200 : 100).draw(x, y, w, h);
 				}
 			};
 

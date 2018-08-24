@@ -44,19 +44,16 @@ public class GuiEditConfigList extends GuiBase
 		{
 			if (valueString == null)
 			{
-				valueString = trimStringToWidth(inst.getValue().getStringForGUI().getFormattedText(), width);
+				valueString = getGui().getTheme().trimStringToWidth(inst.getValue().getStringForGUI().getFormattedText(), width);
 			}
 
 			return valueString;
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
 			boolean mouseOver = getMouseY() >= 20 && isMouseOver();
-
-			int ax = getAX();
-			int ay = getAY();
 
 			MutableColor4I textCol = inst.getValue().getColor().mutable();
 			textCol.setAlpha(255);
@@ -65,19 +62,19 @@ public class GuiEditConfigList extends GuiBase
 			{
 				textCol.addBrightness(60);
 
-				Color4I.WHITE.withAlpha(33).draw(ax, ay, width, height);
+				Color4I.WHITE.withAlpha(33).draw(x, y, w, h);
 
-				if (getMouseX() >= ax + width - 19)
+				if (getMouseX() >= x + w - 19)
 				{
-					Color4I.WHITE.withAlpha(33).draw(ax + width - 19, ay, 19, height);
+					Color4I.WHITE.withAlpha(33).draw(x + w - 19, y, 19, h);
 				}
 			}
 
-			drawString(getValueString(), ax + 4, ay + 4, textCol, 0);
+			theme.drawString(getValueString(), x + 4, y + 4, textCol, 0);
 
 			if (mouseOver)
 			{
-				drawString("[-]", ax + width - 16, ay + 4, Color4I.WHITE, 0);
+				theme.drawString("[-]", x + w - 16, y + 4, Color4I.WHITE, 0);
 			}
 
 			GlStateManager.color(1F, 1F, 1F, 1F);
@@ -88,7 +85,7 @@ public class GuiEditConfigList extends GuiBase
 		{
 			GuiHelper.playClickSound();
 
-			if (getMouseX() >= getAX() + width - 19)
+			if (getMouseX() >= getX() + width - 19)
 			{
 				if (originalConfigList.getCanEdit())
 				{
@@ -105,7 +102,7 @@ public class GuiEditConfigList extends GuiBase
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			if (getMouseX() >= getAX() + width - 19)
+			if (getMouseX() >= getX() + width - 19)
 			{
 				list.add("Delete");
 			}
@@ -126,19 +123,16 @@ public class GuiEditConfigList extends GuiBase
 		}
 
 		@Override
-		public void draw()
+		public void draw(Theme theme, int x, int y, int w, int h)
 		{
 			boolean mouseOver = getMouseY() >= 20 && isMouseOver();
 
-			int ax = getAX();
-			int ay = getAY();
-
 			if (mouseOver)
 			{
-				Color4I.WHITE.withAlpha(33).draw(ax, ay, width, height);
+				Color4I.WHITE.withAlpha(33).draw(x, y, w, h);
 			}
 
-			drawString(getTitle(), ax + 4, ay + 4, getTheme().getContentColor(getWidgetType()), SHADOW);
+			theme.drawString(getTitle(), x + 4, y + 4, theme.getContentColor(getWidgetType()), Theme.SHADOW);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 
@@ -258,10 +252,10 @@ public class GuiEditConfigList extends GuiBase
 	}
 
 	@Override
-	public void drawBackground()
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
-		GuiEditConfig.COLOR_BACKGROUND.draw(0, 0, width, 20);
-		drawString(getTitle(), 6, 6, SHADOW);
+		GuiEditConfig.COLOR_BACKGROUND.draw(0, 0, w, 20);
+		theme.drawString(getTitle(), 6, 6, Theme.SHADOW);
 	}
 
 	@Override
@@ -271,7 +265,7 @@ public class GuiEditConfigList extends GuiBase
 	}
 
 	@Override
-	public Theme createTheme()
+	public Theme getTheme()
 	{
 		return GuiEditConfig.THEME;
 	}

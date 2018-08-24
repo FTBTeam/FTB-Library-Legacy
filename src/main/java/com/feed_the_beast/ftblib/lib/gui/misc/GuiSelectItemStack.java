@@ -15,6 +15,7 @@ import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.PanelScrollBar;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.TextBox;
+import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
@@ -110,20 +111,15 @@ public class GuiSelectItemStack extends GuiBase
 		}
 
 		@Override
-		public Icon getButtonBackground()
+		public void drawBackground(Theme theme, int x, int y, int w, int h)
 		{
-			return getWidgetType() == WidgetType.MOUSE_OVER ? Color4I.LIGHT_GREEN.withAlpha(70) : Color4I.BLACK.withAlpha(50);
+			(getWidgetType() == WidgetType.MOUSE_OVER ? Color4I.LIGHT_GREEN.withAlpha(70) : Color4I.BLACK.withAlpha(50)).draw(x, y, w, h);
 		}
 
 		@Override
-		public Icon getIcon()
+		public void drawIcon(Theme theme, int x, int y, int w, int h)
 		{
-			if (icon == null)
-			{
-				icon = ItemIcon.getItemIcon(stack);
-			}
-
-			return icon;
+			GuiHelper.drawItem(stack, x, y, w / 16D, h / 16D, true, Icon.EMPTY);
 		}
 
 		@Override
@@ -145,9 +141,9 @@ public class GuiSelectItemStack extends GuiBase
 		}
 
 		@Override
-		public Icon getIcon()
+		public void drawIcon(Theme theme, int x, int y, int w, int h)
 		{
-			return allItems ? ICON_ALL : ICON_INV;
+			(allItems ? ICON_ALL : ICON_INV).draw(x, y, w, h);
 		}
 
 		@Override
@@ -187,9 +183,9 @@ public class GuiSelectItemStack extends GuiBase
 		}
 
 		@Override
-		public Icon getIcon()
+		public void drawIcon(Theme theme, int x, int y, int w, int h)
 		{
-			return ItemIcon.getItemIcon(selected);
+			GuiHelper.drawItem(selected, x, y, w / 16D, h / 16D, true, Icon.EMPTY);
 		}
 
 		@Override
@@ -469,9 +465,9 @@ public class GuiSelectItemStack extends GuiBase
 			}
 
 			@Override
-			public Icon getIcon()
+			public void drawBackground(Theme theme, int x, int y, int w, int h)
 			{
-				return getTheme().getPanelBackground();
+				theme.drawPanelBackground(x, y, w, h);
 			}
 		};
 
