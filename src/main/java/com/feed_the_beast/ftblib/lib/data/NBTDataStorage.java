@@ -14,9 +14,9 @@ import java.util.Objects;
 /**
  * @author LatvianModder
  */
-public class NBTDataStorage implements INBTSerializable<NBTTagCompound>, IHasCache
+public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 {
-	public static abstract class Data implements IStringSerializable, INBTSerializable<NBTTagCompound>, IHasCache
+	public static abstract class Data implements IStringSerializable, INBTSerializable<NBTTagCompound>
 	{
 		@Override
 		public NBTTagCompound serializeNBT()
@@ -29,7 +29,6 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>, IHasCac
 		{
 		}
 
-		@Override
 		public void clearCache()
 		{
 		}
@@ -122,7 +121,6 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>, IHasCac
 		}
 	}
 
-	@Override
 	public void clearCache()
 	{
 		for (Data data : map.values())

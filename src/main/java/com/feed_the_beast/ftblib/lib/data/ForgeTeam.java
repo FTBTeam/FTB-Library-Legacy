@@ -43,7 +43,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class ForgeTeam extends FinalIDObject implements IStringSerializable, INBTSerializable<NBTTagCompound>, IHasCache, IConfigCallback
+public class ForgeTeam extends FinalIDObject implements IStringSerializable, INBTSerializable<NBTTagCompound>, IConfigCallback
 {
 	public final Universe universe;
 	public final TeamType type;
@@ -188,7 +188,6 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		dataStorage.deserializeNBT(nbt.getCompoundTag("Data"));
 	}
 
-	@Override
 	public void clearCache()
 	{
 		cachedTitle = null;

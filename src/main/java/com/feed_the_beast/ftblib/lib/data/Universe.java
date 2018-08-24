@@ -67,7 +67,7 @@ import java.util.UUID;
  * @author LatvianModder
  */
 @Mod.EventBusSubscriber(modid = FTBLib.MOD_ID)
-public class Universe implements IHasCache
+public class Universe
 {
 	private static class ScheduledTask
 	{
@@ -834,7 +834,6 @@ public class Universe implements IHasCache
 		return set;
 	}
 
-	@Override
 	public void clearCache()
 	{
 		new UniverseClearCacheEvent(this).post();

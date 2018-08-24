@@ -49,7 +49,7 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTagCompound>, Comparable<ForgePlayer>, IHasCache, IConfigCallback
+public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTagCompound>, Comparable<ForgePlayer>, IConfigCallback
 {
 	private static FakePlayer playerForStats;
 
@@ -112,7 +112,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		}
 	}
 
-	@Override
 	public void clearCache()
 	{
 		cachedPlayerNBT = null;

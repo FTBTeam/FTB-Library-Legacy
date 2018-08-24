@@ -318,6 +318,11 @@ public class Color4I extends Icon
 		return (alphai() << 24) | (redi() << 16) | (greeni() << 8) | bluei();
 	}
 
+	public int rgb()
+	{
+		return (redi() << 16) | (greeni() << 8) | bluei();
+	}
+
 	public final int hashCode()
 	{
 		return rgba();
