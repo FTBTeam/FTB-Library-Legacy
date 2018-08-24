@@ -13,7 +13,6 @@ import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
-import com.feed_the_beast.ftblib.lib.util.Folders;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -79,7 +78,7 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 			}
 		}
 
-		JsonElement element = DataReader.get(new File(Folders.getLocal(), "client/sidebar_buttons.json")).safeJson();
+		JsonElement element = DataReader.get(new File(ClientUtils.MC.gameDir, "local/client/sidebar_buttons.json")).safeJson();
 		JsonObject sidebarButtonConfig;
 
 		if (element.isJsonObject())
@@ -263,6 +262,6 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 			}
 		}
 
-		JsonUtils.toJsonSafe(new File(Folders.getLocal(), "client/sidebar_buttons.json"), o);
+		JsonUtils.toJsonSafe(new File(ClientUtils.MC.gameDir, "local/client/sidebar_buttons.json"), o);
 	}
 }
