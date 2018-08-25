@@ -22,6 +22,11 @@ public class SimpleButton extends Button
 	}
 
 	@Override
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
+	{
+	}
+
+	@Override
 	public void onClicked(MouseButton button)
 	{
 		GuiHelper.playClickSound();

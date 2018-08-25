@@ -273,9 +273,11 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		}
 	}
 
-	public void openContextMenu(List<ContextMenuItem> menu)
+	public ContextMenu openContextMenu(List<ContextMenuItem> menu)
 	{
-		openContextMenu(new ContextMenu(this, menu));
+		ContextMenu contextMenu = new ContextMenu(this, menu);
+		openContextMenu(contextMenu);
+		return contextMenu;
 	}
 
 	@Override
@@ -319,14 +321,18 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	@Override
 	public void updateMouseOver(int mouseX, int mouseY)
 	{
-		super.updateMouseOver(mouseX, mouseY);
-
 		if (contextMenu != null)
 		{
 			setOffset(true);
 			contextMenu.updateMouseOver(mouseX, mouseY);
 			setOffset(false);
+			super.updateMouseOver(-1000, -1000);
 		}
+		else
+		{
+			super.updateMouseOver(mouseX, mouseY);
+		}
+
 	}
 
 	@Override

@@ -51,16 +51,6 @@ public class GuiEditConfig extends GuiBase
 	public static Theme THEME = new Theme()
 	{
 		@Override
-		public void drawGui(int x, int y, int w, int h, WidgetType type)
-		{
-		}
-
-		@Override
-		public void drawButton(int x, int y, int w, int h, WidgetType type)
-		{
-		}
-
-		@Override
 		public void drawScrollBarBackground(int x, int y, int w, int h, WidgetType type)
 		{
 			Color4I.BLACK.withAlpha(70).draw(x, y, w, h);
