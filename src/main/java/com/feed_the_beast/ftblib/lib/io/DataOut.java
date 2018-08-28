@@ -12,6 +12,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.handler.codec.EncoderException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntCollection;
+import it.unimi.dsi.fastutil.ints.IntIterator;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
@@ -407,6 +409,21 @@ public class DataOut
 	public void writeIcon(@Nullable Icon icon)
 	{
 		writeJson((icon == null ? Icon.EMPTY : icon).getJson());
+	}
+
+	public void writeIntList(IntCollection collection)
+	{
+		writeInt(collection.size());
+
+		if (!collection.isEmpty())
+		{
+			IntIterator iterator = collection.iterator();
+
+			while (iterator.hasNext())
+			{
+				writeInt(iterator.nextInt());
+			}
+		}
 	}
 
 	public <E> void write(E object, Serializer<E> serializer)

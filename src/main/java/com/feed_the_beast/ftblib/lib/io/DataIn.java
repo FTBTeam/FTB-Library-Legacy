@@ -16,6 +16,9 @@ import io.netty.buffer.ByteBufInputStream;
 import io.netty.handler.codec.EncoderException;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.IntLists;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
@@ -437,6 +440,29 @@ public class DataIn
 	public Icon readIcon()
 	{
 		return Icon.getIcon(readJson());
+	}
+
+	public IntList readIntList()
+	{
+		int size = readInt();
+
+		if (size == 0)
+		{
+			return IntLists.EMPTY_LIST;
+		}
+		else if (size == 1)
+		{
+			return IntLists.singleton(readInt());
+		}
+
+		IntList list = new IntArrayList();
+
+		for (int i = 0; i < size; i++)
+		{
+			list.add(readInt());
+		}
+
+		return list;
 	}
 
 	public <E> E read(Deserializer<E> deserializer)
