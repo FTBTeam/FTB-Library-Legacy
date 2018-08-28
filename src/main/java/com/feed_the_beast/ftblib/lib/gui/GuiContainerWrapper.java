@@ -52,7 +52,11 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	{
 		wrappedGui.updateMouseOver(mouseX, mouseY);
 
-		if (!wrappedGui.mousePressed(MouseButton.get(button)))
+		if (button == MouseButton.BACK.id)
+		{
+			wrappedGui.onBack();
+		}
+		else if (!wrappedGui.mousePressed(MouseButton.get(button)))
 		{
 			super.mouseClicked(mouseX, mouseY, button);
 		}
@@ -71,6 +75,11 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	{
 		if (wrappedGui.keyPressed(key, keyChar))
 		{
+			return;
+		}
+		else if (key == Keyboard.KEY_BACK)
+		{
+			wrappedGui.onBack();
 			return;
 		}
 		else if (wrappedGui.onClosedByKey(key))

@@ -199,6 +199,11 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		return key == Keyboard.KEY_ESCAPE || ClientUtils.MC.gameSettings.keyBindInventory.isActiveAndMatches(key);
 	}
 
+	public void onBack()
+	{
+		closeGui(true);
+	}
+
 	public boolean doesGuiPauseGame()
 	{
 		return false;
@@ -338,7 +343,11 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	@Override
 	public boolean mousePressed(MouseButton button)
 	{
-		if (contextMenu != null)
+		if (button == MouseButton.BACK)
+		{
+			closeGui(true);
+		}
+		else if (contextMenu != null)
 		{
 			setOffset(true);
 			Panel cm = contextMenu;

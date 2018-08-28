@@ -36,8 +36,16 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 	protected final void mouseClicked(int mouseX, int mouseY, int button) throws IOException
 	{
 		wrappedGui.updateMouseOver(mouseX, mouseY);
-		wrappedGui.mousePressed(MouseButton.get(button));
-		super.mouseClicked(mouseX, mouseY, button);
+
+		if (button == MouseButton.BACK.id)
+		{
+			wrappedGui.onBack();
+		}
+		else
+		{
+			wrappedGui.mousePressed(MouseButton.get(button));
+			super.mouseClicked(mouseX, mouseY, button);
+		}
 	}
 
 	@Override
@@ -55,9 +63,14 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 		{
 			return;
 		}
+		else if (key == Keyboard.KEY_BACK)
+		{
+			wrappedGui.onBack();
+			return;
+		}
 		else if (wrappedGui.onClosedByKey(key))
 		{
-			wrappedGui.closeGui(!isShiftKeyDown());
+			wrappedGui.closeGui(false);
 			return;
 		}
 

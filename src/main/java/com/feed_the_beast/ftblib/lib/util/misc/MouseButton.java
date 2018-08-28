@@ -23,6 +23,8 @@ public class MouseButton
 	public static final MouseButton LEFT = get(0);
 	public static final MouseButton RIGHT = get(1);
 	public static final MouseButton MIDDLE = get(2);
+	public static final MouseButton BACK = get(3);
+	public static final MouseButton NEXT = get(4);
 
 	public final int id;
 
