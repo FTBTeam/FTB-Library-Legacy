@@ -211,12 +211,8 @@ public class FTBLibClient extends FTBLibCommon implements IResourceManagerReload
 
 		ClientCommandHandler.instance.registerCommand(new CmdClientConfig());
 		ClientCommandHandler.instance.registerCommand(new CmdSimulateButton());
-
-		if (FTBLibConfig.debugging.special_commands)
-		{
-			ClientCommandHandler.instance.registerCommand(new CmdPrintItem());
-			ClientCommandHandler.instance.registerCommand(new CmdPrintState());
-		}
+		ClientCommandHandler.instance.registerCommand(new CmdPrintItem());
+		ClientCommandHandler.instance.registerCommand(new CmdPrintState());
 	}
 
 	@Override

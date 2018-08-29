@@ -549,8 +549,8 @@ public class FTBLibClientEventHandler
 					{
 						int nw = font.getStringWidth(event.getText());
 						int width = 16;
-						Color4I.LIGHT_RED.draw(b.x + width - nw, b.y - 2, nw + 1, 9);
-						font.drawString(event.getText(), b.x + width - nw + 1, b.y - 1, 0xFFFFFFFF);
+						Color4I.LIGHT_RED.draw(b.x + width - nw, b.y - 1, nw + 1, 9);
+						font.drawString(event.getText(), b.x + width - nw + 1, b.y, 0xFFFFFFFF);
 						GlStateManager.color(1F, 1F, 1F, 1F);
 					}
 				}
