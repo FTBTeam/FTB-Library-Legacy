@@ -79,7 +79,7 @@ if (ENV.CURSEFORGE_KEY) {
 			addGameVersion "${mc_version}"
 			changelog = getGitChangelog
 			changelogType = 'markdown'
-			addArtifact(sourcesJar)
+			addArtifact(sourceJar)
 		}
 	}
 }
