@@ -84,7 +84,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 		}
 		else if (wrappedGui.onClosedByKey(key))
 		{
-			wrappedGui.closeGui(!isShiftKeyDown());
+			wrappedGui.closeGui(false);
 			return;
 		}
 
