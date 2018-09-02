@@ -10,7 +10,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.handler.codec.EncoderException;
@@ -27,14 +26,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTSizeTracker;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagDouble;
+import net.minecraft.nbt.NBTTagFloat;
+import net.minecraft.nbt.NBTTagInt;
+import net.minecraft.nbt.NBTTagLong;
+import net.minecraft.nbt.NBTTagShort;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.IForgeRegistryEntry;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
@@ -44,7 +49,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -300,28 +304,33 @@ public class DataIn
 	@Nullable
 	public NBTBase readNBTBase()
 	{
-		int i = readByte();
-
-		if (i == 0)
+		switch (readByte())
 		{
-			return null;
+			case Constants.NBT.TAG_END:
+				return null;
+			case Constants.NBT.TAG_BYTE:
+				return new NBTTagByte(readByte());
+			case Constants.NBT.TAG_SHORT:
+				return new NBTTagShort(readShort());
+			case Constants.NBT.TAG_INT:
+				return new NBTTagInt(readInt());
+			case Constants.NBT.TAG_LONG:
+				return new NBTTagLong(readLong());
+			case Constants.NBT.TAG_FLOAT:
+				return new NBTTagFloat(readFloat());
+			case Constants.NBT.TAG_DOUBLE:
+				return new NBTTagDouble(readDouble());
+			//TAG_BYTE_ARRAY
+			case Constants.NBT.TAG_STRING:
+				return new NBTTagString(readString());
+			//TAG_LIST
+			case Constants.NBT.TAG_COMPOUND:
+				return readNBT();
+			//TAG_INT_ARRAY
+			//TAG_LONG_ARRAY
+			default:
+				return readNBT().getTag("_");
 		}
-		else if (i == 1)
-		{
-			return readNBT();
-		}
-
-		return readNBT().getTag("_");
-	}
-
-	public <T extends IForgeRegistryEntry<T>> T readRegistryEntry(IForgeRegistry<T> registry)
-	{
-		return ByteBufUtils.readRegistryEntry(byteBuf, registry);
-	}
-
-	public <T extends IForgeRegistryEntry<T>> List<T> readRegistryEntries(IForgeRegistry<T> registry)
-	{
-		return ByteBufUtils.readRegistryEntries(byteBuf, registry);
 	}
 
 	public BlockPos readPos()
@@ -330,14 +339,6 @@ public class DataIn
 		int y = readInt();
 		int z = readInt();
 		return new BlockPos(x, y, z);
-	}
-
-	public BlockPos.MutableBlockPos readMutablePos()
-	{
-		int x = readInt();
-		int y = readInt();
-		int z = readInt();
-		return new BlockPos.MutableBlockPos(x, y, z);
 	}
 
 	public BlockDimPos readDimPos()
@@ -423,12 +424,6 @@ public class DataIn
 	public ITextComponent readTextComponent()
 	{
 		return JsonUtils.deserializeTextComponent(readJson());
-	}
-
-	public GameProfile readProfile()
-	{
-		UUID id = readUUID();
-		return new GameProfile(id, readString());
 	}
 
 	public IBlockState readBlockState()

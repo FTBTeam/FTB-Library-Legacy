@@ -7,7 +7,6 @@ import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import com.mojang.authlib.GameProfile;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.handler.codec.EncoderException;
@@ -20,12 +19,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
@@ -229,7 +231,7 @@ public class DataOut
 	{
 		if (nbt == null)
 		{
-			this.writeByte(0);
+			writeByte(0);
 		}
 		else
 		{
@@ -246,21 +248,48 @@ public class DataOut
 
 	public void writeNBTBase(@Nullable NBTBase nbt)
 	{
-		if (nbt == null)
+		if (nbt == null || nbt.getId() == Constants.NBT.TAG_END)
 		{
-			writeByte(0);
+			writeByte(Constants.NBT.TAG_END);
+			return;
 		}
-		else if (nbt instanceof NBTTagCompound)
+
+		writeByte(nbt.getId());
+
+		switch (nbt.getId())
 		{
-			writeByte(1);
-			writeNBT((NBTTagCompound) nbt);
-		}
-		else
-		{
-			writeByte(2);
-			NBTTagCompound nbt1 = new NBTTagCompound();
-			nbt1.setTag("_", nbt);
-			writeNBT(nbt1);
+			case Constants.NBT.TAG_BYTE:
+				writeByte(((NBTPrimitive) nbt).getByte());
+				return;
+			case Constants.NBT.TAG_SHORT:
+				writeShort(((NBTPrimitive) nbt).getShort());
+				return;
+			case Constants.NBT.TAG_INT:
+				writeInt(((NBTPrimitive) nbt).getInt());
+				return;
+			case Constants.NBT.TAG_LONG:
+				writeLong(((NBTPrimitive) nbt).getLong());
+				return;
+			case Constants.NBT.TAG_FLOAT:
+				writeFloat(((NBTPrimitive) nbt).getFloat());
+				return;
+			case Constants.NBT.TAG_DOUBLE:
+				writeDouble(((NBTPrimitive) nbt).getDouble());
+				return;
+			//TAG_BYTE_ARRAY
+			case Constants.NBT.TAG_STRING:
+				writeString(((NBTTagString) nbt).getString());
+				return;
+			//TAG_LIST
+			case Constants.NBT.TAG_COMPOUND:
+				writeNBT((NBTTagCompound) nbt);
+				return;
+			//TAG_INT_ARRAY
+			//TAG_LONG_ARRAY
+			default:
+				NBTTagCompound nbt1 = new NBTTagCompound();
+				nbt1.setTag("_", nbt);
+				writeNBT(nbt1);
 		}
 	}
 
@@ -393,12 +422,6 @@ public class DataOut
 	public void writeTextComponent(@Nullable ITextComponent component)
 	{
 		writeJson(JsonUtils.serializeTextComponent(component));
-	}
-
-	public void writeProfile(GameProfile profile)
-	{
-		writeUUID(profile.getId());
-		writeString(profile.getName());
 	}
 
 	public void writeBlockState(IBlockState state)

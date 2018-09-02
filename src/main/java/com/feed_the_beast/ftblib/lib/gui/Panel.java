@@ -12,7 +12,7 @@ import java.util.List;
 
 public abstract class Panel extends Widget
 {
-	public static final Comparator<Widget> WIDGET_TITLE_COMPARATOR = (o1, o2) -> o1.getTitle().compareToIgnoreCase(o2.getTitle());
+	public static final Comparator<Widget> WIDGET_TITLE_COMPARATOR = (o1, o2) -> TextFormatting.getTextWithoutFormattingCodes(o1.getTitle()).compareToIgnoreCase(TextFormatting.getTextWithoutFormattingCodes(o2.getTitle()));
 
 	public final List<Widget> widgets;
 	private int scrollX = 0, scrollY = 0;
