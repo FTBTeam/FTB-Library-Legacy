@@ -20,4 +20,5 @@ public interface OtherMods
 	String FTBGUIDES = "ftbguides";
 	String IC2 = "ic2";
 	String FTBQUESTS = "ftbquests";
+	String BOTANIA = "botania";
 }
