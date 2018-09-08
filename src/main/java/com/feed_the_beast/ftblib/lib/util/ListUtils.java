@@ -110,4 +110,11 @@ public class ListUtils
 		}
 		return al1;
 	}
+
+	public static <E> List<E> clearAndCopy(List<E> list)
+	{
+		ArrayList<E> list1 = new ArrayList<>(list);
+		list.clear();
+		return list1;
+	}
 }

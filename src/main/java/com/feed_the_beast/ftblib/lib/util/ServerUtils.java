@@ -7,6 +7,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -20,6 +22,7 @@ import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -181,5 +184,22 @@ public class ServerUtils
 		{
 			player.sendStatusMessage(component, true);
 		}
+	}
+
+	public static boolean isFirstLogin(EntityPlayer player, String key)
+	{
+		NBTTagList list = player.getEntityData().getTagList("FirstLogin", Constants.NBT.TAG_STRING);
+
+		for (int i = 0; i < list.tagCount(); i++)
+		{
+			if (list.getStringTagAt(i).equals(key))
+			{
+				return false;
+			}
+		}
+
+		list.appendTag(new NBTTagString(key));
+		player.getEntityData().setTag("FirstLogin", list);
+		return true;
 	}
 }

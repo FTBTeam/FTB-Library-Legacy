@@ -21,15 +21,11 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.IStringSerializable;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -42,7 +38,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -55,7 +50,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 
 	private final UUID playerId;
 	private String playerName;
-	public final HashSet<ResourceLocation> firstLogin;
 	private final NBTDataStorage dataStorage;
 	public ForgeTeam team;
 	private final ConfigBoolean hideTeamNotification;
@@ -70,7 +64,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		playerId = id;
 		playerName = name;
-		firstLogin = new HashSet<>();
 		dataStorage = new NBTDataStorage();
 		team = u.getTeam("");
 		hideTeamNotification = new ConfigBoolean(false);
@@ -85,15 +78,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		nbt.setBoolean("HideTeamNotification", hideTeamNotification.getBoolean());
 		nbt.setLong("LastTimeSeen", lastTimeSeen);
 		nbt.setTag("Data", dataStorage.serializeNBT());
-
-		NBTTagList list = new NBTTagList();
-
-		for (ResourceLocation id : firstLogin)
-		{
-			list.appendTag(new NBTTagString(id.toString()));
-		}
-
-		nbt.setTag("FirstLogin", list);
 		return nbt;
 	}
 
@@ -103,13 +87,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		hideTeamNotification.setBoolean(nbt.getBoolean("HideTeamNotification"));
 		lastTimeSeen = nbt.getLong("LastTimeSeen");
 		dataStorage.deserializeNBT(nbt.getCompoundTag("Data"));
-
-		NBTTagList list = nbt.getTagList("FirstLogin", Constants.NBT.TAG_STRING);
-
-		for (int i = 0; i < list.tagCount(); i++)
-		{
-			firstLogin.add(new ResourceLocation(list.getStringTagAt(i)));
-		}
 	}
 
 	public void clearCache()
@@ -422,17 +399,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	public ConfigValue getRankConfig(Node node)
 	{
 		return RankConfigAPI.get(team.universe.server, getProfile(), node, getContext());
-	}
-
-	public boolean isFirstLogin(ResourceLocation id)
-	{
-		if (!firstLogin.contains(id))
-		{
-			firstLogin.add(id);
-			return true;
-		}
-
-		return false;
 	}
 
 	public File getDataFile(String ext)
