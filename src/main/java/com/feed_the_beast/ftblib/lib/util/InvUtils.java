@@ -157,7 +157,7 @@ public class InvUtils
 
 	public static boolean stacksAreEqual(ItemStack stackA, ItemStack stackB)
 	{
-		return stackA == stackB || stackA.getItem() == stackB.getItem() && stackA.getMetadata() == stackB.getMetadata() && ItemStack.areItemStackTagsEqual(stackA, stackB);
+		return stackA.getItem() == stackB.getItem() && stackA.getMetadata() == stackB.getMetadata() && ItemStack.areItemStackTagsEqual(stackA, stackB);
 	}
 
 	public static Set<String> getOreNames(@Nullable Set<String> l, ItemStack is)
