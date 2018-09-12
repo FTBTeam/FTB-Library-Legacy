@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class StringUtils
 {
@@ -75,6 +76,20 @@ public class StringUtils
 			TextFormatting.YELLOW,
 			TextFormatting.WHITE
 	);
+
+	private static final Pattern SNAKE_CASE_ID_PATTERN = Pattern.compile("[^a-z0-9_]");
+	private static final Pattern REPEATING_UNDERSCORE_PATTERN = Pattern.compile("_+");
+	private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-FK-OR]");
+
+	public static String unformatted(String string)
+	{
+		return string.isEmpty() ? string : FORMATTING_CODE_PATTERN.matcher(string).replaceAll("");
+	}
+
+	public static String toSnakeCase(String string)
+	{
+		return string.isEmpty() ? string : REPEATING_UNDERSCORE_PATTERN.matcher(SNAKE_CASE_ID_PATTERN.matcher(unformatted(string).toLowerCase()).replaceAll("_")).replaceAll("_");
+	}
 
 	public static final Char2ObjectOpenHashMap<TextFormatting> CODE_TO_FORMATTING = new Char2ObjectOpenHashMap<>();
 

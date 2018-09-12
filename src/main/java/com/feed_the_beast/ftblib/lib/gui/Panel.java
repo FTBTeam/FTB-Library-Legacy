@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.lib.gui;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.util.text.TextFormatting;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 public abstract class Panel extends Widget
 {
-	public static final Comparator<Widget> WIDGET_TITLE_COMPARATOR = (o1, o2) -> TextFormatting.getTextWithoutFormattingCodes(o1.getTitle()).compareToIgnoreCase(TextFormatting.getTextWithoutFormattingCodes(o2.getTitle()));
+	public static final Comparator<Widget> WIDGET_TITLE_COMPARATOR = (o1, o2) -> StringUtils.unformatted(o1.getTitle()).compareToIgnoreCase(StringUtils.unformatted(o2.getTitle()));
 
 	public final List<Widget> widgets;
 	private int scrollX = 0, scrollY = 0;

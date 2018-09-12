@@ -166,9 +166,9 @@ public abstract class StringJoiner
 		return builder.toString();
 	}
 
-	public String joinStrings(String[] objects)
+	public String joinStrings(String[] strings)
 	{
-		return joinStrings(objects, 0, objects.length);
+		return joinStrings(strings, 0, strings.length);
 	}
 
 	public <T> String join(Iterable<T> objects, Function<T, String> stringGetter)
