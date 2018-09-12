@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigItemStack;
 import com.feed_the_beast.ftblib.lib.config.ConfigNBT;
+import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueInstance;
 import com.feed_the_beast.ftblib.lib.gui.Button;
@@ -23,6 +24,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
+import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -337,6 +339,40 @@ public class GuiSelectItemStack extends GuiBase
 		}
 	}
 
+	private class ButtonDisplayName extends ButtonStackConfig
+	{
+		public ButtonDisplayName(Panel panel)
+		{
+			super(panel, I18n.format("ftblib.select_item.display_name"), ItemIcon.getItemIcon(new ItemStack(Items.SIGN)));
+		}
+
+		@Override
+		public void onClicked(MouseButton button)
+		{
+			GuiHelper.playClickSound();
+			new GuiEditConfigValue("name", new ConfigString(selected.hasDisplayName() ? selected.getDisplayName() : ""), this).openGui();
+		}
+
+		@Override
+		public void onCallback(ConfigValue value, boolean set)
+		{
+			if (set)
+			{
+				if (!value.isEmpty())
+				{
+					selected.setStackDisplayName(value.getString());
+				}
+				else if (selected.hasTagCompound())
+				{
+					selected.getTagCompound().getCompoundTag("display").removeTag("Name");
+					selected.setTagCompound(NBTUtils.minimize(selected.getTagCompound()));
+				}
+			}
+
+			openGui();
+		}
+	}
+
 	private final ConfigValueInstance value;
 	private final IOpenableGui callbackGui;
 	private final Button buttonCancel, buttonAccept;
@@ -500,6 +536,7 @@ public class GuiSelectItemStack extends GuiBase
 				add(new ButtonMeta(this));
 				add(new ButtonNBT(this));
 				add(new ButtonCaps(this));
+				add(new ButtonDisplayName(this));
 			}
 
 			@Override
