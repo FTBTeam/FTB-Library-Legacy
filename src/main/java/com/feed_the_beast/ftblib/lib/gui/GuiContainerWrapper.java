@@ -5,10 +5,13 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author LatvianModder
@@ -17,6 +20,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 {
 	private GuiBase wrappedGui;
 	private boolean drawSlots = true;
+	private List<String> tempTextList = new ArrayList<>();
 
 	public GuiContainerWrapper(GuiBase g, Container c)
 	{
@@ -147,7 +151,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(int mx, int my)
+	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
 	{
 		if (wrappedGui.fixUnicode)
 		{
@@ -160,9 +164,21 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 
 		wrappedGui.drawForeground(wrappedGui.getTheme(), guiLeft, guiTop, xSize, ySize);
 
+		if (wrappedGui.contextMenu != null)
+		{
+			wrappedGui.contextMenu.addMouseOverText(tempTextList);
+		}
+		else
+		{
+			wrappedGui.addMouseOverText(tempTextList);
+		}
+
+		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), wrappedGui.getScreen().getScaledWidth(), wrappedGui.getScreen().getScaledHeight(), 0, wrappedGui.getTheme().getFont());
+		tempTextList.clear();
+
 		if (wrappedGui.contextMenu == null)
 		{
-			renderHoveredToolTip(mx, my);
+			renderHoveredToolTip(mouseX, mouseY);
 		}
 
 		GlStateManager.popMatrix();

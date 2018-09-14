@@ -65,7 +65,7 @@ public class GuiEditConfigValue extends GuiBase
 
 				if (getGui().parent instanceof GuiBase)
 				{
-					getGui().parent.openContextMenu(null);
+					getGui().parent.closeContextMenu();
 				}
 			}
 

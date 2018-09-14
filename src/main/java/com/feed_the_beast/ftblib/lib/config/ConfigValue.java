@@ -87,7 +87,7 @@ public abstract class ConfigValue implements IStringSerializable
 				setValueFromOtherValue(value);
 			}
 
-			gui.openGui();
+			gui.closeContextMenu();
 		}));
 	}
 

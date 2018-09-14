@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
+import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
@@ -34,6 +35,7 @@ public class Theme
 	private static final Color4I CONTENT_COLOR_DISABLED = Color4I.rgb(10526880);
 	private static final Color4I CONTENT_COLOR_DARK = Color4I.rgb(4210752);
 
+	public static final ImageIcon BACKGROUND_SQUARES = (ImageIcon) Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/background_squares.png");
 	private static final ImageIcon TEXTURE_BEACON = (ImageIcon) Icon.getIcon("textures/gui/container/beacon.png");
 	private static final ImageIcon TEXTURE_WIDGETS = (ImageIcon) Icon.getIcon("textures/gui/widgets.png");
 	private static final ImageIcon TEXTURE_RECIPE_BOOK = (ImageIcon) Icon.getIcon("textures/gui/recipe_book.png");

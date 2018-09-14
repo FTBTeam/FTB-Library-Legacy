@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.lib.gui;
 
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.renderer.GlStateManager;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public class ContextMenu extends Panel
 {
-	public static class CButton extends Button
+	public static class CButton extends Button implements Runnable
 	{
 		public final ContextMenu contextMenu;
 		public final ContextMenuItem item;
@@ -55,12 +56,19 @@ public class ContextMenu extends Panel
 
 			if (item.yesNoText.isEmpty())
 			{
-				item.callback.run();
+				run();
 			}
 			else
 			{
-				getGui().openYesNo(item.yesNoText, "", item.callback);
+				getGui().openYesNo(item.yesNoText, "", this);
 			}
+		}
+
+		@Override
+		public void run()
+		{
+			getGui().closeContextMenu();
+			item.callback.run();
 		}
 	}
 
@@ -113,6 +121,20 @@ public class ContextMenu extends Panel
 	}
 
 	@Override
+	public boolean mousePressed(MouseButton button)
+	{
+		boolean b = super.mousePressed(button);
+
+		if (!b && !isMouseOver())
+		{
+			closeContextMenu();
+			return true;
+		}
+
+		return b;
+	}
+
+	@Override
 	public void alignWidgets()
 	{
 		setWidth(0);
@@ -137,5 +159,14 @@ public class ContextMenu extends Panel
 	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
 		theme.drawContextMenuBackground(x, y, w, h);
+	}
+
+	@Override
+	public void draw(Theme theme, int x, int y, int w, int h)
+	{
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0F, 0F, 800F);
+		super.draw(theme, x, y, w, h);
+		GlStateManager.popMatrix();
 	}
 }

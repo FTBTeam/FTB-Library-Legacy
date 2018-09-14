@@ -32,4 +32,16 @@ public interface IOpenableGui
 			((Widget) this).getGui().openContextMenu(panel);
 		}
 	}
+
+	default void closeContextMenu()
+	{
+		if (this instanceof Widget)
+		{
+			((Widget) this).getGui().closeContextMenu();
+		}
+		else
+		{
+			openContextMenu(null);
+		}
+	}
 }

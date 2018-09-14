@@ -29,33 +29,33 @@ public abstract class DataReader
 	public static final String XML = "text/xml; charset=utf-8";
 	public static final String PNG = "image/png";
 
-	public static DataReader get(URL url, RequestMethod requestMethod, String contentType, @Nullable HttpDataReader.HttpDataOutput data, Proxy proxy)
+	public static HttpDataReader get(URL url, RequestMethod requestMethod, String contentType, @Nullable HttpDataReader.HttpDataOutput data, Proxy proxy)
 	{
 		return new HttpDataReader(url, requestMethod, contentType, data, proxy);
 	}
 
-	public static DataReader get(URL url, String contentType, Proxy proxy)
+	public static HttpDataReader get(URL url, String contentType, Proxy proxy)
 	{
 		return get(url, RequestMethod.GET, contentType, null, proxy);
 	}
 
-	public static DataReader get(File file)
+	public static FileDataReader get(File file)
 	{
 		return new FileDataReader(file);
 	}
 
-	public static DataReader get(@Nullable String string)
+	public static StringDataReader get(@Nullable String string)
 	{
 		return new StringDataReader(string);
 	}
 
 	@SideOnly(Side.CLIENT)
-	public static DataReader get(IResource resource)
+	public static ResourceDataReader get(IResource resource)
 	{
 		return new ResourceDataReader(resource);
 	}
 
-	public static DataReader get(InputStream stream)
+	public static StreamDataReader get(InputStream stream)
 	{
 		return new StreamDataReader(stream);
 	}

@@ -2,10 +2,13 @@ package com.feed_the_beast.ftblib.lib.gui;
 
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author LatvianModder
@@ -13,6 +16,7 @@ import java.io.IOException;
 public class GuiWrapper extends GuiScreen implements IGuiWrapper
 {
 	private GuiBase wrappedGui;
+	private List<String> tempTextList = new ArrayList<>();
 
 	public GuiWrapper(GuiBase g)
 	{
@@ -120,6 +124,18 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 		Theme theme = wrappedGui.getTheme();
 		wrappedGui.draw(theme, x, y, w, h);
 		wrappedGui.drawForeground(theme, x, y, w, h);
+
+		if (wrappedGui.contextMenu != null)
+		{
+			wrappedGui.contextMenu.addMouseOverText(tempTextList);
+		}
+		else
+		{
+			wrappedGui.addMouseOverText(tempTextList);
+		}
+
+		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), wrappedGui.getScreen().getScaledWidth(), wrappedGui.getScreen().getScaledHeight(), 0, theme.getFont());
+		tempTextList.clear();
 
 		if (wrappedGui.fixUnicode)
 		{

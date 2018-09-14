@@ -17,13 +17,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
-import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import javax.annotation.Nullable;
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -241,13 +239,14 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	@Override
 	public void openContextMenu(@Nullable Panel panel)
 	{
-		int x = 0, y = 0;
+		int px = 0, py = 0;
 
 		if (contextMenu != null)
 		{
-			x = contextMenu.posX;
-			y = contextMenu.posY;
+			px = contextMenu.posX;
+			py = contextMenu.posY;
 			contextMenu.onClosed();
+			widgets.remove(contextMenu);
 		}
 
 		if (panel == null)
@@ -256,21 +255,22 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 			return;
 		}
 
-		int ax = getX();
-		int ay = getY();
+		int x = getX();
+		int y = getY();
 
 		if (contextMenu == null)
 		{
-			x = getMouseX() - ax;
-			y = getMouseY() - ay;
+			px = getMouseX() - x;
+			py = getMouseY() - y;
 		}
 
 		contextMenu = panel;
 		contextMenu.parent = this;
+		widgets.add(contextMenu);
 		contextMenu.refreshWidgets();
-		x = Math.min(x, screen.getScaledWidth() - contextMenu.width - ax) - 3;
-		y = Math.min(y, screen.getScaledHeight() - contextMenu.height - ay) - 3;
-		contextMenu.setPos(x, y);
+		px = Math.min(px, screen.getScaledWidth() - contextMenu.width - x) - 3;
+		py = Math.min(py, screen.getScaledHeight() - contextMenu.height - y) - 3;
+		contextMenu.setPos(px, py);
 
 		if (contextMenu instanceof GuiBase)
 		{
@@ -283,6 +283,13 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		ContextMenu contextMenu = new ContextMenu(this, menu);
 		openContextMenu(contextMenu);
 		return contextMenu;
+	}
+
+	@Override
+	public void closeContextMenu()
+	{
+		openContextMenu((Panel) null);
+		onInit();
 	}
 
 	@Override
@@ -317,27 +324,6 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 
 			GlStateManager.popMatrix();
 		}
-
-		List<String> tempTextList = new ArrayList<>(0);
-		addMouseOverText(tempTextList);
-		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), screen.getScaledWidth(), screen.getScaledHeight(), 0, theme.getFont());
-	}
-
-	@Override
-	public void updateMouseOver(int mouseX, int mouseY)
-	{
-		if (contextMenu != null)
-		{
-			setOffset(true);
-			contextMenu.updateMouseOver(mouseX, mouseY);
-			setOffset(false);
-			super.updateMouseOver(-1000, -1000);
-		}
-		else
-		{
-			super.updateMouseOver(mouseX, mouseY);
-		}
-
 	}
 
 	@Override
@@ -347,19 +333,6 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		{
 			closeGui(true);
 		}
-		else if (contextMenu != null)
-		{
-			setOffset(true);
-			Panel cm = contextMenu;
-			contextMenu = null;
-			boolean b = cm.mousePressed(button);
-			setOffset(false);
-
-			if (b)
-			{
-				return true;
-			}
-		}
 
 		return super.mousePressed(button);
 	}
@@ -367,11 +340,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	@Override
 	public boolean keyPressed(int key, char keyChar)
 	{
-		if (contextMenu != null && contextMenu.keyPressed(key, keyChar))
-		{
-			return true;
-		}
-		else if (super.keyPressed(key, keyChar))
+		if (super.keyPressed(key, keyChar))
 		{
 			return true;
 		}
