@@ -60,7 +60,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -772,7 +771,14 @@ public class Universe
 				return fakePlayer;
 			}
 
-			return Objects.requireNonNull(getPlayer(player.getGameProfile()));
+			ForgePlayer p = getPlayer(player.getGameProfile());
+
+			if (p == null)
+			{
+				throw new NullPointerException("Player can't be found for " + player.getName() + ":" + StringUtils.fromUUID(player.getUniqueID()) + ":" + player.getClass().getName());
+			}
+
+			return p;
 		}
 
 		throw new IllegalArgumentException("Sender is not a player!");
