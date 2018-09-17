@@ -13,6 +13,7 @@ import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.LongConsumer;
 import java.util.function.LongSupplier;
 
 /**
@@ -21,6 +22,36 @@ import java.util.function.LongSupplier;
 public class ConfigLong extends ConfigValue implements LongSupplier
 {
 	public static final String ID = "long";
+
+	public static class SimpleLong extends ConfigLong
+	{
+		private final LongSupplier get;
+		private final LongConsumer set;
+
+		public SimpleLong(long min, long max, LongSupplier g, LongConsumer s)
+		{
+			super(0L, min, max);
+			get = g;
+			set = s;
+		}
+
+		public SimpleLong(LongSupplier g, LongConsumer s)
+		{
+			this(Long.MIN_VALUE, Long.MAX_VALUE, g, s);
+		}
+
+		@Override
+		public long getLong()
+		{
+			return get.getAsLong();
+		}
+
+		@Override
+		public void setLong(long v)
+		{
+			set.accept(v);
+		}
+	}
 
 	private long value;
 	private long min = Long.MIN_VALUE;

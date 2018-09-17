@@ -11,6 +11,7 @@ import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
 
 /**
@@ -20,6 +21,36 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 {
 	public static final String ID = "int";
 	public static final Color4I COLOR = Color4I.rgb(0xAA5AE8);
+
+	public static class SimpleInt extends ConfigInt
+	{
+		private final IntSupplier get;
+		private final IntConsumer set;
+
+		public SimpleInt(int min, int max, IntSupplier g, IntConsumer s)
+		{
+			super(0, min, max);
+			get = g;
+			set = s;
+		}
+
+		public SimpleInt(IntSupplier g, IntConsumer s)
+		{
+			this(Integer.MIN_VALUE, Integer.MAX_VALUE, g, s);
+		}
+
+		@Override
+		public int getInt()
+		{
+			return get.getAsInt();
+		}
+
+		@Override
+		public void setInt(int v)
+		{
+			set.accept(v);
+		}
+	}
 
 	private int value;
 	private int min = Integer.MIN_VALUE;
