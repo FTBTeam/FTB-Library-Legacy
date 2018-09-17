@@ -222,7 +222,7 @@ public class ItemStackSerializer
 		if (!nbt.hasKey("ForgeCaps") && !nbt.hasKey("tag"))
 		{
 			NBTTagCompound nbt1 = new NBTTagCompound();
-			nbt1.setString("item", ItemStackSerializer.toString(stack));
+			nbt1.setString("item", toString(stack));
 			return nbt1;
 		}
 
@@ -250,7 +250,7 @@ public class ItemStackSerializer
 
 		if (nbt.hasKey("item", Constants.NBT.TAG_STRING))
 		{
-			stack = ItemStackSerializer.parseItem(nbt.getString("item"));
+			stack = parseItem(nbt.getString("item"));
 		}
 		else
 		{

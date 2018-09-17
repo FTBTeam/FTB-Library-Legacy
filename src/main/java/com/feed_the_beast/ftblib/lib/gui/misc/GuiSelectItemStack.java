@@ -28,7 +28,6 @@ import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -90,20 +89,7 @@ public class GuiSelectItemStack extends GuiBase
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			boolean first = true;
-
-			for (String s : stack.getTooltip(ClientUtils.MC.player, ClientUtils.MC.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL))
-			{
-				if (first)
-				{
-					list.add(stack.getRarity().rarityColor + s);
-					first = false;
-				}
-				else
-				{
-					list.add(TextFormatting.GRAY + s);
-				}
-			}
+			GuiHelper.addStackTooltip(stack, list, "");
 		}
 
 		@Override

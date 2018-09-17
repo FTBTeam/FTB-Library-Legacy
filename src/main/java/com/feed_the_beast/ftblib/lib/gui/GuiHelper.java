@@ -14,14 +14,17 @@ import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Stack;
 
 /**
@@ -310,6 +313,17 @@ public class GuiHelper
 				return "suggest_command:" + event.getValue();
 			default:
 				return "";
+		}
+	}
+
+	public static void addStackTooltip(ItemStack stack, List<String> list, String prefix)
+	{
+		List<String> tooltip = stack.getTooltip(ClientUtils.MC.player, ClientUtils.MC.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+		list.add((prefix.isEmpty() ? stack.getRarity().rarityColor.toString() : prefix) + tooltip.get(0));
+
+		for (int i = 1; i < tooltip.size(); i++)
+		{
+			list.add(TextFormatting.GRAY + tooltip.get(i));
 		}
 	}
 }
