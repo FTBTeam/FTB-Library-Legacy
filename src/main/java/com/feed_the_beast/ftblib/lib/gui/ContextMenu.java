@@ -165,7 +165,7 @@ public class ContextMenu extends Panel
 	public void draw(Theme theme, int x, int y, int w, int h)
 	{
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(0F, 0F, 800F);
+		GlStateManager.translate(0F, 0F, 900F);
 		super.draw(theme, x, y, w, h);
 		GlStateManager.popMatrix();
 	}

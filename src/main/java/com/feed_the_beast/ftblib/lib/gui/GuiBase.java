@@ -12,7 +12,6 @@ import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.event.ClickEvent;
@@ -305,25 +304,6 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 
 	public void drawForeground(Theme theme, int x, int y, int w, int h)
 	{
-		if (contextMenu != null)
-		{
-			GlStateManager.pushMatrix();
-			GlStateManager.translate(0F, 0F, 800F);
-
-			int cx = contextMenu.getX();
-			int cy = contextMenu.getY();
-			int cw = contextMenu.width;
-			int ch = contextMenu.height;
-
-			contextMenu.draw(theme, cx, cy, cw, ch);
-
-			if (contextMenu instanceof GuiBase)
-			{
-				((GuiBase) contextMenu).drawForeground(theme, cx, cy, cw, ch);
-			}
-
-			GlStateManager.popMatrix();
-		}
 	}
 
 	@Override
