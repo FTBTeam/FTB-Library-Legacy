@@ -193,6 +193,7 @@ public class Theme
 
 		int i = getFont().drawString(text, x, y, color.rgba(), Bits.getFlag(flags, SHADOW));
 		GlStateManager.color(1F, 1F, 1F, 1F);
+		GlStateManager.disableAlpha();
 		return i;
 	}
 
