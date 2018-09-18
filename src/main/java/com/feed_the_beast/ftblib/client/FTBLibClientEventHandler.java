@@ -28,6 +28,7 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.InventoryEffectRenderer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
@@ -220,9 +221,14 @@ public class FTBLibClientEventHandler
 			}
 		}
 
-		if (FTBLibClientConfig.general.item_nbt && event.getItemStack().hasTagCompound() && GuiScreen.isShiftKeyDown())
+		if (FTBLibClientConfig.general.item_nbt && GuiScreen.isShiftKeyDown())
 		{
-			event.getToolTip().add(NBTUtils.getColoredNBTString(event.getItemStack().getTagCompound()));
+			NBTTagCompound nbt = GuiScreen.isAltKeyDown() ? event.getItemStack().getItem().getNBTShareTag(event.getItemStack()) : event.getItemStack().getTagCompound();
+
+			if (nbt != null)
+			{
+				event.getToolTip().add(NBTUtils.getColoredNBTString(nbt));
+			}
 		}
 	}
 
