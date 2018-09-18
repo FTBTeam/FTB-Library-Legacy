@@ -1,10 +1,8 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.google.gson.JsonElement;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
@@ -18,7 +16,7 @@ import java.util.function.Consumer;
 /**
  * @author LatvianModder
  */
-public class ConfigBoolean extends ConfigValue implements BooleanSupplier
+public class ConfigBoolean extends ConfigValue implements BooleanSupplier, IIteratingConfig
 {
 	public static final List<String> VARIANTS = Arrays.asList("true", "false");
 	public static final String ID = "bool";
@@ -74,17 +72,10 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 		value = v;
 	}
 
-	public final boolean toggle()
-	{
-		boolean value = !getBoolean();
-		setBoolean(value);
-		return value;
-	}
-
 	@Override
 	public String getString()
 	{
-		return value ? "true" : "false";
+		return getBoolean() ? "true" : "false";
 	}
 
 	@Override
@@ -118,7 +109,7 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier
 	}
 
 	@Override
-	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
+	public void iterate(ConfigValueInstance inst, boolean next)
 	{
 		if (inst.getCanEdit())
 		{

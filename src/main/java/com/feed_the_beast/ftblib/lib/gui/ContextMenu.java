@@ -11,7 +11,7 @@ import java.util.List;
  */
 public class ContextMenu extends Panel
 {
-	public static class CButton extends Button implements Runnable
+	public static class CButton extends Button
 	{
 		public final ContextMenu contextMenu;
 		public final ContextMenuItem item;
@@ -27,6 +27,7 @@ public class ContextMenu extends Panel
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
+			item.addMouseOverText(list);
 		}
 
 		@Override
@@ -56,19 +57,12 @@ public class ContextMenu extends Panel
 
 			if (item.yesNoText.isEmpty())
 			{
-				run();
+				item.onClicked(contextMenu, button);
 			}
 			else
 			{
-				getGui().openYesNo(item.yesNoText, "", this);
+				getGui().openYesNo(item.yesNoText, "", () -> item.onClicked(contextMenu, button));
 			}
-		}
-
-		@Override
-		public void run()
-		{
-			getGui().closeContextMenu();
-			item.callback.run();
 		}
 	}
 
@@ -92,7 +86,7 @@ public class ContextMenu extends Panel
 		}
 	}
 
-	private final List<ContextMenuItem> items;
+	public final List<ContextMenuItem> items;
 	public boolean hasIcons;
 
 	public ContextMenu(Panel panel, List<ContextMenuItem> i)

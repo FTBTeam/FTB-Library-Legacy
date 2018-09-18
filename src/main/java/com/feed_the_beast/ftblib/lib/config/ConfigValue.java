@@ -80,6 +80,12 @@ public abstract class ConfigValue implements IStringSerializable
 
 	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
 	{
+		if (this instanceof IIteratingConfig)
+		{
+			((IIteratingConfig) this).iterate(inst, button.isLeft());
+			return;
+		}
+
 		gui.openContextMenu(new GuiEditConfigValue(inst, (value, set) ->
 		{
 			if (set)

@@ -1,10 +1,8 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import com.google.gson.JsonElement;
 import net.minecraft.command.ICommandSender;
@@ -21,7 +19,7 @@ import java.util.function.Supplier;
 /**
  * @author LatvianModder
  */
-public class ConfigEnum<E> extends ConfigValue
+public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 {
 	public static final String ID = "enum";
 	public static final Color4I COLOR = Color4I.rgb(0x0094FF);
@@ -166,17 +164,12 @@ public class ConfigEnum<E> extends ConfigValue
 		throw new IllegalStateException("Can't read Abstract Enum property!");
 	}
 
-	public void onClicked(MouseButton button)
-	{
-		setValue(button.isLeft() ? getNameMap().getNext(getValue()) : getNameMap().getPrevious(getValue()));
-	}
-
 	@Override
-	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
+	public void iterate(ConfigValueInstance inst, boolean next)
 	{
 		if (inst.getCanEdit())
 		{
-			onClicked(button);
+			setValue(next ? getNameMap().getNext(getValue()) : getNameMap().getPrevious(getValue()));
 		}
 	}
 

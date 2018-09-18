@@ -1,12 +1,10 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
-import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -23,7 +21,7 @@ import java.util.Map;
 /**
  * @author LatvianModder
  */
-public class ConfigStringEnum extends ConfigValue
+public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 {
 	private final List<String> keys;
 	private String value;
@@ -140,11 +138,11 @@ public class ConfigStringEnum extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
+	public void iterate(ConfigValueInstance inst, boolean next)
 	{
 		if (inst.getCanEdit())
 		{
-			setString(keys.get(MathUtils.mod(getInt() + (button.isLeft() ? 1 : -1), keys.size())));
+			setString(keys.get(MathUtils.mod(getInt() + (next ? 1 : -1), keys.size())));
 		}
 	}
 

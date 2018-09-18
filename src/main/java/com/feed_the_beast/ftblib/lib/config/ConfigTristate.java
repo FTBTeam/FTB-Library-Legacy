@@ -1,10 +1,8 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
-import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -14,7 +12,7 @@ import java.util.List;
 /**
  * @author LatvianModder
  */
-public class ConfigTristate extends ConfigValue
+public class ConfigTristate extends ConfigValue implements IIteratingConfig
 {
 	public static final String ID = "tristate";
 
@@ -78,11 +76,11 @@ public class ConfigTristate extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
+	public void iterate(ConfigValueInstance inst, boolean next)
 	{
 		if (inst.getCanEdit())
 		{
-			set(EnumTristate.NAME_MAP.getNext(get()));
+			set(next ? EnumTristate.NAME_MAP.getNext(get()) : EnumTristate.NAME_MAP.getPrevious(get()));
 		}
 	}
 

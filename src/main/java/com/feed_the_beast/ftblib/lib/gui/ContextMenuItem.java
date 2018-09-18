@@ -1,11 +1,15 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
 import com.feed_the_beast.ftblib.lib.icon.Icon;
+import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * @author LatvianModder
  */
-public class ContextMenuItem
+public class ContextMenuItem implements Comparable<ContextMenuItem>
 {
 	public static final ContextMenuItem SEPARATOR = new ContextMenuItem("", Icon.EMPTY, () -> {})
 	{
@@ -22,11 +26,15 @@ public class ContextMenuItem
 	public boolean enabled = true;
 	public String yesNoText = "";
 
-	public ContextMenuItem(String t, Icon i, Runnable c)
+	public ContextMenuItem(String t, Icon i, @Nullable Runnable c)
 	{
 		title = t;
 		icon = i;
 		callback = c;
+	}
+
+	public void addMouseOverText(List<String> list)
+	{
 	}
 
 	public ContextMenuItem setEnabled(boolean v)
@@ -44,5 +52,17 @@ public class ContextMenuItem
 	public Widget createWidget(ContextMenu panel)
 	{
 		return new ContextMenu.CButton(panel, this);
+	}
+
+	@Override
+	public int compareTo(ContextMenuItem o)
+	{
+		return title.compareToIgnoreCase(o.title);
+	}
+
+	public void onClicked(Panel panel, MouseButton button)
+	{
+		panel.getGui().closeContextMenu();
+		callback.run();
 	}
 }
