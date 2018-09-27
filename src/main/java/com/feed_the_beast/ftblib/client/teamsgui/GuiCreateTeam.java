@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.client.teamsgui;
 
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -85,10 +86,10 @@ public class GuiCreateTeam extends GuiBase
 
 		textBoxId.setPosAndSize(8, 8, width - 16, 16);
 		textBoxId.writeText(ClientUtils.MC.player.getGameProfile().getName().toLowerCase());
-		textBoxId.ghostText = "Enter ID";
+		textBoxId.ghostText = "Enter ID"; //LANG
 		textBoxId.textColor = color.getColor();
 		textBoxId.setFocused(true);
-		textBoxId.charLimit = 35;
+		textBoxId.charLimit = ForgeTeam.MAX_TEAM_ID_LENGTH;
 
 		colorButtons = new ArrayList<>();
 		int i = 0;

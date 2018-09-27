@@ -39,12 +39,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * @author LatvianModder
  */
 public class ForgeTeam extends FinalIDObject implements IStringSerializable, INBTSerializable<NBTTagCompound>, IConfigCallback
 {
+	public static final int MAX_TEAM_ID_LENGTH = 35;
+	public static final Pattern TEAM_ID_PATTERN = Pattern.compile("^[a-z0-9_]{1," + MAX_TEAM_ID_LENGTH + "}$");
+
 	public final Universe universe;
 	public final TeamType type;
 	public ForgePlayer owner;
