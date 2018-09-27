@@ -23,9 +23,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigTeam;
 import com.feed_the_beast.ftblib.lib.config.ConfigTeamClient;
 import com.feed_the_beast.ftblib.lib.config.ConfigTextComponent;
 import com.feed_the_beast.ftblib.lib.config.ConfigTimer;
-import com.feed_the_beast.ftblib.lib.config.ConfigTristate;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueProvider;
-import com.feed_the_beast.ftblib.lib.config.EnumTristate;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.data.AdminPanelAction;
@@ -135,7 +133,6 @@ public class FTBLibCommon
 		registry.registerConfigValueProvider(ConfigNull.ID, () -> ConfigNull.INSTANCE);
 		registry.registerConfigValueProvider(ConfigList.ID, () -> new ConfigList<>(ConfigNull.INSTANCE));
 		registry.registerConfigValueProvider(ConfigBoolean.ID, () -> new ConfigBoolean(false));
-		registry.registerConfigValueProvider(ConfigTristate.ID, () -> new ConfigTristate(EnumTristate.DEFAULT));
 		registry.registerConfigValueProvider(ConfigInt.ID, () -> new ConfigInt(0));
 		registry.registerConfigValueProvider(ConfigDouble.ID, () -> new ConfigDouble(0D));
 		registry.registerConfigValueProvider(ConfigLong.ID, () -> new ConfigLong(0L));
