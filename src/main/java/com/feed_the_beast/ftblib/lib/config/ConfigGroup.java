@@ -3,6 +3,8 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
+import com.feed_the_beast.ftblib.lib.util.misc.BooleanConsumer;
+import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -15,6 +17,15 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.IntConsumer;
+import java.util.function.IntSupplier;
+import java.util.function.LongConsumer;
+import java.util.function.LongSupplier;
+import java.util.function.Supplier;
+import java.util.regex.Pattern;
 
 /**
  * @author LatvianModder
@@ -147,6 +158,41 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 		}
 
 		return instance;
+	}
+
+	public ConfigValueInstance addBool(String id, BooleanSupplier getter, BooleanConsumer setter, boolean def)
+	{
+		return add(id, new ConfigBoolean.SimpleBoolean(getter, setter), new ConfigBoolean(def));
+	}
+
+	public ConfigValueInstance addInt(String id, IntSupplier getter, IntConsumer setter, int def, int min, int max)
+	{
+		return add(id, new ConfigInt.SimpleInt(min, max, getter, setter), new ConfigInt(def));
+	}
+
+	public ConfigValueInstance addLong(String id, LongSupplier getter, LongConsumer setter, long def, long min, long max)
+	{
+		return add(id, new ConfigLong.SimpleLong(min, max, getter, setter), new ConfigLong(def));
+	}
+
+	public ConfigValueInstance addString(String id, Supplier<String> getter, Consumer<String> setter, String def, @Nullable Pattern pattern)
+	{
+		return add(id, new ConfigString.SimpleString(getter, setter, pattern), new ConfigString(def));
+	}
+
+	public ConfigValueInstance addString(String id, Supplier<String> getter, Consumer<String> setter, String def)
+	{
+		return addString(id, getter, setter, def, null);
+	}
+
+	public <T> ConfigValueInstance addEnum(String id, Supplier<T> getter, Consumer<T> setter, NameMap<T> nameMap)
+	{
+		return add(id, new ConfigEnum.SimpleEnum<>(nameMap, getter, setter), new ConfigEnum<>(nameMap));
+	}
+
+	public <C extends ConfigValue, V> ConfigValueInstance addList(String id, Collection<V> c, C type, Function<V, C> toConfig, Function<C, V> fromConfig)
+	{
+		return add(id, new ConfigList.SimpleList<>(c, type, toConfig, fromConfig), new ConfigList<>(type));
 	}
 
 	public boolean hasValue(String key)

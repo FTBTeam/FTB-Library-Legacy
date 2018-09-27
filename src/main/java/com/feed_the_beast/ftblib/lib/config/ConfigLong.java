@@ -35,11 +35,6 @@ public class ConfigLong extends ConfigValue implements LongSupplier
 			set = s;
 		}
 
-		public SimpleLong(LongSupplier g, LongConsumer s)
-		{
-			this(Long.MIN_VALUE, Long.MAX_VALUE, g, s);
-		}
-
 		@Override
 		public long getLong()
 		{

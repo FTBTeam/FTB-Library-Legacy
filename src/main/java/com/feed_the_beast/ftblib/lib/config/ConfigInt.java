@@ -34,11 +34,6 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 			set = s;
 		}
 
-		public SimpleInt(IntSupplier g, IntConsumer s)
-		{
-			this(Integer.MIN_VALUE, Integer.MAX_VALUE, g, s);
-		}
-
 		@Override
 		public int getInt()
 		{

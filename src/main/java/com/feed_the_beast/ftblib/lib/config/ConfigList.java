@@ -16,8 +16,10 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * @author LatvianModder
@@ -26,6 +28,43 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 {
 	public static final String ID = "list";
 	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
+
+	public static class SimpleList<C extends ConfigValue, V> extends ConfigList<C>
+	{
+		public final Collection<V> collection;
+		public final Function<V, C> toConfig;
+		public final Function<C, V> fromConfig;
+
+		public SimpleList(Collection<V> c, C type, Function<V, C> to, Function<C, V> from)
+		{
+			super(type);
+			collection = c;
+			toConfig = to;
+			fromConfig = from;
+		}
+
+		@Override
+		public void readFromList()
+		{
+			collection.clear();
+
+			for (C value : list)
+			{
+				collection.add(fromConfig.apply(value));
+			}
+		}
+
+		@Override
+		public void writeToList()
+		{
+			list.clear();
+
+			for (V value : collection)
+			{
+				list.add(toConfig.apply(value));
+			}
+		}
+	}
 
 	public final List<T> list;
 	public T type;

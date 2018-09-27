@@ -5,6 +5,7 @@ import java.util.function.Supplier;
 /**
  * @author LatvianModder
  */
+@FunctionalInterface
 public interface ConfigValueProvider extends Supplier<ConfigValue>
 {
 }

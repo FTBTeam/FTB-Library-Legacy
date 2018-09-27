@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.gui;
 /**
  * @author LatvianModder
  */
+@FunctionalInterface
 public interface WidgetLayout
 {
 	int align(Panel panel);

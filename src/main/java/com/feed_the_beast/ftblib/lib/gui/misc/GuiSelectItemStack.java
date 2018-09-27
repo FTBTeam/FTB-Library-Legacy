@@ -6,7 +6,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigItemStack;
 import com.feed_the_beast.ftblib.lib.config.ConfigNBT;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
-import com.feed_the_beast.ftblib.lib.config.ConfigValueInstance;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -39,6 +38,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
@@ -186,7 +186,7 @@ public class GuiSelectItemStack extends GuiBase
 		public void onClicked(MouseButton button)
 		{
 			GuiHelper.playClickSound();
-			new GuiEditConfigValue("itemstack", new ConfigItemStack(selected.copy(), ((ConfigItemStack) value.getValue()).getSingleItemOnly()), this).openGui();
+			new GuiEditConfigValue("itemstack", new ConfigItemStack(selected.copy(), single), this).openGui();
 		}
 
 		@Override
@@ -211,7 +211,7 @@ public class GuiSelectItemStack extends GuiBase
 		@Override
 		public WidgetType getWidgetType()
 		{
-			return ((ConfigItemStack) value.getValue()).getSingleItemOnly() ? WidgetType.DISABLED : super.getWidgetType();
+			return single ? WidgetType.DISABLED : super.getWidgetType();
 		}
 
 		@Override
@@ -359,21 +359,23 @@ public class GuiSelectItemStack extends GuiBase
 		}
 	}
 
-	private final ConfigValueInstance value;
 	private final IOpenableGui callbackGui;
 	private final Button buttonCancel, buttonAccept;
 	private final Panel panelStacks;
 	private final PanelScrollBar scrollBar;
 	private TextBox searchBox;
 	private ItemStack selected;
+	private final boolean single;
+	private final Consumer<ItemStack> callback;
 	private final Panel tabs;
 
-	public GuiSelectItemStack(ConfigValueInstance v, IOpenableGui g)
+	public GuiSelectItemStack(IOpenableGui g, ItemStack is, boolean s, Consumer<ItemStack> c)
 	{
 		setSize(211, 150);
-		value = v;
-		selected = ((ConfigItemStack) value.getValue()).getStack();
 		callbackGui = g;
+		selected = is;
+		single = s;
+		callback = c;
 
 		int bsize = width / 2 - 10;
 
@@ -401,7 +403,7 @@ public class GuiSelectItemStack extends GuiBase
 			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
-				((ConfigItemStack) value.getValue()).setStack(selected);
+				callback.accept(selected);
 				callbackGui.openGui();
 			}
 
@@ -538,6 +540,11 @@ public class GuiSelectItemStack extends GuiBase
 		};
 
 		tabs.setPosAndSize(-19, 8, 20, 0);
+	}
+
+	public GuiSelectItemStack(IOpenableGui g, Consumer<ItemStack> c)
+	{
+		this(g, ItemStack.EMPTY, false, c);
 	}
 
 	@Override

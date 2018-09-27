@@ -24,22 +24,29 @@ public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 	public static final String ID = "enum";
 	public static final Color4I COLOR = Color4I.rgb(0x0094FF);
 
-	public static <T extends Enum<T>> ConfigEnum<T> create(NameMap<T> nm, Supplier<T> getter, Consumer<T> setter)
+	public static class SimpleEnum<T> extends ConfigEnum<T>
 	{
-		return new ConfigEnum<T>(nm)
-		{
-			@Override
-			public T getValue()
-			{
-				return getter.get();
-			}
+		private final Supplier<T> get;
+		private final Consumer<T> set;
 
-			@Override
-			public void setValue(T e)
-			{
-				setter.accept(e);
-			}
-		};
+		public SimpleEnum(NameMap<T> nm, Supplier<T> g, Consumer<T> s)
+		{
+			super(nm);
+			get = g;
+			set = s;
+		}
+
+		@Override
+		public T getValue()
+		{
+			return get.get();
+		}
+
+		@Override
+		public void setValue(T e)
+		{
+			set.accept(e);
+		}
 	}
 
 	private final NameMap<E> nameMap;

@@ -9,10 +9,7 @@ import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerLeftEvent;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
-import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
-import com.feed_the_beast.ftblib.lib.config.ConfigEnum;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
-import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
@@ -53,12 +50,12 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	public final TeamType type;
 	public ForgePlayer owner;
 	private final NBTDataStorage dataStorage;
-	private final ConfigString title;
-	private final ConfigString desc;
-	private final ConfigEnum<EnumTeamColor> color;
-	private final ConfigString icon;
-	private final ConfigBoolean freeToJoin;
-	private final ConfigEnum<EnumTeamStatus> fakePlayerStatus;
+	private String title;
+	private String desc;
+	private EnumTeamColor color;
+	private String icon;
+	private boolean freeToJoin;
+	private EnumTeamStatus fakePlayerStatus;
 	private final Collection<ForgePlayer> requestingInvite;
 	public final Map<ForgePlayer, EnumTeamStatus> players;
 	private ConfigGroup cachedConfig;
@@ -71,12 +68,12 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		super(id, t.isNone ? 0 : (StringUtils.FLAG_ID_DEFAULTS | StringUtils.FLAG_ID_ALLOW_EMPTY));
 		universe = u;
 		type = t;
-		title = new ConfigString("");
-		desc = new ConfigString("");
-		color = new ConfigEnum<>(EnumTeamColor.NAME_MAP);
-		icon = new ConfigString("");
-		freeToJoin = new ConfigBoolean(false);
-		fakePlayerStatus = new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS);
+		title = "";
+		desc = "";
+		color = EnumTeamColor.BLUE;
+		icon = "";
+		freeToJoin = false;
+		fakePlayerStatus = EnumTeamStatus.ALLY;
 		requestingInvite = new HashSet<>();
 		players = new HashMap<>();
 		dataStorage = new NBTDataStorage();
@@ -95,12 +92,12 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 			nbt.setString("Owner", owner.getName());
 		}
 
-		nbt.setString("Title", title.getString());
-		nbt.setString("Desc", desc.getString());
-		nbt.setString("Color", color.getString());
-		nbt.setString("Icon", icon.getString());
-		nbt.setBoolean("FreeToJoin", freeToJoin.getBoolean());
-		nbt.setString("FakePlayerStatus", fakePlayerStatus.getString());
+		nbt.setString("Title", title);
+		nbt.setString("Desc", desc);
+		nbt.setString("Color", EnumTeamColor.NAME_MAP.getName(color));
+		nbt.setString("Icon", icon);
+		nbt.setBoolean("FreeToJoin", freeToJoin);
+		nbt.setString("FakePlayerStatus", EnumTeamStatus.NAME_MAP_PERMS.getName(fakePlayerStatus));
 
 		NBTTagCompound nbt1 = new NBTTagCompound();
 
@@ -136,12 +133,12 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 			return;
 		}
 
-		title.setString(nbt.getString("Title"));
-		desc.setString(nbt.getString("Desc"));
-		color.setValue(nbt.getString("Color"));
-		icon.setString(nbt.getString("Icon"));
-		freeToJoin.setBoolean(nbt.getBoolean("FreeToJoin"));
-		fakePlayerStatus.setValue(nbt.getString("FakePlayerStatus"));
+		title = nbt.getString("Title");
+		desc = nbt.getString("Desc");
+		color = EnumTeamColor.NAME_MAP.get(nbt.getString("Color"));
+		icon = nbt.getString("Icon");
+		freeToJoin = nbt.getBoolean("FreeToJoin");
+		fakePlayerStatus = EnumTeamStatus.NAME_MAP_PERMS.get(nbt.getString("FakePlayerStatus"));
 
 		players.clear();
 
@@ -229,7 +226,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		}
 		else
 		{
-			cachedTitle = new TextComponentString(title.getString());
+			cachedTitle = new TextComponentString(title);
 		}
 
 		cachedTitle = StringUtils.color(cachedTitle, getColor().getTextFormatting());
@@ -238,37 +235,37 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 	public void setTitle(String s)
 	{
-		if (!title.getString().equals(s))
+		if (!title.equals(s))
 		{
-			title.setString(s);
+			title = s;
 			markDirty();
 		}
 	}
 
 	public String getDesc()
 	{
-		return desc.getString();
+		return desc;
 	}
 
 	public void setDesc(String s)
 	{
-		if (!desc.getString().equals(s))
+		if (!desc.equals(s))
 		{
-			desc.setString(s);
+			desc = s;
 			markDirty();
 		}
 	}
 
 	public EnumTeamColor getColor()
 	{
-		return color.getValue();
+		return color;
 	}
 
 	public void setColor(EnumTeamColor col)
 	{
-		if (color.getValue() != col)
+		if (color != col)
 		{
-			color.setValue(col);
+			color = col;
 			markDirty();
 		}
 	}
@@ -277,8 +274,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	{
 		if (cachedIcon == null)
 		{
-			String iconstring = icon.getString();
-			if (iconstring.isEmpty())
+			if (icon.isEmpty())
 			{
 				if (hasOwner())
 				{
@@ -291,7 +287,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 			}
 			else
 			{
-				cachedIcon = Icon.getIcon(iconstring);
+				cachedIcon = Icon.getIcon(icon);
 			}
 		}
 
@@ -300,30 +296,30 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 	public void setIcon(String s)
 	{
-		if (!icon.getString().equals(s))
+		if (!icon.equals(s))
 		{
-			icon.setString(s);
+			icon = s;
 			markDirty();
 		}
 	}
 
 	public boolean isFreeToJoin()
 	{
-		return freeToJoin.getBoolean();
+		return freeToJoin;
 	}
 
 	public void setFreeToJoin(boolean b)
 	{
-		if (freeToJoin.getBoolean() != b)
+		if (freeToJoin != b)
 		{
-			freeToJoin.setBoolean(b);
+			freeToJoin = b;
 			markDirty();
 		}
 	}
 
 	public EnumTeamStatus getFakePlayerStatus(ForgePlayer player)
 	{
-		return fakePlayerStatus.getValue();
+		return fakePlayerStatus;
 	}
 
 	public EnumTeamStatus getHighestStatus(@Nullable ForgePlayer player)
@@ -334,7 +330,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		}
 		else if (player.isFake())
 		{
-			return fakePlayerStatus.getValue();
+			return fakePlayerStatus;
 		}
 		else if (isOwner(player))
 		{
@@ -372,7 +368,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		}
 		else if (player.isFake())
 		{
-			return fakePlayerStatus.getValue();
+			return fakePlayerStatus;
 		}
 		else if (type == TeamType.SERVER && getName().equals("singleplayer"))
 		{
@@ -575,7 +571,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		}
 		else if (player.isFake())
 		{
-			return fakePlayerStatus.getValue().isEqualOrGreaterThan(EnumTeamStatus.MEMBER);
+			return fakePlayerStatus.isEqualOrGreaterThan(EnumTeamStatus.MEMBER);
 		}
 
 		return isValid() && equalsTeam(player.team);
@@ -648,13 +644,13 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 			ConfigGroup main = cachedConfig.getGroup(FTBLib.MOD_ID);
 			main.setDisplayName(new TextComponentString(FTBLib.MOD_NAME));
-			main.add("free_to_join", freeToJoin, new ConfigBoolean(false));
+			main.addBool("free_to_join", () -> freeToJoin, v -> freeToJoin = v, false);
 
 			ConfigGroup display = main.getGroup("display");
-			display.add("color", color, new ConfigEnum<>(EnumTeamColor.NAME_MAP));
-			display.add("fake_player_status", fakePlayerStatus, new ConfigEnum<>(EnumTeamStatus.NAME_MAP_PERMS));
-			display.add("title", title, new ConfigString(""));
-			display.add("desc", desc, new ConfigString(""));
+			display.addEnum("color", () -> color, v -> color = v, EnumTeamColor.NAME_MAP);
+			display.addEnum("fake_player_status", () -> fakePlayerStatus, v -> fakePlayerStatus = v, EnumTeamStatus.NAME_MAP_PERMS);
+			display.addString("title", () -> title, v -> title = v, "");
+			display.addString("desc", () -> desc, v -> desc = v, "");
 		}
 
 		return cachedConfig;

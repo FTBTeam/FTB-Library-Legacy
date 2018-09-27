@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
-import com.feed_the_beast.ftblib.lib.config.ConfigBoolean;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
@@ -52,7 +51,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	private String playerName;
 	private final NBTDataStorage dataStorage;
 	public ForgeTeam team;
-	private final ConfigBoolean hideTeamNotification;
+	private boolean hideTeamNotification;
 	public EntityPlayerMP entityPlayer;
 	public NBTTagCompound cachedPlayerNBT;
 	private ConfigGroup cachedConfig;
@@ -66,7 +65,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		playerName = name;
 		dataStorage = new NBTDataStorage();
 		team = u.getTeam("");
-		hideTeamNotification = new ConfigBoolean(false);
+		hideTeamNotification = false;
 		new ForgePlayerDataEvent(this, dataStorage::add).post();
 		needsSaving = false;
 	}
@@ -75,7 +74,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setBoolean("HideTeamNotification", hideTeamNotification.getBoolean());
+		nbt.setBoolean("HideTeamNotification", hideTeamNotification);
 		nbt.setLong("LastTimeSeen", lastTimeSeen);
 		nbt.setTag("Data", dataStorage.serializeNBT());
 		return nbt;
@@ -84,7 +83,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		hideTeamNotification.setBoolean(nbt.getBoolean("HideTeamNotification"));
+		hideTeamNotification = nbt.getBoolean("HideTeamNotification");
 		lastTimeSeen = nbt.getLong("LastTimeSeen");
 		dataStorage.deserializeNBT(nbt.getCompoundTag("Data"));
 	}
@@ -302,9 +301,9 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 			ForgePlayerConfigEvent event = new ForgePlayerConfigEvent(this, cachedConfig);
 			event.post();
 
-			ConfigGroup main = cachedConfig.getGroup(FTBLib.MOD_ID);
-			main.setDisplayName(new TextComponentString(FTBLib.MOD_NAME));
-			main.add("hide_team_notification", hideTeamNotification, new ConfigBoolean(false));
+			ConfigGroup config = cachedConfig.getGroup(FTBLib.MOD_ID);
+			config.setDisplayName(new TextComponentString(FTBLib.MOD_NAME));
+			config.addBool("hide_team_notification", () -> hideTeamNotification, v -> hideTeamNotification = v, false);
 		}
 
 		return cachedConfig;
@@ -368,7 +367,7 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 
 	public boolean hideTeamNotification()
 	{
-		return FTBLibConfig.teams.hide_team_notification || hideTeamNotification.getBoolean() || isFake();
+		return FTBLibConfig.teams.hide_team_notification || hideTeamNotification || isFake();
 	}
 
 	public long getLastTimeSeen()

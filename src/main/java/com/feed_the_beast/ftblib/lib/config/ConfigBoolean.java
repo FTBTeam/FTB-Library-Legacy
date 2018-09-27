@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.config;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.util.misc.BooleanConsumer;
 import com.google.gson.JsonElement;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,7 +12,6 @@ import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
@@ -26,9 +26,9 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier, IIter
 	public static class SimpleBoolean extends ConfigBoolean
 	{
 		private final BooleanSupplier get;
-		private final Consumer<Boolean> set;
+		private final BooleanConsumer set;
 
-		public SimpleBoolean(BooleanSupplier g, Consumer<Boolean> s)
+		public SimpleBoolean(BooleanSupplier g, BooleanConsumer s)
 		{
 			super(false);
 			get = g;

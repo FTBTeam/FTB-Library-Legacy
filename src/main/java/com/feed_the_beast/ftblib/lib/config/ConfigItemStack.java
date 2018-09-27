@@ -13,6 +13,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author LatvianModder
@@ -20,6 +22,36 @@ import javax.annotation.Nullable;
 public class ConfigItemStack extends ConfigValue
 {
 	public static final String ID = "item_stack";
+
+	public static class SimpleStack extends ConfigItemStack
+	{
+		private final Supplier<ItemStack> get;
+		private final Consumer<ItemStack> set;
+
+		public SimpleStack(boolean single, Supplier<ItemStack> g, Consumer<ItemStack> s)
+		{
+			super(ItemStack.EMPTY, single);
+			get = g;
+			set = s;
+		}
+
+		public SimpleStack(Supplier<ItemStack> g, Consumer<ItemStack> s)
+		{
+			this(false, g, s);
+		}
+
+		@Override
+		public ItemStack getStack()
+		{
+			return get.get();
+		}
+
+		@Override
+		public void setStack(ItemStack v)
+		{
+			set.accept(v);
+		}
+	}
 
 	private ItemStack value;
 	private boolean singleItemOnly;
@@ -159,7 +191,7 @@ public class ConfigItemStack extends ConfigValue
 	{
 		if (inst.getCanEdit())
 		{
-			new GuiSelectItemStack(inst, gui).openGui();
+			new GuiSelectItemStack(gui, getStack().copy(), getSingleItemOnly(), this::setStack).openGui();
 		}
 	}
 

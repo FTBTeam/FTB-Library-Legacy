@@ -11,6 +11,8 @@ import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 /**
@@ -21,13 +23,33 @@ public class ConfigString extends ConfigValue
 	public static final String ID = "string";
 	public static final Color4I COLOR = Color4I.rgb(0xFFAA49);
 
+	public static class SimpleString extends ConfigString
+	{
+		private final Supplier<String> get;
+		private final Consumer<String> set;
+
+		public SimpleString(Supplier<String> g, Consumer<String> s, @Nullable Pattern pattern)
+		{
+			super("", pattern);
+			get = g;
+			set = s;
+		}
+
+		@Override
+		public String getString()
+		{
+			return get.get();
+		}
+
+		@Override
+		public void setString(String v)
+		{
+			set.accept(v);
+		}
+	}
+
 	private String value;
 	private Pattern pattern;
-
-	public ConfigString()
-	{
-		this("");
-	}
 
 	public ConfigString(String v)
 	{

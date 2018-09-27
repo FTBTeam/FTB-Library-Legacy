@@ -14,19 +14,23 @@ import net.minecraft.util.text.TextFormatting;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author LatvianModder
  */
-public class ConfigTeam extends ConfigString
+public class ConfigTeam extends ConfigValue
 {
-	public static final Pattern PATTERN = Pattern.compile("");
 	public static final String TEAM_ID = "team";
 
-	public ConfigTeam(String v)
+	private final Supplier<String> get;
+	private final Consumer<String> set;
+
+	public ConfigTeam(Supplier<String> g, Consumer<String> s)
 	{
-		super(v, PATTERN);
+		get = g;
+		set = s;
 	}
 
 	@Override
@@ -47,9 +51,27 @@ public class ConfigTeam extends ConfigString
 	}
 
 	@Override
+	public String getString()
+	{
+		return get.get();
+	}
+
+	@Override
+	public boolean getBoolean()
+	{
+		throw new IllegalStateException("Not supported!");
+	}
+
+	@Override
+	public int getInt()
+	{
+		throw new IllegalStateException("Not supported!");
+	}
+
+	@Override
 	public ConfigTeam copy()
 	{
-		return new ConfigTeam(getString());
+		throw new IllegalStateException("Not supported!");
 	}
 
 	@Override
@@ -101,7 +123,7 @@ public class ConfigTeam extends ConfigString
 	@Override
 	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		setString(nbt.getString(key));
+		set.accept(nbt.getString(key));
 	}
 
 	@Override

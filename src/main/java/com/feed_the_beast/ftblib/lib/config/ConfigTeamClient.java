@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.config;
 
+import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiSelectTeamValue;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
@@ -36,7 +37,7 @@ public class ConfigTeamClient extends ConfigString
 
 	public ConfigTeamClient(String v)
 	{
-		super(v, ConfigTeam.PATTERN);
+		super(v, ForgeTeam.TEAM_ID_PATTERN);
 		map = new HashMap<>();
 	}
 

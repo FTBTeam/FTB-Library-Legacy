@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.data.FTBLibAPI;
+import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
+import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
@@ -27,6 +29,7 @@ public final class ConfigValueInstance extends FinalIDObject
 	private int flags;
 	private ITextComponent displayName, info;
 	private byte order;
+	private Icon icon;
 
 	public ConfigValueInstance(String id, ConfigGroup g, ConfigValue v)
 	{
@@ -38,6 +41,7 @@ public final class ConfigValueInstance extends FinalIDObject
 		displayName = null;
 		info = null;
 		order = 0;
+		icon = GuiIcons.SETTINGS_RED;
 	}
 
 	public ConfigValueInstance(ConfigGroup g, DataIn data)
@@ -63,6 +67,11 @@ public final class ConfigValueInstance extends FinalIDObject
 	{
 		return value;
 	}
+
+	/*public ConfigValueInstance changeValueType(ConfigValue newValue)
+	{
+		return this;
+	}*/
 
 	public ConfigValueInstance setDefaultValue(ConfigValue def)
 	{
@@ -163,6 +172,17 @@ public final class ConfigValueInstance extends FinalIDObject
 		return order;
 	}
 
+	public ConfigValueInstance setIcon(Icon i)
+	{
+		icon = i;
+		return this;
+	}
+
+	public Icon getIcon()
+	{
+		return icon;
+	}
+
 	public void writeData(DataOut data)
 	{
 		data.writeString(value.getName());
@@ -191,6 +211,7 @@ public final class ConfigValueInstance extends FinalIDObject
 		inst.info = info == null ? null : info.createCopy();
 		inst.flags = flags;
 		inst.order = order;
+		inst.icon = icon.copy();
 		return inst;
 	}
 

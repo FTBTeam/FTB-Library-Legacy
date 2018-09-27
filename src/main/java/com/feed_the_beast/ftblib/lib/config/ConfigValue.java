@@ -45,7 +45,7 @@ public abstract class ConfigValue implements IStringSerializable
 
 	public Ticks getTimer()
 	{
-		return Ticks.NO_TICKS;
+		return Ticks.get(getLong());
 	}
 
 	public abstract ConfigValue copy();
