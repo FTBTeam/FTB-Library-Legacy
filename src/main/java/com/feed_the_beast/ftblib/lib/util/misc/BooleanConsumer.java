@@ -3,7 +3,8 @@ package com.feed_the_beast.ftblib.lib.util.misc;
 /**
  * @author LatvianModder
  */
-public interface TriFunction<R, A, B, C>
+@FunctionalInterface
+public interface BooleanConsumer
 {
-	R apply(A a, B b, C c);
+	void accept(boolean v);
 }

@@ -5,6 +5,7 @@ import net.minecraft.command.ICommandSender;
 /**
  * @author LatvianModder
  */
+@FunctionalInterface
 public interface IConfigCallback
 {
 	IConfigCallback DEFAULT = (group, sender) -> {};

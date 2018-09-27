@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.data.Universe;
 /**
  * @author LatvianModder
  */
+@FunctionalInterface
 public interface IScheduledTask
 {
 	default boolean isComplete(Universe universe, TimeType type, long time)
