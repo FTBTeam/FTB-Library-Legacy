@@ -1,20 +1,18 @@
 package com.feed_the_beast.ftblib.lib.item;
 
-import com.feed_the_beast.ftblib.lib.util.JsonUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.oredict.OreDictionary;
+
+import javax.annotation.Nullable;
 
 public class ItemStackSerializer
 {
@@ -68,7 +66,7 @@ public class ItemStackSerializer
 			itemstack.setTagCompound(JsonToNBT.getTagFromJson(s1[3]));
 		}
 
-		return itemstack;
+		return itemstack.isEmpty() ? ItemStack.EMPTY : itemstack;
 	}
 
 	public static ItemStack parseItem(String input)
@@ -124,103 +122,22 @@ public class ItemStackSerializer
 		return builder.toString();
 	}
 
-	public static JsonElement serialize(ItemStack stack, boolean forceNonnull, boolean string)
-	{
-		if (!forceNonnull && stack.isEmpty())
-		{
-			return JsonNull.INSTANCE;
-		}
-		else if (string)
-		{
-			return new JsonPrimitive(toString(stack));
-		}
-
-		NBTTagCompound nbt = stack.serializeNBT();
-
-		JsonObject json = new JsonObject();
-		json.addProperty("item", nbt.getString("id"));
-
-		if (stack.getHasSubtypes())
-		{
-			json.addProperty("data", nbt.getShort("Damage"));
-		}
-
-		if (stack.getCount() > 1)
-		{
-			json.addProperty("count", nbt.getByte("Count"));
-		}
-
-		if (stack.hasTagCompound())
-		{
-			json.add("nbt", JsonUtils.toJson(nbt.getCompoundTag("tag")));
-		}
-
-		if (nbt.hasKey("ForgeCaps"))
-		{
-			json.add("caps", JsonUtils.toJson(nbt.getCompoundTag("ForgeCaps")));
-		}
-
-		return json;
-	}
-
-	public static ItemStack deserialize(JsonElement e)
-	{
-		if (e.isJsonNull())
-		{
-			return ItemStack.EMPTY;
-		}
-		else if (e.isJsonPrimitive())
-		{
-			return parseItem(e.getAsString());
-		}
-
-		JsonObject json = e.getAsJsonObject();
-
-		if (!json.has("item"))
-		{
-			return ItemStack.EMPTY;
-		}
-
-		NBTTagCompound nbt = new NBTTagCompound();
-		nbt.setString("id", json.get("item").getAsString());
-		nbt.setShort("Damage", json.has("data") ? json.get("data").getAsShort() : (short) 0);
-		nbt.setShort("Count", json.has("count") ? json.get("count").getAsByte() : (byte) 1);
-
-		if (json.has("nbt"))
-		{
-			NBTBase nbt1 = JsonUtils.toNBT(json.get("nbt"));
-
-			if (nbt1 instanceof NBTTagCompound && !nbt1.isEmpty())
-			{
-				nbt.setTag("tag", nbt1);
-			}
-		}
-
-		if (json.has("caps"))
-		{
-			NBTBase nbt1 = JsonUtils.toNBT(json.get("caps"));
-
-			if (nbt1 instanceof NBTTagCompound && !nbt1.isEmpty())
-			{
-				nbt.setTag("ForgeCaps", nbt1);
-			}
-		}
-
-		ItemStack stack = new ItemStack(nbt);
-		return stack.isEmpty() ? ItemStack.EMPTY : stack;
-	}
-
-	public static NBTTagCompound write(ItemStack stack)
+	public static NBTBase write(ItemStack stack, boolean forceCompound)
 	{
 		if (stack.isEmpty())
 		{
-			return new NBTTagCompound();
+			return forceCompound ? new NBTTagCompound() : new NBTTagString("");
 		}
 
 		NBTTagCompound nbt = stack.serializeNBT();
 
 		if (!nbt.hasKey("ForgeCaps") && !nbt.hasKey("tag"))
 		{
+			if (!forceCompound)
+			{
+				return new NBTTagString(toString(stack));
+			}
+
 			NBTTagCompound nbt1 = new NBTTagCompound();
 			nbt1.setString("item", toString(stack));
 			return nbt1;
@@ -239,29 +156,34 @@ public class ItemStackSerializer
 		return nbt;
 	}
 
-	public static ItemStack read(NBTTagCompound nbt)
+	public static ItemStack read(@Nullable NBTBase nbtBase)
 	{
-		if (nbt.isEmpty())
+		if (nbtBase == null || nbtBase.isEmpty())
+		{
+			return ItemStack.EMPTY;
+		}
+		else if (nbtBase instanceof NBTTagString)
+		{
+			return parseItem(((NBTTagString) nbtBase).getString());
+		}
+		else if (!(nbtBase instanceof NBTTagCompound))
 		{
 			return ItemStack.EMPTY;
 		}
 
-		ItemStack stack;
+		NBTTagCompound nbt = (NBTTagCompound) nbtBase;
 
 		if (nbt.hasKey("item", Constants.NBT.TAG_STRING))
 		{
-			stack = parseItem(nbt.getString("item"));
+			return parseItem(nbt.getString("item"));
 		}
-		else
+
+		if (!nbt.hasKey("Count"))
 		{
-			if (!nbt.hasKey("Count"))
-			{
-				nbt.setByte("Count", (byte) 1);
-			}
-
-			stack = new ItemStack(nbt);
+			nbt.setByte("Count", (byte) 1);
 		}
 
+		ItemStack stack = new ItemStack(nbt);
 		return stack.isEmpty() ? ItemStack.EMPTY : stack;
 	}
 }
