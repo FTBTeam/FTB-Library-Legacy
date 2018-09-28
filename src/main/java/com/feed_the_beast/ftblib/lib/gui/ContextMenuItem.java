@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
 import com.feed_the_beast.ftblib.lib.icon.Icon;
+import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 
 import javax.annotation.Nullable;
@@ -57,7 +58,7 @@ public class ContextMenuItem implements Comparable<ContextMenuItem>
 	@Override
 	public int compareTo(ContextMenuItem o)
 	{
-		return title.compareToIgnoreCase(o.title);
+		return StringUtils.unformatted(title).compareToIgnoreCase(StringUtils.unformatted(o.title));
 	}
 
 	public void onClicked(Panel panel, MouseButton button)
