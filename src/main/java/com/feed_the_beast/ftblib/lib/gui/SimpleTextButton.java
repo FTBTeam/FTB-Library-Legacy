@@ -52,9 +52,18 @@ public abstract class SimpleTextButton extends Button
 		int textX = x;
 		int textY = y + (h - theme.getFontHeight() + 1) / 2;
 
+		int sw = theme.getStringWidth(title);
+		int mw = w - (hasIcon() ? off + s : 0) - 6;
+
+		if (sw > mw)
+		{
+			sw = mw;
+			title = theme.trimStringToWidth(title, mw);
+		}
+
 		if (renderTitleInCenter())
 		{
-			textX += (w - theme.getStringWidth(title) - (hasIcon() ? off + s : 0)) / 2;
+			textX += (mw - sw + 6) / 2;
 		}
 		else
 		{
