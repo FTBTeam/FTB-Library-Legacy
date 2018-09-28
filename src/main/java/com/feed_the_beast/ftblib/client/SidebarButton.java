@@ -156,7 +156,7 @@ public class SidebarButton implements Comparable<SidebarButton>
 
 	public boolean isVisible()
 	{
-		return configValue && FTBLibClientConfig.general.action_buttons != EnumSidebarButtonPlacement.DISABLED && isAvailable();
+		return configValue && FTBLibClientConfig.action_buttons != EnumSidebarButtonPlacement.DISABLED && isAvailable();
 	}
 
 	public boolean isAvailable()

@@ -64,7 +64,7 @@ public class FTBLibClientEventHandler
 	{
 		if (type == ChatType.GAME_INFO)
 		{
-			if (component instanceof Notification || FTBLibClientConfig.general.replace_vanilla_status_messages)
+			if (component instanceof Notification || FTBLibClientConfig.replace_vanilla_status_messages)
 			{
 				ResourceLocation id = component instanceof Notification ? ((Notification) component).getId() : Notification.VANILLA_STATUS;
 				Temp.MAP.remove(id);
@@ -206,7 +206,7 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onTooltip(ItemTooltipEvent event)
 	{
-		if (FTBLibClientConfig.general.item_ore_names)
+		if (FTBLibClientConfig.item_ore_names)
 		{
 			Collection<String> ores = InvUtils.getOreNames(null, event.getItemStack());
 
@@ -221,7 +221,7 @@ public class FTBLibClientEventHandler
 			}
 		}
 
-		if (FTBLibClientConfig.general.item_nbt && GuiScreen.isShiftKeyDown())
+		if (FTBLibClientConfig.item_nbt && GuiScreen.isShiftKeyDown())
 		{
 			NBTTagCompound nbt = GuiScreen.isAltKeyDown() ? event.getItemStack().getItem().getNBTShareTag(event.getItemStack()) : event.getItemStack().getTagCompound();
 
@@ -237,7 +237,7 @@ public class FTBLibClientEventHandler
 	{
 		//sidebarButtonScale = 0D;
 
-		if (FTBLibClientConfig.general.action_buttons != EnumSidebarButtonPlacement.DISABLED && event.getGui() instanceof InventoryEffectRenderer && !FTBLibClient.SIDEBAR_BUTTON_GROUPS.isEmpty())
+		if (FTBLibClientConfig.action_buttons != EnumSidebarButtonPlacement.DISABLED && event.getGui() instanceof InventoryEffectRenderer && !FTBLibClient.SIDEBAR_BUTTON_GROUPS.isEmpty())
 		{
 			event.getButtonList().add(new GuiButtonSidebarGroup((InventoryEffectRenderer) event.getGui()));
 		}
@@ -299,7 +299,7 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onDebugInfoEvent(RenderGameOverlayEvent.Text event)
 	{
-		if (FTBLibClientConfig.general.debug_helper && !ClientUtils.MC.gameSettings.showDebugInfo && Keyboard.isKeyDown(Keyboard.KEY_F3))
+		if (FTBLibClientConfig.debug_helper && !ClientUtils.MC.gameSettings.showDebugInfo && Keyboard.isKeyDown(Keyboard.KEY_F3))
 		{
 			event.getLeft().add(I18n.format("debug.help.help"));
 		}
@@ -390,7 +390,7 @@ public class FTBLibClientEventHandler
 			mouseOver = null;
 			int rx, ry = 0;
 			boolean addedAny;
-			boolean top = FTBLibClientConfig.general.action_buttons.top() || !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).func_194310_f().isVisible());
+			boolean top = FTBLibClientConfig.action_buttons.top() || !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).func_194310_f().isVisible());
 
 			for (SidebarButtonGroup group : FTBLibClient.SIDEBAR_BUTTON_GROUPS)
 			{
@@ -420,7 +420,7 @@ public class FTBLibClientEventHandler
 			{
 				for (GuiButtonSidebar button : buttons)
 				{
-					if (FTBLibClientConfig.general.collapse_sidebar_buttons)
+					if (FTBLibClientConfig.collapse_sidebar_buttons)
 					{
 						button.x = 4 + button.buttonX * 17;
 						button.y = 4 + button.buttonY * 17;
@@ -487,7 +487,7 @@ public class FTBLibClientEventHandler
 
 			if (mx < x || my < y || mx >= x + width || my >= y + height)
 			{
-				sidebarButtonScale -= partialTicks * 0.3D * FTBLibClientConfig.general.sidebar_button_collapse_speed;
+				sidebarButtonScale -= partialTicks * 0.3D * FTBLibClientConfig.sidebar_button_collapse_speed;
 
 				if (sidebarButtonScale < 0D)
 				{
@@ -496,7 +496,7 @@ public class FTBLibClientEventHandler
 			}
 			else if (sidebarButtonScale > 0D)
 			{
-				sidebarButtonScale += partialTicks * 0.3D * FTBLibClientConfig.general.sidebar_button_collapse_speed;
+				sidebarButtonScale += partialTicks * 0.3D * FTBLibClientConfig.sidebar_button_collapse_speed;
 
 				if (sidebarButtonScale > 1D)
 				{
@@ -504,7 +504,7 @@ public class FTBLibClientEventHandler
 				}
 			}
 
-			if (!FTBLibClientConfig.general.collapse_sidebar_buttons)
+			if (!FTBLibClientConfig.collapse_sidebar_buttons)
 			{
 				sidebarButtonScale = 1D;
 			}
@@ -528,7 +528,7 @@ public class FTBLibClientEventHandler
 				GlStateManager.scale(scale, scale, 1D);
 			}
 
-			if (FTBLibClientConfig.general.collapse_sidebar_buttons)
+			if (FTBLibClientConfig.collapse_sidebar_buttons)
 			{
 				int alpha = (int) MathUtils.lerp(50D, 100D, sidebarButtonScale);
 				Color4I.GRAY.withAlpha(alpha).draw(x, y, width, height);
@@ -571,7 +571,7 @@ public class FTBLibClientEventHandler
 
 				int tw = font.getStringWidth(title);
 
-				if (!FTBLibClientConfig.general.action_buttons.top())
+				if (!FTBLibClientConfig.action_buttons.top())
 				{
 					mx1 -= tw + 8;
 					my1 += 4;
