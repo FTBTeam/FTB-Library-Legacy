@@ -1,0 +1,249 @@
+# Gui
+## Buttons
+gui.accept=Akzeptieren
+gui.add=Hinzufügen
+gui.added=Hinzugefügt
+gui.remove=Entfernen
+gui.removed=Entfernet
+gui.close=Schließen
+gui.open=Öffnen
+gui.saved=Gespeichert
+gui.loaded=Geladen
+gui.info=Info
+gui.collapse_all=Alle schließen
+gui.expand_all=Alle öffnen
+gui.download=Herunterladen
+gui.downloaded=Heruntergelanden
+gui.update=Aktualisieren
+gui.updated=Aktualisiert
+gui.active=Aktiv
+gui.inactive=Inaktiv
+gui.settings=Einstellungen
+gui.rename=Umbennen
+gui.search_box=Suchen...
+
+## Labels
+gui.other=Weitere
+gui.server_forced=Server Forced: %s
+gui.online=Online
+gui.offline=Offline
+gui.whitelist=Whitelist
+gui.blacklist=Blacklist
+gui.color=Farbe
+gui.downloading=Herunterladen...
+gui.infinite=Unendlich
+
+## Sides
+facing.north=Norden
+facing.south=Süden
+facing.west=Westen
+facing.east=osten
+
+relative_facing.bottom=Unten
+relative_facing.top=Oben
+relative_facing.back=Hinten
+relative_facing.front=Vorne
+relative_facing.left=Links
+relative_facing.right=Rechts
+
+# FTBLib Lang
+ftblib=FTBLib
+wip=In Arbeit!
+deprecated=Diese Methode ist veraltet, bitte benutze: %s
+example=Beispiel:
+click_here=[Hier klicken]
+feature_disabled=Diese Funktion ist deaktiviert!
+feature_disabled_server=Diese Funktion ist auf Servern deaktiviert!
+error=Fehler: %s
+owner=Besitze: %s
+delete_item=Möchtest du '%s' löschen?
+server_forced=Durch den Server zu '%s' überschrieben
+commands=Befehle
+my_permissions=Meine Berechtigungen
+all_permissions=Alle Berechtigungen
+key.categories.ftbmods=FTB Mods
+stand_still=Bitte warte für %d Sekunden.
+stand_still_failed=Du hast dich bewegt. Teleport abgebrochen.
+teleporting=Teleportieren...
+cooldown=Wartezeit
+cant_use_now=Kann dies gerade nicht benutzen!
+cant_use_now_cooldown=Kann dies nicht benutzen! Wartezeit: %d
+action_bar=Aktionsleiste
+nothing_changed=Nichts geändert!
+player_must_be_online=Spieler muss online sein!
+
+ftblib.lang.reload_server_button=Server neuladen!
+ftblib.lang.reload_server=FTBLib: Server neugeladen in: %s
+ftblib.lang.reload_client=Du kannst %s drücken um den Client neuzuladen.
+ftblib.lang.reload_failed=Diese IDs konnten nicht neugeladen werden.
+
+ftblib.lang.config_command.invalid_key=Kann Einstellungs-Wert '%s' nicht finden!
+ftblib.lang.config_command.set='%s' wird zu %s eingestellt
+
+ftblib.lang.add_fake_player.invalid_uuid=Ungültige UUID!
+ftblib.lang.add_fake_player.player_exists=Spieler existiert bereits!
+ftblib.lang.add_fake_player.added=Fake-Spieler %s hinzugefügt!
+
+ftblib.select_fluid.gui=Flüssigkeit auswählen
+ftblib.select_fluid.none=Keine
+ftblib.select_item.list_mode=Listenmodus: %s
+ftblib.select_item.list_mode.all=Alle Items
+ftblib.select_item.list_mode.inv=Inventar
+ftblib.select_item.count=Größe einstellen
+ftblib.select_item.meta=Metadaten einstellen
+ftblib.select_item.nbt=NBT bearbeiten
+ftblib.select_item.caps=Fähigkeiten bearbeiten
+ftblib.select_item.display_name=Anzeige-Name einstellen
+ftblib.select_team.gui=Team auswählen
+
+# Config
+ftblib.general.clientless_mode=Clientloser Modus
+ftblib.general.replace_reload_command=/reload Befehl ersetzen
+ftblib.general.merge_offline_mode_players=Offline-Modus-Spieler zusammenführen
+
+ftblib.teams=Teams
+ftblib.teams.autocreate_sp=Automatisches Erstellen im Einzelspieler
+ftblib.teams.autocreate_mp=Automatisches Erstellen im Mehrspieler
+
+ftblib.debugging=Debuggen
+ftblib.debugging.special_commands=Spezielle Befehle
+ftblib.debugging.print_more_info=Mehr Info ausgeben
+ftblib.debugging.print_more_errors=Mehr Fehler ausgeben
+ftblib.debugging.log_network=Netzwerk E/A loggen
+ftblib.debugging.log_teleport=Teleports loggen
+ftblib.debugging.log_config_editing=Einstellungen-Bearbeitungen loggen
+ftblib.debugging.dev_sidebar_buttons=Nur-Entwickler Seitenleisten-Schaltflächen
+ftblib.debugging.gui_widget_bounds=GUI-Widgetgrenzen
+ftblib.debugging.log_events=Ereignisse loggen
+
+# Client Config
+ftblib_client.general.item_ore_names=Item OreDictionary-Namen anzeigen
+ftblib_client.general.item_ore_names.item_tooltip=OreDictionary Namen:
+ftblib_client.general.item_nbt=Item NBT anzeigen
+ftblib_client.general.replace_vanilla_status_messages=Ersetze Vanilla Statusmeldungen
+ftblib_client.general.debug_helper=Debug Helfer
+ftblib_client.general.collapse_sidebar_buttons=Seitenleisten-Schaltflächen schließen
+ftblib_client.general.sidebar_button_collapse_speed=Seitenleisten-Schaltflächen Schließtempo
+
+# Player Settings
+player_config=My Server Settings
+player_config.ftblib.hide_team_notification=Verstecke Team-Benachrichtigung beim Login
+
+# Team Settings
+team_config.ftblib.display=Anzeige
+team_config.ftblib.display.color=Farbe
+team_config.ftblib.display.fake_player_status=Fake-Spieler Status
+team_config.ftblib.display.title=Titel
+team_config.ftblib.display.title.tooltip=Anzeigen, wenn ein beanspruchter Chunk betreten wird.
+team_config.ftblib.display.desc=Beschreibung
+team_config.ftblib.display.desc.tooltip=Anzeige unter dem Titel
+team_config.ftblib.free_to_join=Freies Beitreten
+team_config.ftblib.free_to_join.tooltip=Jeder kann ohne Einladung beitreten.
+
+# Teams
+ftblib.lang.team.created=Team '%s' erstellt
+ftblib.lang.team.id_already_exists=ID bereits registriert.
+ftblib.lang.team.id_invalid=Eine ID kann die die kleingeschriebenen Buchstaben a-z, _ und | beinhalten!
+ftblib.lang.team.deleted=Team '%s' gelöscht
+ftblib.lang.team.member_left=%s hat dein Team verlassen!
+ftblib.lang.team.member_joined=%s ist deinem Team beigetreten!
+ftblib.lang.team.transferred_ownership=Der neue Besitze ist nun %s
+ftblib.lang.team.invited=%s zu '%s' eingeladen
+ftblib.lang.team.invited_you=Du wurdest zu '%s' von %s eingeladen
+ftblib.lang.team.cancel_invite=Einladungen abbrechen
+ftblib.lang.team.error.not_found=Team '%s' nicht gefunden!
+ftblib.lang.team.error.no_team=Du musst in einem Team sein, um das zu tun!
+ftblib.lang.team.error.must_leave=Du musst dein Team verlassen, um das zu tun!
+ftblib.lang.team.error.not_owner=Du bist nicht der Besitzer dieses Teams!
+ftblib.lang.team.error.not_member=%s ist kein Mitglied diese Teams!
+ftblib.lang.team.error.must_transfer_ownership=Du musst die Leitung übertragen!
+ftblib.lang.team.error.already_invited=%s ist bereits eingeladen!
+ftblib.lang.team.error.failed_to_join=Kann diesem Team nicht beitreten!
+ftblib.lang.team.permission.set=Erlaubnis für '%s' von %s wurde zu %s gesetzt
+ftblib.lang.team.permission.owner=Kann Leitung nicht ändern.
+ftblib.lang.team.notification=Du bist keinen Team beigetreten oder hast eins erstellt. %s um die TeamsGUI zu öffen oder %s um diese Nachricht auszublenden.
+ftblib.lang.team.notification.hide=Nachricht ausblenden
+ftblib.lang.team.chat_message=[Team %s] %s
+
+team_action.ftblib.select_team=Team zum Beitreten auswählen
+team_action.ftblib.create_team=Neues Team erstellen.
+team_action.ftblib.members=Mitglieder
+team_action.ftblib.allies=Verbündete
+team_action.ftblib.moderators=Moderatoren
+team_action.ftblib.enemies=Gegner
+team_action.ftblib.leave=Team verlassen
+team_action.ftblib.transfer_ownership=Leitung übertragen
+
+ftblib.lang.team.gui.join_team=Klicke um '%s' beizutreten
+ftblib.lang.team.gui.request_invite=Klicke um eine Einladung zu '%s' erfragen
+ftblib.lang.team.gui.members.invite=Klicke um dein Team einzuladen
+ftblib.lang.team.gui.members.requesting_invite=Dieser Spieler fragt nach einer Einladung
+ftblib.lang.team.gui.members.deny_request=Rechts-Klick um Anfrage abzulehnen
+ftblib.lang.team.gui.members.cancel_invite=Rechts-Klicke um Einladung abzubrechen
+ftblib.lang.team.gui.members.kick=Rechts-Klicke um Mitglied rauszuwerfen
+
+ftblib.lang.team_status.enemy=Gegner
+ftblib.lang.team_status.none=Keiner
+ftblib.lang.team_status.requesting_invite=Einladung anfragen
+ftblib.lang.team_status.invited=Eingeladen
+ftblib.lang.team_status.ally=Verbündeter
+ftblib.lang.team_status.member=Mitglied
+ftblib.lang.team_status.mod=Moderator
+ftblib.lang.team_status.owner=Besitzer
+
+# Sidebar Buttons
+sidebar_button=Seitenleisten-Schaltflächen
+sidebar_button.ftblib.my_team=Mein Team
+sidebar_button.ftblib.my_team.tooltip=Öffnet eine GUI, wo du dein Team verwalten kannst.
+sidebar_button.ftblib.settings=Client Einstellungen
+sidebar_button.ftblib.settings.tooltip=Bearbeite nur Client-Seitige Einstellungen
+sidebar_button.ftblib.notifications=Benachrichtigungen
+sidebar_button.ftblib.admin_panel=Admin Tafel
+
+# Privacy Level
+privacy=Privatsphäre
+privacy.public=Öffentlich
+privacy.private=Privat
+privacy.team=Team
+
+# Redstone Mode
+redstone_mode=Redstone Modus
+redstone_mode.disabled=Deaktivert
+redstone_mode.active_high=Aktiv hoch
+redstone_mode.active_low=Aktiv niedrig
+redstone_mode.pulse=Impuls
+
+# IO Mode
+io_mode=EA Modus
+io_mode.io=EA
+io_mode.in=Nur Eingang
+io_mode.out=Nur Ausgang
+io_mode.none=Deaktivert
+
+# Click Actions
+click_action.cmd=Befehl
+click_action.show_cmd=Befehl anzeigen
+click_action.url=URL öffnen
+click_action.file=Datei öffen
+click_action.gui=GUI öffen
+
+# Commands
+commands.reload.usage=/reload [*|domain:*|domain:id]
+commands.my_settings.usage=/my_settings <config id> [Wert]
+commands.team.usage=/team
+commands.team.settings.usage=/team settings <config id> [Wert]
+commands.team.create.usage=/team create <id> [Farbe]
+commands.team.leave.usage=/team leave
+commands.team.transfer_ownership.usage=/team transfer_ownership <Spieler>
+commands.team.kick.usage=/team kick <Spieler>
+commands.team.join.usage=/team join <team>
+commands.team.status.usage=/team status <Spieler> [set_status]
+commands.team.status.set=Status von %s wurde zu %s gesetzt
+commands.team.status.cant_set=Status kann nicht gesetzt werden!
+commands.team.msg.usage=/team msg <Nachricht...>
+commands.team.delete.usage=/team delete <team>
+commands.team.request_invite.usage=/team request_invite <team>
+commands.add_fake_player.usage=/add_fake_player <uuid> <name>
+
+# Client Commands
+commands.client_config.usage=/client_config
