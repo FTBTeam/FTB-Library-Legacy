@@ -232,7 +232,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	@Override
 	public void updateMouseOver(int mouseX, int mouseY)
 	{
-		super.updateMouseOver(mouseX, mouseY);
+		isMouseOver = checkMouseOver(mouseX, mouseY);
 		setOffset(true);
 
 		if (contextMenu != null)
@@ -310,6 +310,13 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	{
 		openContextMenu((Panel) null);
 		onInit();
+	}
+
+	@Override
+	public void onClosed()
+	{
+		super.onClosed();
+		closeContextMenu();
 	}
 
 	@Override

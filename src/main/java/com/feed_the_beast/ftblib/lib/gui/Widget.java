@@ -12,7 +12,7 @@ public class Widget implements IGuiWrapper
 {
 	public Panel parent;
 	public int posX, posY, width, height;
-	private boolean isMouseOver;
+	protected boolean isMouseOver;
 
 	public Widget(Panel p)
 	{
