@@ -26,6 +26,7 @@ public class ContextMenuItem implements Comparable<ContextMenuItem>
 	public Runnable callback;
 	public boolean enabled = true;
 	public String yesNoText = "";
+	public boolean closeMenu = true;
 
 	public ContextMenuItem(String t, Icon i, @Nullable Runnable c)
 	{
@@ -50,6 +51,12 @@ public class ContextMenuItem implements Comparable<ContextMenuItem>
 		return this;
 	}
 
+	public ContextMenuItem setCloseMenu(boolean v)
+	{
+		closeMenu = v;
+		return this;
+	}
+
 	public Widget createWidget(ContextMenu panel)
 	{
 		return new ContextMenu.CButton(panel, this);
@@ -63,7 +70,11 @@ public class ContextMenuItem implements Comparable<ContextMenuItem>
 
 	public void onClicked(Panel panel, MouseButton button)
 	{
-		panel.getGui().closeContextMenu();
+		if (closeMenu)
+		{
+			panel.getGui().closeContextMenu();
+		}
+
 		callback.run();
 	}
 }

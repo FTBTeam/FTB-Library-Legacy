@@ -230,6 +230,27 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	}
 
 	@Override
+	public void updateMouseOver(int mouseX, int mouseY)
+	{
+		super.updateMouseOver(mouseX, mouseY);
+		setOffset(true);
+
+		if (contextMenu != null)
+		{
+			contextMenu.updateMouseOver(mouseX, mouseY);
+		}
+		else
+		{
+			for (Widget widget : widgets)
+			{
+				widget.updateMouseOver(mouseX, mouseY);
+			}
+		}
+
+		setOffset(false);
+	}
+
+	@Override
 	public final void draw(Theme theme, int x, int y, int w, int h)
 	{
 		super.draw(theme, x, y, w, h);
