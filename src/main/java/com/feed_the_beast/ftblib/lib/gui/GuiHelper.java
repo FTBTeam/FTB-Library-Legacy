@@ -319,7 +319,7 @@ public class GuiHelper
 	public static void addStackTooltip(ItemStack stack, List<String> list, String prefix)
 	{
 		List<String> tooltip = stack.getTooltip(ClientUtils.MC.player, ClientUtils.MC.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
-		list.add((prefix.isEmpty() ? stack.getRarity().rarityColor.toString() : prefix) + tooltip.get(0));
+		list.add((prefix.isEmpty() ? stack.getRarity().color.toString() : prefix) + tooltip.get(0));
 
 		for (int i = 1; i < tooltip.size(); i++)
 		{
