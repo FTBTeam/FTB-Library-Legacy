@@ -237,7 +237,7 @@ public class FTBLibClientEventHandler
 	{
 		//sidebarButtonScale = 0D;
 
-		if (FTBLibClientConfig.action_buttons != EnumSidebarButtonPlacement.DISABLED && event.getGui() instanceof InventoryEffectRenderer && !FTBLibClient.SIDEBAR_BUTTON_GROUPS.isEmpty())
+		if (FTBLibClientConfig.action_buttons != EnumSidebarButtonPlacement.DISABLED && event.getGui() instanceof InventoryEffectRenderer && !SidebarButtonManager.INSTANCE.groups.isEmpty())
 		{
 			event.getButtonList().add(new GuiButtonSidebarGroup((InventoryEffectRenderer) event.getGui()));
 		}
@@ -392,7 +392,7 @@ public class FTBLibClientEventHandler
 			boolean addedAny;
 			boolean top = FTBLibClientConfig.action_buttons.top() || !gui.mc.player.getActivePotionEffects().isEmpty() || (gui instanceof GuiInventory && ((GuiInventory) gui).func_194310_f().isVisible());
 
-			for (SidebarButtonGroup group : FTBLibClient.SIDEBAR_BUTTON_GROUPS)
+			for (SidebarButtonGroup group : SidebarButtonManager.INSTANCE.groups)
 			{
 				rx = 0;
 				addedAny = false;

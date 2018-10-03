@@ -154,6 +154,6 @@ public class GuiClientConfig extends GuiButtonListBase
 	public void onClosed()
 	{
 		super.onClosed();
-		FTBLibClient.saveSidebarButtonConfig();
+		SidebarButtonManager.INSTANCE.saveConfig();
 	}
 }
