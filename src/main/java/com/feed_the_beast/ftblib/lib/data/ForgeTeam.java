@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.lib.data;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigSavedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDataEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamOwnerChangedEvent;
@@ -699,5 +700,6 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	{
 		clearCache();
 		markDirty();
+		new ForgeTeamConfigSavedEvent(this, group, sender).post();
 	}
 }

@@ -3,6 +3,7 @@ package com.feed_the_beast.ftblib.lib.data;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigSavedEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
@@ -415,5 +416,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 	{
 		clearCache();
 		markDirty();
+		new ForgePlayerConfigSavedEvent(this, group, sender).post();
 	}
 }
