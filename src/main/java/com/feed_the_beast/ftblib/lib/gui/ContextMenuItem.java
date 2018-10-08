@@ -39,6 +39,11 @@ public class ContextMenuItem implements Comparable<ContextMenuItem>
 	{
 	}
 
+	public void drawIcon(Theme theme, int x, int y, int w, int h)
+	{
+		icon.draw(x, y, w, h);
+	}
+
 	public ContextMenuItem setEnabled(boolean v)
 	{
 		enabled = v;
