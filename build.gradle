@@ -31,7 +31,7 @@ minecraft {
 	runDir = "run"
 	mappings = "${mappings_version}"
 
-	replace "0.0.0.forge", forge_version
+	replace "0.0.0.forge", min_forge_version
 	replace "0.0.0.ftblib", project.version
 	replaceIn "${mod_reference}"
 }
