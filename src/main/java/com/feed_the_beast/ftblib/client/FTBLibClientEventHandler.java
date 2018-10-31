@@ -2,7 +2,6 @@ package com.feed_the_beast.ftblib.client;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.events.CustomSidebarButtonTextEvent;
 import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.lib.ClientATHelper;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
@@ -17,6 +16,7 @@ import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftblib.net.MessageAdminPanelGui;
 import com.feed_the_beast.ftblib.net.MessageMyTeamGui;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -546,17 +546,16 @@ public class FTBLibClientEventHandler
 					Color4I.WHITE.withAlpha(33).draw(b.x, b.y, 16, 16);
 				}
 
-				if (sidebarButtonScale >= 1D && b.button.hasCustomText())
+				if (sidebarButtonScale >= 1D && b.button.hasCustomText() && b.button.getCustomTextHandler() != null)
 				{
-					CustomSidebarButtonTextEvent event = new CustomSidebarButtonTextEvent(b.button);
-					event.post();
+					String text = b.button.getCustomTextHandler().get();
 
-					if (!event.getText().isEmpty())
+					if (!text.isEmpty())
 					{
-						int nw = font.getStringWidth(event.getText());
+						int nw = font.getStringWidth(text);
 						int width = 16;
 						Color4I.LIGHT_RED.draw(b.x + width - nw, b.y - 1, nw + 1, 9);
-						font.drawString(event.getText(), b.x + width - nw + 1, b.y, 0xFFFFFFFF);
+						font.drawString(text, b.x + width - nw + 1, b.y, 0xFFFFFFFF);
 						GlStateManager.color(1F, 1F, 1F, 1F);
 					}
 				}
@@ -564,34 +563,35 @@ public class FTBLibClientEventHandler
 
 			if (mouseOver != null && sidebarButtonScale >= 1D)
 			{
-				int mx1 = mx - 4;
-				int my1 = my - 12;
+				int mx1 = mx + 10;
+				int my1 = Math.max(3, my - 9);
 
-				String title = I18n.format(mouseOver.button.getLangKey());
+				List<String> list = new ObjectArrayList<>();
+				list.add(I18n.format(mouseOver.button.getLangKey()));
 
-				int tw = font.getStringWidth(title);
-
-				if (!FTBLibClientConfig.action_buttons.top())
+				if (mouseOver.button.getTooltipHandler() != null)
 				{
-					mx1 -= tw + 8;
-					my1 += 4;
+					mouseOver.button.getTooltipHandler().accept(list);
 				}
 
-				if (mx1 < 4)
+				int tw = 0;
+
+				for (String s : list)
 				{
-					mx1 = 4;
-				}
-				if (my1 < 4)
-				{
-					my1 = 4;
+					tw = Math.max(tw, font.getStringWidth(s));
 				}
 
 				GlStateManager.pushMatrix();
 				GlStateManager.translate(0, 0, 500);
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				Color4I.DARK_GRAY.draw(mx1 - 3, my1 - 2, tw + 6, 12);
-				font.drawString(title, mx1, my1, 0xFFFFFFFF);
+				Color4I.DARK_GRAY.draw(mx1 - 3, my1 - 2, tw + 6, 2 + list.size() * 10);
+
+				for (int i = 0; i < list.size(); i++)
+				{
+					font.drawString(list.get(i), mx1, my1 + i * 10, 0xFFFFFFFF);
+				}
+
 				GlStateManager.color(1F, 1F, 1F, 1F);
 				GlStateManager.popMatrix();
 			}

@@ -14,8 +14,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * @author LatvianModder
@@ -31,7 +34,9 @@ public class SidebarButton implements Comparable<SidebarButton>
 	private final List<String> requiredServerMods = new ArrayList<>();
 	private final List<String> clickEvents = new ArrayList<>();
 	private final List<String> shiftClickEvents = new ArrayList<>();
-	private boolean requiresOp, hideWithNEI, loadingScreen, customText;
+	private boolean requiresOp, hideWithNEI, loadingScreen, hasCustomText;
+	private Supplier<String> customTextHandler = null;
+	private Consumer<List<String>> tooltipHandler = null;
 
 	public SidebarButton(ResourceLocation _id, SidebarButtonGroup g, JsonObject json)
 	{
@@ -95,7 +100,7 @@ public class SidebarButton implements Comparable<SidebarButton>
 		requiresOp = json.has("requires_op") && json.get("requires_op").getAsBoolean();
 		hideWithNEI = json.has("hide_with_nei") && json.get("hide_with_nei").getAsBoolean();
 		loadingScreen = json.has("loading_screen") && json.get("loading_screen").getAsBoolean();
-		customText = json.has("custom_text") && json.get("custom_text").getAsBoolean();
+		hasCustomText = json.has("custom_text") && json.get("custom_text").getAsBoolean();
 	}
 
 	public String getLangKey()
@@ -166,7 +171,7 @@ public class SidebarButton implements Comparable<SidebarButton>
 
 	public boolean hasCustomText()
 	{
-		return customText;
+		return hasCustomText;
 	}
 
 	public boolean getConfig()
@@ -177,6 +182,28 @@ public class SidebarButton implements Comparable<SidebarButton>
 	public void setConfig(boolean value)
 	{
 		configValue = value;
+	}
+
+	@Nullable
+	public Supplier<String> getCustomTextHandler()
+	{
+		return customTextHandler;
+	}
+
+	public void setCustomTextHandler(Supplier<String> text)
+	{
+		customTextHandler = text;
+	}
+
+	@Nullable
+	public Consumer<List<String>> getTooltipHandler()
+	{
+		return tooltipHandler;
+	}
+
+	public void setTooltipHandler(Consumer<List<String>> text)
+	{
+		tooltipHandler = text;
 	}
 
 	@Override

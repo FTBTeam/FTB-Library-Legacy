@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.client;
 
 import com.feed_the_beast.ftblib.FTBLibConfig;
+import com.feed_the_beast.ftblib.events.SidebarButtonCreatedEvent;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
@@ -162,6 +163,15 @@ public enum SidebarButtonManager implements ISelectiveResourceReloadListener
 		}
 
 		groups.sort(null);
+
+		for (SidebarButtonGroup group : groups)
+		{
+			for (SidebarButton button : group.getButtons())
+			{
+				new SidebarButtonCreatedEvent(button).post();
+			}
+		}
+
 		saveConfig();
 	}
 
