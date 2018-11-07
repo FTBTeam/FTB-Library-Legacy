@@ -24,6 +24,7 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -86,6 +87,21 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 	public final short getUID()
 	{
 		return uid;
+	}
+
+	public final int hashCode()
+	{
+		return uid;
+	}
+
+	public final boolean equals(Object o)
+	{
+		return o == this || o instanceof ForgeTeam && uid == ((ForgeTeam) o).uid;
+	}
+
+	public final String toString()
+	{
+		return String.format("%04X", uid);
 	}
 
 	@Override
@@ -638,7 +654,7 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 		if (cachedConfig == null)
 		{
 			cachedConfig = ConfigGroup.newGroup("team_config");
-			cachedConfig.setDisplayName(new TextComponentTranslation("gui.settings"));
+			cachedConfig.setDisplayName(new TextComponentTranslation("gui.settings").appendSibling(StringUtils.bold(StringUtils.color(new TextComponentString(" #" + toString()), TextFormatting.DARK_GRAY), false)));
 			ForgeTeamConfigEvent event = new ForgeTeamConfigEvent(this, cachedConfig);
 			event.post();
 
@@ -686,12 +702,14 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 
 	public File getDataFile(String ext)
 	{
+		File dir = new File(universe.getWorldDirectory(), "data/ftb_lib/teams/");
+
 		if (ext.isEmpty())
 		{
-			return new File(universe.getWorldDirectory(), "data/ftb_lib/teams/" + getID() + ".dat");
+			return new File(dir, getID() + ".dat");
 		}
 
-		return new File(universe.getWorldDirectory(), "data/ftb_lib/teams/" + getID() + "." + ext + ".dat");
+		return new File(dir, getID() + "." + ext + ".dat");
 	}
 
 	@Override

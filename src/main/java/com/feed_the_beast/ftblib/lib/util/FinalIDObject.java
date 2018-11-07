@@ -30,13 +30,13 @@ public class FinalIDObject implements IWithID
 	}
 
 	@Override
-	public final int hashCode()
+	public int hashCode()
 	{
 		return id.hashCode();
 	}
 
 	@Override
-	public final boolean equals(Object o)
+	public boolean equals(Object o)
 	{
 		return o == this || o instanceof IWithID && id.equals(((IWithID) o).getID());
 	}

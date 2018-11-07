@@ -405,7 +405,14 @@ public class Universe
 						{
 							String s = FileUtils.getBaseName(file);
 							teamNBT.put(s, nbt);
-							addTeam(new ForgeTeam(this, generateTeamUID(nbt.getShort("UID")), s, TeamType.NAME_MAP.get(nbt.getString("Type"))));
+							short uid = nbt.getShort("UID");
+							ForgeTeam team = new ForgeTeam(this, generateTeamUID(uid), s, TeamType.NAME_MAP.get(nbt.getString("Type")));
+							addTeam(team);
+
+							if (uid == 0)
+							{
+								team.markDirty();
+							}
 						}
 					}
 				}
@@ -565,6 +572,7 @@ public class Universe
 				if (team.type.save && team.isValid())
 				{
 					NBTTagCompound nbt = team.serializeNBT();
+					nbt.setShort("UID", team.getUID());
 					nbt.setString("Type", team.type.getName());
 					NBTUtils.writeNBTSafe(file, nbt);
 					new ForgeTeamSavedEvent(team).post();
