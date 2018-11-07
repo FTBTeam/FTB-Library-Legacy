@@ -1,6 +1,9 @@
 package com.feed_the_beast.ftblib.lib.util.text_components;
 
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
+import it.unimi.dsi.fastutil.chars.Char2ObjectOpenHashMap;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
@@ -14,6 +17,51 @@ import java.util.function.Function;
  */
 public class TextComponentParser
 {
+	public static final NameMap.ObjectProperties<TextFormatting> TEXT_FORMATTING_OBJECT_PROPERTIES = new NameMap.ObjectProperties<TextFormatting>()
+	{
+		@Override
+		public String getName(TextFormatting value)
+		{
+			return value.getFriendlyName();
+		}
+
+		@Override
+		public ITextComponent getDisplayName(@Nullable ICommandSender sender, TextFormatting value)
+		{
+			return StringUtils.color(new TextComponentString(getName(value)), value);
+		}
+	};
+
+	public static final NameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = NameMap.create(TextFormatting.RESET, TEXT_FORMATTING_OBJECT_PROPERTIES, TextFormatting.values());
+	public static final NameMap<TextFormatting> TEXT_FORMATTING_COLORS_NAME_MAP = NameMap.create(TextFormatting.WHITE, TEXT_FORMATTING_OBJECT_PROPERTIES,
+			TextFormatting.BLACK,
+			TextFormatting.DARK_BLUE,
+			TextFormatting.DARK_GREEN,
+			TextFormatting.DARK_AQUA,
+			TextFormatting.DARK_RED,
+			TextFormatting.DARK_PURPLE,
+			TextFormatting.GOLD,
+			TextFormatting.GRAY,
+			TextFormatting.DARK_GRAY,
+			TextFormatting.BLUE,
+			TextFormatting.GREEN,
+			TextFormatting.AQUA,
+			TextFormatting.RED,
+			TextFormatting.LIGHT_PURPLE,
+			TextFormatting.YELLOW,
+			TextFormatting.WHITE
+	);
+
+	public static final Char2ObjectOpenHashMap<TextFormatting> CODE_TO_FORMATTING = new Char2ObjectOpenHashMap<>();
+
+	static
+	{
+		for (TextFormatting formatting : TEXT_FORMATTING_NAME_MAP.values)
+		{
+			CODE_TO_FORMATTING.put(formatting.formattingCode, formatting);
+		}
+	}
+
 	public static ITextComponent parse(String text, @Nullable Function<String, ITextComponent> substitutes)
 	{
 		return new TextComponentParser(text, substitutes).parse();
@@ -96,7 +144,7 @@ public class TextComponentParser
 
 					i++;
 
-					TextFormatting formatting = StringUtils.CODE_TO_FORMATTING.get(c[i]);
+					TextFormatting formatting = CODE_TO_FORMATTING.get(c[i]);
 
 					if (formatting == null)
 					{

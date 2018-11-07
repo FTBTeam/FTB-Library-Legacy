@@ -48,7 +48,7 @@ public class CmdJoin extends CmdBase
 				{
 					if (team.addMember(player, true))
 					{
-						list.add(team.getName());
+						list.add(team.getID());
 					}
 				}
 

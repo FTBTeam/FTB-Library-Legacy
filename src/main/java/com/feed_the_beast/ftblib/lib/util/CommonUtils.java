@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.ModContainer;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nullable;
-import java.util.function.Predicate;
 
 /**
  * Made by LatvianModder
@@ -16,17 +15,11 @@ import java.util.function.Predicate;
 public class CommonUtils
 {
 	private static ListMultimap<String, ModContainer> packageOwners = null;
-	private static final Predicate<Object> PREDICATE_ALWAYS_TRUE = object -> true;
 
 	@SuppressWarnings({"unchecked", "ConstantConditions"})
 	public static <T> T cast(@Nullable Object o)
 	{
-		return (T) o;
-	}
-
-	public static <T> Predicate<T> alwaysTruePredicate()
-	{
-		return cast(PREDICATE_ALWAYS_TRUE);
+		return o == null ? null : (T) o;
 	}
 
 	@Nullable

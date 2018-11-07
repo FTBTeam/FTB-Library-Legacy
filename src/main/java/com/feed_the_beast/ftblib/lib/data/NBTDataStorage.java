@@ -1,13 +1,12 @@
 package com.feed_the_beast.ftblib.lib.data;
 
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
-import com.feed_the_beast.ftblib.lib.util.NBTUtils;
+import com.feed_the_beast.ftblib.lib.util.IWithID;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -16,20 +15,20 @@ import java.util.Objects;
  */
 public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 {
-	public static abstract class Data implements IStringSerializable, INBTSerializable<NBTTagCompound>
+	public interface Data extends IWithID, INBTSerializable<NBTTagCompound>
 	{
 		@Override
-		public NBTTagCompound serializeNBT()
+		default NBTTagCompound serializeNBT()
 		{
 			return new NBTTagCompound();
 		}
 
 		@Override
-		public void deserializeNBT(NBTTagCompound nbt)
+		default void deserializeNBT(NBTTagCompound nbt)
 		{
 		}
 
-		public void clearCache()
+		default void clearCache()
 		{
 		}
 	}
@@ -65,12 +64,12 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 
 	public NBTDataStorage()
 	{
-		map = new HashMap<>();
+		map = new Object2ObjectOpenHashMap<>();
 	}
 
 	public void add(Data data)
 	{
-		map.put(data.getName(), data);
+		map.put(data.getID(), data);
 	}
 
 	@Nullable
@@ -100,7 +99,7 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 
 			if (!nbt1.isEmpty())
 			{
-				nbt.setTag(data.getName(), nbt1);
+				nbt.setTag(data.getID(), nbt1);
 			}
 		}
 
@@ -110,14 +109,9 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 	@Override
 	public void deserializeNBT(NBTTagCompound nbt)
 	{
-		NBTUtils.renameTag(nbt, "ftbl:data", "ftblib");
-		NBTUtils.renameTag(nbt, "ftbl", "ftblib");
-		NBTUtils.renameTag(nbt, "ftbu:data", "ftbutilities");
-		NBTUtils.renameTag(nbt, "ftbu", "ftbutilities");
-
 		for (Data data : map.values())
 		{
-			data.deserializeNBT(nbt.getCompoundTag(data.getName()));
+			data.deserializeNBT(nbt.getCompoundTag(data.getID()));
 		}
 	}
 

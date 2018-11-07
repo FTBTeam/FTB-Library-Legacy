@@ -22,7 +22,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatisticsManagerServer;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -44,7 +43,7 @@ import java.util.UUID;
 /**
  * @author LatvianModder
  */
-public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTagCompound>, Comparable<ForgePlayer>, IConfigCallback
+public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable<ForgePlayer>, IConfigCallback
 {
 	private static FakePlayer playerForStats;
 
@@ -132,7 +131,6 @@ public class ForgePlayer implements IStringSerializable, INBTSerializable<NBTTag
 		return playerId;
 	}
 
-	@Override
 	public final String getName()
 	{
 		return playerName;

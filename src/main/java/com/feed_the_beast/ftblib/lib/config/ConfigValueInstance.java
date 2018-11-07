@@ -205,7 +205,7 @@ public final class ConfigValueInstance extends FinalIDObject
 
 	public ConfigValueInstance copy(ConfigGroup g)
 	{
-		ConfigValueInstance inst = new ConfigValueInstance(getName(), g, value.copy());
+		ConfigValueInstance inst = new ConfigValueInstance(getID(), g, value.copy());
 		inst.defaultValue = defaultValue.copy();
 		inst.displayName = displayName == null ? null : displayName.createCopy();
 		inst.info = info == null ? null : info.createCopy();
@@ -217,6 +217,6 @@ public final class ConfigValueInstance extends FinalIDObject
 
 	public String getPath()
 	{
-		return group.getPath() + "." + getName();
+		return group.getPath() + "." + getID();
 	}
 }

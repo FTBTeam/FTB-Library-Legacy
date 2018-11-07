@@ -99,7 +99,7 @@ public class ConfigTeam extends ConfigValue
 
 			for (ForgeTeam team : Universe.get().getTeams())
 			{
-				list.add(team.getName());
+				list.add(team.getID());
 			}
 
 			list.sort(null);
@@ -138,7 +138,7 @@ public class ConfigTeam extends ConfigValue
 
 		for (ForgeTeam team : Universe.get().getTeams())
 		{
-			data.writeString(team.getName());
+			data.writeString(team.getID());
 			data.writeTextComponent(team.getTitle());
 			data.writeIcon(team.getIcon());
 		}

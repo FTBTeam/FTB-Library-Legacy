@@ -79,7 +79,7 @@ public class CmdCreate extends CmdBase
 
 		p.team.universe.clearCache();
 
-		ForgeTeam team = new ForgeTeam(p.team.universe, args[0], TeamType.PLAYER);
+		ForgeTeam team = new ForgeTeam(p.team.universe, p.team.universe.generateTeamUID((short) 0), args[0], TeamType.PLAYER);
 
 		if (args.length > 1)
 		{
@@ -88,10 +88,10 @@ public class CmdCreate extends CmdBase
 
 		p.team = team;
 		team.owner = p;
-		team.universe.teams.put(team.getName(), team);
+		team.universe.addTeam(team);
 		new ForgeTeamCreatedEvent(team).post();
 		new ForgeTeamPlayerJoinedEvent(p).post();
-		sender.sendMessage(FTBLib.lang(sender, "ftblib.lang.team.created", team.getName()));
+		sender.sendMessage(FTBLib.lang(sender, "ftblib.lang.team.created", team.getID()));
 		new MessageMyTeamGuiResponse(p).sendTo(player);
 		team.markDirty();
 		p.markDirty();

@@ -36,13 +36,13 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 
 	public static final DataOut.Serializer<ConfigGroup> SERIALIZER = (data, object) ->
 	{
-		data.writeString(object.getName());
+		data.writeString(object.getID());
 		data.writeTextComponent(object.displayName);
 		data.writeShort(object.values.size());
 
 		for (ConfigValueInstance instance : object.getValues())
 		{
-			data.writeString(instance.getName());
+			data.writeString(instance.getID());
 			instance.writeData(data);
 		}
 
@@ -65,7 +65,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 		while (--s >= 0)
 		{
 			ConfigValueInstance inst = new ConfigValueInstance(group, data);
-			group.values.put(inst.getName(), inst);
+			group.values.put(inst.getID(), inst);
 		}
 
 		s = data.readUnsignedShort();
@@ -75,7 +75,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 		{
 			ConfigGroup group1 = ConfigGroup.DESERIALIZER.read(data);
 			group1.parent = group;
-			group.groups.put(group1.getName(), group1);
+			group.groups.put(group1.getID(), group1);
 		}
 
 		return group;
@@ -127,7 +127,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 			{
 				g = new ConfigGroup(id);
 				g.parent = this;
-				groups.put(g.getName(), g);
+				groups.put(g.getID(), g);
 			}
 
 			return g;
@@ -143,7 +143,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 			throw new IllegalArgumentException("Can't add to this group, parent doesn't match!");
 		}
 
-		values.put(inst.getName(), inst);
+		values.put(inst.getID(), inst);
 		return inst;
 	}
 
@@ -230,7 +230,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 
 	public ConfigGroup copy()
 	{
-		ConfigGroup g = new ConfigGroup(getName());
+		ConfigGroup g = new ConfigGroup(getID());
 
 		if (displayName != null)
 		{
@@ -249,10 +249,10 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 	{
 		if (parent == null)
 		{
-			return getName();
+			return getID();
 		}
 
-		return parent.getPath() + "." + getName();
+		return parent.getPath() + "." + getID();
 	}
 
 	public ITextComponent getDisplayNameOf(ConfigValueInstance inst)
@@ -285,11 +285,11 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 		{
 			if (path.isEmpty())
 			{
-				list.add(instance.getName());
+				list.add(instance.getID());
 			}
 			else
 			{
-				list.add(path + "." + instance.getName());
+				list.add(path + "." + instance.getID());
 			}
 		}
 	}
@@ -300,15 +300,15 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 
 		for (ConfigGroup group : getGroups())
 		{
-			map.put(group.getName(), group.toString());
+			map.put(group.getID(), group.toString());
 		}
 
 		for (ConfigValueInstance instance : getValues())
 		{
-			map.put(instance.getName(), instance.getValue().getString());
+			map.put(instance.getID(), instance.getValue().getString());
 		}
 
-		return parent == null ? (getName() + "#" + map) : map.toString();
+		return parent == null ? (getID() + "#" + map) : map.toString();
 	}
 
 	@Override
@@ -320,7 +320,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 		{
 			if (!instance.getExcluded())
 			{
-				instance.getValue().writeToNBT(nbt, instance.getName());
+				instance.getValue().writeToNBT(nbt, instance.getID());
 			}
 		}
 
@@ -330,7 +330,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 
 			if (!nbt1.isEmpty())
 			{
-				nbt.setTag(group.getName(), nbt1);
+				nbt.setTag(group.getID(), nbt1);
 			}
 		}
 
@@ -344,13 +344,13 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 		{
 			if (!instance.getExcluded())
 			{
-				instance.getValue().readFromNBT(nbt, instance.getName());
+				instance.getValue().readFromNBT(nbt, instance.getID());
 			}
 		}
 
 		for (ConfigGroup group : getGroups())
 		{
-			group.deserializeNBT(nbt.getCompoundTag(group.getName()));
+			group.deserializeNBT(nbt.getCompoundTag(group.getID()));
 		}
 	}
 
@@ -360,13 +360,13 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 		{
 			if (!instance.getExcluded() && instance.getCanEdit())
 			{
-				instance.getValue().readFromNBT(nbt, instance.getName());
+				instance.getValue().readFromNBT(nbt, instance.getID());
 			}
 		}
 
 		for (ConfigGroup group : getGroups())
 		{
-			group.deserializeEditedNBT(nbt.getCompoundTag(group.getName()));
+			group.deserializeEditedNBT(nbt.getCompoundTag(group.getID()));
 		}
 	}
 }

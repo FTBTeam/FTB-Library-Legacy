@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamConfigSavedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDataEvent;
-import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamOwnerChangedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerLeftEvent;
@@ -14,14 +13,14 @@ import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
-import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -33,8 +32,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -42,11 +39,12 @@ import java.util.regex.Pattern;
 /**
  * @author LatvianModder
  */
-public class ForgeTeam extends FinalIDObject implements IStringSerializable, INBTSerializable<NBTTagCompound>, IConfigCallback
+public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagCompound>, IConfigCallback
 {
 	public static final int MAX_TEAM_ID_LENGTH = 35;
 	public static final Pattern TEAM_ID_PATTERN = Pattern.compile("^[a-z0-9_]{1," + MAX_TEAM_ID_LENGTH + "}$");
 
+	private final short uid;
 	public final Universe universe;
 	public final TeamType type;
 	public ForgePlayer owner;
@@ -64,9 +62,10 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	private Icon cachedIcon;
 	public boolean needsSaving;
 
-	public ForgeTeam(Universe u, String id, TeamType t)
+	public ForgeTeam(Universe u, short id, String n, TeamType t)
 	{
-		super(id, t.isNone ? 0 : (StringUtils.FLAG_ID_DEFAULTS | StringUtils.FLAG_ID_ALLOW_EMPTY));
+		super(n, t.isNone ? 0 : (StringUtils.FLAG_ID_DEFAULTS | StringUtils.FLAG_ID_ALLOW_EMPTY));
+		uid = id;
 		universe = u;
 		type = t;
 		title = "";
@@ -75,13 +74,18 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		icon = "";
 		freeToJoin = false;
 		fakePlayerStatus = EnumTeamStatus.ALLY;
-		requestingInvite = new HashSet<>();
-		players = new HashMap<>();
+		requestingInvite = new ObjectOpenHashSet<>();
+		players = new Object2ObjectOpenHashMap<>();
 		dataStorage = new NBTDataStorage();
 		new ForgeTeamDataEvent(this, dataStorage::add).post();
 		clearCache();
 		cachedIcon = null;
 		needsSaving = false;
+	}
+
+	public final short getUID()
+	{
+		return uid;
 	}
 
 	@Override
@@ -371,7 +375,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 		{
 			return fakePlayerStatus;
 		}
-		else if (type == TeamType.SERVER && getName().equals("singleplayer"))
+		else if (type == TeamType.SERVER && getID().equals("singleplayer"))
 		{
 			return EnumTeamStatus.MOD;
 		}
@@ -551,12 +555,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 	public void delete()
 	{
-		File folder = new File(universe.getWorldDirectory(), "data/ftb_lib/teams/");
-		new ForgeTeamDeletedEvent(this, folder).post();
-		universe.teams.remove(getName());
-		FileUtils.delete(new File(folder, getName() + ".dat"));
-		universe.markDirty();
-		universe.clearCache();
+		universe.removeTeam(this);
 	}
 
 	public List<ForgePlayer> getMembers()
@@ -669,7 +668,7 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 
 	public boolean equalsTeam(@Nullable ForgeTeam team)
 	{
-		return team == this || (team != null && getName().equals(team.getName()));
+		return team == this || (team != null && getID().equals(team.getID()));
 	}
 
 	public boolean anyPlayerHasPermission(String permission, EnumTeamStatus status)
@@ -689,10 +688,10 @@ public class ForgeTeam extends FinalIDObject implements IStringSerializable, INB
 	{
 		if (ext.isEmpty())
 		{
-			return new File(universe.getWorldDirectory(), "data/ftb_lib/teams/" + getName() + ".dat");
+			return new File(universe.getWorldDirectory(), "data/ftb_lib/teams/" + getID() + ".dat");
 		}
 
-		return new File(universe.getWorldDirectory(), "data/ftb_lib/teams/" + getName() + "." + ext + ".dat");
+		return new File(universe.getWorldDirectory(), "data/ftb_lib/teams/" + getID() + "." + ext + ".dat");
 	}
 
 	@Override

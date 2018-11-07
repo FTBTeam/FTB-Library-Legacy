@@ -35,7 +35,7 @@ public class GuiSelectTeamValue extends GuiButtonListBase
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
-					value.setString(inst.getName());
+					value.setString(inst.getID());
 					callbackGui.openGui();
 				}
 			});

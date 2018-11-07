@@ -32,6 +32,7 @@ public class InvUtils
 {
 	public static final IInventory EMPTY_INVENTORY = new InventoryBasic("[Null]", true, 0);
 	public static final ItemStack ERROR_ITEM = new ItemStack(Blocks.BARRIER);
+	public static final Predicate<ItemStack> NO_FILTER = stack -> true;
 
 	static
 	{

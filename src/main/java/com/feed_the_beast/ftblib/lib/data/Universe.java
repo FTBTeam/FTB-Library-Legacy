@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.events.player.ForgePlayerLoadedEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerSavedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamLoadedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamSavedEvent;
@@ -20,6 +21,7 @@ import com.feed_the_beast.ftblib.lib.EnumReloadType;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
+import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
@@ -31,6 +33,9 @@ import com.feed_the_beast.ftblib.net.MessageSyncData;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -52,7 +57,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -236,7 +240,8 @@ public class Universe
 	public final MinecraftServer server;
 	public final WorldServer world;
 	public final Map<UUID, ForgePlayer> players;
-	public final Map<String, ForgeTeam> teams;
+	private final Map<String, ForgeTeam> teams;
+	private final Short2ObjectOpenHashMap<ForgeTeam> teamMap;
 	private final ForgeTeam noneTeam;
 	private UUID uuid;
 	private boolean needsSaving;
@@ -256,16 +261,17 @@ public class Universe
 		server = w.getMinecraftServer();
 		world = w;
 		ticks = Ticks.get(world.getTotalWorldTime());
-		players = new HashMap<>();
-		teams = new HashMap<>();
-		noneTeam = new ForgeTeam(this, "", TeamType.NONE);
+		players = new Object2ObjectOpenHashMap<>();
+		teams = new Object2ObjectOpenHashMap<>();
+		teamMap = new Short2ObjectOpenHashMap<>();
+		noneTeam = new ForgeTeam(this, (short) 0, "", TeamType.NONE);
 		uuid = null;
 		needsSaving = false;
 		checkSaving = true;
-		scheduledTasks = new ArrayList<>();
-		persistentScheduledTasks = new ArrayList<>();
-		scheduledTaskQueue = new ArrayList<>();
-		persistentScheduledTaskQueue = new ArrayList<>();
+		scheduledTasks = new ObjectArrayList<>();
+		persistentScheduledTasks = new ObjectArrayList<>();
+		scheduledTaskQueue = new ObjectArrayList<>();
+		persistentScheduledTaskQueue = new ObjectArrayList<>();
 	}
 
 	public void markDirty()
@@ -399,7 +405,7 @@ public class Universe
 						{
 							String s = FileUtils.getBaseName(file);
 							teamNBT.put(s, nbt);
-							teams.put(s, new ForgeTeam(this, s, TeamType.NAME_MAP.get(nbt.getString("Type"))));
+							addTeam(new ForgeTeam(this, generateTeamUID(nbt.getShort("UID")), s, TeamType.NAME_MAP.get(nbt.getString("Type"))));
 						}
 					}
 				}
@@ -410,7 +416,7 @@ public class Universe
 			ex.printStackTrace();
 		}
 
-		fakePlayerTeam = new ForgeTeam(this, "fakeplayer", TeamType.SERVER_NO_SAVE)
+		fakePlayerTeam = new ForgeTeam(this, (short) 1, "fakeplayer", TeamType.SERVER_NO_SAVE)
 		{
 			@Override
 			public void markDirty()
@@ -452,14 +458,14 @@ public class Universe
 			new ForgePlayerLoadedEvent(player).post();
 		}
 
-		for (ForgeTeam team : teams.values())
+		for (ForgeTeam team : getTeams())
 		{
 			if (!team.type.save)
 			{
 				continue;
 			}
 
-			NBTTagCompound nbt = teamNBT.get(team.getName());
+			NBTTagCompound nbt = teamNBT.get(team.getID());
 
 			if (nbt != null && !nbt.isEmpty())
 			{
@@ -538,20 +544,20 @@ public class Universe
 				NBTTagCompound nbt = player.serializeNBT();
 				nbt.setString("Name", player.getName());
 				nbt.setString("UUID", StringUtils.fromUUID(player.getId()));
-				nbt.setString("TeamID", player.team.getName());
+				nbt.setString("TeamID", player.team.getID());
 				NBTUtils.writeNBTSafe(player.getDataFile(""), nbt);
 				new ForgePlayerSavedEvent(player).post();
 				player.needsSaving = false;
 			}
 		}
 
-		for (ForgeTeam team : teams.values())
+		for (ForgeTeam team : getTeams())
 		{
 			if (team.needsSaving)
 			{
 				if (FTBLibConfig.debugging.print_more_info)
 				{
-					FTBLib.LOGGER.info("Saved team data for " + team.getName());
+					FTBLib.LOGGER.info("Saved team data for " + team.getID());
 				}
 
 				File file = team.getDataFile("");
@@ -617,9 +623,9 @@ public class Universe
 
 				if (!getTeam(id).isValid())
 				{
-					ForgeTeam team = new ForgeTeam(this, id, TeamType.PLAYER);
+					ForgeTeam team = new ForgeTeam(this, generateTeamUID((short) 0), id, TeamType.PLAYER);
 					team.owner = p;
-					teams.put(team.getName(), team);
+					addTeam(team);
 					p.team = team;
 					team.markDirty();
 					sendTeamCreatedEvent = true;
@@ -632,9 +638,9 @@ public class Universe
 
 				if (!team.isValid())
 				{
-					team = new ForgeTeam(this, "singleplayer", TeamType.SERVER);
+					team = new ForgeTeam(this, (short) 2, "singleplayer", TeamType.SERVER);
 					team.setFreeToJoin(true);
-					teams.put(team.getName(), team);
+					addTeam(team);
 					p.team = team;
 					team.setTitle(p.getName());
 					team.setIcon(new PlayerHeadIcon(p.getId()).toString());
@@ -820,11 +826,17 @@ public class Universe
 		return team == null ? (id.equals("fakeplayer") ? fakePlayerTeam : noneTeam) : team;
 	}
 
+	public ForgeTeam getTeam(short uid)
+	{
+		ForgeTeam team = uid == 0 ? null : teamMap.get(uid);
+		return team == null ? (uid == 1 ? fakePlayerTeam : noneTeam) : team;
+	}
+
 	public Collection<ForgePlayer> getOnlinePlayers()
 	{
 		Collection<ForgePlayer> set = Collections.emptySet();
 
-		for (ForgePlayer player : players.values())
+		for (ForgePlayer player : getPlayers())
 		{
 			if (player.isOnline())
 			{
@@ -843,17 +855,35 @@ public class Universe
 	public void clearCache()
 	{
 		new UniverseClearCacheEvent(this).post();
-
-		for (ForgeTeam team : teams.values())
-		{
-			team.clearCache();
-		}
-
-		for (ForgePlayer player : players.values())
-		{
-			player.clearCache();
-		}
-
+		getTeams().forEach(ForgeTeam::clearCache);
+		getPlayers().forEach(ForgePlayer::clearCache);
 		fakePlayer.clearCache();
+	}
+
+	public void addTeam(ForgeTeam team)
+	{
+		teamMap.put(team.getUID(), team);
+		teams.put(team.getID(), team);
+	}
+
+	public void removeTeam(ForgeTeam team)
+	{
+		File folder = new File(getWorldDirectory(), "data/ftb_lib/teams/");
+		new ForgeTeamDeletedEvent(team, folder).post();
+		teamMap.remove(team.getUID());
+		teams.remove(team.getID());
+		FileUtils.delete(new File(folder, team.getID() + ".dat"));
+		markDirty();
+		clearCache();
+	}
+
+	public short generateTeamUID(short id)
+	{
+		while (id == 0 || id == 1 || id == 2 || teamMap.containsKey(id))
+		{
+			id = (short) MathUtils.RAND.nextInt();
+		}
+
+		return id;
 	}
 }

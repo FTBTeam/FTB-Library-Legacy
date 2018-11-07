@@ -1,12 +1,8 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.io.Bits;
-import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
-import it.unimi.dsi.fastutil.chars.Char2ObjectOpenHashMap;
-import net.minecraft.command.ICommandSender;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
@@ -35,47 +31,12 @@ public class StringUtils
 	public static final int FLAG_ID_DEFAULTS = FLAG_ID_FIX | FLAG_ID_ONLY_LOWERCASE | FLAG_ID_ONLY_UNDERLINE;
 
 	public static final Comparator<Object> IGNORE_CASE_COMPARATOR = (o1, o2) -> String.valueOf(o1).compareToIgnoreCase(String.valueOf(o2));
-	public static final Comparator<Object> ID_COMPARATOR = (o1, o2) -> getId(o1, FLAG_ID_FIX).compareToIgnoreCase(getId(o2, FLAG_ID_FIX));
+	public static final Comparator<Object> ID_COMPARATOR = (o1, o2) -> getID(o1, FLAG_ID_FIX).compareToIgnoreCase(getID(o2, FLAG_ID_FIX));
 
 	public static final Map<String, String> TEMP_MAP = new HashMap<>();
 	public static final DecimalFormat DOUBLE_FORMATTER_00 = new DecimalFormat("#0.00");
 	public static final DecimalFormat DOUBLE_FORMATTER_0 = new DecimalFormat("#0.0");
 	public final static int[] INT_SIZE_TABLE = {9, 99, 999, 9999, 99999, 999999, 9999999, 99999999, 999999999, Integer.MAX_VALUE};
-
-	public static final NameMap.ObjectProperties<TextFormatting> TEXT_FORMATTING_OBJECT_PROPERTIES = new NameMap.ObjectProperties<TextFormatting>()
-	{
-		@Override
-		public String getName(TextFormatting value)
-		{
-			return value.getFriendlyName();
-		}
-
-		@Override
-		public ITextComponent getDisplayName(@Nullable ICommandSender sender, TextFormatting value)
-		{
-			return color(new TextComponentString(getName(value)), value);
-		}
-	};
-
-	public static final NameMap<TextFormatting> TEXT_FORMATTING_NAME_MAP = NameMap.create(TextFormatting.RESET, TEXT_FORMATTING_OBJECT_PROPERTIES, TextFormatting.values());
-	public static final NameMap<TextFormatting> TEXT_FORMATTING_COLORS_NAME_MAP = NameMap.create(TextFormatting.WHITE, TEXT_FORMATTING_OBJECT_PROPERTIES,
-			TextFormatting.BLACK,
-			TextFormatting.DARK_BLUE,
-			TextFormatting.DARK_GREEN,
-			TextFormatting.DARK_AQUA,
-			TextFormatting.DARK_RED,
-			TextFormatting.DARK_PURPLE,
-			TextFormatting.GOLD,
-			TextFormatting.GRAY,
-			TextFormatting.DARK_GRAY,
-			TextFormatting.BLUE,
-			TextFormatting.GREEN,
-			TextFormatting.AQUA,
-			TextFormatting.RED,
-			TextFormatting.LIGHT_PURPLE,
-			TextFormatting.YELLOW,
-			TextFormatting.WHITE
-	);
 
 	private static final Pattern SNAKE_CASE_ID_PATTERN = Pattern.compile("[^a-z0-9_]");
 	private static final Pattern REPEATING_UNDERSCORE_PATTERN = Pattern.compile("_+");
@@ -91,26 +52,20 @@ public class StringUtils
 		return string.isEmpty() ? string : REPEATING_UNDERSCORE_PATTERN.matcher(SNAKE_CASE_ID_PATTERN.matcher(unformatted(string).toLowerCase()).replaceAll("_")).replaceAll("_");
 	}
 
-	public static final Char2ObjectOpenHashMap<TextFormatting> CODE_TO_FORMATTING = new Char2ObjectOpenHashMap<>();
-
-	static
-	{
-		for (TextFormatting formatting : TEXT_FORMATTING_NAME_MAP.values)
-		{
-			CODE_TO_FORMATTING.put(formatting.toString().charAt(1), formatting);
-		}
-	}
-
 	public static String emptyIfNull(@Nullable Object o)
 	{
 		return o == null ? "" : o.toString();
 	}
 
-	public static String getRawId(Object o)
+	public static String getRawID(Object o)
 	{
 		if (o instanceof IStringSerializable)
 		{
 			return ((IStringSerializable) o).getName();
+		}
+		else if (o instanceof IWithID)
+		{
+			return ((IWithID) o).getID();
 		}
 		else if (o instanceof Enum)
 		{
@@ -120,9 +75,9 @@ public class StringUtils
 		return String.valueOf(o);
 	}
 
-	public static String getId(Object o, int flags)
+	public static String getID(Object o, int flags)
 	{
-		String id = getRawId(o);
+		String id = getRawID(o);
 
 		if (flags == 0)
 		{

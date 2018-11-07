@@ -168,7 +168,24 @@ public class FTBLibAPI
 			return false;
 		}
 
-		return p.hasTeam() ? p.team.getName().equals(team) : team.isEmpty();
+		return p.hasTeam() ? p.team.getID().equals(team) : team.isEmpty();
+	}
+
+	public static boolean isPlayerInTeam(UUID player, int team)
+	{
+		if (!Universe.loaded())
+		{
+			return false;
+		}
+
+		ForgePlayer p = Universe.get().getPlayer(player);
+
+		if (p == null)
+		{
+			return false;
+		}
+
+		return p.hasTeam() ? p.team.getUID() == team : team == 0;
 	}
 
 	public static String getTeam(UUID player)
@@ -179,6 +196,17 @@ public class FTBLibAPI
 		}
 
 		ForgePlayer p = Universe.get().getPlayer(player);
-		return p == null ? "" : p.team.getName();
+		return p == null ? "" : p.team.getID();
+	}
+
+	public static short getTeamID(UUID player)
+	{
+		if (!Universe.loaded())
+		{
+			return 0;
+		}
+
+		ForgePlayer p = Universe.get().getPlayer(player);
+		return p == null ? 0 : p.team.getUID();
 	}
 }

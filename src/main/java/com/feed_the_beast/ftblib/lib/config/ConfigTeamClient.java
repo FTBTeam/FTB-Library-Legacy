@@ -67,10 +67,10 @@ public class ConfigTeamClient extends ConfigString
 
 		for (TeamInst inst : map.values())
 		{
-			TeamInst inst1 = new TeamInst(inst.getName());
+			TeamInst inst1 = new TeamInst(inst.getID());
 			inst1.title = inst.title.createCopy();
 			inst1.icon = inst.icon.copy();
-			config.map.put(inst1.getName(), inst1);
+			config.map.put(inst1.getID(), inst1);
 		}
 
 		return config;
@@ -131,7 +131,7 @@ public class ConfigTeamClient extends ConfigString
 			TeamInst inst = new TeamInst(data.readString());
 			inst.title = data.readTextComponent();
 			inst.icon = data.readIcon();
-			map.put(inst.getName(), inst);
+			map.put(inst.getID(), inst);
 		}
 
 		setString(data.readString());

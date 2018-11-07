@@ -1,17 +1,15 @@
 package com.feed_the_beast.ftblib.lib.util;
 
-import net.minecraft.util.IStringSerializable;
-
 /**
  * @author LatvianModder
  */
-public class FinalIDObject implements IStringSerializable
+public class FinalIDObject implements IWithID
 {
 	private final String id;
 
 	public FinalIDObject(String _id, int flags)
 	{
-		id = StringUtils.getId(_id, flags);
+		id = StringUtils.getID(_id, flags);
 	}
 
 	public FinalIDObject(String id)
@@ -20,7 +18,7 @@ public class FinalIDObject implements IStringSerializable
 	}
 
 	@Override
-	public final String getName()
+	public final String getID()
 	{
 		return id;
 	}
@@ -40,6 +38,6 @@ public class FinalIDObject implements IStringSerializable
 	@Override
 	public final boolean equals(Object o)
 	{
-		return o == this || o == id || (o != null && id.equals(StringUtils.getId(o, StringUtils.FLAG_ID_FIX)));
+		return o == this || o instanceof IWithID && id.equals(((IWithID) o).getID());
 	}
 }

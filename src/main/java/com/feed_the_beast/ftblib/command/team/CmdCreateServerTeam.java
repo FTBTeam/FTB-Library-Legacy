@@ -35,12 +35,13 @@ public class CmdCreateServerTeam extends CmdBase
 			throw FTBLib.error(sender, "ftblib.lang.team.id_already_exists");
 		}
 
-		Universe.get().clearCache();
-		ForgeTeam team = new ForgeTeam(Universe.get(), args[0], TeamType.SERVER);
-		team.setTitle(team.getName());
-		team.universe.teams.put(team.getName(), team);
+		Universe universe = Universe.get();
+		universe.clearCache();
+		ForgeTeam team = new ForgeTeam(universe, universe.generateTeamUID((short) 0), args[0], TeamType.SERVER);
+		team.setTitle(team.getID());
+		team.universe.addTeam(team);
 		new ForgeTeamCreatedEvent(team).post();
-		sender.sendMessage(FTBLib.lang(sender, "ftblib.lang.team.created", team.getName()));
+		sender.sendMessage(FTBLib.lang(sender, "ftblib.lang.team.created", team.getID()));
 		team.markDirty();
 	}
 }

@@ -80,7 +80,7 @@ public class GuiCreateTeam extends GuiBase
 			@Override
 			public void onTextChanged()
 			{
-				setText(StringUtils.getId(getText(), StringUtils.FLAG_ID_DEFAULTS), false);
+				setText(StringUtils.getID(getText(), StringUtils.FLAG_ID_DEFAULTS), false);
 			}
 		};
 

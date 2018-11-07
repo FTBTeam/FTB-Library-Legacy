@@ -75,12 +75,12 @@ public class GuiSelectTeam extends GuiButtonListBase
 
 			if (team.type == PublicTeamData.Type.CAN_JOIN)
 			{
-				ClientUtils.execClientCommand("/team join " + team.getName());
+				ClientUtils.execClientCommand("/team join " + team.getID());
 				getGui().closeGui();
 			}
 			else if (team.type != PublicTeamData.Type.ENEMY && team.type != PublicTeamData.Type.REQUESTING_INVITE)
 			{
-				ClientUtils.execClientCommand("/team request_invite " + team.getName());
+				ClientUtils.execClientCommand("/team request_invite " + team.getID());
 				team.type = PublicTeamData.Type.REQUESTING_INVITE;
 				setTitle(TextFormatting.AQUA + getTitle());
 				parent.alignWidgets();
@@ -105,7 +105,7 @@ public class GuiSelectTeam extends GuiButtonListBase
 			}
 			else
 			{
-				list.add(TextFormatting.GRAY + I18n.format(team.type == PublicTeamData.Type.CAN_JOIN ? "ftblib.lang.team.gui.join_team" : "ftblib.lang.team.gui.request_invite", team.color.getTextFormatting() + team.getName() + TextFormatting.GRAY));
+				list.add(TextFormatting.GRAY + I18n.format(team.type == PublicTeamData.Type.CAN_JOIN ? "ftblib.lang.team.gui.join_team" : "ftblib.lang.team.gui.request_invite", team.color.getTextFormatting() + team.getID() + TextFormatting.GRAY));
 			}
 		}
 

@@ -3,7 +3,7 @@ package com.feed_the_beast.ftblib.lib.data;
 /**
  * @author LatvianModder
  */
-public abstract class PlayerData extends NBTDataStorage.Data
+public abstract class PlayerData implements NBTDataStorage.Data
 {
 	public final ForgePlayer player;
 
@@ -15,7 +15,7 @@ public abstract class PlayerData extends NBTDataStorage.Data
 	@Override
 	public final int hashCode()
 	{
-		return getName().hashCode() * 31 + player.hashCode();
+		return getID().hashCode() * 31 + player.hashCode();
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public abstract class PlayerData extends NBTDataStorage.Data
 		}
 		else if (o instanceof PlayerData)
 		{
-			return player.equalsPlayer(((PlayerData) o).player) && getName().equals(((PlayerData) o).getName());
+			return player.equalsPlayer(((PlayerData) o).player) && getID().equals(((PlayerData) o).getID());
 		}
 
 		return false;
@@ -35,6 +35,6 @@ public abstract class PlayerData extends NBTDataStorage.Data
 
 	public final String toString()
 	{
-		return player.getName() + ':' + getName();
+		return player.getName() + ':' + getID();
 	}
 }

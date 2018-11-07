@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.util.misc;
 
-import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
 import java.util.function.Predicate;
@@ -13,11 +12,6 @@ public class UnlistedPropertyString implements IUnlistedProperty<String>
 	public static UnlistedPropertyString create(String name, Predicate<String> validator)
 	{
 		return new UnlistedPropertyString(name, validator);
-	}
-
-	public static UnlistedPropertyString create(String name)
-	{
-		return create(name, CommonUtils.alwaysTruePredicate());
 	}
 
 	private final String name;
