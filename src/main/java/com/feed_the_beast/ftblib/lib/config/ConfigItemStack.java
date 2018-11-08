@@ -73,7 +73,7 @@ public class ConfigItemStack extends ConfigValue
 	}
 
 	@Override
-	public String getName()
+	public String getID()
 	{
 		return ID;
 	}

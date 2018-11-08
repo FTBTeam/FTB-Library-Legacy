@@ -56,7 +56,7 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier, IIter
 	}
 
 	@Override
-	public String getName()
+	public String getID()
 	{
 		return ID;
 	}

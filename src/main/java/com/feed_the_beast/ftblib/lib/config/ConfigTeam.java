@@ -34,7 +34,7 @@ public class ConfigTeam extends ConfigValue
 	}
 
 	@Override
-	public String getName()
+	public String getID()
 	{
 		return TEAM_ID;
 	}

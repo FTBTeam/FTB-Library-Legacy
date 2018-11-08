@@ -42,7 +42,7 @@ public class ConfigTeamClient extends ConfigString
 	}
 
 	@Override
-	public String getName()
+	public String getID()
 	{
 		return ConfigTeam.TEAM_ID;
 	}

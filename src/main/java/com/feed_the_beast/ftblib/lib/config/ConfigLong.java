@@ -65,7 +65,7 @@ public class ConfigLong extends ConfigValue implements LongSupplier
 	}
 
 	@Override
-	public String getName()
+	public String getID()
 	{
 		return ID;
 	}

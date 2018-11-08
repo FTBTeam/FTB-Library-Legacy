@@ -63,7 +63,7 @@ public class ConfigString extends ConfigValue
 	}
 
 	@Override
-	public String getName()
+	public String getID()
 	{
 		return ID;
 	}

@@ -40,7 +40,7 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	}
 
 	@Override
-	public String getName()
+	public String getID()
 	{
 		return ID;
 	}

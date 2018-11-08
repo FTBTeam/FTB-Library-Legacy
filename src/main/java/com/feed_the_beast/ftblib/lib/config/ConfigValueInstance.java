@@ -185,9 +185,9 @@ public final class ConfigValueInstance extends FinalIDObject
 
 	public void writeData(DataOut data)
 	{
-		data.writeString(value.getName());
+		data.writeString(value.getID());
 		value.writeData(data);
-		data.writeString(defaultValue.getName());
+		data.writeString(defaultValue.getID());
 		defaultValue.writeData(data);
 		data.writeShort(flags);
 		data.writeByte(order);
