@@ -33,7 +33,7 @@ public class ContextMenu extends Panel
 		@Override
 		public WidgetType getWidgetType()
 		{
-			return item.enabled ? super.getWidgetType() : WidgetType.DISABLED;
+			return item.enabled.getAsBoolean() ? super.getWidgetType() : WidgetType.DISABLED;
 		}
 
 		@Override

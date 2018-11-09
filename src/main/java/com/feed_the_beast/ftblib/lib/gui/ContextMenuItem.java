@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 
 /**
  * @author LatvianModder
@@ -21,10 +22,13 @@ public class ContextMenuItem implements Comparable<ContextMenuItem>
 		}
 	};
 
+	public static final BooleanSupplier TRUE = () -> true;
+	public static final BooleanSupplier FALSE = () -> false;
+
 	public String title;
 	public Icon icon;
 	public Runnable callback;
-	public boolean enabled = true;
+	public BooleanSupplier enabled = TRUE;
 	public String yesNoText = "";
 	public boolean closeMenu = true;
 
@@ -45,6 +49,11 @@ public class ContextMenuItem implements Comparable<ContextMenuItem>
 	}
 
 	public ContextMenuItem setEnabled(boolean v)
+	{
+		return setEnabled(v ? TRUE : FALSE);
+	}
+
+	public ContextMenuItem setEnabled(BooleanSupplier v)
 	{
 		enabled = v;
 		return this;
