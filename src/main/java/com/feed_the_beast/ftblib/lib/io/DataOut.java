@@ -74,6 +74,11 @@ public class DataOut
 		byteBuf = io;
 	}
 
+	public int getPosition()
+	{
+		return byteBuf.writerIndex();
+	}
+
 	public void writeBoolean(boolean value)
 	{
 		byteBuf.writeBoolean(value);

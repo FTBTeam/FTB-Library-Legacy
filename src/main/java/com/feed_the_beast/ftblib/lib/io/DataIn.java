@@ -89,6 +89,11 @@ public class DataIn
 		byteBuf = io;
 	}
 
+	public int getPosition()
+	{
+		return byteBuf.readerIndex();
+	}
+
 	public boolean readBoolean()
 	{
 		return byteBuf.readBoolean();
