@@ -37,7 +37,7 @@ public class GuiEditConfig extends GuiBase
 
 		if (i == 0)
 		{
-			i = Byte.compare(o1.getOrder(), o2.getOrder());
+			i = Integer.compare(o1.getOrder(), o2.getOrder());
 		}
 
 		if (i == 0)

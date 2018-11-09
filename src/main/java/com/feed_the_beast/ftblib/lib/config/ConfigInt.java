@@ -201,17 +201,17 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeInt(getInt());
-		data.writeInt(getMin());
-		data.writeInt(getMax());
+		data.writeVarInt(getInt());
+		data.writeVarInt(getMin());
+		data.writeVarInt(getMax());
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		setInt(data.readInt());
-		setMin(data.readInt());
-		setMax(data.readInt());
+		setInt(data.readVarInt());
+		setMin(data.readVarInt());
+		setMax(data.readVarInt());
 	}
 
 	@Override

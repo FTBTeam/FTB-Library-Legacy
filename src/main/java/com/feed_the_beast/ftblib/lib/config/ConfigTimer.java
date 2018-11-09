@@ -158,15 +158,15 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeLong(getTimer().ticks());
-		data.writeLong(getMax().ticks());
+		data.writeVarLong(getTimer().ticks());
+		data.writeVarLong(getMax().ticks());
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		setTimer(Ticks.get(data.readLong()));
-		setMax(Ticks.get(data.readLong()));
+		setTimer(Ticks.get(data.readVarLong()));
+		setMax(Ticks.get(data.readVarLong()));
 	}
 
 	@Override

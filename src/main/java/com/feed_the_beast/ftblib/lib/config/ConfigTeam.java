@@ -134,10 +134,11 @@ public class ConfigTeam extends ConfigValue
 			throw new IllegalStateException("Can't write Team property, world hasn't loaded!");
 		}
 
-		data.writeShort(Universe.get().getTeams().size());
+		data.writeVarInt(Universe.get().getTeams().size());
 
 		for (ForgeTeam team : Universe.get().getTeams())
 		{
+			data.writeShort(team.getUID());
 			data.writeString(team.getID());
 			data.writeTextComponent(team.getTitle());
 			data.writeIcon(team.getIcon());

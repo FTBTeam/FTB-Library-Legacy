@@ -153,7 +153,7 @@ public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 	{
 		NameMap<E> nameMap = getNameMap();
 
-		data.writeShort(nameMap.size());
+		data.writeVarInt(nameMap.size());
 
 		for (Map.Entry<String, E> entry : nameMap.map.entrySet())
 		{
@@ -162,7 +162,7 @@ public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 			data.writeIcon(nameMap.getColor(entry.getValue()));
 		}
 
-		data.writeShort(nameMap.getIndex(getValue()));
+		data.writeVarInt(nameMap.getIndex(getValue()));
 	}
 
 	@Override

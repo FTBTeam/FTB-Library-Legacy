@@ -280,21 +280,12 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 	@Override
 	public void write(DataOut data, E object)
 	{
-		int index = getIndex(object);
-
-		if (size() >= 256)
-		{
-			data.writeShort(index);
-		}
-		else
-		{
-			data.writeByte(index);
-		}
+		data.writeVarInt(getIndex(object));
 	}
 
 	@Override
 	public E read(DataIn data)
 	{
-		return get(size() >= 256 ? data.readUnsignedShort() : data.readUnsignedByte());
+		return get(data.readVarInt());
 	}
 }

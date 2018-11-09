@@ -210,17 +210,17 @@ public class ConfigLong extends ConfigValue implements LongSupplier
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeLong(getLong());
-		data.writeLong(getMin());
-		data.writeLong(getMax());
+		data.writeVarLong(getLong());
+		data.writeVarLong(getMin());
+		data.writeVarLong(getMax());
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		setLong(data.readLong());
-		setMin(data.readLong());
-		setMax(data.readLong());
+		setLong(data.readVarLong());
+		setMin(data.readVarLong());
+		setMax(data.readVarLong());
 	}
 
 	@Override

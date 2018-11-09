@@ -28,7 +28,7 @@ public final class ConfigValueInstance extends FinalIDObject
 	private ConfigValue defaultValue;
 	private int flags;
 	private ITextComponent displayName, info;
-	private byte order;
+	private int order;
 	private Icon icon;
 
 	public ConfigValueInstance(String id, ConfigGroup g, ConfigValue v)
@@ -52,8 +52,8 @@ public final class ConfigValueInstance extends FinalIDObject
 		value.readData(data);
 		defaultValue = FTBLibAPI.createConfigValueFromId(data.readString());
 		defaultValue.readData(data);
-		flags = data.readUnsignedShort();
-		order = data.readByte();
+		flags = data.readVarInt();
+		order = data.readVarInt();
 		displayName = Bits.getFlag(flags, HAS_NAME) ? data.readTextComponent() : null;
 		info = Bits.getFlag(flags, HAS_INFO) ? data.readTextComponent() : null;
 	}
@@ -161,13 +161,13 @@ public final class ConfigValueInstance extends FinalIDObject
 		return Bits.getFlag(flags, EXCLUDED);
 	}
 
-	public ConfigValueInstance setOrder(byte o)
+	public ConfigValueInstance setOrder(int o)
 	{
 		order = o;
 		return this;
 	}
 
-	public byte getOrder()
+	public int getOrder()
 	{
 		return order;
 	}
@@ -189,8 +189,8 @@ public final class ConfigValueInstance extends FinalIDObject
 		value.writeData(data);
 		data.writeString(defaultValue.getID());
 		defaultValue.writeData(data);
-		data.writeShort(flags);
-		data.writeByte(order);
+		data.writeVarInt(flags);
+		data.writeVarInt(order);
 
 		if (displayName != null)
 		{

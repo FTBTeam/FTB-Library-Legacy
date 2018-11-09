@@ -45,7 +45,7 @@ public abstract class Action
 		public final boolean requiresConfirm;
 		public final Icon icon;
 		public boolean enabled;
-		public short order;
+		public int order;
 
 		private Inst(DataIn data)
 		{
@@ -54,7 +54,7 @@ public abstract class Action
 			requiresConfirm = data.readBoolean();
 			icon = data.readIcon();
 			enabled = data.readBoolean();
-			order = data.readShort();
+			order = data.readVarInt();
 		}
 
 		public Inst(Action action, Action.Type t)
@@ -64,7 +64,7 @@ public abstract class Action
 			requiresConfirm = action.getRequireConfirm();
 			icon = action.getIcon();
 			enabled = t.isEnabled();
-			order = (short) action.getOrder();
+			order = action.getOrder();
 		}
 
 		private void writeData(DataOut data)
@@ -74,13 +74,13 @@ public abstract class Action
 			data.writeBoolean(requiresConfirm);
 			data.writeIcon(icon);
 			data.writeBoolean(enabled);
-			data.writeShort(order);
+			data.writeVarInt(order);
 		}
 
 		@Override
 		public int compareTo(Inst o)
 		{
-			int i = Short.compare(order, o.order);
+			int i = Integer.compare(order, o.order);
 			return i == 0 ? title.getUnformattedText().compareToIgnoreCase(o.title.getUnformattedText()) : i;
 		}
 	}

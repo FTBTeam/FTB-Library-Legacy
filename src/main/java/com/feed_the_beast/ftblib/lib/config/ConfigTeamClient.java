@@ -24,12 +24,14 @@ public class ConfigTeamClient extends ConfigString
 {
 	public static class TeamInst extends FinalIDObject
 	{
+		public final short uid;
 		public ITextComponent title;
 		public Icon icon;
 
-		public TeamInst(String id)
+		public TeamInst(short u, String id)
 		{
 			super(id);
+			uid = u;
 		}
 	}
 
@@ -67,7 +69,7 @@ public class ConfigTeamClient extends ConfigString
 
 		for (TeamInst inst : map.values())
 		{
-			TeamInst inst1 = new TeamInst(inst.getID());
+			TeamInst inst1 = new TeamInst(inst.uid, inst.getID());
 			inst1.title = inst.title.createCopy();
 			inst1.icon = inst.icon.copy();
 			config.map.put(inst1.getID(), inst1);
@@ -123,12 +125,14 @@ public class ConfigTeamClient extends ConfigString
 	@Override
 	public void readData(DataIn data)
 	{
-		int s = data.readUnsignedShort();
+		int s = data.readVarInt();
 		map.clear();
 
 		for (int i = 0; i < s; i++)
 		{
-			TeamInst inst = new TeamInst(data.readString());
+			short uid = data.readShort();
+			String id = data.readString();
+			TeamInst inst = new TeamInst(uid, id);
 			inst.title = data.readTextComponent();
 			inst.icon = data.readIcon();
 			map.put(inst.getID(), inst);

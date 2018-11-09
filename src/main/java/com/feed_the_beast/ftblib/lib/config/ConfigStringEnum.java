@@ -161,7 +161,7 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeShort(keys.size());
+		data.writeVarInt(keys.size());
 
 		for (String s : keys)
 		{
@@ -170,7 +170,7 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 			data.writeIcon(customColors.get(s));
 		}
 
-		data.writeShort(getInt());
+		data.writeVarInt(getInt());
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 		keys.clear();
 		customNames.clear();
 		customColors.clear();
-		int s = data.readUnsignedShort();
+		int s = data.readVarInt();
 
 		while (--s >= 0)
 		{
@@ -194,6 +194,6 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 			}
 		}
 
-		setString(keys.get(data.readUnsignedShort()));
+		setString(keys.get(data.readVarInt()));
 	}
 }

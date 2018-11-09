@@ -10,7 +10,6 @@ import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.handler.codec.EncoderException;
-import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import net.minecraft.block.Block;
@@ -28,15 +27,16 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.UUID;
 
 /**
@@ -44,6 +44,7 @@ import java.util.UUID;
  */
 public class DataOut
 {
+	@FunctionalInterface
 	public interface Serializer<T>
 	{
 		void write(DataOut data, T object);
@@ -62,8 +63,8 @@ public class DataOut
 
 	public static final DataOut.Serializer<ChunkPos> CHUNK_POS = (data, pos) ->
 	{
-		data.writeInt(pos.x);
-		data.writeInt(pos.z);
+		data.writeVarInt(pos.x);
+		data.writeVarInt(pos.z);
 	};
 
 	private final ByteBuf byteBuf;
@@ -121,15 +122,15 @@ public class DataOut
 	public void writePos(Vec3i pos)
 	{
 		writeInt(pos.getX());
-		writeInt(pos.getY());
+		writeVarInt(pos.getY());
 		writeInt(pos.getZ());
 	}
 
 	public void writeDimPos(BlockDimPos pos)
 	{
-		writeInt(pos.dim);
+		writeVarInt(pos.dim);
 		writeInt(pos.posX);
-		writeInt(pos.posY);
+		writeVarInt(pos.posY);
 		writeInt(pos.posZ);
 	}
 
@@ -141,7 +142,15 @@ public class DataOut
 
 	public void writeString(String string)
 	{
-		ByteBufUtils.writeUTF8String(byteBuf, string);
+		if (string.isEmpty())
+		{
+			writeVarInt(0);
+			return;
+		}
+
+		byte[] bytes = string.getBytes(StandardCharsets.UTF_8);
+		writeVarInt(bytes.length);
+		writeBytes(bytes);
 	}
 
 	public <T> void writeCollection(Collection<T> collection, Serializer<T> serializer)
@@ -150,26 +159,17 @@ public class DataOut
 
 		if (size == 0)
 		{
-			writeByte(6);
+			writeVarInt(0);
 			return;
 		}
 
-		boolean set = collection instanceof Set;
-
-		if (size >= 65536)
+		if (collection instanceof Set)
 		{
-			writeByte(set ? 5 : 2);
-			writeInt(size);
-		}
-		else if (size >= 256)
-		{
-			writeByte(set ? 4 : 1);
-			writeShort(size);
+			writeVarInt(-size);
 		}
 		else
 		{
-			writeByte(set ? 3 : 0);
-			writeByte(size);
+			writeVarInt(size);
 		}
 
 		for (T object : collection)
@@ -184,26 +184,17 @@ public class DataOut
 
 		if (size == 0)
 		{
-			writeByte(6);
+			writeVarInt(0);
 			return;
 		}
 
-		boolean linked = map instanceof LinkedHashMap || map instanceof Int2ObjectLinkedOpenHashMap;
-
-		if (size >= 65536)
+		if (map instanceof LinkedHashMap || map instanceof SortedMap)
 		{
-			writeByte(linked ? 5 : 2);
-			writeInt(size);
-		}
-		else if (size >= 256)
-		{
-			writeByte(linked ? 4 : 1);
-			writeShort(size);
+			writeVarInt(-size);
 		}
 		else
 		{
-			writeByte(linked ? 3 : 0);
-			writeByte(size);
+			writeVarInt(size);
 		}
 
 		for (Map.Entry<K, V> entry : map.entrySet())
@@ -223,7 +214,7 @@ public class DataOut
 
 		writeInt(Item.getIdFromItem(stack.getItem()));
 		writeByte(stack.getCount());
-		writeShort(stack.getMetadata());
+		writeVarInt(stack.getMetadata());
 		writeNBT(stack.getItem().isDamageable() || stack.getItem().getShareTag() ? stack.getItem().getNBTShareTag(stack) : null);
 	}
 
@@ -342,13 +333,13 @@ public class DataOut
 		{
 			if (primitive.getAsBoolean())
 			{
-				writeByte(11);
-				return 11;
+				writeByte(5);
+				return 5;
 			}
 			else
 			{
-				writeByte(12);
-				return 12;
+				writeByte(6);
+				return 6;
 			}
 		}
 		else if (primitive.isNumber())
@@ -369,40 +360,23 @@ public class DataOut
 
 			Class<? extends Number> n = number.getClass();
 
-			if (n == Integer.class)
-			{
-				writeByte(7);
-				writeInt(primitive.getAsInt());
-				return 7;
-			}
-			else if (n == Byte.class)
-			{
-				writeByte(5);
-				writeByte(primitive.getAsByte());
-				return 5;
-			}
-			else if (n == Short.class)
-			{
-				writeByte(6);
-				writeShort(primitive.getAsShort());
-			}
-			else if (n == Long.class)
+			if (n == Float.class)
 			{
 				writeByte(8);
-				writeLong(primitive.getAsLong());
-				return 8;
-			}
-			else if (n == Float.class)
-			{
-				writeByte(9);
 				writeFloat(primitive.getAsFloat());
-				return 9;
+				return 8;
 			}
 			else if (n == Double.class)
 			{
-				writeByte(4);
+				writeByte(9);
 				writeDouble(primitive.getAsDouble());
-				return 4;
+				return 9;
+			}
+			else
+			{
+				writeByte(7);
+				writeVarLong(primitive.getAsLong());
+				return 7;
 			}
 		}
 
@@ -410,8 +384,8 @@ public class DataOut
 
 		if (string.isEmpty())
 		{
-			writeByte(13);
-			return 13;
+			writeByte(10);
+			return 10;
 		}
 
 		writeByte(3);
@@ -436,7 +410,7 @@ public class DataOut
 
 	public void writeIntList(IntCollection collection)
 	{
-		writeInt(collection.size());
+		writeVarInt(collection.size());
 
 		if (!collection.isEmpty())
 		{
@@ -452,5 +426,56 @@ public class DataOut
 	public <E> void write(E object, Serializer<E> serializer)
 	{
 		serializer.write(this, object);
+	}
+
+	public void writeVarInt(int value)
+	{
+		if (value > Short.MAX_VALUE || value < Short.MIN_VALUE)
+		{
+			writeByte(123);
+			writeInt(value);
+		}
+		else if (value > Byte.MAX_VALUE || value < Byte.MIN_VALUE)
+		{
+			writeByte(122);
+			writeShort(value);
+		}
+		else if (value >= 121 && value <= 123)
+		{
+			writeByte(121);
+			writeByte(value);
+		}
+		else
+		{
+			writeByte(value);
+		}
+	}
+
+	public void writeVarLong(long value)
+	{
+		if (value > Integer.MAX_VALUE || value < Integer.MIN_VALUE)
+		{
+			writeByte(124);
+			writeLong(value);
+		}
+		else if (value > Short.MAX_VALUE || value < Short.MIN_VALUE)
+		{
+			writeByte(123);
+			writeInt((int) value);
+		}
+		else if (value > Byte.MAX_VALUE || value < Byte.MIN_VALUE)
+		{
+			writeByte(122);
+			writeShort((int) value);
+		}
+		else if (value >= 121 && value <= 124)
+		{
+			writeByte(121);
+			writeByte((int) value);
+		}
+		else
+		{
+			writeByte((int) value);
+		}
 	}
 }

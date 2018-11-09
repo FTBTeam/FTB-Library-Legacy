@@ -63,7 +63,7 @@ public class MessageSyncData extends MessageToClient
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeByte(flags);
+		data.writeVarInt(flags);
 		data.writeUUID(universeId);
 		data.writeNBT(syncData);
 		data.writeMap(gamerules, DataOut.STRING, DataOut.STRING);
@@ -72,7 +72,7 @@ public class MessageSyncData extends MessageToClient
 	@Override
 	public void readData(DataIn data)
 	{
-		flags = data.readByte();
+		flags = data.readVarInt();
 		universeId = data.readUUID();
 		syncData = data.readNBT();
 		gamerules = data.readMap(DataIn.STRING, DataIn.STRING);

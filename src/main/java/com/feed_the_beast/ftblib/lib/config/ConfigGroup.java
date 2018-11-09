@@ -38,7 +38,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 	{
 		data.writeString(object.getID());
 		data.writeTextComponent(object.displayName);
-		data.writeShort(object.values.size());
+		data.writeVarInt(object.values.size());
 
 		for (ConfigValueInstance instance : object.getValues())
 		{
@@ -46,7 +46,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 			instance.writeData(data);
 		}
 
-		data.writeShort(object.groups.size());
+		data.writeVarInt(object.groups.size());
 
 		for (ConfigGroup group : object.getGroups())
 		{
@@ -59,7 +59,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 		ConfigGroup group = newGroup(data.readString());
 		group.displayName = data.readTextComponent();
 
-		int s = data.readUnsignedShort();
+		int s = data.readVarInt();
 		group.values.clear();
 
 		while (--s >= 0)
@@ -68,7 +68,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 			group.values.put(inst.getID(), inst);
 		}
 
-		s = data.readUnsignedShort();
+		s = data.readVarInt();
 		group.groups.clear();
 
 		while (--s >= 0)
@@ -150,7 +150,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 	public <T extends ConfigValue> ConfigValueInstance add(String id, T value, @Nullable T def)
 	{
 		ConfigValueInstance instance = add(new ConfigValueInstance(id, this, value));
-		instance.setOrder((byte) Math.min(values.size(), 127));
+		instance.setOrder(values.size());
 
 		if (def != null)
 		{

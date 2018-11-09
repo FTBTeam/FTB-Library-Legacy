@@ -116,7 +116,7 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 			return;
 		}
 
-		data.writeShort(list.size());
+		data.writeVarInt(list.size());
 
 		for (ConfigValue s : list)
 		{
@@ -136,7 +136,7 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 			return;
 		}
 
-		int s = data.readUnsignedShort();
+		int s = data.readVarInt();
 
 		while (--s >= 0)
 		{

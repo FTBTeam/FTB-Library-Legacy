@@ -18,6 +18,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntLists;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
@@ -39,16 +43,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -57,6 +57,7 @@ import java.util.UUID;
  */
 public class DataIn
 {
+	@FunctionalInterface
 	public interface Deserializer<T>
 	{
 		T read(DataIn data);
@@ -65,6 +66,7 @@ public class DataIn
 	public static final Deserializer<String> STRING = DataIn::readString;
 	public static final Deserializer<Integer> INT = DataIn::readInt;
 	public static final Deserializer<Boolean> BOOLEAN = DataIn::readBoolean;
+
 	public static final Deserializer<UUID> UUID = DataIn::readUUID;
 	public static final Deserializer<BlockPos> BLOCK_POS = DataIn::readPos;
 	public static final Deserializer<BlockDimPos> BLOCK_DIM_POS = DataIn::readDimPos;
@@ -75,8 +77,8 @@ public class DataIn
 
 	public static final DataIn.Deserializer<ChunkPos> CHUNK_POS = data ->
 	{
-		int x = data.readInt();
-		int z = data.readInt();
+		int x = data.readVarInt();
+		int z = data.readVarInt();
 		return new ChunkPos(x, z);
 	};
 
@@ -144,7 +146,16 @@ public class DataIn
 
 	public String readString()
 	{
-		return ByteBufUtils.readUTF8String(byteBuf);
+		int s = readVarInt();
+
+		if (s == 0)
+		{
+			return "";
+		}
+
+		byte[] bytes = new byte[s];
+		readBytes(bytes);
+		return new String(bytes, StandardCharsets.UTF_8);
 	}
 
 	public <T> Collection<T> readCollection(@Nullable Collection<T> collection, Deserializer<T> deserializer)
@@ -154,35 +165,25 @@ public class DataIn
 			collection.clear();
 		}
 
-		int id = readUnsignedByte();
+		int num = readVarInt();
 
-		if (id == 6)
+		if (num == 0)
 		{
 			return collection == null ? Collections.emptyList() : collection;
 		}
 
-		int size;
-
-		switch (id % 3)
-		{
-			case 0:
-				size = readUnsignedByte();
-				break;
-			case 1:
-				size = readUnsignedShort();
-				break;
-			default:
-				size = readInt();
-		}
+		int size = Math.abs(num);
 
 		if (collection == null)
 		{
+			boolean list = num > 0;
+
 			if (size == 1)
 			{
-				return (id / 3 == 0) ? Collections.singletonList(deserializer.read(this)) : Collections.singleton(deserializer.read(this));
+				return list ? Collections.singletonList(deserializer.read(this)) : Collections.singleton(deserializer.read(this));
 			}
 
-			collection = (id / 3 == 0) ? new ArrayList<>(size) : new HashSet<>(size);
+			collection = list ? new ObjectArrayList<>(size) : new ObjectOpenHashSet<>(size);
 		}
 
 		while (--size >= 0)
@@ -205,30 +206,18 @@ public class DataIn
 			map.clear();
 		}
 
-		int id = readUnsignedByte();
+		int num = readVarInt();
 
-		if (id == 6)
+		if (num == 0)
 		{
 			return map == null ? Collections.emptyMap() : map;
 		}
 
-		int size;
-
-		switch (id % 3)
-		{
-			case 0:
-				size = readUnsignedByte();
-				break;
-			case 1:
-				size = readUnsignedShort();
-				break;
-			default:
-				size = readInt();
-		}
+		int size = Math.abs(num);
 
 		if (map == null)
 		{
-			boolean linked = id >= 3;
+			boolean linked = num < 0;
 
 			if (keyDeserializer == INT)
 			{
@@ -236,7 +225,7 @@ public class DataIn
 			}
 			else
 			{
-				map = linked ? new LinkedHashMap<>(size) : new HashMap<>(size);
+				map = linked ? new Object2ObjectLinkedOpenHashMap<>(size) : new Object2ObjectOpenHashMap<>(size);
 			}
 		}
 
@@ -272,7 +261,7 @@ public class DataIn
 		}
 
 		int size = readByte();
-		int meta = readShort();
+		int meta = readVarInt();
 		ItemStack stack = new ItemStack(item, size, meta);
 		stack.getItem().readNBTShareTag(stack, readNBT());
 		return stack;
@@ -336,16 +325,16 @@ public class DataIn
 	public BlockPos readPos()
 	{
 		int x = readInt();
-		int y = readInt();
+		int y = readVarInt();
 		int z = readInt();
 		return new BlockPos(x, y, z);
 	}
 
 	public BlockDimPos readDimPos()
 	{
-		int d = readInt();
+		int d = readVarInt();
 		int x = readInt();
-		int y = readInt();
+		int y = readVarInt();
 		int z = readInt();
 		return new BlockDimPos(x, y, z, d);
 	}
@@ -397,23 +386,17 @@ public class DataIn
 			}
 			case 4:
 				return JsonUtils.JSON_ZERO;
-			case 11:
-				return JsonUtils.JSON_TRUE;
-			case 12:
-				return JsonUtils.JSON_FALSE;
 			case 5:
-				return new JsonPrimitive(readByte());
+				return JsonUtils.JSON_TRUE;
 			case 6:
-				return new JsonPrimitive(readShort());
+				return JsonUtils.JSON_FALSE;
 			case 7:
-				return new JsonPrimitive(readInt());
+				return new JsonPrimitive(readVarLong());
 			case 8:
-				return new JsonPrimitive(readLong());
-			case 9:
 				return new JsonPrimitive(readFloat());
-			case 10:
+			case 9:
 				return new JsonPrimitive(readDouble());
-			case 13:
+			case 10:
 				return JsonUtils.JSON_EMPTY_STRING;
 		}
 
@@ -439,7 +422,7 @@ public class DataIn
 
 	public IntList readIntList()
 	{
-		int size = readInt();
+		int size = readVarInt();
 
 		if (size == 0)
 		{
@@ -463,5 +446,41 @@ public class DataIn
 	public <E> E read(Deserializer<E> deserializer)
 	{
 		return deserializer.read(this);
+	}
+
+	public int readVarInt()
+	{
+		int b = readByte();
+
+		switch (b)
+		{
+			case 121:
+				return readByte();
+			case 122:
+				return readShort();
+			case 123:
+				return readInt();
+			default:
+				return b;
+		}
+	}
+
+	public long readVarLong()
+	{
+		int b = readByte();
+
+		switch (b)
+		{
+			case 121:
+				return readByte();
+			case 122:
+				return readShort();
+			case 123:
+				return readInt();
+			case 124:
+				return readLong();
+			default:
+				return b;
+		}
 	}
 }
