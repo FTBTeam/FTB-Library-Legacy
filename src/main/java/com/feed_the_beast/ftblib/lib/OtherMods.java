@@ -18,7 +18,5 @@ public interface OtherMods
 	String SILENTGEMS = "silentgems";
 	String REFINED_STORAGE = "refinedstorage";
 	String FTBGUIDES = "ftbguides";
-	String IC2 = "ic2";
 	String FTBQUESTS = "ftbquests";
-	String BOTANIA = "botania";
 }

@@ -147,6 +147,14 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 	}
 
 	@Override
+	public ConfigValue getIteration(boolean next)
+	{
+		ConfigStringEnum c = copy();
+		c.setString(keys.get(MathUtils.mod(getInt() + (next ? 1 : -1), keys.size())));
+		return c;
+	}
+
+	@Override
 	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
 		nbt.setString(key, getString());

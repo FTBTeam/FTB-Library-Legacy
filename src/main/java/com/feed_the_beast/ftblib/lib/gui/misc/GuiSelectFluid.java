@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.gui.misc;
 
-import com.feed_the_beast.ftblib.lib.config.ConfigFluid;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
@@ -14,26 +13,31 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 /**
  * @author LatvianModder
  */
 public class GuiSelectFluid extends GuiButtonListBase
 {
-	private final ConfigFluid value;
 	private final IOpenableGui callbackGui;
+	private final Supplier<Fluid> defaultFluid;
+	private final Consumer<Fluid> callback;
 
-	public GuiSelectFluid(ConfigFluid v, IOpenableGui c)
+	public GuiSelectFluid(IOpenableGui g, Supplier<Fluid> def, Consumer<Fluid> c)
 	{
 		setTitle(I18n.format("ftblib.select_fluid.gui"));
 		setHasSearchBox(true);
-		value = v;
-		callbackGui = c;
+		callbackGui = g;
+		defaultFluid = def;
+		callback = c;
 	}
 
 	@Override
 	public void addButtons(Panel panel)
 	{
-		if (value.getDefaultFluid() == null)
+		if (defaultFluid.get() == null)
 		{
 			panel.add(new SimpleTextButton(panel, I18n.format("ftblib.select_fluid.none"), GuiIcons.BARRIER)
 			{
@@ -41,7 +45,7 @@ public class GuiSelectFluid extends GuiButtonListBase
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
-					value.setFluid(null);
+					callback.accept(null);
 					callbackGui.openGui();
 				}
 			});
@@ -57,7 +61,7 @@ public class GuiSelectFluid extends GuiButtonListBase
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
-					value.setFluid(fluid);
+					callback.accept(fluid);
 					callbackGui.openGui();
 				}
 			});

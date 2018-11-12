@@ -118,6 +118,12 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier, IIter
 	}
 
 	@Override
+	public ConfigValue getIteration(boolean next)
+	{
+		return new ConfigBoolean(!getBoolean());
+	}
+
+	@Override
 	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
 		if (simulate)

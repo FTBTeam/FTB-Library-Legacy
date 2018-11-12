@@ -181,6 +181,14 @@ public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 	}
 
 	@Override
+	public ConfigValue getIteration(boolean next)
+	{
+		ConfigEnum<E> c = copy();
+		c.setValue(next ? getNameMap().getNext(getValue()) : getNameMap().getPrevious(getValue()));
+		return c;
+	}
+
+	@Override
 	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
 		E val = getNameMap().getNullable(string);
