@@ -403,8 +403,8 @@ public class GuiSelectItemStack extends GuiBase
 			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
-				callback.accept(selected);
 				callbackGui.openGui();
+				callback.accept(selected);
 			}
 
 			@Override

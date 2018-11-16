@@ -45,8 +45,8 @@ public class GuiSelectFluid extends GuiButtonListBase
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
-					callback.accept(null);
 					callbackGui.openGui();
+					callback.accept(null);
 				}
 			});
 		}
@@ -61,8 +61,8 @@ public class GuiSelectFluid extends GuiButtonListBase
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
-					callback.accept(fluid);
 					callbackGui.openGui();
+					callback.accept(fluid);
 				}
 			});
 		}
