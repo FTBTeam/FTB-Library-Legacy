@@ -12,6 +12,7 @@ public abstract class SimpleTextButton extends Button
 	public SimpleTextButton(Panel panel, String txt, Icon icon)
 	{
 		super(panel, txt, icon);
+		setWidth(panel.getGui().getTheme().getStringWidth(txt) + (hasIcon() ? 28 : 8));
 		setHeight(20);
 	}
 

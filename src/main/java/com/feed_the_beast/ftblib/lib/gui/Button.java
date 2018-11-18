@@ -14,11 +14,11 @@ public abstract class Button extends Widget
 		setSize(16, 16);
 	}
 
-	public Button(Panel panel, String title, Icon icon)
+	public Button(Panel panel, String t, Icon i)
 	{
 		this(panel);
-		setIcon(icon);
-		setTitle(title);
+		icon = i;
+		title = t;
 	}
 
 	@Override
