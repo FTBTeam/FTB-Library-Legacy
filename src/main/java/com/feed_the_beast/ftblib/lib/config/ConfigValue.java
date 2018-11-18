@@ -78,11 +78,16 @@ public abstract class ConfigValue implements IWithID
 		return false;
 	}
 
-	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button, Runnable callback)
 	{
 		if (this instanceof IIteratingConfig)
 		{
-			((IIteratingConfig) this).iterate(inst, button.isLeft());
+			if (inst.getCanEdit())
+			{
+				setValueFromOtherValue(((IIteratingConfig) this).getIteration(button.isLeft()));
+				callback.run();
+			}
+
 			return;
 		}
 
@@ -91,6 +96,7 @@ public abstract class ConfigValue implements IWithID
 			if (set)
 			{
 				setValueFromOtherValue(value);
+				callback.run();
 			}
 
 			gui.closeContextMenu();

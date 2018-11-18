@@ -138,15 +138,6 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 	}
 
 	@Override
-	public void iterate(ConfigValueInstance inst, boolean next)
-	{
-		if (inst.getCanEdit())
-		{
-			setString(keys.get(MathUtils.mod(getInt() + (next ? 1 : -1), keys.size())));
-		}
-	}
-
-	@Override
 	public ConfigValue getIteration(boolean next)
 	{
 		ConfigStringEnum c = copy();

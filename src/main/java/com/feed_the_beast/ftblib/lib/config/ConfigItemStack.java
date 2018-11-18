@@ -187,11 +187,14 @@ public class ConfigItemStack extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button, Runnable callback)
 	{
 		if (inst.getCanEdit())
 		{
-			new GuiSelectItemStack(gui, getStack().copy(), getSingleItemOnly(), this::setStack).openGui();
+			new GuiSelectItemStack(gui, getStack().copy(), getSingleItemOnly(), stack -> {
+				setStack(stack);
+				callback.run();
+			}).openGui();
 		}
 	}
 

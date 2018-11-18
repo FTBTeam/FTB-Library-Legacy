@@ -172,15 +172,6 @@ public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 	}
 
 	@Override
-	public void iterate(ConfigValueInstance inst, boolean next)
-	{
-		if (inst.getCanEdit())
-		{
-			setValue(next ? getNameMap().getNext(getValue()) : getNameMap().getPrevious(getValue()));
-		}
-	}
-
-	@Override
 	public ConfigValue getIteration(boolean next)
 	{
 		ConfigEnum<E> c = copy();

@@ -126,9 +126,12 @@ public class ConfigFluid extends ConfigValue
 	}
 
 	@Override
-	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button, Runnable callback)
 	{
-		new GuiSelectFluid(gui, this::getDefaultFluid, this::setFluid).openGui();
+		new GuiSelectFluid(gui, this::getDefaultFluid, fluid -> {
+			setFluid(fluid);
+			callback.run();
+		}).openGui();
 	}
 
 	@Override

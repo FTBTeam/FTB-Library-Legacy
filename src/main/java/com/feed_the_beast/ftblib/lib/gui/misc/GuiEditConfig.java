@@ -231,8 +231,7 @@ public class GuiEditConfig extends GuiBase
 			if (getMouseY() >= 20)
 			{
 				GuiHelper.playClickSound();
-				inst.getValue().onClicked(GuiEditConfig.this, inst, button);
-				valueString = null;
+				inst.getValue().onClicked(GuiEditConfig.this, inst, button, () -> valueString = null);
 			}
 		}
 

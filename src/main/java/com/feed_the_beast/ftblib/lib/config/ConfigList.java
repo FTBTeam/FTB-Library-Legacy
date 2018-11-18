@@ -285,9 +285,9 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	}
 
 	@Override
-	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button, Runnable callback)
 	{
-		new GuiEditConfigList(inst).openGui();
+		new GuiEditConfigList(inst, callback).openGui();
 	}
 
 	@Override

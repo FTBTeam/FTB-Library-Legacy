@@ -96,11 +96,11 @@ public class ConfigTeamClient extends ConfigString
 	}
 
 	@Override
-	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button)
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button, Runnable callback)
 	{
 		if (inst.getCanEdit())
 		{
-			new GuiSelectTeamValue(this, gui).openGui();
+			new GuiSelectTeamValue(this, gui, callback).openGui();
 		}
 	}
 

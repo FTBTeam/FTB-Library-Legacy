@@ -95,7 +95,7 @@ public class GuiEditConfigList extends GuiBase
 			}
 			else
 			{
-				inst.getValue().onClicked(getGui(), inst, button);
+				inst.getValue().onClicked(getGui(), inst, button, () -> {});
 			}
 		}
 
@@ -104,7 +104,7 @@ public class GuiEditConfigList extends GuiBase
 		{
 			if (getMouseX() >= getX() + width - 19)
 			{
-				list.add("Delete");
+				list.add(I18n.format("selectServer.delete"));
 			}
 			else
 			{
@@ -151,6 +151,7 @@ public class GuiEditConfigList extends GuiBase
 	}
 
 	private final ConfigValueInstance originalConfigList;
+	private final Runnable callback;
 	private final ConfigList<ConfigValue> configList;
 
 	private final String title;
@@ -158,9 +159,10 @@ public class GuiEditConfigList extends GuiBase
 	private final Button buttonAccept, buttonCancel;
 	private final PanelScrollBar scroll;
 
-	public GuiEditConfigList(ConfigValueInstance c)
+	public GuiEditConfigList(ConfigValueInstance c, Runnable cb)
 	{
 		originalConfigList = c;
+		callback = cb;
 		configList = (ConfigList<ConfigValue>) originalConfigList.getValue().copy();
 
 		ITextComponent title0 = originalConfigList.getDisplayName().createCopy();
@@ -199,8 +201,9 @@ public class GuiEditConfigList extends GuiBase
 
 		buttonAccept = new SimpleButton(this, I18n.format("gui.accept"), GuiIcons.ACCEPT, (widget, button) ->
 		{
-			originalConfigList.getValue().setValueFromOtherValue(configList);
 			widget.getGui().closeGui();
+			originalConfigList.getValue().setValueFromOtherValue(configList);
+			callback.run();
 		});
 
 		buttonCancel = new SimpleButton(this, I18n.format("gui.cancel"), GuiIcons.CANCEL, (widget, button) -> widget.getGui().closeGui());

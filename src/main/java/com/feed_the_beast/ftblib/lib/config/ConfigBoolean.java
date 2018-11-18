@@ -109,15 +109,6 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier, IIter
 	}
 
 	@Override
-	public void iterate(ConfigValueInstance inst, boolean next)
-	{
-		if (inst.getCanEdit())
-		{
-			setBoolean(!getBoolean());
-		}
-	}
-
-	@Override
 	public ConfigValue getIteration(boolean next)
 	{
 		return new ConfigBoolean(!getBoolean());

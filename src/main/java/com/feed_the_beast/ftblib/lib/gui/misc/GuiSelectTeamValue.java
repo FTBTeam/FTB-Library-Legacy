@@ -15,13 +15,15 @@ public class GuiSelectTeamValue extends GuiButtonListBase
 {
 	private final ConfigTeamClient value;
 	private final IOpenableGui callbackGui;
+	private final Runnable callback;
 
-	public GuiSelectTeamValue(ConfigTeamClient v, IOpenableGui c)
+	public GuiSelectTeamValue(ConfigTeamClient v, IOpenableGui c, Runnable cb)
 	{
 		setTitle(I18n.format("ftblib.select_team.gui"));
 		setHasSearchBox(true);
 		value = v;
 		callbackGui = c;
+		callback = cb;
 	}
 
 	@Override
@@ -35,8 +37,9 @@ public class GuiSelectTeamValue extends GuiButtonListBase
 				public void onClicked(MouseButton button)
 				{
 					GuiHelper.playClickSound();
-					value.setString(inst.getID());
 					callbackGui.openGui();
+					value.setString(inst.getID());
+					callback.run();
 				}
 			});
 		}
