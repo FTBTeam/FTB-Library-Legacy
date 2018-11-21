@@ -251,7 +251,7 @@ public class DataIn
 
 	public ItemStack readItemStack()
 	{
-		int id = readInt();
+		int id = readVarInt();
 
 		if (id == 0)
 		{

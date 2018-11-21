@@ -213,11 +213,11 @@ public class DataOut
 	{
 		if (stack.isEmpty() || stack.getItem().getRegistryName() == null)
 		{
-			writeInt(0);
+			writeVarInt(0);
 			return;
 		}
 
-		writeInt(Item.getIdFromItem(stack.getItem()));
+		writeVarInt(Item.getIdFromItem(stack.getItem()));
 		writeByte(stack.getCount());
 		writeVarInt(stack.getMetadata());
 		writeNBT(stack.getItem().isDamageable() || stack.getItem().getShareTag() ? stack.getItem().getNBTShareTag(stack) : null);
