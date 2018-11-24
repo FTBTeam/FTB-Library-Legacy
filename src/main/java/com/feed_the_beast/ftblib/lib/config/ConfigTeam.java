@@ -24,10 +24,10 @@ public class ConfigTeam extends ConfigValue
 {
 	public static final String TEAM_ID = "team";
 
-	private final Supplier<String> get;
-	private final Consumer<String> set;
+	private final Supplier<ForgeTeam> get;
+	private final Consumer<ForgeTeam> set;
 
-	public ConfigTeam(Supplier<String> g, Consumer<String> s)
+	public ConfigTeam(Supplier<ForgeTeam> g, Consumer<ForgeTeam> s)
 	{
 		get = g;
 		set = s;
@@ -53,7 +53,8 @@ public class ConfigTeam extends ConfigValue
 	@Override
 	public String getString()
 	{
-		return get.get();
+		ForgeTeam team = get.get();
+		return team == null ? "" : team.getID();
 	}
 
 	@Override
@@ -65,7 +66,8 @@ public class ConfigTeam extends ConfigValue
 	@Override
 	public int getInt()
 	{
-		throw new IllegalStateException("Not supported!");
+		ForgeTeam team = get.get();
+		return team == null ? 0 : team.getUID();
 	}
 
 	@Override
@@ -117,13 +119,13 @@ public class ConfigTeam extends ConfigValue
 	@Override
 	public void writeToNBT(NBTTagCompound nbt, String key)
 	{
-		nbt.setString(key, getString());
+		nbt.setShort(key, (short) getInt());
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		set.accept(nbt.getString(key));
+		set.accept(Universe.get().getTeam(nbt.getShort(key)));
 	}
 
 	@Override
