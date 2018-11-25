@@ -35,6 +35,7 @@ import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -59,8 +60,6 @@ import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -346,8 +345,8 @@ public class Universe
 
 		new UniverseLoadedEvent.Pre(this, world, data).post();
 
-		Map<UUID, NBTTagCompound> playerNBT = new HashMap<>();
-		Map<String, NBTTagCompound> teamNBT = new HashMap<>();
+		Map<UUID, NBTTagCompound> playerNBT = new Object2ObjectOpenHashMap<>();
+		Map<String, NBTTagCompound> teamNBT = new Object2ObjectOpenHashMap<>();
 
 		try
 		{
@@ -397,7 +396,7 @@ public class Universe
 			{
 				for (File file : files)
 				{
-					if (file.getName().indexOf('.') == file.getName().lastIndexOf('.'))
+					if (file.isFile() && file.getName().indexOf('.') == file.getName().lastIndexOf('.'))
 					{
 						NBTTagCompound nbt = NBTUtils.readNBT(file);
 
@@ -886,7 +885,7 @@ public class Universe
 			{
 				if (set.isEmpty())
 				{
-					set = new HashSet<>();
+					set = new ObjectOpenHashSet<>();
 				}
 
 				set.add(player);

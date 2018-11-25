@@ -401,12 +401,33 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 
 	public File getDataFile(String ext)
 	{
+		File dir = new File(team.universe.getWorldDirectory(), "data/ftb_lib/players/");
+
 		if (ext.isEmpty())
 		{
-			return new File(team.universe.getWorldDirectory(), "data/ftb_lib/players/" + getName().toLowerCase() + ".dat");
+			return new File(dir, getName().toLowerCase() + ".dat");
 		}
 
-		return new File(team.universe.getWorldDirectory(), "data/ftb_lib/players/" + getName().toLowerCase() + "." + ext + ".dat");
+		File extFolder = new File(dir, ext);
+
+		if (!extFolder.exists())
+		{
+			extFolder.mkdirs();
+		}
+
+		File extFile = new File(extFolder, getName().toLowerCase() + ".dat");
+
+		if (!extFile.exists())
+		{
+			File oldExtFile = new File(dir, getName().toLowerCase() + "." + ext + ".dat");
+
+			if (oldExtFile.exists())
+			{
+				oldExtFile.renameTo(extFile);
+			}
+		}
+
+		return extFile;
 	}
 
 	@Override

@@ -710,7 +710,27 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 			return new File(dir, getID() + ".dat");
 		}
 
-		return new File(dir, getID() + "." + ext + ".dat");
+		File extFolder = new File(dir, ext);
+
+		if (!extFolder.exists())
+		{
+			extFolder.mkdirs();
+		}
+
+		File extFile = new File(extFolder, getID() + ".dat");
+
+		if (!extFile.exists())
+		{
+			File oldExtFile = new File(dir, getID() + "." + ext + ".dat");
+
+			if (oldExtFile.exists())
+			{
+				oldExtFile.renameTo(extFile);
+				oldExtFile.deleteOnExit();
+			}
+		}
+
+		return extFile;
 	}
 
 	@Override
