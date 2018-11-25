@@ -1,18 +1,16 @@
 package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
-import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -42,32 +40,25 @@ public class ConfigTeam extends ConfigValue
 	@Override
 	public ITextComponent getStringForGUI()
 	{
-		if (Universe.loaded())
-		{
-			return Universe.get().getTeam(getString()).getTitle();
-		}
-
-		return super.getStringForGUI();
+		return get.get().getTitle();
 	}
 
 	@Override
 	public String getString()
 	{
-		ForgeTeam team = get.get();
-		return team == null ? "" : team.getID();
+		return get.get().getID();
 	}
 
 	@Override
 	public boolean getBoolean()
 	{
-		throw new IllegalStateException("Not supported!");
+		return get.get().isValid();
 	}
 
 	@Override
 	public int getInt()
 	{
-		ForgeTeam team = get.get();
-		return team == null ? 0 : team.getUID();
+		return get.get().getUID();
 	}
 
 	@Override
@@ -79,12 +70,7 @@ public class ConfigTeam extends ConfigValue
 	@Override
 	public Color4I getColor()
 	{
-		if (Universe.loaded())
-		{
-			return Universe.get().getTeam(getString()).getColor().getColor();
-		}
-
-		return Color4I.getChatFormattingColor(TextFormatting.DARK_GREEN);
+		return get.get().getColor().getColor();
 	}
 
 	@Override
@@ -95,20 +81,15 @@ public class ConfigTeam extends ConfigValue
 	@Override
 	public List<String> getVariants()
 	{
-		if (Universe.loaded())
+		List<String> list = new ObjectArrayList<>();
+
+		for (ForgeTeam team : get.get().universe.getTeams())
 		{
-			List<String> list = new ArrayList<>();
-
-			for (ForgeTeam team : Universe.get().getTeams())
-			{
-				list.add(team.getID());
-			}
-
-			list.sort(null);
-			return list;
+			list.add(team.getID());
 		}
 
-		return Collections.emptyList();
+		list.sort(null);
+		return list;
 	}
 
 	@Override
@@ -125,25 +106,22 @@ public class ConfigTeam extends ConfigValue
 	@Override
 	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		set.accept(Universe.get().getTeam(nbt.getShort(key)));
+		set.accept(get.get().universe.getTeam(nbt.getShort(key)));
 	}
 
 	@Override
 	public void writeData(DataOut data)
 	{
-		if (!Universe.loaded())
-		{
-			throw new IllegalStateException("Can't write Team property, world hasn't loaded!");
-		}
+		ForgeTeam team = get.get();
+		Collection<ForgeTeam> teams = team.universe.getTeams();
+		data.writeVarInt(teams.size());
 
-		data.writeVarInt(Universe.get().getTeams().size());
-
-		for (ForgeTeam team : Universe.get().getTeams())
+		for (ForgeTeam t : teams)
 		{
-			data.writeShort(team.getUID());
-			data.writeString(team.getID());
-			data.writeTextComponent(team.getTitle());
-			data.writeIcon(team.getIcon());
+			data.writeShort(t.getUID());
+			data.writeString(t.getID());
+			data.writeTextComponent(t.getTitle());
+			data.writeIcon(t.getIcon());
 		}
 
 		data.writeString(getString());

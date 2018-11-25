@@ -141,8 +141,8 @@ public class Universe
 				player.onLoggedOut();
 			}
 
-			new UniverseClosedEvent(INSTANCE).post();
 			INSTANCE.save();
+			new UniverseClosedEvent(INSTANCE).post();
 			INSTANCE = null;
 		}
 	}
@@ -403,7 +403,13 @@ public class Universe
 
 						if (nbt != null)
 						{
-							String s = FileUtils.getBaseName(file);
+							String s = nbt.getString("ID");
+
+							if (s.isEmpty())
+							{
+								s = FileUtils.getBaseName(file);
+							}
+
 							teamNBT.put(s, nbt);
 							short uid = nbt.getShort("UID");
 							ForgeTeam team = new ForgeTeam(this, generateTeamUID(uid), s, TeamType.NAME_MAP.get(nbt.getString("Type")));
@@ -572,6 +578,7 @@ public class Universe
 				if (team.type.save && team.isValid())
 				{
 					NBTTagCompound nbt = team.serializeNBT();
+					nbt.setString("ID", team.getID());
 					nbt.setShort("UID", team.getUID());
 					nbt.setString("Type", team.type.getName());
 					NBTUtils.writeNBTSafe(file, nbt);
@@ -830,14 +837,43 @@ public class Universe
 
 	public ForgeTeam getTeam(String id)
 	{
-		ForgeTeam team = id.isEmpty() ? null : teams.get(id);
+		if (id.isEmpty())
+		{
+			return noneTeam;
+		}
+		else if (id.length() == 4)
+		{
+			try
+			{
+				ForgeTeam team = getTeam(Integer.valueOf(id, 16).shortValue());
+
+				if (team.isValid())
+				{
+					return team;
+				}
+			}
+			catch (Exception ex)
+			{
+			}
+		}
+
+		ForgeTeam team = teams.get(id);
 		return team == null ? (id.equals("fakeplayer") ? fakePlayerTeam : noneTeam) : team;
 	}
 
 	public ForgeTeam getTeam(short uid)
 	{
-		ForgeTeam team = uid == 0 ? null : teamMap.get(uid);
-		return team == null ? (uid == 1 ? fakePlayerTeam : noneTeam) : team;
+		if (uid == 0)
+		{
+			return noneTeam;
+		}
+		else if (uid == 1)
+		{
+			return fakePlayerTeam;
+		}
+
+		ForgeTeam team = teamMap.get(uid);
+		return team == null ? noneTeam : team;
 	}
 
 	public Collection<ForgePlayer> getOnlinePlayers()

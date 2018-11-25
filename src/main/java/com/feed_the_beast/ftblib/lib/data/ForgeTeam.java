@@ -35,6 +35,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 /**
@@ -96,7 +97,7 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 
 	public final boolean equals(Object o)
 	{
-		return o == this || o instanceof ForgeTeam && uid == ((ForgeTeam) o).uid;
+		return o == this || uid == Objects.hashCode(o);
 	}
 
 	public final String toString()
@@ -684,7 +685,7 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 
 	public boolean equalsTeam(@Nullable ForgeTeam team)
 	{
-		return team == this || (team != null && getID().equals(team.getID()));
+		return team == this || uid == Objects.hashCode(team);
 	}
 
 	public boolean anyPlayerHasPermission(String permission, EnumTeamStatus status)
