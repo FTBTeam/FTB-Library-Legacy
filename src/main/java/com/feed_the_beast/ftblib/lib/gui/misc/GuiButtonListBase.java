@@ -19,6 +19,7 @@ public abstract class GuiButtonListBase extends GuiBase
 	private String title = "";
 	private TextBox searchBox;
 	private boolean hasSearchBox;
+	private int borderH, borderV, borderW;
 
 	public GuiButtonListBase()
 	{
@@ -66,13 +67,14 @@ public abstract class GuiButtonListBase extends GuiBase
 
 				for (Widget w : widgets)
 				{
-					w.setWidth(width);
+					w.setX(borderH);
+					w.setWidth(width - borderH * 2);
 				}
 
 				setHeight(140);
 
 				scrollBar.setPosAndSize(posX + width + 6, posY - 1, 16, height + 2);
-				scrollBar.setMaxValue(align(WidgetLayout.VERTICAL));
+				scrollBar.setMaxValue(align(new WidgetLayout.Vertical(borderV, borderW, borderV)));
 
 				getGui().setWidth(scrollBar.posX + scrollBar.width + 8);
 				getGui().setHeight(height + 18 + (hasSearchBox ? 14 : 0));
@@ -152,6 +154,13 @@ public abstract class GuiButtonListBase extends GuiBase
 	public String getTitle()
 	{
 		return title;
+	}
+
+	public void setBorder(int h, int v, int w)
+	{
+		borderH = h;
+		borderV = v;
+		borderW = w;
 	}
 
 	@Override
