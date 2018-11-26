@@ -7,7 +7,10 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.Collection;
@@ -106,7 +109,16 @@ public class ConfigTeam extends ConfigValue
 	@Override
 	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		set.accept(get.get().universe.getTeam(nbt.getShort(key)));
+		NBTBase id = nbt.getTag(key);
+
+		if (id instanceof NBTTagString)
+		{
+			set.accept(get.get().universe.getTeam(((NBTTagString) id).getString()));
+		}
+		else if (id instanceof NBTPrimitive)
+		{
+			set.accept(get.get().universe.getTeam(((NBTPrimitive) id).getShort()));
+		}
 	}
 
 	@Override

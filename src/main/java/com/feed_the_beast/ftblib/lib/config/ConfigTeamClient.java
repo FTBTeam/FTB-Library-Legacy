@@ -9,7 +9,10 @@ import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.nbt.NBTBase;
+import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.ArrayList;
@@ -113,7 +116,26 @@ public class ConfigTeamClient extends ConfigString
 	@Override
 	public void readFromNBT(NBTTagCompound nbt, String key)
 	{
-		setString(nbt.getString(key));
+		NBTBase id = nbt.getTag(key);
+
+		if (id instanceof NBTTagString)
+		{
+			setString(((NBTTagString) id).getString());
+		}
+		else if (id instanceof NBTPrimitive)
+		{
+			ForgeTeam team = null;
+			short ids = ((NBTPrimitive) id).getShort();
+
+			for (TeamInst inst : map.values())
+			{
+				if (inst.uid == ids)
+				{
+					setString(inst.getID());
+					return;
+				}
+			}
+		}
 	}
 
 	@Override
