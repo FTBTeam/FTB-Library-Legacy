@@ -18,10 +18,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntLists;
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Items;
@@ -47,8 +43,12 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -188,7 +188,7 @@ public class DataIn
 				return list ? Collections.singletonList(deserializer.read(this)) : Collections.singleton(deserializer.read(this));
 			}
 
-			collection = list ? new ObjectArrayList<>(size) : new ObjectOpenHashSet<>(size);
+			collection = list ? new ArrayList<>(size) : new HashSet<>(size);
 		}
 
 		while (--size >= 0)
@@ -230,7 +230,7 @@ public class DataIn
 			}
 			else
 			{
-				map = linked ? new Object2ObjectLinkedOpenHashMap<>(size) : new Object2ObjectOpenHashMap<>(size);
+				map = linked ? new LinkedHashMap<>(size) : new HashMap<>(size);
 			}
 		}
 

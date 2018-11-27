@@ -8,7 +8,6 @@ import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.tile.EnumSaveType;
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -19,6 +18,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -118,7 +118,7 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 		objectProperties = ng;
 		values = v;
 
-		Map<String, E> map0 = new Object2ObjectLinkedOpenHashMap<>(size());
+		Map<String, E> map0 = new LinkedHashMap<>(size());
 
 		for (E value : values)
 		{

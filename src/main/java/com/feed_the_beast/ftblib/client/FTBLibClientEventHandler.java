@@ -16,7 +16,6 @@ import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.text_components.Notification;
 import com.feed_the_beast.ftblib.net.MessageAdminPanelGui;
 import com.feed_the_beast.ftblib.net.MessageMyTeamGui;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
@@ -566,7 +565,7 @@ public class FTBLibClientEventHandler
 				int mx1 = mx + 10;
 				int my1 = Math.max(3, my - 9);
 
-				List<String> list = new ObjectArrayList<>();
+				List<String> list = new ArrayList<>();
 				list.add(I18n.format(mouseOver.button.getLangKey()));
 
 				if (mouseOver.button.getTooltipHandler() != null)

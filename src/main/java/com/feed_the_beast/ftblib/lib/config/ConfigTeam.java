@@ -6,13 +6,13 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTPrimitive;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.text.ITextComponent;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -84,7 +84,7 @@ public class ConfigTeam extends ConfigValue
 	@Override
 	public List<String> getVariants()
 	{
-		List<String> list = new ObjectArrayList<>();
+		List<String> list = new ArrayList<>();
 
 		for (ForgeTeam team : get.get().universe.getTeams())
 		{

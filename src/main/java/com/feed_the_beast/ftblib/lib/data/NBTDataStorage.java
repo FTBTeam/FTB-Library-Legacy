@@ -2,11 +2,11 @@ package com.feed_the_beast.ftblib.lib.data;
 
 import com.feed_the_beast.ftblib.lib.util.CommonUtils;
 import com.feed_the_beast.ftblib.lib.util.IWithID;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -64,7 +64,7 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 
 	public NBTDataStorage()
 	{
-		map = new Object2ObjectOpenHashMap<>();
+		map = new HashMap<>();
 	}
 
 	public void add(Data data)

@@ -33,9 +33,6 @@ import com.feed_the_beast.ftblib.net.MessageSyncData;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import it.unimi.dsi.fastutil.shorts.Short2ObjectOpenHashMap;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -51,6 +48,7 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -58,8 +56,11 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -173,6 +174,21 @@ public class Universe
 		}
 	}
 
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void onPlayerClone(net.minecraftforge.event.entity.player.PlayerEvent.Clone event)
+	{
+		if (event.getEntity() instanceof EntityPlayerMP)
+		{
+			INSTANCE.clearCache();
+			ForgePlayer player = INSTANCE.getPlayer(event.getEntity().getUniqueID());
+
+			if (player != null)
+			{
+				player.entityPlayer = (EntityPlayerMP) event.getEntity();
+			}
+		}
+	}
+
 	@SubscribeEvent
 	public static void onTickEvent(TickEvent.WorldTickEvent event)
 	{
@@ -260,17 +276,17 @@ public class Universe
 		server = w.getMinecraftServer();
 		world = w;
 		ticks = Ticks.get(world.getTotalWorldTime());
-		players = new Object2ObjectOpenHashMap<>();
-		teams = new Object2ObjectOpenHashMap<>();
+		players = new HashMap<>();
+		teams = new HashMap<>();
 		teamMap = new Short2ObjectOpenHashMap<>();
 		noneTeam = new ForgeTeam(this, (short) 0, "", TeamType.NONE);
 		uuid = null;
 		needsSaving = false;
 		checkSaving = true;
-		scheduledTasks = new ObjectArrayList<>();
-		persistentScheduledTasks = new ObjectArrayList<>();
-		scheduledTaskQueue = new ObjectArrayList<>();
-		persistentScheduledTaskQueue = new ObjectArrayList<>();
+		scheduledTasks = new ArrayList<>();
+		persistentScheduledTasks = new ArrayList<>();
+		scheduledTaskQueue = new ArrayList<>();
+		persistentScheduledTaskQueue = new ArrayList<>();
 	}
 
 	public void markDirty()
@@ -345,8 +361,8 @@ public class Universe
 
 		new UniverseLoadedEvent.Pre(this, world, data).post();
 
-		Map<UUID, NBTTagCompound> playerNBT = new Object2ObjectOpenHashMap<>();
-		Map<String, NBTTagCompound> teamNBT = new Object2ObjectOpenHashMap<>();
+		Map<UUID, NBTTagCompound> playerNBT = new HashMap<>();
+		Map<String, NBTTagCompound> teamNBT = new HashMap<>();
 
 		try
 		{
@@ -885,7 +901,7 @@ public class Universe
 			{
 				if (set.isEmpty())
 				{
-					set = new ObjectOpenHashSet<>();
+					set = new HashSet<>();
 				}
 
 				set.add(player);

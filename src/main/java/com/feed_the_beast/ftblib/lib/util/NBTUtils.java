@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.util;
 
 import com.feed_the_beast.ftblib.lib.io.ByteCounterOutputStream;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagByte;
@@ -268,5 +269,17 @@ public class NBTUtils
 		{
 			return -1L;
 		}
+	}
+
+	public static NBTTagCompound getPersistedData(EntityPlayer player, boolean createIfMissing)
+	{
+		NBTTagCompound tag = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
+
+		if (createIfMissing)
+		{
+			player.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, tag);
+		}
+
+		return tag;
 	}
 }
