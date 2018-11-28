@@ -30,12 +30,14 @@ public class GuiEditConfigList extends GuiBase
 {
 	public class ButtonConfigValue extends Button
 	{
+		public final int index;
 		public final ConfigValueInstance inst;
 		private String valueString = null;
 
-		public ButtonConfigValue(Panel panel, ConfigValueInstance v)
+		public ButtonConfigValue(Panel panel, int i, ConfigValueInstance v)
 		{
 			super(panel);
+			index = i;
 			setHeight(16);
 			inst = v;
 		}
@@ -89,7 +91,7 @@ public class GuiEditConfigList extends GuiBase
 			{
 				if (originalConfigList.getCanEdit())
 				{
-					configList.list.remove(inst.getValue());
+					configList.list.remove(index);
 					parent.refreshWidgets();
 				}
 			}
@@ -176,7 +178,7 @@ public class GuiEditConfigList extends GuiBase
 			{
 				for (int i = 0; i < configList.list.size(); i++)
 				{
-					add(new ButtonConfigValue(this, new ConfigValueInstance(Integer.toString(i), ConfigGroup.DEFAULT, configList.list.get(i))));
+					add(new ButtonConfigValue(this, i, new ConfigValueInstance(Integer.toString(i), ConfigGroup.DEFAULT, configList.list.get(i))));
 				}
 
 				if (originalConfigList.getCanEdit())

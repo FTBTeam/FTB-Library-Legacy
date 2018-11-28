@@ -8,7 +8,6 @@ import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.common.util.INBTSerializable;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -30,7 +29,7 @@ import java.util.regex.Pattern;
 /**
  * @author LatvianModder
  */
-public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTagCompound>
+public class ConfigGroup extends FinalIDObject
 {
 	public static final ConfigGroup DEFAULT = newGroup("default");
 
@@ -62,7 +61,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 		int s = data.readVarInt();
 		group.values.clear();
 
-		while (--s >= 0)
+		for (int i = 0; i < s; i++)
 		{
 			ConfigValueInstance inst = new ConfigValueInstance(group, data);
 			group.values.put(inst.getID(), inst);
@@ -71,7 +70,7 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 		s = data.readVarInt();
 		group.groups.clear();
 
-		while (--s >= 0)
+		for (int i = 0; i < s; i++)
 		{
 			ConfigGroup group1 = ConfigGroup.DESERIALIZER.read(data);
 			group1.parent = group;
@@ -311,7 +310,6 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 		return parent == null ? (getID() + "#" + map) : map.toString();
 	}
 
-	@Override
 	public NBTTagCompound serializeNBT()
 	{
 		NBTTagCompound nbt = new NBTTagCompound();
@@ -326,32 +324,10 @@ public class ConfigGroup extends FinalIDObject implements INBTSerializable<NBTTa
 
 		for (ConfigGroup group : getGroups())
 		{
-			NBTTagCompound nbt1 = group.serializeNBT();
-
-			if (!nbt1.isEmpty())
-			{
-				nbt.setTag(group.getID(), nbt1);
-			}
+			nbt.setTag(group.getID(), group.serializeNBT());
 		}
 
 		return nbt;
-	}
-
-	@Override
-	public void deserializeNBT(NBTTagCompound nbt)
-	{
-		for (ConfigValueInstance instance : getValues())
-		{
-			if (!instance.getExcluded())
-			{
-				instance.getValue().readFromNBT(nbt, instance.getID());
-			}
-		}
-
-		for (ConfigGroup group : getGroups())
-		{
-			group.deserializeNBT(nbt.getCompoundTag(group.getID()));
-		}
 	}
 
 	public void deserializeEditedNBT(NBTTagCompound nbt)

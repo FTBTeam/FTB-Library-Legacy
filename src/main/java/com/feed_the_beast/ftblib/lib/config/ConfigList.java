@@ -107,20 +107,17 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	public void writeData(DataOut data)
 	{
 		writeToList();
-
 		data.writeString(type.getID());
-		type.writeData(data);
 
-		if (!hasValidId())
+		if (hasValidId())
 		{
-			return;
-		}
+			type.writeData(data);
+			data.writeVarInt(list.size());
 
-		data.writeVarInt(list.size());
-
-		for (ConfigValue s : list)
-		{
-			s.writeData(data);
+			for (ConfigValue s : list)
+			{
+				s.writeData(data);
+			}
 		}
 	}
 
@@ -129,20 +126,18 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	{
 		list.clear();
 		type = (T) FTBLibAPI.createConfigValueFromId(data.readString());
-		type.readData(data);
 
-		if (!hasValidId())
+		if (hasValidId())
 		{
-			return;
-		}
+			type.readData(data);
+			int s = data.readVarInt();
 
-		int s = data.readVarInt();
-
-		while (--s >= 0)
-		{
-			ConfigValue v = type.copy();
-			v.readData(data);
-			list.add((T) v);
+			while (--s >= 0)
+			{
+				ConfigValue v = type.copy();
+				v.readData(data);
+				list.add((T) v);
+			}
 		}
 
 		readFromList();
@@ -204,19 +199,19 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	{
 		writeToList();
 
-		if (hasValidId() && !list.isEmpty())
-		{
-			NBTTagList l = new NBTTagList();
+		NBTTagList l = new NBTTagList();
 
+		if (hasValidId())
+		{
 			for (T value : list)
 			{
 				NBTTagCompound nbt1 = new NBTTagCompound();
 				value.writeToNBT(nbt1, "value");
 				l.appendTag(nbt1);
 			}
-
-			nbt.setTag(key, l);
 		}
+
+		nbt.setTag(key, l);
 	}
 
 	@Override
@@ -225,11 +220,6 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 		list.clear();
 
 		NBTTagList l = nbt.getTagList(key, Constants.NBT.TAG_COMPOUND);
-
-		if (l.isEmpty())
-		{
-			return;
-		}
 
 		for (int i = 0; i < l.tagCount(); i++)
 		{
@@ -313,7 +303,7 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	{
 		list.clear();
 
-		if (ovalue instanceof ConfigList && type.equals(((ConfigList) ovalue).type))
+		if (ovalue instanceof ConfigList && !ovalue.isEmpty() && type.equals(((ConfigList) ovalue).type))
 		{
 			for (ConfigValue v : (ConfigList<?>) ovalue)
 			{
