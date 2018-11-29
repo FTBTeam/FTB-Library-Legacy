@@ -488,6 +488,17 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 				ClientUtils.execClientCommand(path, false);
 				return true;
 			}
+			case "curseforgepages":
+			{
+				String[] s = path.split(":", 2);
+
+				if (s.length == 2)
+				{
+					return handleClick("https://minecraft.curseforge.com/projects/" + s[0] + "/pages/" + s[1]);
+				}
+
+				return false;
+			}
 			case "custom":
 				return new CustomClickEvent(new ResourceLocation(path)).post();
 			default:
