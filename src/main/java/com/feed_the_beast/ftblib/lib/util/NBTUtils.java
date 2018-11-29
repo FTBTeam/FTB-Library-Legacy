@@ -42,9 +42,9 @@ public class NBTUtils
 
 	public static void writeNBT(File file, NBTTagCompound tag)
 	{
-		try
+		try (FileOutputStream stream = new FileOutputStream(FileUtils.newFile(file)))
 		{
-			CompressedStreamTools.writeCompressed(tag, new FileOutputStream(FileUtils.newFile(file)));
+			CompressedStreamTools.writeCompressed(tag, stream);
 		}
 		catch (Exception ex)
 		{
