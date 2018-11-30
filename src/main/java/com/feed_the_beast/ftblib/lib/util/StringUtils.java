@@ -19,7 +19,6 @@ public class StringUtils
 {
 	public static final String ALLOWED_TEXT_CHARS = " .-_!@#$%^&*()+=\\/,<>?\'\"[]{}|;:`~";
 	public static final char FORMATTING_CHAR = '\u00a7';
-	public static final String FORMATTING = "" + FORMATTING_CHAR;
 	public static final String[] EMPTY_ARRAY = { };
 	public static final char[] HEX = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
 
@@ -41,6 +40,7 @@ public class StringUtils
 	private static final Pattern SNAKE_CASE_ID_PATTERN = Pattern.compile("[^a-z0-9_]");
 	private static final Pattern REPEATING_UNDERSCORE_PATTERN = Pattern.compile("_+");
 	private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-FK-OR]");
+	private static final Pattern FORMATTING_CODE_AND_PATTERN = Pattern.compile("(?i)\\&([0-9A-FK-OR])");
 
 	public static String unformatted(String string)
 	{
@@ -230,7 +230,7 @@ public class StringUtils
 		{
 			return Character.toString(c);
 		}
-		return String.valueOf(c) + s.substring(1);
+		return c + s.substring(1);
 	}
 
 	public static String fillString(CharSequence s, char fill, int length)
@@ -517,7 +517,7 @@ public class StringUtils
 		}
 		else
 		{
-			char c[] = new char[tabSize];
+			char[] c = new char[tabSize];
 			Arrays.fill(c, ' ');
 			with = new String(c);
 		}
@@ -577,5 +577,10 @@ public class StringUtils
 		}
 
 		return builder.toString();
+	}
+
+	public static String addFormatting(String string)
+	{
+		return FORMATTING_CODE_AND_PATTERN.matcher(string).replaceAll("\u00a7$1");
 	}
 }
