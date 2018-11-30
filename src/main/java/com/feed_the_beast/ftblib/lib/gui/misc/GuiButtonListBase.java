@@ -175,4 +175,9 @@ public abstract class GuiButtonListBase extends GuiBase
 			theme.drawString(title, getX() + (width - theme.getStringWidth(title)) / 2, getY() - theme.getFontHeight() - 2, Theme.SHADOW);
 		}
 	}
+
+	public void focus()
+	{
+		searchBox.setFocused(true);
+	}
 }
