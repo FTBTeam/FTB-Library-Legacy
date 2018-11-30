@@ -13,15 +13,15 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class MessageEditConfigResponse extends MessageToServer
 {
-	private NBTTagCompound groupData;
+	private NBTTagCompound nbt;
 
 	public MessageEditConfigResponse()
 	{
 	}
 
-	public MessageEditConfigResponse(NBTTagCompound json)
+	public MessageEditConfigResponse(NBTTagCompound n)
 	{
-		groupData = json;
+		nbt = n;
 	}
 
 	@Override
@@ -33,13 +33,13 @@ public class MessageEditConfigResponse extends MessageToServer
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeNBT(groupData);
+		data.writeNBT(nbt);
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		groupData = data.readNBT();
+		nbt = data.readNBT();
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class MessageEditConfigResponse extends MessageToServer
 
 		if (c != null)
 		{
-			c.group.deserializeEditedNBT(groupData);
+			c.group.deserializeEditedNBT(nbt);
 			c.callback.onConfigSaved(c.group, player);
 			FTBLibCommon.TEMP_SERVER_CONFIG.remove(player.getUniqueID());
 		}

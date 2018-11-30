@@ -81,14 +81,9 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 		return ID;
 	}
 
-	private boolean hasValidId()
-	{
-		return !type.isNull();
-	}
-
 	public boolean canAdd(ConfigValue value)
 	{
-		return !value.isNull() && hasValidId() && type.getID().equals(value.getID());
+		return !value.isNull() && type.getID().equals(value.getID());
 	}
 
 	public ConfigList<T> add(ConfigValue v)
@@ -108,16 +103,12 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	{
 		writeToList();
 		data.writeString(type.getID());
+		type.writeData(data);
+		data.writeVarInt(list.size());
 
-		if (hasValidId())
+		for (ConfigValue s : list)
 		{
-			type.writeData(data);
-			data.writeVarInt(list.size());
-
-			for (ConfigValue s : list)
-			{
-				s.writeData(data);
-			}
+			s.writeData(data);
 		}
 	}
 
@@ -126,18 +117,14 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	{
 		list.clear();
 		type = (T) FTBLibAPI.createConfigValueFromId(data.readString());
+		type.readData(data);
+		int s = data.readVarInt();
 
-		if (hasValidId())
+		while (--s >= 0)
 		{
-			type.readData(data);
-			int s = data.readVarInt();
-
-			while (--s >= 0)
-			{
-				ConfigValue v = type.copy();
-				v.readData(data);
-				list.add((T) v);
-			}
+			ConfigValue v = type.copy();
+			v.readData(data);
+			list.add((T) v);
 		}
 
 		readFromList();
@@ -201,14 +188,11 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 
 		NBTTagList l = new NBTTagList();
 
-		if (hasValidId())
+		for (T value : list)
 		{
-			for (T value : list)
-			{
-				NBTTagCompound nbt1 = new NBTTagCompound();
-				value.writeToNBT(nbt1, "value");
-				l.appendTag(nbt1);
-			}
+			NBTTagCompound nbt1 = new NBTTagCompound();
+			value.writeToNBT(nbt1, "value");
+			l.appendTag(nbt1);
 		}
 
 		nbt.setTag(key, l);

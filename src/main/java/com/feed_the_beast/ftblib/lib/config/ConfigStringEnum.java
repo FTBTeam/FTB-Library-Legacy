@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -12,28 +13,90 @@ import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author LatvianModder
  */
 public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 {
-	private final List<String> keys;
-	private String value;
-	private final Map<String, ITextComponent> customNames;
-	private final Map<String, Color4I> customColors;
-
-	public ConfigStringEnum(Collection<String> k, String v)
+	public static final class StringEnumValue
 	{
-		keys = new ArrayList<>(k);
-		value = v;
-		customNames = new HashMap<>();
-		customColors = new HashMap<>();
+		public final int index;
+		public final String id;
+		public ITextComponent customName = null;
+		public Color4I customColor = Icon.EMPTY;
+
+		public StringEnumValue(int idx, String i)
+		{
+			index = idx;
+			id = i;
+		}
+
+		public int hashCode()
+		{
+			return index;
+		}
+
+		public boolean equals(Object o)
+		{
+			return o == this || index == o.hashCode();
+		}
+
+		public String toString()
+		{
+			return id;
+		}
+	}
+
+	private final List<StringEnumValue> values;
+	private StringEnumValue value;
+
+	public ConfigStringEnum(List<String> k, String v)
+	{
+		values = new ArrayList<>(k.size());
+
+		for (int i = 0; i < k.size(); i++)
+		{
+			values.add(new StringEnumValue(i, k.get(i)));
+		}
+
+		value = get(v);
+	}
+
+	private ConfigStringEnum(ConfigStringEnum copyFrom)
+	{
+		values = new ArrayList<>(copyFrom.values.size());
+
+		for (int i = 0; i < copyFrom.values.size(); i++)
+		{
+			StringEnumValue v0 = copyFrom.values.get(i);
+			StringEnumValue v = new StringEnumValue(i, v0.id);
+			v.customName = v0.customName == null ? null : v0.customName.createCopy();
+			v.customColor = v0.customColor.copy();
+			values.add(v);
+		}
+
+		setString(copyFrom.getString());
+	}
+
+	@Nullable
+	public StringEnumValue get(String v)
+	{
+		if (v.isEmpty())
+		{
+			return null;
+		}
+
+		for (StringEnumValue value : values)
+		{
+			if (value.id.equals(v))
+			{
+				return value;
+			}
+		}
+
+		return null;
 	}
 
 	@Override
@@ -44,81 +107,43 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 
 	public void setString(String v)
 	{
-		value = v;
+		value = get(v);
 	}
 
 	@Override
 	public String getString()
 	{
-		return value;
+		return value == null ? "" : value.id;
 	}
 
 	@Override
 	public ITextComponent getStringForGUI()
 	{
-		ITextComponent textComponent = customNames.get(getString());
-		return textComponent == null ? new TextComponentString(getString()) : textComponent.createCopy();
-	}
-
-	public void setCustomName(String key, @Nullable ITextComponent component)
-	{
-		if (component == null)
-		{
-			customNames.remove(key);
-		}
-		else
-		{
-			customNames.put(key, component);
-		}
-	}
-
-	public void setCustomColor(String key, Color4I col)
-	{
-		if (col.isEmpty())
-		{
-			customColors.remove(key);
-		}
-		else
-		{
-			customColors.put(key, col);
-		}
+		return value == null ? new TextComponentString("null") : value.customName == null ? new TextComponentString(getString()) : value.customName.createCopy();
 	}
 
 	@Override
 	public boolean getBoolean()
 	{
-		return !getString().equals("-");
+		return true;
 	}
 
 	@Override
 	public int getInt()
 	{
-		return keys.indexOf(getString());
+		return value == null ? -1 : value.index;
 	}
 
 	@Override
 	public ConfigStringEnum copy()
 	{
-		ConfigStringEnum config = new ConfigStringEnum(keys, getString());
-
-		for (Map.Entry<String, ITextComponent> entry : customNames.entrySet())
-		{
-			config.customNames.put(entry.getKey(), entry.getValue().createCopy());
-		}
-
-		for (Map.Entry<String, Color4I> entry : customColors.entrySet())
-		{
-			config.customColors.put(entry.getKey(), entry.getValue().copy());
-		}
-
-		return config;
+		return new ConfigStringEnum(this);
 	}
 
 	@Override
 	public Color4I getColor()
 	{
-		Color4I color4I = customColors.get(getString());
-		return color4I == null || color4I.isEmpty() ? ConfigEnum.COLOR : color4I;
+		return value == null || value.customColor.isEmpty() ? ConfigEnum.COLOR : value.customColor;
 	}
 
 	@Override
@@ -126,7 +151,7 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 	{
 		if (inst.getCanEdit() && !inst.getDefaultValue().isNull())
 		{
-			ITextComponent component = customNames.get(inst.getDefaultValue().getString());
+			ITextComponent component = get(inst.getDefaultValue().getString()).customName;
 			list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + (component == null ? inst.getDefaultValue() : component.getFormattedText()));
 		}
 	}
@@ -134,14 +159,21 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 	@Override
 	public List<String> getVariants()
 	{
-		return Collections.unmodifiableList(keys);
+		List<String> l = new ArrayList<>(values.size());
+
+		for (StringEnumValue v : values)
+		{
+			l.add(v.id);
+		}
+
+		return l;
 	}
 
 	@Override
 	public ConfigValue getIteration(boolean next)
 	{
 		ConfigStringEnum c = copy();
-		c.setString(keys.get(MathUtils.mod(getInt() + (next ? 1 : -1), keys.size())));
+		c.value = value == null ? null : c.values.get(MathUtils.mod(c.value.index + (next ? 1 : -1), c.values.size()));
 		return c;
 	}
 
@@ -160,39 +192,45 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 	@Override
 	public void writeData(DataOut data)
 	{
-		data.writeVarInt(keys.size());
+		data.writeVarInt(values.size());
 
-		for (String s : keys)
+		for (StringEnumValue v : values)
 		{
-			data.writeString(s);
-			data.writeTextComponent(customNames.get(s));
-			data.writeIcon(customColors.get(s));
+			data.writeString(v.id);
+			data.writeTextComponent(v.customName);
+			data.writeInt(v.customColor.rgba());
 		}
 
-		data.writeVarInt(getInt());
+		data.writeString(getString());
 	}
 
 	@Override
 	public void readData(DataIn data)
 	{
-		keys.clear();
-		customNames.clear();
-		customColors.clear();
+		values.clear();
 		int s = data.readVarInt();
 
-		while (--s >= 0)
+		for (int i = 0; i < s; i++)
 		{
-			String key = data.readString();
-			keys.add(key);
-			setCustomName(key, data.readTextComponent());
-			Icon i = data.readIcon();
-
-			if (i instanceof Color4I)
-			{
-				setCustomColor(key, (Color4I) i);
-			}
+			StringEnumValue v = new StringEnumValue(i, data.readString());
+			v.customName = data.readTextComponent();
+			v.customColor = Color4I.rgba(data.readInt());
+			values.add(v);
 		}
 
-		setString(keys.get(data.readVarInt()));
+		setString(data.readString());
+	}
+
+	@Override
+	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
+	{
+		setString(string);
+		return true;
+	}
+
+	@Override
+	public void setValueFromOtherValue(ConfigValue value)
+	{
+		setString(value.getString());
 	}
 }

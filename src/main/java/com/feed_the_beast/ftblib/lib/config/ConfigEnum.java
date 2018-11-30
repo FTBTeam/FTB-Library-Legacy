@@ -159,10 +159,10 @@ public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 		{
 			data.writeString(entry.getKey());
 			data.writeTextComponent(nameMap.getDisplayName(null, entry.getValue()));
-			data.writeIcon(nameMap.getColor(entry.getValue()));
+			data.writeInt(nameMap.getColor(entry.getValue()).rgba());
 		}
 
-		data.writeVarInt(nameMap.getIndex(getValue()));
+		data.writeString(getString());
 	}
 
 	@Override
