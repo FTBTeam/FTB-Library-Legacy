@@ -173,7 +173,7 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 	public ConfigValue getIteration(boolean next)
 	{
 		ConfigStringEnum c = copy();
-		c.value = value == null ? null : c.values.get(MathUtils.mod(c.value.index + (next ? 1 : -1), c.values.size()));
+		c.setString(value == null ? "" : c.values.get(MathUtils.mod(c.value.index + (next ? 1 : -1), c.values.size())).id);
 		return c;
 	}
 
