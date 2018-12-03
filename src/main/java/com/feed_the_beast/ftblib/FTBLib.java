@@ -31,7 +31,7 @@ import java.util.Map;
 		name = FTBLib.MOD_NAME,
 		version = FTBLib.VERSION,
 		acceptableRemoteVersions = "*",
-		dependencies = "required-after:forge@[0.0.0.forge,)"
+		dependencies = "required-after:forge@[0.0.0.forge,);after:jei@[4.6.0,);"
 )
 public class FTBLib
 {
