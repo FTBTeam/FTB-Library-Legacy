@@ -9,7 +9,6 @@ import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.AtlasSpriteIcon;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.IconPresets;
-import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
@@ -45,7 +44,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -59,7 +58,6 @@ import java.util.List;
 public class FTBLibClientEventHandler
 {
 	private static Temp currentNotification;
-	private static double sidebarButtonScale = 0D;
 	public static Rectangle lastDrawnArea = new Rectangle();
 
 	private static final IChatListener CHAT_LISTENER = (type, component) ->
@@ -167,7 +165,7 @@ public class FTBLibClientEventHandler
 			for (int i = 0; i < widget.text.size(); i++)
 			{
 				String string = widget.text.get(i);
-				widget.font.drawStringWithShadow(string, -widget.font.getStringWidth(string) / 2, offy + i * 11, 0xFFFFFF | (alpha << 24));
+				widget.font.drawStringWithShadow(string, -widget.font.getStringWidth(string) / 2F, offy + i * 11, 0xFFFFFF | (alpha << 24));
 			}
 
 			GlStateManager.depthMask(true);
@@ -427,16 +425,8 @@ public class FTBLibClientEventHandler
 			{
 				for (GuiButtonSidebar button : buttons)
 				{
-					if (FTBLibClientConfig.collapse_sidebar_buttons)
-					{
-						button.x = 4 + button.buttonX * 17;
-						button.y = 4 + button.buttonY * 17;
-					}
-					else
-					{
-						button.x = 1 + button.buttonX * 17;
-						button.y = 1 + button.buttonY * 17;
-					}
+					button.x = 1 + button.buttonX * 17;
+					button.y = 1 + button.buttonY * 17;
 				}
 			}
 			else
@@ -483,39 +473,6 @@ public class FTBLibClientEventHandler
 
 			width = maxX - x;
 			height = maxY - y;
-
-			if (sidebarButtonScale <= 0D)
-			{
-				if (mx >= x && my >= y && mx < x + 16 && my < y + 16)
-				{
-					sidebarButtonScale = 0.01D;
-				}
-			}
-
-			if (mx < x || my < y || mx >= x + width || my >= y + height)
-			{
-				sidebarButtonScale -= partialTicks * 0.3D * FTBLibClientConfig.sidebar_button_collapse_speed;
-
-				if (sidebarButtonScale < 0D)
-				{
-					sidebarButtonScale = 0D;
-				}
-			}
-			else if (sidebarButtonScale > 0D)
-			{
-				sidebarButtonScale += partialTicks * 0.3D * FTBLibClientConfig.sidebar_button_collapse_speed;
-
-				if (sidebarButtonScale > 1D)
-				{
-					sidebarButtonScale = 1D;
-				}
-			}
-
-			if (!FTBLibClientConfig.collapse_sidebar_buttons)
-			{
-				sidebarButtonScale = 1D;
-			}
-
 			zLevel = 0F;
 
 			GlStateManager.pushMatrix();
@@ -527,34 +484,16 @@ public class FTBLibClientEventHandler
 			GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
-			GlStateManager.pushMatrix();
-
-			double scale = 1.0;
-			if (sidebarButtonScale < 1D)
-			{
-				scale = Math.min(16D / MathUtils.lerp(width, 16D, sidebarButtonScale), 16D / MathUtils.lerp(height, 16D, sidebarButtonScale));
-				GlStateManager.scale(scale, scale, 1D);
-			}
-
-			if (FTBLibClientConfig.collapse_sidebar_buttons)
-			{
-				int alpha = (int) MathUtils.lerp(50D, 100D, sidebarButtonScale);
-				Color4I.GRAY.withAlpha(alpha).draw(x, y, width, height);
-				Color4I.DARK_GRAY.withAlpha(alpha).draw(x + 1, y + 1, width - 2, height - 2);
-			}
-
-			int alpha255 = (int) MathUtils.lerp(80D, 255D, sidebarButtonScale);
-
 			for (GuiButtonSidebar b : buttons)
 			{
-				b.button.getIcon().draw(b.x, b.y, 16, 16, Color4I.WHITE.withAlpha(alpha255));
+				b.button.getIcon().draw(b.x, b.y, 16, 16, Color4I.WHITE);
 
-				if (sidebarButtonScale >= 1D && b == mouseOver)
+				if (b == mouseOver)
 				{
 					Color4I.WHITE.withAlpha(33).draw(b.x, b.y, 16, 16);
 				}
 
-				if (sidebarButtonScale >= 1D && b.button.hasCustomText() && b.button.getCustomTextHandler() != null)
+				if (b.button.hasCustomText() && b.button.getCustomTextHandler() != null)
 				{
 					String text = b.button.getCustomTextHandler().get();
 
@@ -569,7 +508,7 @@ public class FTBLibClientEventHandler
 				}
 			}
 
-			if (mouseOver != null && sidebarButtonScale >= 1D)
+			if (mouseOver != null)
 			{
 				int mx1 = mx + 10;
 				int my1 = Math.max(3, my - 9);
@@ -606,15 +545,9 @@ public class FTBLibClientEventHandler
 
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			GlStateManager.popMatrix();
-			GlStateManager.popMatrix();
 			zLevel = 0F;
 
-			lastDrawnArea = new Rectangle(
-				(int) Math.ceil(x * scale),
-				(int) Math.ceil(y * scale),
-				(int) Math.ceil(width * scale),
-				(int) Math.ceil(height * scale)
-			);
+			lastDrawnArea = new Rectangle(x, y, width, height);
 		}
 
 		@Override
@@ -622,14 +555,9 @@ public class FTBLibClientEventHandler
 		{
 			if (super.mousePressed(mc, mx, my))
 			{
-				if (sidebarButtonScale >= 1D && mouseOver != null)
+				if (mouseOver != null)
 				{
 					mouseOver.button.onClicked(GuiScreen.isShiftKeyDown());
-
-					if (!(ClientUtils.MC.currentScreen instanceof InventoryEffectRenderer))
-					{
-						sidebarButtonScale = 0D;
-					}
 				}
 
 				return true;

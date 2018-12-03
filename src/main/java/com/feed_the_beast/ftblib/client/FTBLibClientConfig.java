@@ -36,13 +36,6 @@ public class FTBLibClientConfig
 	@Config.Comment("Show help text while holding F3.")
 	public static boolean debug_helper = true;
 
-	@Config.Comment("Collapses sidebar buttons when you don't have mouse over them.")
-	public static boolean collapse_sidebar_buttons = false;
-
-	@Config.Comment("How fast buttons collapse and expand.")
-	@Config.RangeDouble(min = 0.1D, max = 10D)
-	public static double sidebar_button_collapse_speed = 1D;
-
 	public static void sync()
 	{
 		ConfigManager.sync("ftblib_client", Config.Type.INSTANCE);

@@ -26,14 +26,6 @@ compileJava {
 	sourceCompatibility = targetCompatibility = "1.8"
 }
 
-repositories {
-	maven { url "http://dvs1.progwml6.com/files/maven" }
-}
-
-dependencies {
-	deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
-}
-
 minecraft {
 	version = "${mc_version}-${forge_version}"
 	runDir = "run"
@@ -42,6 +34,14 @@ minecraft {
 	replace "0.0.0.forge", min_forge_version
 	replace "0.0.0.ftblib", project.version
 	replaceIn "${mod_reference}"
+}
+
+repositories {
+	maven { url "http://dvs1.progwml6.com/files/maven" } //JEI
+}
+
+dependencies {
+	deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
 }
 
 processResources {
