@@ -44,6 +44,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nullable;
+import java.awt.Rectangle;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,6 +60,7 @@ public class FTBLibClientEventHandler
 {
 	private static Temp currentNotification;
 	private static double sidebarButtonScale = 0D;
+	public static Rectangle lastDrawnArea = new Rectangle();
 
 	private static final IChatListener CHAT_LISTENER = (type, component) ->
 	{
@@ -236,10 +239,15 @@ public class FTBLibClientEventHandler
 	{
 		//sidebarButtonScale = 0D;
 
-		if (FTBLibClientConfig.action_buttons != EnumSidebarButtonPlacement.DISABLED && event.getGui() instanceof InventoryEffectRenderer && !SidebarButtonManager.INSTANCE.groups.isEmpty())
+		if (areButtonsVisible(event.getGui()))
 		{
 			event.getButtonList().add(new GuiButtonSidebarGroup((InventoryEffectRenderer) event.getGui()));
 		}
+	}
+
+	public static boolean areButtonsVisible(@Nullable GuiScreen gui)
+	{
+		return FTBLibClientConfig.action_buttons != EnumSidebarButtonPlacement.DISABLED && gui instanceof InventoryEffectRenderer && !SidebarButtonManager.INSTANCE.groups.isEmpty();
 	}
 
 	@SubscribeEvent
@@ -521,9 +529,10 @@ public class FTBLibClientEventHandler
 
 			GlStateManager.pushMatrix();
 
+			double scale = 1.0;
 			if (sidebarButtonScale < 1D)
 			{
-				double scale = Math.min(16D / MathUtils.lerp(width, 16D, sidebarButtonScale), 16D / MathUtils.lerp(height, 16D, sidebarButtonScale));
+				scale = Math.min(16D / MathUtils.lerp(width, 16D, sidebarButtonScale), 16D / MathUtils.lerp(height, 16D, sidebarButtonScale));
 				GlStateManager.scale(scale, scale, 1D);
 			}
 
@@ -599,6 +608,13 @@ public class FTBLibClientEventHandler
 			GlStateManager.popMatrix();
 			GlStateManager.popMatrix();
 			zLevel = 0F;
+
+			lastDrawnArea = new Rectangle(
+				(int) Math.ceil(x * scale),
+				(int) Math.ceil(y * scale),
+				(int) Math.ceil(width * scale),
+				(int) Math.ceil(height * scale)
+			);
 		}
 
 		@Override

@@ -26,6 +26,14 @@ compileJava {
 	sourceCompatibility = targetCompatibility = "1.8"
 }
 
+repositories {
+	maven { url "http://dvs1.progwml6.com/files/maven" }
+}
+
+dependencies {
+	deobfProvided "mezz.jei:jei_${mc_version}:${jei_version}:api"
+}
+
 minecraft {
 	version = "${mc_version}-${forge_version}"
 	runDir = "run"
