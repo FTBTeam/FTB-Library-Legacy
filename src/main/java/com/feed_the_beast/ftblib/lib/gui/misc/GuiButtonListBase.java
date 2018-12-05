@@ -172,7 +172,7 @@ public abstract class GuiButtonListBase extends GuiBase
 
 		if (!title.isEmpty())
 		{
-			theme.drawString(title, getX() + (width - theme.getStringWidth(title)) / 2, getY() - theme.getFontHeight() - 2, Theme.SHADOW);
+			theme.drawString(title, x + (width - theme.getStringWidth(title)) / 2, y - theme.getFontHeight() - 2, Theme.SHADOW);
 		}
 	}
 

@@ -126,17 +126,17 @@ public class DataOut
 
 	public void writePos(Vec3i pos)
 	{
-		writeInt(pos.getX());
+		writeVarInt(pos.getX());
 		writeVarInt(pos.getY());
-		writeInt(pos.getZ());
+		writeVarInt(pos.getZ());
 	}
 
 	public void writeDimPos(BlockDimPos pos)
 	{
 		writeVarInt(pos.dim);
-		writeInt(pos.posX);
+		writeVarInt(pos.posX);
 		writeVarInt(pos.posY);
-		writeInt(pos.posZ);
+		writeVarInt(pos.posZ);
 	}
 
 	public void writeUUID(UUID id)

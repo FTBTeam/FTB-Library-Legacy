@@ -329,18 +329,18 @@ public class DataIn
 
 	public BlockPos readPos()
 	{
-		int x = readInt();
+		int x = readVarInt();
 		int y = readVarInt();
-		int z = readInt();
+		int z = readVarInt();
 		return new BlockPos(x, y, z);
 	}
 
 	public BlockDimPos readDimPos()
 	{
 		int d = readVarInt();
-		int x = readInt();
+		int x = readVarInt();
 		int y = readVarInt();
-		int z = readInt();
+		int z = readVarInt();
 		return new BlockDimPos(x, y, z, d);
 	}
 
