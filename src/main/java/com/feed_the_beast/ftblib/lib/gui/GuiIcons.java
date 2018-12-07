@@ -78,6 +78,7 @@ public interface GuiIcons
 	Icon LOCK = get("lock");
 	Icon LOCK_OPEN = get("lock_open");
 	Icon SIGN = Icon.getIcon("minecraft:items/sign");
+	Icon PATREON = get("PATREON");
 
 	static Icon get(String id)
 	{
