@@ -72,7 +72,7 @@ public class GuiEditConfig extends GuiBase
 		public ButtonConfigGroup(Panel panel, ConfigGroup g)
 		{
 			super(panel);
-			setHeight(16);
+			setHeight(12);
 			group = g;
 
 			if (group.parent != null)
@@ -124,7 +124,7 @@ public class GuiEditConfig extends GuiBase
 		public void draw(Theme theme, int x, int y, int w, int h)
 		{
 			COLOR_BACKGROUND.draw(x, y, w, h);
-			theme.drawString(getTitle(), x + 3, y + 4);
+			theme.drawString(getTitle(), x + 2, y + 2);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
 			if (isMouseOver())
@@ -160,7 +160,7 @@ public class GuiEditConfig extends GuiBase
 		public ButtonConfigEntry(Panel panel, ButtonConfigGroup g, ConfigValueInstance i)
 		{
 			super(panel);
-			setHeight(16);
+			setHeight(12);
 			group = g;
 			inst = i;
 
@@ -196,7 +196,7 @@ public class GuiEditConfig extends GuiBase
 				Color4I.WHITE.withAlpha(33).draw(x, y, w, h);
 			}
 
-			theme.drawString(keyText, x + 4, y + 4, Bits.setFlag(0, Theme.SHADOW, mouseOver));
+			theme.drawString(keyText, x + 4, y + 2, Bits.setFlag(0, Theme.SHADOW, mouseOver));
 			GlStateManager.color(1F, 1F, 1F, 1F);
 
 			String s = getValueString();
@@ -221,7 +221,7 @@ public class GuiEditConfig extends GuiBase
 				}
 			}
 
-			theme.drawString(s, getGui().width - (slen + 20), y + 4, textCol, 0);
+			theme.drawString(s, getGui().width - (slen + 20), y + 2, textCol, 0);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 
