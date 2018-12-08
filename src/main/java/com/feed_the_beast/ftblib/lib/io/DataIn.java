@@ -265,7 +265,7 @@ public class DataIn
 			return ItemStack.EMPTY;
 		}
 
-		int size = readByte();
+		int size = readVarInt();
 		int meta = readVarInt();
 		ItemStack stack = new ItemStack(item, size, meta);
 		stack.getItem().readNBTShareTag(stack, readNBT());

@@ -218,7 +218,7 @@ public class DataOut
 		}
 
 		writeVarInt(Item.getIdFromItem(stack.getItem()));
-		writeByte(stack.getCount());
+		writeVarInt(stack.getCount());
 		writeVarInt(stack.getMetadata());
 		writeNBT(stack.getItem().isDamageable() || stack.getItem().getShareTag() ? stack.getItem().getNBTShareTag(stack) : null);
 	}
