@@ -38,7 +38,7 @@ public class GuiEditConfigList extends GuiBase
 		{
 			super(panel);
 			index = i;
-			setHeight(16);
+			setHeight(12);
 			inst = v;
 		}
 
@@ -72,11 +72,11 @@ public class GuiEditConfigList extends GuiBase
 				}
 			}
 
-			theme.drawString(getValueString(), x + 4, y + 4, textCol, 0);
+			theme.drawString(getValueString(), x + 4, y + 2, textCol, 0);
 
 			if (mouseOver)
 			{
-				theme.drawString("[-]", x + w - 16, y + 4, Color4I.WHITE, 0);
+				theme.drawString("[-]", x + w - 16, y + 2, Color4I.WHITE, 0);
 			}
 
 			GlStateManager.color(1F, 1F, 1F, 1F);
@@ -120,7 +120,7 @@ public class GuiEditConfigList extends GuiBase
 		public ButtonAddValue(Panel panel)
 		{
 			super(panel);
-			setHeight(16);
+			setHeight(12);
 			setTitle("+ " + I18n.format("gui.add"));
 		}
 
@@ -134,7 +134,7 @@ public class GuiEditConfigList extends GuiBase
 				Color4I.WHITE.withAlpha(33).draw(x, y, w, h);
 			}
 
-			theme.drawString(getTitle(), x + 4, y + 4, theme.getContentColor(getWidgetType()), Theme.SHADOW);
+			theme.drawString(getTitle(), x + 4, y + 2, theme.getContentColor(getWidgetType()), Theme.SHADOW);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 		}
 
