@@ -116,4 +116,9 @@ public class ItemIcon extends Icon
 	{
 		return "item:" + ItemStackSerializer.toString(getStack());
 	}
+
+	public boolean equals(Object o)
+	{
+		return o == this || o instanceof ItemIcon && ItemStack.areItemStacksEqualUsingNBTShareTag(getStack(), ((ItemIcon) o).getStack());
+	}
 }
