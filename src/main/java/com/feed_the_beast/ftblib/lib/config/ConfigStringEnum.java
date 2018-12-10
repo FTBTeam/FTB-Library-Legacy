@@ -1,10 +1,17 @@
 package com.feed_the_beast.ftblib.lib.config;
 
+import com.feed_the_beast.ftblib.lib.gui.GuiBase;
+import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
+import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
+import com.feed_the_beast.ftblib.lib.gui.Panel;
+import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
+import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
+import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -154,6 +161,41 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 			ITextComponent component = get(inst.getDefaultValue().getString()).customName;
 			list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + (component == null ? inst.getDefaultValue() : component.getFormattedText()));
 		}
+	}
+
+	@Override
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button, Runnable callback)
+	{
+		if (values.size() > 16 || GuiBase.isCtrlKeyDown())
+		{
+			GuiButtonListBase g = new GuiButtonListBase()
+			{
+				@Override
+				public void addButtons(Panel panel)
+				{
+					for (StringEnumValue v : values)
+					{
+						panel.add(new SimpleTextButton(panel, v.customName == null ? getString() : v.customName.getUnformattedText(), Icon.EMPTY)
+						{
+							@Override
+							public void onClicked(MouseButton button)
+							{
+								GuiHelper.playClickSound();
+								setString(v.id);
+								gui.openGui();
+								callback.run();
+							}
+						});
+					}
+				}
+			};
+
+			g.setHasSearchBox(true);
+			g.openGui();
+			return;
+		}
+
+		super.onClicked(gui, inst, button, callback);
 	}
 
 	@Override

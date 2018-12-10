@@ -1,8 +1,17 @@
 package com.feed_the_beast.ftblib.lib.config;
 
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import com.feed_the_beast.ftblib.lib.gui.GuiBase;
+import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
+import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
+import com.feed_the_beast.ftblib.lib.gui.Panel;
+import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
+import com.feed_the_beast.ftblib.lib.gui.misc.GuiButtonListBase;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
+import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.io.DataIn;
 import com.feed_the_beast.ftblib.lib.io.DataOut;
+import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import com.google.gson.JsonElement;
 import net.minecraft.command.ICommandSender;
@@ -128,6 +137,41 @@ public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 		{
 			list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + getNameMap().getDisplayName(null, getNameMap().get(inst.getDefaultValue().getString())).getFormattedText());
 		}
+	}
+
+	@Override
+	public void onClicked(IOpenableGui gui, ConfigValueInstance inst, MouseButton button, Runnable callback)
+	{
+		if (getNameMap().values.size() > 16 || GuiBase.isCtrlKeyDown())
+		{
+			GuiButtonListBase g = new GuiButtonListBase()
+			{
+				@Override
+				public void addButtons(Panel panel)
+				{
+					for (E v : getNameMap())
+					{
+						panel.add(new SimpleTextButton(panel, getNameMap().getDisplayName(ClientUtils.MC.player, v).getUnformattedText(), Icon.EMPTY)
+						{
+							@Override
+							public void onClicked(MouseButton button)
+							{
+								GuiHelper.playClickSound();
+								setValue(v);
+								gui.openGui();
+								callback.run();
+							}
+						});
+					}
+				}
+			};
+
+			g.setHasSearchBox(true);
+			g.openGui();
+			return;
+		}
+
+		super.onClicked(gui, inst, button, callback);
 	}
 
 	@Override
