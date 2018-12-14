@@ -340,7 +340,7 @@ public class GuiEditConfig extends GuiBase
 
 		scroll = new PanelScrollBar(this, configPanel);
 
-		buttonAccept = new SimpleButton(this, I18n.format("gui.accept"), GuiIcons.ACCEPT, (widget, button) ->
+		buttonAccept = new SimpleButton(this, I18n.format("gui.close"), GuiIcons.ACCEPT, (widget, button) ->
 		{
 			shouldClose = 1;
 			widget.getGui().closeGui();
@@ -460,7 +460,7 @@ public class GuiEditConfig extends GuiBase
 	{
 		if (super.onClosedByKey(key))
 		{
-			shouldClose = 2;
+			shouldClose = 1;
 			closeGui();
 		}
 
