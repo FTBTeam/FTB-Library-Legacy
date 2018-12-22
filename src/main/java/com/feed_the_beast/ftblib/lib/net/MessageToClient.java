@@ -51,6 +51,19 @@ public abstract class MessageToClient extends MessageBase
 		channel.writeAndFlush(this).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
 	}
 
+	public final void sendToAllTracking(NetworkRegistry.TargetPoint pos)
+	{
+		FMLEmbeddedChannel channel = getWrapper().getChannel(Side.SERVER);
+		channel.attr(FMLOutboundHandler.FML_MESSAGETARGET).set(FMLOutboundHandler.OutboundTarget.TRACKING_POINT);
+		channel.attr(FMLOutboundHandler.FML_MESSAGETARGETARGS).set(pos);
+		channel.writeAndFlush(this).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
+	}
+
+	public final void sendToAllTracking(int dim, double x, double y, double z)
+	{
+		sendToAllTracking(new NetworkRegistry.TargetPoint(dim, x, y, z, 0D));
+	}
+
 	@SideOnly(Side.CLIENT)
 	public void onMessage()
 	{
