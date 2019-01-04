@@ -5,7 +5,7 @@ import com.google.common.collect.ListMultimap;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 import javax.annotation.Nullable;
 
@@ -29,8 +29,8 @@ public class CommonUtils
 		{
 			try
 			{
-				LoadController instance = ReflectionHelper.getPrivateValue(Loader.class, Loader.instance(), "modController");
-				packageOwners = ReflectionHelper.getPrivateValue(LoadController.class, instance, "packageOwners");
+				LoadController instance = ObfuscationReflectionHelper.getPrivateValue(Loader.class, Loader.instance(), "modController");
+				packageOwners = ObfuscationReflectionHelper.getPrivateValue(LoadController.class, instance, "packageOwners");
 			}
 			catch (Exception ex)
 			{

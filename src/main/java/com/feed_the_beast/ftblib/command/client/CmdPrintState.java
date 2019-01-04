@@ -31,7 +31,7 @@ public class CmdPrintState extends CmdBase
 		BlockPos pos = ClientUtils.MC.objectMouseOver.getBlockPos();
 		IBlockState state = sender.getEntityWorld().getBlockState(pos);
 
-		ITextComponent component = new TextComponentString(state.getBlock().getItem(sender.getEntityWorld(), pos, state).getDisplayName() + " :: " + BlockUtils.getNameFromState(state));
+		ITextComponent component = new TextComponentString(state.getBlock().getPickBlock(state, ClientUtils.MC.objectMouseOver, sender.getEntityWorld(), pos, ClientUtils.MC.player).getDisplayName() + " :: " + BlockUtils.getNameFromState(state));
 		component.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, BlockUtils.getNameFromState(state)));
 		sender.sendMessage(component);
 	}
