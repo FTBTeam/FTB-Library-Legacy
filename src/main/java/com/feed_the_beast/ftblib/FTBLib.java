@@ -36,7 +36,7 @@ import java.util.Map;
 public class FTBLib
 {
 	public static final String MOD_ID = "ftblib";
-	public static final String MOD_NAME = "FTBLib";
+	public static final String MOD_NAME = "FTB Library";
 	public static final String VERSION = "0.0.0.ftblib";
 	public static final String THIS_DEP = "required-after:" + MOD_ID + "@[" + VERSION + ",)";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
