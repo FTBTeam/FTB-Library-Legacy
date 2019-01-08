@@ -3,9 +3,11 @@ package com.feed_the_beast.ftblib.lib.gui;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraftforge.fml.common.Loader;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class Widget implements IGuiWrapper
@@ -169,7 +171,17 @@ public class Widget implements IGuiWrapper
 
 	public boolean keyPressed(int key, char keyChar)
 	{
+		if (isMouseOver() && Loader.isModLoaded("jei"))
+		{
+			return openFocus(key);
+		}
+
 		return false;
+	}
+
+	private boolean openFocus(int key)
+	{
+		return FTBLibJEIIntegration.openFocus(key, getJEIFocus());
 	}
 
 	public void keyReleased(int key)
@@ -210,6 +222,12 @@ public class Widget implements IGuiWrapper
 
 	public void onClosed()
 	{
+	}
+
+	@Nullable
+	public Object getJEIFocus()
+	{
+		return null;
 	}
 
 	public static boolean isMouseButtonDown(MouseButton button)

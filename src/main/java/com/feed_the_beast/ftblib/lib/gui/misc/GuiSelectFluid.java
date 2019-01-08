@@ -64,6 +64,12 @@ public class GuiSelectFluid extends GuiButtonListBase
 					callbackGui.openGui();
 					callback.accept(fluid);
 				}
+
+				@Override
+				public Object getJEIFocus()
+				{
+					return new FluidStack(fluid, Fluid.BUCKET_VOLUME);
+				}
 			});
 		}
 	}

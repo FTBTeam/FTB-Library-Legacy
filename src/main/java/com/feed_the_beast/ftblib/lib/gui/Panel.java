@@ -351,6 +351,11 @@ public abstract class Panel extends Widget
 	@Override
 	public boolean keyPressed(int key, char keyChar)
 	{
+		if (super.keyPressed(key, keyChar))
+		{
+			return true;
+		}
+
 		setOffset(true);
 
 		for (int i = widgets.size() - 1; i >= 0; i--)
