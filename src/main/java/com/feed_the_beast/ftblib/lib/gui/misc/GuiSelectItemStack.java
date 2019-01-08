@@ -107,7 +107,7 @@ public class GuiSelectItemStack extends GuiBase
 		@Override
 		public void drawIcon(Theme theme, int x, int y, int w, int h)
 		{
-			GuiHelper.drawItem(stack, x, y, w / 16D, h / 16D, true, Icon.EMPTY);
+			GuiHelper.drawItem(stack, x, y, w / 16D, h / 16D, true);
 		}
 
 		@Override
@@ -173,7 +173,7 @@ public class GuiSelectItemStack extends GuiBase
 		@Override
 		public void drawIcon(Theme theme, int x, int y, int w, int h)
 		{
-			GuiHelper.drawItem(selected, x, y, w / 16D, h / 16D, true, Icon.EMPTY);
+			GuiHelper.drawItem(selected, x, y, w / 16D, h / 16D, true);
 		}
 
 		@Override

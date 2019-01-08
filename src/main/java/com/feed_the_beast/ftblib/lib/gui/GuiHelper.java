@@ -195,7 +195,7 @@ public class GuiHelper
 		GlStateManager.enableTexture2D();
 	}
 
-	public static boolean drawItem(ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay, Color4I color)
+	public static boolean drawItem(ItemStack stack, double x, double y, double scaleX, double scaleY, boolean renderOverlay)
 	{
 		if (stack.isEmpty())
 		{
@@ -244,9 +244,9 @@ public class GuiHelper
 		return result;
 	}
 
-	public static boolean drawItem(ItemStack stack, double x, double y, boolean renderOverlay, Color4I color)
+	public static boolean drawItem(ItemStack stack, double x, double y, boolean renderOverlay)
 	{
-		return drawItem(stack, x, y, 1D, 1D, renderOverlay, color);
+		return drawItem(stack, x, y, 1D, 1D, renderOverlay);
 	}
 
 	public static void pushScissor(ScaledResolution screen, int x, int y, int w, int h)

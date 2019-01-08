@@ -80,7 +80,7 @@ public class ItemIcon extends Icon
 	@SideOnly(Side.CLIENT)
 	public void draw(int x, int y, int w, int h, Color4I col)
 	{
-		if (!GuiHelper.drawItem(getStack(), x, y, w / 16D, h / 16D, true, col))
+		if (!GuiHelper.drawItem(getStack(), x, y, w / 16D, h / 16D, true))
 		{
 			stack = InvUtils.ERROR_ITEM;
 		}
