@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.DimensionType;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
@@ -72,6 +73,21 @@ public class ServerUtils
 				return new TextComponentTranslation("advancements.end.root.title");
 			default:
 				return new TextComponentString("DIM_" + dim);
+		}
+	}
+
+	public static ITextComponent getDimensionName(DimensionType type)
+	{
+		switch (type)
+		{
+			case OVERWORLD:
+				return new TextComponentTranslation("createWorld.customize.preset.overworld");
+			case NETHER:
+				return new TextComponentTranslation("advancements.nether.root.title");
+			case THE_END:
+				return new TextComponentTranslation("advancements.end.root.title");
+			default:
+				return new TextComponentString(type.getName());
 		}
 	}
 
