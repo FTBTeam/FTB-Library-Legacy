@@ -33,15 +33,16 @@ public class ItemEntryWithCount
 		count = c;
 	}
 
-	public ItemEntryWithCount(NBTTagCompound nbt)
+	public ItemEntryWithCount(NBTBase nbtb)
 	{
-		NBTBase id = nbt.getTag("I");
+		NBTTagCompound nbt = nbtb instanceof NBTTagCompound ? (NBTTagCompound) nbtb : null;
+		NBTBase id = nbt == null ? null : nbt.getTag("I");
 
 		if (id == null)
 		{
-			ItemStack stack = new ItemStack(nbt);
+			ItemStack stack = ItemStackSerializer.read(nbtb);
 			entry = ItemEntry.get(stack);
-			count = nbt.hasKey("RealCount") ? nbt.getInteger("RealCount") : stack.getCount();
+			count = nbt != null && nbt.hasKey("RealCount") ? nbt.getInteger("RealCount") : stack.getCount();
 			return;
 		}
 
@@ -110,7 +111,7 @@ public class ItemEntryWithCount
 
 		if (count > 1 || entry.metadata > 0)
 		{
-			int ai[] = new int[entry.metadata > 0 ? 3 : 2];
+			int[] ai = new int[entry.metadata > 0 ? 3 : 2];
 			ai[0] = Item.REGISTRY.getIDForObject(entry.item);
 			ai[1] = count;
 
