@@ -167,7 +167,7 @@ public abstract class Icon
 			}
 		}
 
-		return (id.endsWith(".png") || id.endsWith(".jpg")) ? new ImageIcon(new ResourceLocation(id)) : new AtlasSpriteIcon(new ResourceLocation(id));
+		return (id.endsWith(".png") || id.endsWith(".jpg")) ? new ImageIcon(new ResourceLocation(id)) : new AtlasSpriteIcon(id);
 	}
 
 	public boolean isEmpty()

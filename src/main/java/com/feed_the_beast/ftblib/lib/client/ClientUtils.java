@@ -12,30 +12,24 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ModelRotation;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
-import net.minecraftforge.client.model.ModelLoader;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ClientUtils
 {
 	public static final Minecraft MC = Minecraft.getMinecraft();
 	public static final NameMap<EnumBlockRenderType> BLOCK_RENDER_TYPE_NAME_MAP = NameMap.create(EnumBlockRenderType.MODEL, EnumBlockRenderType.values());
 	public static final NameMap<BlockRenderLayer> BLOCK_RENDER_LAYER_NAME_MAP = NameMap.create(BlockRenderLayer.SOLID, BlockRenderLayer.values());
-	public static final Map<ResourceLocation, TextureAtlasSprite> SPRITE_MAP = new HashMap<>();
 	public static final ModelRotation[] FACE_ROTATIONS = {ModelRotation.X0_Y0, ModelRotation.X180_Y0, ModelRotation.X90_Y180, ModelRotation.X90_Y0, ModelRotation.X90_Y90, ModelRotation.X90_Y270};
 
 	private static float lastBrightnessX, lastBrightnessY;
@@ -146,11 +140,6 @@ public class ClientUtils
 	public static void runLater(final Runnable runnable)
 	{
 		new Thread(() -> MC.addScheduledTask(runnable)).start();
-	}
-
-	public static TextureAtlasSprite getAtlasSprite(ResourceLocation name)
-	{
-		return SPRITE_MAP.computeIfAbsent(name, ModelLoader.defaultTextureGetter());
 	}
 
 	public static boolean isClientOP()

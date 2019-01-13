@@ -313,8 +313,6 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onBeforeTexturesStitched(TextureStitchEvent.Pre event)
 	{
-		ClientUtils.SPRITE_MAP.clear();
-
 		try
 		{
 			for (Field field : GuiIcons.class.getDeclaredFields())
@@ -325,8 +323,8 @@ public class FTBLibClientEventHandler
 				if (o instanceof AtlasSpriteIcon)
 				{
 					AtlasSpriteIcon a = (AtlasSpriteIcon) o;
-					event.getMap().registerSprite(a.name);
-					IconPresets.MAP.put(a.name.toString(), a);
+					event.getMap().registerSprite(new ResourceLocation(a.name));
+					IconPresets.MAP.put(a.name, a);
 				}
 			}
 		}
