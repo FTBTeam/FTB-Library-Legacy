@@ -12,6 +12,7 @@ import com.feed_the_beast.ftblib.lib.client.ParticleColoredDust;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.net.MessageToClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
@@ -32,9 +33,9 @@ public class FTBLibClient extends FTBLibCommon
 	{
 		super.preInit(event);
 		FTBLibClientConfig.sync();
-		ClientUtils.localPlayerHead = new PlayerHeadIcon(ClientUtils.MC.getSession().getProfile().getId());
-		((IReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(FTBLibClientConfigManager.INSTANCE);
-		((IReloadableResourceManager) ClientUtils.MC.getResourceManager()).registerReloadListener(SidebarButtonManager.INSTANCE);
+		ClientUtils.localPlayerHead = new PlayerHeadIcon(Minecraft.getMinecraft().getSession().getProfile().getId());
+		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(FTBLibClientConfigManager.INSTANCE);
+		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(SidebarButtonManager.INSTANCE);
 		ChunkSelectorMap.setMap(new BuiltinChunkMap());
 	}
 
@@ -69,6 +70,6 @@ public class FTBLibClient extends FTBLibCommon
 	@Override
 	public long getWorldTime()
 	{
-		return ClientUtils.MC.world == null ? super.getWorldTime() : ClientUtils.MC.world.getTotalWorldTime();
+		return Minecraft.getMinecraft().world == null ? super.getWorldTime() : Minecraft.getMinecraft().world.getTotalWorldTime();
 	}
 }

@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftblib.command.client;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -23,15 +23,16 @@ public class CmdPrintState extends CmdBase
 	@Override
 	public void execute(MinecraftServer server, ICommandSender sender, final String[] args) throws CommandException
 	{
-		if (ClientUtils.MC.objectMouseOver.typeOfHit != RayTraceResult.Type.BLOCK)
+		RayTraceResult ray = Minecraft.getMinecraft().objectMouseOver;
+		if (ray.typeOfHit != RayTraceResult.Type.BLOCK)
 		{
 			return;
 		}
 
-		BlockPos pos = ClientUtils.MC.objectMouseOver.getBlockPos();
+		BlockPos pos = ray.getBlockPos();
 		IBlockState state = sender.getEntityWorld().getBlockState(pos);
 
-		ITextComponent component = new TextComponentString(state.getBlock().getPickBlock(state, ClientUtils.MC.objectMouseOver, sender.getEntityWorld(), pos, ClientUtils.MC.player).getDisplayName() + " :: " + BlockUtils.getNameFromState(state));
+		ITextComponent component = new TextComponentString(state.getBlock().getPickBlock(state, ray, sender.getEntityWorld(), pos, Minecraft.getMinecraft().player).getDisplayName() + " :: " + BlockUtils.getNameFromState(state));
 		component.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, BlockUtils.getNameFromState(state)));
 		sender.sendMessage(component);
 	}

@@ -13,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 import java.util.ArrayList;
@@ -85,7 +86,7 @@ public class GuiCreateTeam extends GuiBase
 		};
 
 		textBoxId.setPosAndSize(8, 8, width - 16, 16);
-		textBoxId.writeText(ClientUtils.MC.player.getGameProfile().getName().toLowerCase());
+		textBoxId.writeText(Minecraft.getMinecraft().player.getGameProfile().getName().toLowerCase());
 		textBoxId.ghostText = "Enter ID"; //LANG
 		textBoxId.textColor = color.getColor();
 		textBoxId.setFocused(true);

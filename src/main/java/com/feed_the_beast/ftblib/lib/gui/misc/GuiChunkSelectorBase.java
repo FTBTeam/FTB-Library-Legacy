@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui.misc;
 
 import com.feed_the_beast.ftblib.lib.client.CachedVertexData;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -12,6 +11,7 @@ import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -107,14 +107,14 @@ public class GuiChunkSelectorBase extends GuiBase
 	}
 
 	public int startX, startZ;
-	private final MapButton mapButtons[];
+	private final MapButton[] mapButtons;
 	private final Panel panelButtons;
 	public int currentSelectionMode = -1;
 
 	public GuiChunkSelectorBase()
 	{
-		startX = MathUtils.chunk(ClientUtils.MC.player.posX) - ChunkSelectorMap.TILES_GUI2;
-		startZ = MathUtils.chunk(ClientUtils.MC.player.posZ) - ChunkSelectorMap.TILES_GUI2;
+		startX = MathUtils.chunk(Minecraft.getMinecraft().player.posX) - ChunkSelectorMap.TILES_GUI2;
+		startZ = MathUtils.chunk(Minecraft.getMinecraft().player.posZ) - ChunkSelectorMap.TILES_GUI2;
 
 		panelButtons = new Panel(this)
 		{
@@ -175,8 +175,8 @@ public class GuiChunkSelectorBase extends GuiBase
 	@Override
 	public void drawBackground(Theme theme, int x, int y, int w, int h)
 	{
-		int currentStartX = MathUtils.chunk(ClientUtils.MC.player.posX) - ChunkSelectorMap.TILES_GUI2;
-		int currentStartZ = MathUtils.chunk(ClientUtils.MC.player.posZ) - ChunkSelectorMap.TILES_GUI2;
+		int currentStartX = MathUtils.chunk(Minecraft.getMinecraft().player.posX) - ChunkSelectorMap.TILES_GUI2;
+		int currentStartZ = MathUtils.chunk(Minecraft.getMinecraft().player.posZ) - ChunkSelectorMap.TILES_GUI2;
 
 		if (currentStartX != startX || currentStartZ != startZ)
 		{

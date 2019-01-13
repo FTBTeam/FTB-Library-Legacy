@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.gui.misc;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueInstance;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
@@ -19,6 +18,7 @@ import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.MutableColor4I;
 import com.feed_the_beast.ftblib.lib.io.Bits;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.ITextComponent;
@@ -451,7 +451,7 @@ public class GuiEditConfig extends GuiBase
 
 		if (shouldClose == 1)
 		{
-			callback.onConfigSaved(group, ClientUtils.MC.player);
+			callback.onConfigSaved(group, Minecraft.getMinecraft().player);
 		}
 	}
 

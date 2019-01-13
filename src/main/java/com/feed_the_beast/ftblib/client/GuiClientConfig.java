@@ -13,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TextComponentString;
@@ -35,7 +36,7 @@ public class GuiClientConfig extends GuiButtonListBase
 	{
 		public GuiCustomConfig(String modid, String title)
 		{
-			super(ClientUtils.MC.currentScreen, modid, title);
+			super(Minecraft.getMinecraft().currentScreen, modid, title);
 		}
 
 		@Override
@@ -100,7 +101,7 @@ public class GuiClientConfig extends GuiButtonListBase
 		public void onClicked(MouseButton button)
 		{
 			GuiHelper.playClickSound();
-			ClientUtils.MC.displayGuiScreen(new GuiCustomConfig(modId, getTitle()));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiCustomConfig(modId, getTitle()));
 		}
 	}
 

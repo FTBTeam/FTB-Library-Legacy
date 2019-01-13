@@ -1,9 +1,9 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.FTBLib;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.google.common.base.Objects;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
@@ -40,7 +40,7 @@ public class ImageIcon extends Icon
 	@SideOnly(Side.CLIENT)
 	public void bindTexture()
 	{
-		TextureManager manager = ClientUtils.MC.getTextureManager();
+		TextureManager manager = Minecraft.getMinecraft().getTextureManager();
 		ITextureObject tex = manager.getTexture(texture);
 
 		if (tex == null)

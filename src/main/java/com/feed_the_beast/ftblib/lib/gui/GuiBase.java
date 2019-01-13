@@ -7,6 +7,7 @@ import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftblib.lib.gui.misc.YesNoCallback;
 import com.feed_the_beast.ftblib.lib.util.NetUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiConfirmOpenLink;
 import net.minecraft.client.gui.GuiScreen;
@@ -62,7 +63,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		setSize(176, 166);
 		setOnlyRenderWidgetsInside(false);
 		setOnlyInteractWithWidgetsInside(false);
-		prevScreen = ClientUtils.MC.currentScreen;
+		prevScreen = Minecraft.getMinecraft().currentScreen;
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		}
 		else
 		{
-			screen = new ScaledResolution(ClientUtils.MC);
+			screen = new ScaledResolution(Minecraft.getMinecraft());
 		}
 
 		if (onInit())
@@ -172,19 +173,19 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		int mx = Mouse.getX();
 		int my = Mouse.getY();
 
-		if (ClientUtils.MC.player != null)
+		if (Minecraft.getMinecraft().player != null)
 		{
-			ClientUtils.MC.player.closeScreen();
+			Minecraft.getMinecraft().player.closeScreen();
 
-			if (ClientUtils.MC.currentScreen == null)
+			if (Minecraft.getMinecraft().currentScreen == null)
 			{
-				ClientUtils.MC.setIngameFocus();
+				Minecraft.getMinecraft().setIngameFocus();
 			}
 		}
 
 		if (openPrevScreen)
 		{
-			ClientUtils.MC.displayGuiScreen(getPrevScreen());
+			Minecraft.getMinecraft().displayGuiScreen(getPrevScreen());
 			Mouse.setCursorPosition(mx, my);
 		}
 
@@ -193,7 +194,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 
 	public boolean onClosedByKey(int key)
 	{
-		return key == Keyboard.KEY_ESCAPE || ClientUtils.MC.gameSettings.keyBindInventory.isActiveAndMatches(key);
+		return key == Keyboard.KEY_ESCAPE || Minecraft.getMinecraft().gameSettings.keyBindInventory.isActiveAndMatches(key);
 	}
 
 	public void onBack()
@@ -375,7 +376,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	@Override
 	public final void openGui()
 	{
-		ClientUtils.MC.displayGuiScreen(getWrapper());
+		Minecraft.getMinecraft().displayGuiScreen(getWrapper());
 	}
 
 	@Override
@@ -435,11 +436,11 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 				try
 				{
 					final URI uri = new URI(scheme + ':' + path);
-					if (ClientUtils.MC.gameSettings.chatLinksPrompt)
+					if (Minecraft.getMinecraft().gameSettings.chatLinksPrompt)
 					{
-						final GuiScreen currentScreen = ClientUtils.MC.currentScreen;
+						final GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
 
-						ClientUtils.MC.displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
+						Minecraft.getMinecraft().displayGuiScreen(new GuiConfirmOpenLink((result, id) ->
 						{
 							if (result)
 							{
@@ -452,7 +453,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 									ex.printStackTrace();
 								}
 							}
-							ClientUtils.MC.displayGuiScreen(currentScreen);
+							Minecraft.getMinecraft().displayGuiScreen(currentScreen);
 						}, scheme + ':' + path, 0, false));
 					}
 					else
@@ -508,7 +509,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 
 	public void openYesNoFull(String title, String desc, YesNoCallback callback)
 	{
-		ClientUtils.MC.displayGuiScreen(new GuiYesNo((result, id) ->
+		Minecraft.getMinecraft().displayGuiScreen(new GuiYesNo((result, id) ->
 		{
 			openGui();
 			callback.onButtonClicked(result);

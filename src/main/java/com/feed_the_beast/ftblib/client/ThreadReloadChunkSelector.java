@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.client;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.client.PixelBuffer;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
@@ -9,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.init.Blocks;
@@ -191,7 +191,7 @@ public class ThreadReloadChunkSelector extends Thread
 	@Override
 	public void run()
 	{
-		Arrays.fill(PIXELS.getPixels(), Color4I.rgb(world.getSkyColor(ClientUtils.MC.player, 0)).rgba());
+		Arrays.fill(PIXELS.getPixels(), Color4I.rgb(world.getSkyColor(Minecraft.getMinecraft().player, 0)).rgba());
 		Arrays.fill(HEIGHT_MAP, -1);
 		pixelBuffer = PIXELS.toByteBuffer(false);
 
@@ -200,7 +200,7 @@ public class ThreadReloadChunkSelector extends Thread
 		Color4I color;
 		IBlockState state;
 
-		int startY = ClientUtils.MC.player.getPosition().getY();
+		int startY = Minecraft.getMinecraft().player.getPosition().getY();
 
 		try
 		{

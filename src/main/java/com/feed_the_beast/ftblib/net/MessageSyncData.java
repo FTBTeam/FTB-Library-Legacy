@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.SyncGamerulesEvent;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
 import com.feed_the_beast.ftblib.lib.data.ISyncData;
 import com.feed_the_beast.ftblib.lib.io.Bits;
@@ -14,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.net.MessageToClient;
 import com.feed_the_beast.ftblib.lib.net.NetworkWrapper;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
@@ -96,7 +96,7 @@ public class MessageSyncData extends MessageToClient
 
 		for (Map.Entry<String, String> entry : gamerules.entrySet())
 		{
-			ClientUtils.MC.world.getGameRules().setOrCreateGameRule(entry.getKey(), entry.getValue());
+			Minecraft.getMinecraft().world.getGameRules().setOrCreateGameRule(entry.getKey(), entry.getValue());
 		}
 
 		if (FTBLibConfig.debugging.print_more_info && Bits.getFlag(flags, LOGIN))

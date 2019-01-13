@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -41,7 +41,7 @@ public class URLImageIcon extends ImageIcon
 	@SideOnly(Side.CLIENT)
 	public void bindTexture()
 	{
-		TextureManager manager = ClientUtils.MC.getTextureManager();
+		TextureManager manager = Minecraft.getMinecraft().getTextureManager();
 		ITextureObject img = manager.getTexture(texture);
 
 		if (img == null)

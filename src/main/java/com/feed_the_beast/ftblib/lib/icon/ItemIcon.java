@@ -2,10 +2,10 @@ package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -93,16 +93,17 @@ public class ItemIcon extends Icon
 	@SideOnly(Side.CLIENT)
 	public static void drawItem3D(ItemStack stack)
 	{
-		ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		ClientUtils.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
+		Minecraft mc = Minecraft.getMinecraft();
+		mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).setBlurMipmap(false, false);
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1F, -1F, -0.02F);
-		IBakedModel bakedmodel = ClientUtils.MC.getRenderItem().getItemModelWithOverrides(stack, ClientUtils.MC.world, ClientUtils.MC.player);
+		IBakedModel bakedmodel = mc.getRenderItem().getItemModelWithOverrides(stack, mc.world, mc.player);
 		bakedmodel = ForgeHooksClient.handleCameraTransforms(bakedmodel, ItemCameraTransforms.TransformType.GUI, false);
-		ClientUtils.MC.getRenderItem().renderItem(stack, bakedmodel);
+		mc.getRenderItem().renderItem(stack, bakedmodel);
 		GlStateManager.popMatrix();
-		ClientUtils.MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		ClientUtils.MC.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
+		mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		mc.getTextureManager().getTexture(TextureMap.LOCATION_BLOCKS_TEXTURE).restoreLastBlurMipmap();
 	}
 
 	@Override

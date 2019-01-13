@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.ImageBufferDownload;
@@ -82,7 +82,7 @@ public class PlayerHeadIcon extends ImageIcon
 
 						try
 						{
-							JsonObject json = DataReader.get(new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + StringUtils.fromUUID(icon.uuid)), DataReader.JSON, ClientUtils.MC.getProxy()).json().getAsJsonObject();
+							JsonObject json = DataReader.get(new URL("https://sessionserver.mojang.com/session/minecraft/profile/" + StringUtils.fromUUID(icon.uuid)), DataReader.JSON, Minecraft.getMinecraft().getProxy()).json().getAsJsonObject();
 
 							for (JsonElement element : json.get("properties").getAsJsonArray())
 							{
@@ -109,7 +109,7 @@ public class PlayerHeadIcon extends ImageIcon
 
 						try
 						{
-							bufferedImage = imageBuffer.parseUserSkin(DataReader.get(new URL(imageUrl), DataReader.PNG, ClientUtils.MC.getProxy()).image());
+							bufferedImage = imageBuffer.parseUserSkin(DataReader.get(new URL(imageUrl), DataReader.PNG, Minecraft.getMinecraft().getProxy()).image());
 						}
 						catch (Exception ex)
 						{
@@ -135,7 +135,7 @@ public class PlayerHeadIcon extends ImageIcon
 	@SideOnly(Side.CLIENT)
 	public void bindTexture()
 	{
-		TextureManager manager = ClientUtils.MC.getTextureManager();
+		TextureManager manager = Minecraft.getMinecraft().getTextureManager();
 		ITextureObject img = manager.getTexture(texture);
 
 		if (img == null)

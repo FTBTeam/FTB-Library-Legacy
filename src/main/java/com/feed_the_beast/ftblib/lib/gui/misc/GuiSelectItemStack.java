@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.gui.misc;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.config.ConfigInt;
 import com.feed_the_beast.ftblib.lib.config.ConfigItemStack;
 import com.feed_the_beast.ftblib.lib.config.ConfigNBT;
@@ -25,6 +24,7 @@ import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.creativetab.CreativeTabs;
@@ -444,9 +444,9 @@ public class GuiSelectItemStack extends GuiBase
 				}
 				else
 				{
-					for (int i = 0; i < ClientUtils.MC.player.inventory.getSizeInventory(); i++)
+					for (int i = 0; i < Minecraft.getMinecraft().player.inventory.getSizeInventory(); i++)
 					{
-						ItemStack stack = ClientUtils.MC.player.inventory.getStackInSlot(i);
+						ItemStack stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
 
 						if (!stack.isEmpty())
 						{

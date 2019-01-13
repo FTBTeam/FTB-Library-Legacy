@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftblib.client.teamsgui;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.data.FTBLibTeamGuiActions;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.net.MessageMyTeamAction;
 import com.feed_the_beast.ftblib.net.MessageMyTeamPlayerList;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -35,7 +35,7 @@ public class GuiTransferOwnership extends GuiManagePlayersBase
 		{
 			GuiHelper.playClickSound();
 
-			getGui().openYesNo(I18n.format("team_action.ftblib.transfer_ownership") + "?", ClientUtils.MC.getSession().getUsername() + " => " + entry.name, () ->
+			getGui().openYesNo(I18n.format("team_action.ftblib.transfer_ownership") + "?", Minecraft.getMinecraft().getSession().getUsername() + " => " + entry.name, () ->
 			{
 				getGui().closeGui(false);
 				NBTTagCompound data = new NBTTagCompound();

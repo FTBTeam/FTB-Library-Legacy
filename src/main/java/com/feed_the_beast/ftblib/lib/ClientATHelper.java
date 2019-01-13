@@ -1,6 +1,6 @@
 package com.feed_the_beast.ftblib.lib;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.chat.IChatListener;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -24,11 +24,11 @@ public final class ClientATHelper
 
 	public static Map<ChatType, List<IChatListener>> getChatListeners()
 	{
-		return ClientUtils.MC.ingameGUI.chatListeners;
+		return Minecraft.getMinecraft().ingameGUI.chatListeners;
 	}
 
 	public static Map<String, TextureAtlasSprite> getRegisteredSpritesMap()
 	{
-		return ClientUtils.MC.getTextureMapBlocks().mapRegisteredSprites;
+		return Minecraft.getMinecraft().getTextureMapBlocks().mapRegisteredSprites;
 	}
 }

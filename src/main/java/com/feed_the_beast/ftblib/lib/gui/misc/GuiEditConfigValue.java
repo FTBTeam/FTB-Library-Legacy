@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.gui.misc;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.ConfigValueInstance;
@@ -12,6 +11,7 @@ import com.feed_the_beast.ftblib.lib.gui.TextBox;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 
@@ -58,7 +58,7 @@ public class GuiEditConfigValue extends GuiBase
 			{
 				GuiHelper.playClickSound();
 
-				if (value.setValueFromString(ClientUtils.MC.player, textBox.getText(), false))
+				if (value.setValueFromString(Minecraft.getMinecraft().player, textBox.getText(), false))
 				{
 					callback.onCallback(value, true);
 				}
@@ -95,7 +95,7 @@ public class GuiEditConfigValue extends GuiBase
 			@Override
 			public boolean isValid(String txt)
 			{
-				return value.setValueFromString(ClientUtils.MC.player, txt, true);
+				return value.setValueFromString(Minecraft.getMinecraft().player, txt, true);
 			}
 
 			@Override

@@ -1,10 +1,10 @@
 package com.feed_the_beast.ftblib.lib.gui.misc;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -71,7 +71,7 @@ public class GuiLoading extends GuiBase
 			w1 -= 2;
 			h1 -= 2;
 
-			timer += ClientUtils.MC.getTickLength();
+			timer += Minecraft.getMinecraft().getTickLength();
 			timer = timer % (h1 * 2F);
 
 			for (int oy = 0; oy < h1; oy++)

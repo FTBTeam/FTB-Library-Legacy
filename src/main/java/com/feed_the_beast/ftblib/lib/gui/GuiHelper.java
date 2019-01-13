@@ -1,8 +1,8 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
 import com.feed_the_beast.ftblib.lib.ClientATHelper;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
@@ -89,7 +89,7 @@ public class GuiHelper
 
 	public static void playSound(SoundEvent event, float pitch)
 	{
-		ClientUtils.MC.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(event, pitch));
+		Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(event, pitch));
 	}
 
 	public static void playClickSound()
@@ -204,7 +204,7 @@ public class GuiHelper
 
 		boolean result = true;
 
-		RenderItem renderItem = ClientUtils.MC.getRenderItem();
+		RenderItem renderItem = Minecraft.getMinecraft().getRenderItem();
 		renderItem.zLevel = 180F;
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(x, y, 32D);
@@ -228,7 +228,7 @@ public class GuiHelper
 
 				if (font == null)
 				{
-					font = ClientUtils.MC.fontRenderer;
+					font = Minecraft.getMinecraft().fontRenderer;
 				}
 
 				renderItem.renderItemOverlayIntoGUI(font, stack, 0, 0, null);
@@ -277,7 +277,7 @@ public class GuiHelper
 
 	public static void setFixUnicode(boolean enabled)
 	{
-		TextureManager textureManager = ClientUtils.MC.getTextureManager();
+		TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 		int mode = enabled ? GL11.GL_LINEAR : GL11.GL_NEAREST;
 
 		for (int i = 0; i < 256; i++)
@@ -323,7 +323,7 @@ public class GuiHelper
 
 	public static void addStackTooltip(ItemStack stack, List<String> list, String prefix)
 	{
-		List<String> tooltip = stack.getTooltip(ClientUtils.MC.player, ClientUtils.MC.gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
+		List<String> tooltip = stack.getTooltip(Minecraft.getMinecraft().player, Minecraft.getMinecraft().gameSettings.advancedItemTooltips ? ITooltipFlag.TooltipFlags.ADVANCED : ITooltipFlag.TooltipFlags.NORMAL);
 		list.add((prefix.isEmpty() ? stack.getRarity().color.toString() : prefix) + tooltip.get(0));
 
 		for (int i = 1; i < tooltip.size(); i++)

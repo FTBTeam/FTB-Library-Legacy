@@ -9,6 +9,7 @@ import com.feed_the_beast.ftblib.lib.gui.misc.GuiChunkSelectorBase;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -23,7 +24,7 @@ public class BuiltinChunkMap extends ChunkSelectorMap
 	@Override
 	public void resetMap(int startX, int startZ)
 	{
-		ThreadReloadChunkSelector.reloadArea(ClientUtils.MC.world, startX, startZ);
+		ThreadReloadChunkSelector.reloadArea(Minecraft.getMinecraft().world, startX, startZ);
 	}
 
 	@Override
@@ -34,7 +35,7 @@ public class BuiltinChunkMap extends ChunkSelectorMap
 		GlStateManager.bindTexture(ThreadReloadChunkSelector.getTextureId());
 		GuiHelper.drawTexturedRect(ax, ay, TILES_GUI * GuiChunkSelectorBase.TILE_SIZE, TILES_GUI * GuiChunkSelectorBase.TILE_SIZE, Color4I.WHITE, 0D, 0D, UV, UV);
 
-		EntityPlayer player = ClientUtils.MC.player;
+		EntityPlayer player = Minecraft.getMinecraft().player;
 
 		int cx = MathUtils.chunk(player.posX);
 		int cy = MathUtils.chunk(player.posZ);

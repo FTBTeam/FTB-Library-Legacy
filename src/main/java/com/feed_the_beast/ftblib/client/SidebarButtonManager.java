@@ -2,11 +2,11 @@ package com.feed_the_beast.ftblib.client;
 
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.SidebarButtonCreatedEvent;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
@@ -40,7 +40,7 @@ public enum SidebarButtonManager implements ISelectiveResourceReloadListener
 
 		groups.clear();
 
-		JsonElement element = DataReader.get(new File(ClientUtils.MC.gameDir, "local/client/sidebar_buttons.json")).safeJson();
+		JsonElement element = DataReader.get(new File(Minecraft.getMinecraft().gameDir, "local/client/sidebar_buttons.json")).safeJson();
 		JsonObject sidebarButtonConfig;
 
 		if (element.isJsonObject())
@@ -195,6 +195,6 @@ public enum SidebarButtonManager implements ISelectiveResourceReloadListener
 			}
 		}
 
-		JsonUtils.toJsonSafe(new File(ClientUtils.MC.gameDir, "local/client/sidebar_buttons.json"), o);
+		JsonUtils.toJsonSafe(new File(Minecraft.getMinecraft().gameDir, "local/client/sidebar_buttons.json"), o);
 	}
 }

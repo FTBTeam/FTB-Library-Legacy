@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.IOpenableGui;
@@ -14,6 +13,7 @@ import com.feed_the_beast.ftblib.lib.io.DataOut;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
 import com.google.gson.JsonElement;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
@@ -151,7 +151,7 @@ public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 				{
 					for (E v : getNameMap())
 					{
-						panel.add(new SimpleTextButton(panel, getNameMap().getDisplayName(ClientUtils.MC.player, v).getUnformattedText(), Icon.EMPTY)
+						panel.add(new SimpleTextButton(panel, getNameMap().getDisplayName(Minecraft.getMinecraft().player, v).getUnformattedText(), Icon.EMPTY)
 						{
 							@Override
 							public void onClicked(MouseButton button)

@@ -4,7 +4,6 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.lib.ClientATHelper;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.AtlasSpriteIcon;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
@@ -78,7 +77,7 @@ public class FTBLibClientEventHandler
 			}
 			else
 			{
-				ClientUtils.MC.ingameGUI.setOverlayMessage(component.getFormattedText(), false);
+				Minecraft.getMinecraft().ingameGUI.setOverlayMessage(component.getFormattedText(), false);
 			}
 		}
 	};
@@ -101,7 +100,7 @@ public class FTBLibClientEventHandler
 			text = new ArrayList<>();
 			timer = n instanceof Notification ? ((Notification) n).getTimer().ticks() : 60L;
 
-			for (String s : font.listFormattedStringToWidth(notification.getFormattedText(), new ScaledResolution(ClientUtils.MC).getScaledWidth()))
+			for (String s : font.listFormattedStringToWidth(notification.getFormattedText(), new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth()))
 			{
 				for (String line : s.split("\n"))
 				{
@@ -134,7 +133,7 @@ public class FTBLibClientEventHandler
 
 		private Temp(ITextComponent n)
 		{
-			widget = new NotificationWidget(n, ClientUtils.MC.fontRenderer);
+			widget = new NotificationWidget(n, Minecraft.getMinecraft().fontRenderer);
 			tick = endTick = -1L;
 		}
 
@@ -177,7 +176,7 @@ public class FTBLibClientEventHandler
 
 		private boolean tick()
 		{
-			tick = ClientUtils.MC.world.getTotalWorldTime();
+			tick = Minecraft.getMinecraft().world.getTotalWorldTime();
 
 			if (endTick == -1L)
 			{
@@ -253,7 +252,7 @@ public class FTBLibClientEventHandler
 	{
 		if (event.phase == TickEvent.Phase.START)
 		{
-			if (ClientUtils.MC.world == null)
+			if (Minecraft.getMinecraft().world == null)
 			{
 				currentNotification = null;
 				Temp.MAP.clear();
@@ -293,7 +292,7 @@ public class FTBLibClientEventHandler
 	{
 		if (event.phase == TickEvent.Phase.END && currentNotification != null && currentNotification.isImportant())
 		{
-			currentNotification.render(new ScaledResolution(ClientUtils.MC), event.renderTickTime);
+			currentNotification.render(new ScaledResolution(Minecraft.getMinecraft()), event.renderTickTime);
 			GlStateManager.color(1F, 1F, 1F, 1F);
 			GlStateManager.disableLighting();
 			GlStateManager.enableBlend();
@@ -304,7 +303,7 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onDebugInfoEvent(RenderGameOverlayEvent.Text event)
 	{
-		if (FTBLibClientConfig.debug_helper && !ClientUtils.MC.gameSettings.showDebugInfo && Keyboard.isKeyDown(Keyboard.KEY_F3))
+		if (FTBLibClientConfig.debug_helper && !Minecraft.getMinecraft().gameSettings.showDebugInfo && Keyboard.isKeyDown(Keyboard.KEY_F3))
 		{
 			event.getLeft().add(I18n.format("debug.help.help"));
 		}

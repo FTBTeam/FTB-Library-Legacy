@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
 import com.feed_the_beast.ftblib.FTBLib;
-import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.ImageIcon;
@@ -9,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.icon.PartIcon;
 import com.feed_the_beast.ftblib.lib.io.Bits;
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.text.ITextComponent;
@@ -146,7 +146,7 @@ public class Theme
 
 	public FontRenderer getFont()
 	{
-		return ClientUtils.MC.fontRenderer;
+		return Minecraft.getMinecraft().fontRenderer;
 	}
 
 	public final int getStringWidth(String text)
