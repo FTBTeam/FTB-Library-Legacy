@@ -152,7 +152,7 @@ public class FTBLibClientEventHandler
 			}
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate((int) (screen.getScaledWidth() / 2F), (int) (screen.getScaledHeight() - 68F), 0F);
+			GlStateManager.translate((int) (screen.getScaledWidth() / 2F), (int) (screen.getScaledHeight() - 67F), 0F);
 			GlStateManager.disableDepth();
 			GlStateManager.depthMask(false);
 			GlStateManager.disableLighting();
