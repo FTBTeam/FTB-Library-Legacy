@@ -383,7 +383,7 @@ public class Universe
 							if (uuidString.isEmpty())
 							{
 								uuidString = FileUtils.getBaseName(file);
-								FileUtils.delete(file);
+								FileUtils.deleteSafe(file);
 							}
 
 							UUID uuid = StringUtils.fromString(uuidString);
@@ -931,7 +931,7 @@ public class Universe
 		new ForgeTeamDeletedEvent(team, folder).post();
 		teamMap.remove(team.getUID());
 		teams.remove(team.getID());
-		FileUtils.delete(new File(folder, team.getID() + ".dat"));
+		FileUtils.deleteSafe(new File(folder, team.getID() + ".dat"));
 		markDirty();
 		clearCache();
 	}

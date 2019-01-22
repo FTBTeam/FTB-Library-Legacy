@@ -140,7 +140,7 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 	{
 		if (!isFake() && !playerName.equals(n))
 		{
-			FileUtils.delete(getDataFile(""));
+			FileUtils.deleteSafe(getDataFile(""));
 			playerName = n;
 			markDirty();
 		}
