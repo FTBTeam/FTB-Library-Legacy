@@ -248,6 +248,26 @@ public class FileUtils
 		return file.delete();
 	}
 
+	public static void deleteSafe(File file)
+	{
+		ThreadedFileIOBase.getThreadedIOInstance().queueIO(() ->
+		{
+			try
+			{
+				if (!delete(file))
+				{
+					System.err.println("Failed to safely delete " + file.getAbsolutePath());
+				}
+			}
+			catch (Exception ex)
+			{
+				ex.printStackTrace();
+			}
+
+			return false;
+		});
+	}
+
 	public static String getBaseName(File file)
 	{
 		if (file.isDirectory())

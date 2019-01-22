@@ -14,6 +14,7 @@ import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.DoubleConsumer;
 import java.util.function.DoubleSupplier;
 
 /**
@@ -22,6 +23,31 @@ import java.util.function.DoubleSupplier;
 public class ConfigDouble extends ConfigValue implements DoubleSupplier
 {
 	public static final String ID = "double";
+
+	public static class SimpleDouble extends ConfigDouble
+	{
+		private final DoubleSupplier get;
+		private final DoubleConsumer set;
+
+		public SimpleDouble(double min, double max, DoubleSupplier g, DoubleConsumer s)
+		{
+			super(0D, min, max);
+			get = g;
+			set = s;
+		}
+
+		@Override
+		public double getDouble()
+		{
+			return get.getAsDouble();
+		}
+
+		@Override
+		public void setDouble(double v)
+		{
+			set.accept(v);
+		}
+	}
 
 	private double value;
 	private double min = Double.NEGATIVE_INFINITY;

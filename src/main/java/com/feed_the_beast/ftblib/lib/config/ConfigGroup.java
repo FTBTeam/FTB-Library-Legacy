@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
+import java.util.function.DoubleConsumer;
+import java.util.function.DoubleSupplier;
 import java.util.function.Function;
 import java.util.function.IntConsumer;
 import java.util.function.IntSupplier;
@@ -172,6 +174,11 @@ public class ConfigGroup extends FinalIDObject
 	public ConfigValueInstance addLong(String id, LongSupplier getter, LongConsumer setter, long def, long min, long max)
 	{
 		return add(id, new ConfigLong.SimpleLong(min, max, getter, setter), new ConfigLong(def));
+	}
+
+	public ConfigValueInstance addDouble(String id, DoubleSupplier getter, DoubleConsumer setter, double def, double min, double max)
+	{
+		return add(id, new ConfigDouble.SimpleDouble(min, max, getter, setter), new ConfigDouble(def));
 	}
 
 	public ConfigValueInstance addString(String id, Supplier<String> getter, Consumer<String> setter, String def, @Nullable Pattern pattern)
