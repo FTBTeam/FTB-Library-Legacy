@@ -1,11 +1,12 @@
 package com.feed_the_beast.ftblib.lib.block;
 
-import com.feed_the_beast.ftblib.lib.tile.IItemWritableTile;
+import com.feed_the_beast.ftblib.lib.tile.TileBase;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -28,9 +29,9 @@ public class BlockSpecialDrop extends Block
 		ItemStack stack = super.getItem(world, pos, state);
 		TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (tileEntity instanceof IItemWritableTile)
+		if (tileEntity instanceof TileBase)
 		{
-			((IItemWritableTile) tileEntity).writeToPickBlock(stack);
+			((TileBase) tileEntity).writeToPickBlock(stack);
 		}
 
 		return stack;
@@ -43,9 +44,9 @@ public class BlockSpecialDrop extends Block
 		{
 			TileEntity tile = world.getTileEntity(pos);
 
-			if (tile instanceof IItemWritableTile)
+			if (tile instanceof TileBase)
 			{
-				((IItemWritableTile) tile).readFromItem(stack);
+				((TileBase) tile).readFromItem(stack);
 			}
 		}
 	}
@@ -56,15 +57,34 @@ public class BlockSpecialDrop extends Block
 	}
 
 	@Override
+	public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player)
+	{
+		if (player.capabilities.isCreativeMode)
+		{
+			TileEntity tileEntity = world.getTileEntity(pos);
+
+			if (tileEntity instanceof TileBase)
+			{
+				((TileBase) tileEntity).brokenByCreative = true;
+			}
+		}
+	}
+
+	@Override
 	@SuppressWarnings("deprecation")
 	public void breakBlock(World world, BlockPos pos, IBlockState state)
 	{
 		ItemStack stack = super.getItem(world, pos, state);
 		TileEntity tileEntity = world.getTileEntity(pos);
 
-		if (tileEntity instanceof IItemWritableTile)
+		if (tileEntity instanceof TileBase)
 		{
-			((IItemWritableTile) tileEntity).writeToItem(stack);
+			if (((TileBase) tileEntity).brokenByCreative)
+			{
+				return;
+			}
+
+			((TileBase) tileEntity).writeToItem(stack);
 		}
 
 		spawnAsEntity(world, pos, stack);
