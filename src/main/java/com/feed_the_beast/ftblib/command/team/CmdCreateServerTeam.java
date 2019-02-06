@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.command.team;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
+import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.TeamType;
@@ -39,6 +40,7 @@ public class CmdCreateServerTeam extends CmdBase
 		universe.clearCache();
 		ForgeTeam team = new ForgeTeam(universe, universe.generateTeamUID((short) 0), args[0], TeamType.SERVER);
 		team.setTitle(team.getID());
+		team.setColor(EnumTeamColor.NAME_MAP.getRandom(sender.getEntityWorld().rand));
 		team.universe.addTeam(team);
 		new ForgeTeamCreatedEvent(team).post();
 		sender.sendMessage(FTBLib.lang(sender, "ftblib.lang.team.created", team.getID()));

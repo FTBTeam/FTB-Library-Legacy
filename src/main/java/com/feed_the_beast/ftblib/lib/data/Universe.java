@@ -657,6 +657,7 @@ public class Universe
 					team.owner = p;
 					addTeam(team);
 					p.team = team;
+					team.setColor(EnumTeamColor.NAME_MAP.getRandom(world.rand));
 					team.markDirty();
 					sendTeamCreatedEvent = true;
 					sendTeamJoinEvent = true;
@@ -674,6 +675,7 @@ public class Universe
 					p.team = team;
 					team.setTitle(p.getName());
 					team.setIcon(new PlayerHeadIcon(p.getId()).toString());
+					team.setColor(EnumTeamColor.NAME_MAP.getRandom(world.rand));
 					team.markDirty();
 					sendTeamCreatedEvent = true;
 				}

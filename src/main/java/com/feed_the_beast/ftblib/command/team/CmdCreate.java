@@ -85,6 +85,10 @@ public class CmdCreate extends CmdBase
 		{
 			team.setColor(EnumTeamColor.NAME_MAP.get(args[1]));
 		}
+		else
+		{
+			team.setColor(EnumTeamColor.NAME_MAP.getRandom(sender.getEntityWorld().rand));
+		}
 
 		p.team = team;
 		team.owner = p;
