@@ -24,14 +24,15 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
+import java.awt.image.BufferedImage;
 
 /**
  * @author LatvianModder
  */
 public class Color4I extends Icon
 {
-	private static final Color4I BLACK_A[] = new Color4I[256];
-	private static final Color4I WHITE_A[] = new Color4I[256];
+	private static final Color4I[] BLACK_A = new Color4I[256];
+	private static final Color4I[] WHITE_A = new Color4I[256];
 
 	static
 	{
@@ -82,7 +83,7 @@ public class Color4I extends Icon
 			CHAT_FORMATTING_COLORS[i] = rgb((i == 6) ? r + 85 : r, g, b);
 		}
 
-		int colors256[] = {
+		int[] colors256 = {
 				0x000000, 0x252525, 0x343434, 0x4E4E4E, 0x686868, 0x757575, 0x8E8E8E, 0xA4A4A4, 0xB8B8B8, 0xC5C5C5, 0xD0D0D0, 0xD7D7D7, 0xE1E1E1, 0xEAEAEA, 0xF4F4F4, 0xFFFFFF,
 				0x412000, 0x542800, 0x763700, 0x9A5000, 0xC36806, 0xE47B07, 0xFF911A, 0xFFAB1D, 0xFFC51F, 0xFFD03B, 0xFFD84C, 0xFFE651, 0xFFF456, 0xFFF970, 0xFFFF90, 0xFFFFAA,
 				0x451904, 0x721E11, 0x9F241E, 0xB33A20, 0xC85120, 0xE36920, 0xFC8120, 0xFD8C25, 0xFE982C, 0xFFAE38, 0xFFB946, 0xFFBF51, 0xFFC66D, 0xFFD587, 0xFFE498, 0xFFE6AB,
@@ -456,5 +457,19 @@ public class Color4I extends Icon
 		float[] hsb = new float[3];
 		java.awt.Color.RGBtoHSB(redi(), greeni(), bluei(), hsb);
 		return rgb(java.awt.Color.HSBtoRGB(hsb[0], hsb[1], MathHelper.clamp(hsb[2] + percent, 0F, 1F))).withAlpha(alphai());
+	}
+
+	@Override
+	public boolean canBeCached()
+	{
+		return true;
+	}
+
+	@Override
+	public BufferedImage readImage()
+	{
+		BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+		image.setRGB(0, 0, rgba());
+		return image;
 	}
 }

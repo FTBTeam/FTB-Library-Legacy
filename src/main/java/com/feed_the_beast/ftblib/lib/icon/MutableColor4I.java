@@ -5,6 +5,8 @@ import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import net.minecraft.util.math.MathHelper;
 
+import java.awt.image.BufferedImage;
+
 /**
  * @author LatvianModder
  */
@@ -32,6 +34,14 @@ public class MutableColor4I extends Color4I
 		public boolean isEmpty()
 		{
 			return !hasColor;
+		}
+
+		@Override
+		public BufferedImage readImage()
+		{
+			BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+			image.setRGB(0, 0, 0);
+			return image;
 		}
 	}
 

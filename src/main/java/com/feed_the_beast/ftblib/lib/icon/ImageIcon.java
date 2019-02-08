@@ -8,9 +8,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.awt.image.BufferedImage;
 
 /**
  * @author LatvianModder
@@ -95,5 +98,17 @@ public class ImageIcon extends Icon
 	public ImageIcon withUVfromCoords(int x, int y, int w, int h, int tw, int th)
 	{
 		return withUV(x / (double) tw, y / (double) th, (x + w) / (double) tw, (y + h) / (double) th);
+	}
+
+	@Override
+	public boolean canBeCached()
+	{
+		return true;
+	}
+
+	@Override
+	public BufferedImage readImage() throws Exception
+	{
+		return TextureUtil.readBufferedImage(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream());
 	}
 }

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -281,5 +282,15 @@ public abstract class Icon
 	public boolean equals(Object o)
 	{
 		return o == this || o instanceof Icon && getJson().equals(((Icon) o).getJson());
+	}
+
+	public boolean canBeCached()
+	{
+		return false;
+	}
+
+	public BufferedImage readImage() throws Exception
+	{
+		throw new IllegalStateException();
 	}
 }

@@ -5,10 +5,14 @@ import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+
+import java.awt.image.BufferedImage;
 
 /**
  * @author LatvianModder
@@ -45,5 +49,18 @@ public class AtlasSpriteIcon extends Icon
 	public String toString()
 	{
 		return name;
+	}
+
+	@Override
+	public boolean canBeCached()
+	{
+		return true;
+	}
+
+	@Override
+	public BufferedImage readImage() throws Exception
+	{
+		ResourceLocation rl = new ResourceLocation(name);
+		return TextureUtil.readBufferedImage(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(rl.getNamespace(), "textures/" + rl.getPath() + ".png")).getInputStream());
 	}
 }
