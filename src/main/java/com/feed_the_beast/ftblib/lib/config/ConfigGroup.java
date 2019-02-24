@@ -229,6 +229,18 @@ public class ConfigGroup extends FinalIDObject
 		return values.values();
 	}
 
+	public final List<ConfigValueInstance> getValueTree()
+	{
+		List<ConfigValueInstance> list = new ArrayList<>(getValues());
+
+		for (ConfigGroup group : getGroups())
+		{
+			list.addAll(group.getValueTree());
+		}
+
+		return list;
+	}
+
 	public final Collection<ConfigGroup> getGroups()
 	{
 		return groups.values();
