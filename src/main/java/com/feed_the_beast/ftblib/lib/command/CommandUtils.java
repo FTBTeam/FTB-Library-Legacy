@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
+import net.minecraft.command.EntitySelector;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.math.Vec3d;
@@ -90,7 +91,7 @@ public class CommandUtils
 				break;
 			}
 			default:
-				p = Universe.get().getPlayer(name);
+				p = Universe.get().getPlayer(EntitySelector.matchOneEntity(sender, name, EntityPlayerMP.class));
 		}
 
 		if (p == null || p.isFake())

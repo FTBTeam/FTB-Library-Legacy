@@ -796,7 +796,7 @@ public class Universe
 		return null;
 	}
 
-	public ForgePlayer getPlayer(ICommandSender sender)
+	public ForgePlayer getPlayer(@Nullable ICommandSender sender)
 	{
 		if (sender instanceof EntityPlayerMP)
 		{
