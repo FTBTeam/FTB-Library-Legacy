@@ -10,7 +10,6 @@ import com.google.gson.JsonIOException;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.internal.Streams;
@@ -37,7 +36,6 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.storage.ThreadedFileIOBase;
-import net.minecraftforge.common.crafting.JsonContext;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -57,12 +55,10 @@ import java.util.Map;
  */
 public class JsonUtils
 {
-	private static final JsonParser PARSER = new JsonParser();
 	public static final JsonPrimitive JSON_TRUE = new JsonPrimitive(true);
 	public static final JsonPrimitive JSON_FALSE = new JsonPrimitive(false);
 	public static final JsonPrimitive JSON_EMPTY_STRING = new JsonPrimitive("");
 	public static final JsonPrimitive JSON_ZERO = new JsonPrimitive(0);
-	public static final JsonContext MINECRAFT_JSON_CONTEXT = new JsonContext("minecraft");
 
 	public static boolean isNull(@Nullable JsonElement element)
 	{

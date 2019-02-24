@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.AtlasSpriteIcon;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.IconPresets;
+import com.feed_the_beast.ftblib.lib.icon.IconWrapper;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
@@ -312,6 +313,8 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onBeforeTexturesStitched(TextureStitchEvent.Pre event)
 	{
+		IconWrapper.clearCache();
+
 		try
 		{
 			for (Field field : GuiIcons.class.getDeclaredFields())

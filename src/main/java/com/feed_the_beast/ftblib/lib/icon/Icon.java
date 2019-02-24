@@ -293,4 +293,10 @@ public abstract class Icon
 	{
 		throw new IllegalStateException();
 	}
+
+	@SideOnly(Side.CLIENT)
+	public final javax.swing.ImageIcon getWrappedIcon()
+	{
+		return IconWrapper.from(this);
+	}
 }
