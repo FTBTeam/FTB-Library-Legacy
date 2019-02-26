@@ -128,8 +128,8 @@ public class GuiSelectItemStack extends GuiBase
 
 	private class ButtonSwitchMode extends Button
 	{
-		private final Icon ICON_ALL = ItemIcon.getItemIcon(new ItemStack(Items.COMPASS));
-		private final Icon ICON_INV = ItemIcon.getItemIcon(new ItemStack(Blocks.CHEST));
+		private final Icon ICON_ALL = ItemIcon.getItemIcon(Items.COMPASS);
+		private final Icon ICON_INV = ItemIcon.getItemIcon(Blocks.CHEST);
 
 		public ButtonSwitchMode(Panel panel)
 		{
@@ -213,7 +213,7 @@ public class GuiSelectItemStack extends GuiBase
 	{
 		public ButtonCount(Panel panel)
 		{
-			super(panel, I18n.format("ftblib.select_item.count"), ItemIcon.getItemIcon(new ItemStack(Items.PAPER)));
+			super(panel, I18n.format("ftblib.select_item.count"), ItemIcon.getItemIcon(Items.PAPER));
 		}
 
 		@Override
@@ -271,7 +271,7 @@ public class GuiSelectItemStack extends GuiBase
 	{
 		public ButtonNBT(Panel panel)
 		{
-			super(panel, I18n.format("ftblib.select_item.nbt"), ItemIcon.getItemIcon(new ItemStack(Items.NAME_TAG)));
+			super(panel, I18n.format("ftblib.select_item.nbt"), ItemIcon.getItemIcon(Items.NAME_TAG));
 		}
 
 		@Override
@@ -297,7 +297,7 @@ public class GuiSelectItemStack extends GuiBase
 	{
 		public ButtonCaps(Panel panel)
 		{
-			super(panel, I18n.format("ftblib.select_item.caps"), ItemIcon.getItemIcon(new ItemStack(Blocks.ANVIL)));
+			super(panel, I18n.format("ftblib.select_item.caps"), ItemIcon.getItemIcon(Blocks.ANVIL));
 		}
 
 		@Override
@@ -337,7 +337,7 @@ public class GuiSelectItemStack extends GuiBase
 	{
 		public ButtonDisplayName(Panel panel)
 		{
-			super(panel, I18n.format("ftblib.select_item.display_name"), ItemIcon.getItemIcon(new ItemStack(Items.SIGN)));
+			super(panel, I18n.format("ftblib.select_item.display_name"), ItemIcon.getItemIcon(Items.SIGN));
 		}
 
 		@Override

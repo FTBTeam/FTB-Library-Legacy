@@ -5,11 +5,13 @@ import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.item.ItemStackSerializer;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.relauncher.Side;
@@ -59,6 +61,16 @@ public class ItemIcon extends Icon
 	public static Icon getItemIcon(ItemStack stack)
 	{
 		return stack.isEmpty() ? EMPTY : new ItemIcon(stack);
+	}
+
+	public static Icon getItemIcon(Item item)
+	{
+		return getItemIcon(new ItemStack(item));
+	}
+
+	public static Icon getItemIcon(Block block)
+	{
+		return getItemIcon(new ItemStack(block));
 	}
 
 	public static Icon getItemIcon(String lazyStackString)

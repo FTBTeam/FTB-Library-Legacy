@@ -6,16 +6,10 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.net.Proxy;
-import java.net.URL;
-import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class FileUtils
@@ -27,9 +21,6 @@ public class FileUtils
 	public static final double KB_D = 1024D;
 	public static final double MB_D = KB_D * 1024D;
 	public static final double GB_D = MB_D * 1024D;
-
-	public static final Comparator<File> FILE_COMPARATOR = (o1, o2) -> o1.getName().compareToIgnoreCase(o2.getName());
-	public static final Comparator<File> DEEP_FILE_COMPARATOR = (o1, o2) -> o1.getAbsolutePath().compareToIgnoreCase(o2.getAbsolutePath());
 
 	public static File newFile(File file)
 	{
@@ -109,16 +100,6 @@ public class FileUtils
 
 			return false;
 		});
-	}
-
-	public static void downloadFile(URL url, File out, Proxy proxy) throws Exception
-	{
-		try (InputStream input = url.openConnection(proxy).getInputStream();
-			 ReadableByteChannel channel = Channels.newChannel(input);
-			 FileOutputStream output = new FileOutputStream(out))
-		{
-			output.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
-		}
 	}
 
 	public static List<File> listTree(File file)
@@ -279,20 +260,6 @@ public class FileUtils
 			String name = file.getName();
 			int index = name.lastIndexOf('.');
 			return index == -1 ? name : name.substring(0, index);
-		}
-	}
-
-	public static String getExtension(File file)
-	{
-		if (file.isDirectory())
-		{
-			return "";
-		}
-		else
-		{
-			String name = file.getName();
-			int index = name.lastIndexOf('.');
-			return index == -1 ? "" : name.substring(index + 1);
 		}
 	}
 }

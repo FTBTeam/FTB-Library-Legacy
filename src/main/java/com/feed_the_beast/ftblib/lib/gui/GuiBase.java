@@ -503,7 +503,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 			case "custom":
 				return new CustomClickEvent(new ResourceLocation(path)).post();
 			default:
-				return false;
+				return new CustomClickEvent(new ResourceLocation(scheme, path)).post();
 		}
 	}
 

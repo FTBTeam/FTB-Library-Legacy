@@ -16,7 +16,7 @@ import java.util.function.BooleanSupplier;
 /**
  * @author LatvianModder
  */
-public class ConfigBoolean extends ConfigValue implements BooleanSupplier, IIteratingConfig
+public class ConfigBoolean extends ConfigValue implements BooleanSupplier, BooleanConsumer, IIteratingConfig
 {
 	public static final List<String> VARIANTS = Arrays.asList("true", "false");
 	public static final String ID = "bool";
@@ -177,5 +177,11 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier, IIter
 	public void setValueFromJson(JsonElement json)
 	{
 		setBoolean(json.getAsBoolean());
+	}
+
+	@Override
+	public final void accept(boolean v)
+	{
+		setBoolean(v);
 	}
 }
