@@ -158,7 +158,8 @@ public class ConfigStringEnum extends ConfigValue implements IIteratingConfig
 	{
 		if (inst.getCanEdit() && !inst.getDefaultValue().isNull())
 		{
-			ITextComponent component = get(inst.getDefaultValue().getString()).customName;
+			StringEnumValue value = get(inst.getDefaultValue().getString());
+			ITextComponent component = value == null ? null : value.customName;
 			list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + (component == null ? inst.getDefaultValue() : component.getFormattedText()));
 		}
 	}
