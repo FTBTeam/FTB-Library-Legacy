@@ -91,7 +91,18 @@ public class CommandUtils
 				break;
 			}
 			default:
-				p = Universe.get().getPlayer(EntitySelector.matchOneEntity(sender, name, EntityPlayerMP.class));
+			{
+				EntityPlayerMP e = EntitySelector.matchOneEntity(sender, name, EntityPlayerMP.class);
+
+				if (e == null)
+				{
+					p = Universe.get().getPlayer(name);
+				}
+				else
+				{
+					p = Universe.get().getPlayer(e);
+				}
+			}
 		}
 
 		if (p == null || p.isFake())
