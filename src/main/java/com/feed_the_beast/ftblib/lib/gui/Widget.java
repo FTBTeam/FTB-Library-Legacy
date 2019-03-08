@@ -231,6 +231,15 @@ public class Widget implements IGuiWrapper
 		return null;
 	}
 
+	public boolean isJEIGhostTarget(Object ingredient)
+	{
+		return false;
+	}
+
+	public void acceptJEIGhostIngredient(Object ingredient)
+	{
+	}
+
 	public static boolean isMouseButtonDown(MouseButton button)
 	{
 		return Mouse.isButtonDown(button.id);

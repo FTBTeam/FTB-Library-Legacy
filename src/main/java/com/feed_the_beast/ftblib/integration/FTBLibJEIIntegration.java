@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.integration;
 
 import com.feed_the_beast.ftblib.client.FTBLibClientEventHandler;
+import com.feed_the_beast.ftblib.lib.gui.GuiContainerWrapper;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
@@ -55,6 +56,14 @@ public class FTBLibJEIIntegration implements IModPlugin
 		catch (RuntimeException | LinkageError ignored)
 		{
 			// only JEI 4.14.0 or higher supports addGlobalGuiHandlers
+		}
+
+		try
+		{
+			registry.addGhostIngredientHandler(GuiContainerWrapper.class, new JEIGhostItemHandler());
+		}
+		catch (RuntimeException | LinkageError ignored)
+		{
 		}
 	}
 
