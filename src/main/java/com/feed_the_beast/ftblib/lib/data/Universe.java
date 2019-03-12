@@ -707,7 +707,13 @@ public class Universe
 
 		if (sendTeamJoinEvent)
 		{
-			new ForgeTeamPlayerJoinedEvent(p).post();
+			ForgeTeamPlayerJoinedEvent event = new ForgeTeamPlayerJoinedEvent(p);
+			event.post();
+
+			if (event.getDisplayGui() != null)
+			{
+				event.getDisplayGui().run();
+			}
 		}
 
 		if (!p.hideTeamNotification() && !p.hasTeam())

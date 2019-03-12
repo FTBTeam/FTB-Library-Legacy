@@ -94,9 +94,19 @@ public class CmdCreate extends CmdBase
 		team.owner = p;
 		team.universe.addTeam(team);
 		new ForgeTeamCreatedEvent(team).post();
-		new ForgeTeamPlayerJoinedEvent(p).post();
+		ForgeTeamPlayerJoinedEvent event = new ForgeTeamPlayerJoinedEvent(p);
+		event.post();
 		sender.sendMessage(FTBLib.lang(sender, "ftblib.lang.team.created", team.getID()));
-		new MessageMyTeamGuiResponse(p).sendTo(player);
+
+		if (event.getDisplayGui() != null)
+		{
+			event.getDisplayGui().run();
+		}
+		else
+		{
+			new MessageMyTeamGuiResponse(p).sendTo(player);
+		}
+
 		team.markDirty();
 		p.markDirty();
 	}

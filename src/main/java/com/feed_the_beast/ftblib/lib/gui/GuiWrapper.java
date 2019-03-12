@@ -61,24 +61,19 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 	}
 
 	@Override
-	protected void keyTyped(char keyChar, int key) throws IOException
+	protected void keyTyped(char keyChar, int key)
 	{
-		if (wrappedGui.keyPressed(key, keyChar))
+		if (!wrappedGui.keyPressed(key, keyChar))
 		{
-			return;
+			if (key == Keyboard.KEY_BACK)
+			{
+				wrappedGui.onBack();
+			}
+			else if (wrappedGui.onClosedByKey(key))
+			{
+				wrappedGui.closeGui(false);
+			}
 		}
-		else if (key == Keyboard.KEY_BACK)
-		{
-			wrappedGui.onBack();
-			return;
-		}
-		else if (wrappedGui.onClosedByKey(key))
-		{
-			wrappedGui.closeGui(false);
-			return;
-		}
-
-		super.keyTyped(keyChar, key);
 	}
 
 	@Override

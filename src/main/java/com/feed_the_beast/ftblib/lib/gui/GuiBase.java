@@ -173,19 +173,21 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		int mx = Mouse.getX();
 		int my = Mouse.getY();
 
-		if (Minecraft.getMinecraft().player != null)
-		{
-			Minecraft.getMinecraft().player.closeScreen();
+		Minecraft mc = Minecraft.getMinecraft();
 
-			if (Minecraft.getMinecraft().currentScreen == null)
+		if (mc.player != null)
+		{
+			mc.player.closeScreen();
+
+			if (mc.currentScreen == null)
 			{
-				Minecraft.getMinecraft().setIngameFocus();
+				mc.setIngameFocus();
 			}
 		}
 
 		if (openPrevScreen)
 		{
-			Minecraft.getMinecraft().displayGuiScreen(getPrevScreen());
+			mc.displayGuiScreen(getPrevScreen());
 			Mouse.setCursorPosition(mx, my);
 		}
 

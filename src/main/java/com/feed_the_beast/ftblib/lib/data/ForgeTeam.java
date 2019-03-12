@@ -521,7 +521,15 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 				player.team = this;
 				players.remove(player);
 				requestingInvite.remove(player);
-				new ForgeTeamPlayerJoinedEvent(player).post();
+
+				ForgeTeamPlayerJoinedEvent event = new ForgeTeamPlayerJoinedEvent(player);
+				event.post();
+
+				if (event.getDisplayGui() != null)
+				{
+					event.getDisplayGui().run();
+				}
+
 				player.markDirty();
 				markDirty();
 			}
