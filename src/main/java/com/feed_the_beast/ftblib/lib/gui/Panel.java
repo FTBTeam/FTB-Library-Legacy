@@ -60,9 +60,14 @@ public abstract class Panel extends Widget
 
 	public abstract void alignWidgets();
 
-	public void refreshWidgets()
+	public void clearWidgets()
 	{
 		widgets.clear();
+	}
+
+	public void refreshWidgets()
+	{
+		clearWidgets();
 		Theme theme = getGui().getTheme();
 		theme.pushFontUnicode(getUnicode());
 

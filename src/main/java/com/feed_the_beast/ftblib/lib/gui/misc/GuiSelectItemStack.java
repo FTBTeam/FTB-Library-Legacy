@@ -38,6 +38,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -367,6 +368,91 @@ public class GuiSelectItemStack extends GuiBase
 		}
 	}
 
+	private class ThreadItemList extends Thread
+	{
+		public long update = 0L;
+
+		@Override
+		public void run()
+		{
+			while (threadItemList != null)
+			{
+				long now = System.currentTimeMillis();
+
+				if (now >= update)
+				{
+					update = Long.MAX_VALUE;
+					updateList();
+				}
+			}
+		}
+
+		private void updateList()
+		{
+			List<Widget> widgets = new ArrayList<>();
+			NonNullList<ItemStack> list = NonNullList.create();
+
+			if (allItems)
+			{
+				for (Item item : Item.REGISTRY)
+				{
+					item.getSubItems(CreativeTabs.SEARCH, list);
+				}
+
+				list.add(new ItemStack(Blocks.COMMAND_BLOCK));
+				list.add(new ItemStack(Blocks.BARRIER));
+				list.add(new ItemStack(Blocks.STRUCTURE_VOID));
+			}
+			else
+			{
+				for (int i = 0; i < Minecraft.getMinecraft().player.inventory.getSizeInventory(); i++)
+				{
+					ItemStack stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
+
+					if (!stack.isEmpty())
+					{
+						list.add(stack);
+					}
+				}
+			}
+
+			String search = searchBox.getText().toLowerCase();
+			String mod = "";
+
+			if (search.startsWith("@"))
+			{
+				mod = search.substring(1);
+			}
+
+			ItemStackButton button = new ItemStackButton(panelStacks, ItemStack.EMPTY);
+
+			if (button.shouldAdd(search, mod))
+			{
+				widgets.add(new ItemStackButton(panelStacks, ItemStack.EMPTY));
+			}
+
+			for (ItemStack stack : list)
+			{
+				if (!stack.isEmpty())
+				{
+					button = new ItemStackButton(panelStacks, stack);
+
+					if (button.shouldAdd(search, mod))
+					{
+						widgets.add(button);
+					}
+				}
+			}
+
+			for (int i = 0; i < widgets.size(); i++)
+			{
+				widgets.get(i).setPos(1 + (i % 9) * 19, 1 + (i / 9) * 19);
+			}
+
+			newStackWidgets = widgets;
+		}
+	}
+
 	private final IOpenableGui callbackGui;
 	private final Button buttonCancel, buttonAccept;
 	private final Panel panelStacks;
@@ -376,6 +462,8 @@ public class GuiSelectItemStack extends GuiBase
 	private final boolean single;
 	private final Consumer<ItemStack> callback;
 	private final Panel tabs;
+	private ThreadItemList threadItemList;
+	private List<Widget> newStackWidgets;
 
 	public GuiSelectItemStack(IOpenableGui g, ItemStack is, boolean s, Consumer<ItemStack> c)
 	{
@@ -427,73 +515,19 @@ public class GuiSelectItemStack extends GuiBase
 		panelStacks = new Panel(this)
 		{
 			@Override
+			public void clearWidgets()
+			{
+			}
+
+			@Override
 			public void addWidgets()
 			{
-				NonNullList<ItemStack> list = NonNullList.create();
-
-				if (allItems)
-				{
-					for (Item item : Item.REGISTRY)
-					{
-						item.getSubItems(CreativeTabs.SEARCH, list);
-					}
-
-					list.add(new ItemStack(Blocks.COMMAND_BLOCK));
-					list.add(new ItemStack(Blocks.BARRIER));
-					list.add(new ItemStack(Blocks.STRUCTURE_VOID));
-				}
-				else
-				{
-					for (int i = 0; i < Minecraft.getMinecraft().player.inventory.getSizeInventory(); i++)
-					{
-						ItemStack stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
-
-						if (!stack.isEmpty())
-						{
-							list.add(stack);
-						}
-					}
-				}
-
-				String search = searchBox.getText().toLowerCase();
-				String mod = "";
-
-				if (search.startsWith("@"))
-				{
-					mod = search.substring(1);
-				}
-
-				ItemStackButton button = new ItemStackButton(this, ItemStack.EMPTY);
-
-				if (button.shouldAdd(search, mod))
-				{
-					add(new ItemStackButton(this, ItemStack.EMPTY));
-				}
-
-				for (ItemStack stack : list)
-				{
-					if (!stack.isEmpty())
-					{
-						button = new ItemStackButton(this, stack);
-
-						if (button.shouldAdd(search, mod))
-						{
-							add(button);
-						}
-					}
-				}
+				threadItemList.update = System.currentTimeMillis() + 200L;
 			}
 
 			@Override
 			public void alignWidgets()
 			{
-				for (int i = 0; i < widgets.size(); i++)
-				{
-					widgets.get(i).setPos(1 + (i % 9) * 19, 1 + (i / 9) * 19);
-				}
-
-				scrollBar.setPosAndSize(posX + width + 6, posY - 1, 16, height + 2);
-				scrollBar.setMaxValue(1 + MathHelper.ceil(widgets.size() / 9F) * 19);
 			}
 
 			@Override
@@ -548,6 +582,11 @@ public class GuiSelectItemStack extends GuiBase
 		};
 
 		tabs.setPosAndSize(-19, 8, 20, 0);
+
+		threadItemList = new ThreadItemList();
+		threadItemList.setName("Item Selector Updater");
+		threadItemList.setDaemon(true);
+		threadItemList.start();
 	}
 
 	public GuiSelectItemStack(IOpenableGui g, Consumer<ItemStack> c)
@@ -564,6 +603,29 @@ public class GuiSelectItemStack extends GuiBase
 		add(searchBox);
 		add(buttonCancel);
 		add(buttonAccept);
+	}
+
+	@Override
+	public void onClosed()
+	{
+		super.onClosed();
+		threadItemList = null;
+	}
+
+	@Override
+	public void drawBackground(Theme theme, int x, int y, int w, int h)
+	{
+		super.drawBackground(theme, x, y, w, h);
+
+		if (newStackWidgets != null)
+		{
+			panelStacks.widgets.clear();
+			panelStacks.addAll(newStackWidgets);
+			scrollBar.setPosAndSize(panelStacks.posX + panelStacks.width + 6, panelStacks.posY - 1, 16, panelStacks.height + 2);
+			scrollBar.setValue(0);
+			scrollBar.setMaxValue(1 + MathHelper.ceil(panelStacks.widgets.size() / 9F) * 19);
+			newStackWidgets = null;
+		}
 	}
 
 	@Override
