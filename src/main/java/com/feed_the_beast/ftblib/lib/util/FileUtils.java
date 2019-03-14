@@ -235,7 +235,7 @@ public class FileUtils
 		{
 			try
 			{
-				if (!delete(file))
+				if (file.exists() && !delete(file))
 				{
 					System.err.println("Failed to safely delete " + file.getAbsolutePath());
 				}
