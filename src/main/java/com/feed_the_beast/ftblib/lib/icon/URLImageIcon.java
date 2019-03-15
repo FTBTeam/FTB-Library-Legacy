@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
+import com.feed_the_beast.ftblib.lib.io.DataReader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
@@ -9,6 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.net.URI;
 
@@ -95,5 +97,11 @@ public class URLImageIcon extends ImageIcon
 	public URLImageIcon withUVfromCoords(int x, int y, int w, int h, int tw, int th)
 	{
 		return withUV(x / (double) tw, y / (double) th, (x + w) / (double) tw, (y + h) / (double) th);
+	}
+
+	@Override
+	public BufferedImage readImage() throws Exception
+	{
+		return DataReader.get(uri, Minecraft.getMinecraft().getProxy()).image();
 	}
 }
