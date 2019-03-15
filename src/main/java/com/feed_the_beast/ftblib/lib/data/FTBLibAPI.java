@@ -121,7 +121,8 @@ public class FTBLibAPI
 
 		ConfigValueProvider provider = FTBLibCommon.CONFIG_VALUE_PROVIDERS.get(id);
 		Objects.requireNonNull(provider, "Unknown Config ID: " + id);
-		return provider.get();
+		ConfigValue value = provider.get();
+		return value == null || value.isNull() ? ConfigNull.INSTANCE : value;
 	}
 
 	public static void sendCloseGuiPacket(EntityPlayerMP player)

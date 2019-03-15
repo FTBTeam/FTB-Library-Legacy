@@ -2,7 +2,9 @@ package com.feed_the_beast.ftblib.lib.io;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -78,9 +80,23 @@ public abstract class DataReader
 				return get(new File(uri.getPath()));
 			case "string":
 				return get(uri.getPath());
+			case "mcresource":
+				return getMCResource(uri);
 		}
 
 		throw new IllegalArgumentException("Unknown URI scheme: " + uri.getScheme() + "!");
+	}
+
+	private static DataReader getMCResource(URI uri)
+	{
+		try
+		{
+			return get(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(uri.getPath())));
+		}
+		catch (Throwable ex)
+		{
+			throw new IllegalArgumentException("Failed to load minecraft resource: " + uri.getPath() + "!");
+		}
 	}
 
 	public boolean canRead()
