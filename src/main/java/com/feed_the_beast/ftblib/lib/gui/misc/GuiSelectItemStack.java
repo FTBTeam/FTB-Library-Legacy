@@ -370,24 +370,17 @@ public class GuiSelectItemStack extends GuiBase
 
 	private class ThreadItemList extends Thread
 	{
-		public long update = 0L;
+		private final String search;
+
+		public ThreadItemList()
+		{
+			super("Item Search Thread");
+			setDaemon(true);
+			search = searchBox.getText().toLowerCase();
+		}
 
 		@Override
 		public void run()
-		{
-			while (threadItemList != null)
-			{
-				long now = System.currentTimeMillis();
-
-				if (now >= update)
-				{
-					update = Long.MAX_VALUE;
-					updateList();
-				}
-			}
-		}
-
-		private void updateList()
 		{
 			List<Widget> widgets = new ArrayList<>();
 			NonNullList<ItemStack> list = NonNullList.create();
@@ -416,7 +409,6 @@ public class GuiSelectItemStack extends GuiBase
 				}
 			}
 
-			String search = searchBox.getText().toLowerCase();
 			String mod = "";
 
 			if (search.startsWith("@"))
@@ -464,6 +456,7 @@ public class GuiSelectItemStack extends GuiBase
 	private final Panel tabs;
 	private ThreadItemList threadItemList;
 	private List<Widget> newStackWidgets;
+	public long update = Long.MAX_VALUE;
 
 	public GuiSelectItemStack(IOpenableGui g, ItemStack is, boolean s, Consumer<ItemStack> c)
 	{
@@ -481,6 +474,7 @@ public class GuiSelectItemStack extends GuiBase
 			public void onClicked(MouseButton button)
 			{
 				GuiHelper.playClickSound();
+				onClosed();
 				callbackGui.openGui();
 			}
 
@@ -522,7 +516,7 @@ public class GuiSelectItemStack extends GuiBase
 			@Override
 			public void addWidgets()
 			{
-				threadItemList.update = System.currentTimeMillis() + 200L;
+				update = System.currentTimeMillis() + 200L;
 			}
 
 			@Override
@@ -582,10 +576,7 @@ public class GuiSelectItemStack extends GuiBase
 		};
 
 		tabs.setPosAndSize(-19, 8, 20, 0);
-
 		threadItemList = new ThreadItemList();
-		threadItemList.setName("Item Selector Updater");
-		threadItemList.setDaemon(true);
 		threadItemList.start();
 	}
 
@@ -609,6 +600,22 @@ public class GuiSelectItemStack extends GuiBase
 	public void onClosed()
 	{
 		super.onClosed();
+		stopSearch();
+	}
+
+	private void stopSearch()
+	{
+		if (threadItemList != null)
+		{
+			try
+			{
+				threadItemList.interrupt();
+			}
+			catch (Exception ex)
+			{
+			}
+		}
+
 		threadItemList = null;
 	}
 
@@ -625,6 +632,16 @@ public class GuiSelectItemStack extends GuiBase
 			scrollBar.setValue(0);
 			scrollBar.setMaxValue(1 + MathHelper.ceil(panelStacks.widgets.size() / 9F) * 19);
 			newStackWidgets = null;
+		}
+
+		long now = System.currentTimeMillis();
+
+		if (now >= update)
+		{
+			update = Long.MAX_VALUE;
+			stopSearch();
+			threadItemList = new ThreadItemList();
+			threadItemList.start();
 		}
 	}
 
