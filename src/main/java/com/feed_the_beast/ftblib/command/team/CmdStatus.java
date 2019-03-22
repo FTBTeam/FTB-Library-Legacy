@@ -67,6 +67,7 @@ public class CmdStatus extends CmdBase
 		if (args.length == 1)
 		{
 			sender.sendMessage(EnumTeamStatus.NAME_MAP.getDisplayName(sender, p.team.getHighestStatus(p1)));
+			return;
 		}
 
 		if (p.team.isOwner(p1))
