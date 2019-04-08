@@ -299,4 +299,10 @@ public abstract class Icon
 	{
 		return IconWrapper.from(this);
 	}
+
+	@Nullable
+	public Object getJEIFocus()
+	{
+		return null;
+	}
 }

@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,5 +97,17 @@ public class IconAnimation extends Icon
 
 		json.add("icons", array);
 		return json;
+	}
+
+	@Override
+	@Nullable
+	public Object getJEIFocus()
+	{
+		if (!list.isEmpty())
+		{
+			return list.get((int) ((System.currentTimeMillis() / 1000L) % list.size())).getJEIFocus();
+		}
+
+		return null;
 	}
 }

@@ -17,6 +17,8 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+
 /**
  * @author LatvianModder
  */
@@ -133,5 +135,12 @@ public class ItemIcon extends Icon
 	public boolean equals(Object o)
 	{
 		return o == this || o instanceof ItemIcon && ItemStack.areItemStacksEqualUsingNBTShareTag(getStack(), ((ItemIcon) o).getStack());
+	}
+
+	@Override
+	@Nullable
+	public Object getJEIFocus()
+	{
+		return getStack();
 	}
 }

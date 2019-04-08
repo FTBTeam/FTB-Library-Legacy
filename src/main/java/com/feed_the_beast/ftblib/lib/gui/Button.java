@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
 import com.feed_the_beast.ftblib.lib.icon.Icon;
-import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 
 import javax.annotation.Nullable;
@@ -82,6 +81,6 @@ public abstract class Button extends Widget
 	@Nullable
 	public Object getJEIFocus()
 	{
-		return icon instanceof ItemIcon ? ((ItemIcon) icon).getStack() : null;
+		return icon.getJEIFocus();
 	}
 }
