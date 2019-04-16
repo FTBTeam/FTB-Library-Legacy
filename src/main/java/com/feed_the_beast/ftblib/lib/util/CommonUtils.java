@@ -5,7 +5,7 @@ import com.google.common.collect.ListMultimap;
 import net.minecraftforge.fml.common.LoadController;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
-import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nullable;
 
@@ -23,14 +23,15 @@ public class CommonUtils
 	}
 
 	@Nullable
+	@SuppressWarnings("deprecation")
 	public static ModContainer getModContainerForClass(Class clazz)
 	{
 		if (packageOwners == null)
 		{
 			try
 			{
-				LoadController instance = ObfuscationReflectionHelper.getPrivateValue(Loader.class, Loader.instance(), "modController");
-				packageOwners = ObfuscationReflectionHelper.getPrivateValue(LoadController.class, instance, "packageOwners");
+				LoadController instance = ReflectionHelper.getPrivateValue(Loader.class, Loader.instance(), "modController");
+				packageOwners = ReflectionHelper.getPrivateValue(LoadController.class, instance, "packageOwners");
 			}
 			catch (Exception ex)
 			{
