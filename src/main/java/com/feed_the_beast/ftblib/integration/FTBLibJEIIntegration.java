@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.integration;
 
 import com.feed_the_beast.ftblib.client.FTBLibClientEventHandler;
+import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.lib.gui.GuiContainerWrapper;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
@@ -10,10 +11,13 @@ import mezz.jei.api.gui.IGlobalGuiHandler;
 import mezz.jei.api.recipe.IFocus;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -65,6 +69,8 @@ public class FTBLibJEIIntegration implements IModPlugin
 		catch (RuntimeException | LinkageError ignored)
 		{
 		}
+
+		MinecraftForge.EVENT_BUS.register(FTBLibJEIIntegration.class);
 	}
 
 	public static boolean openFocus(int key, @Nullable Object object)
@@ -84,5 +90,17 @@ public class FTBLibJEIIntegration implements IModPlugin
 		}
 
 		return false;
+	}
+
+	@SubscribeEvent
+	public static void onCustomClick(CustomClickEvent event)
+	{
+		if (event.getID().getNamespace().equals("jeicategory"))
+		{
+			if (RUNTIME != null)
+			{
+				RUNTIME.getRecipesGui().showCategories(Arrays.asList(event.getID().getPath().split(";")));
+			}
+		}
 	}
 }

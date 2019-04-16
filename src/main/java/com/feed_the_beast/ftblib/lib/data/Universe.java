@@ -102,6 +102,7 @@ public class Universe
 		}
 	}
 
+	private static final HashSet<UUID> LOGGED_IN_PLAYERS = new HashSet<>(); //Required because of a Forge bug https://github.com/MinecraftForge/MinecraftForge/issues/5696
 	private static Universe INSTANCE = null;
 
 	public static boolean loaded()
@@ -141,6 +142,7 @@ public class Universe
 				player.onLoggedOut();
 			}
 
+			LOGGED_IN_PLAYERS.clear();
 			INSTANCE.save();
 			new UniverseClosedEvent(INSTANCE).post();
 			INSTANCE = null;
@@ -161,6 +163,7 @@ public class Universe
 	{
 		if (loaded() && event.player instanceof EntityPlayerMP && !ServerUtils.isFake((EntityPlayerMP) event.player))
 		{
+			LOGGED_IN_PLAYERS.add(event.player.getUniqueID());
 			INSTANCE.onPlayerLoggedIn((EntityPlayerMP) event.player);
 		}
 	}
@@ -168,7 +171,7 @@ public class Universe
 	@SubscribeEvent
 	public static void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event)
 	{
-		if (loaded() && event.player instanceof EntityPlayerMP)
+		if (loaded() && event.player instanceof EntityPlayerMP && LOGGED_IN_PLAYERS.remove(event.player.getUniqueID()))
 		{
 			INSTANCE.onPlayerLoggedOut((EntityPlayerMP) event.player);
 		}

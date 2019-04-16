@@ -17,6 +17,7 @@ import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.world.World;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import org.lwjgl.opengl.Display;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +38,11 @@ public class FTBLibClient extends FTBLibCommon
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(FTBLibClientConfigManager.INSTANCE);
 		((IReloadableResourceManager) Minecraft.getMinecraft().getResourceManager()).registerReloadListener(SidebarButtonManager.INSTANCE);
 		ChunkSelectorMap.setMap(new BuiltinChunkMap());
+
+		if (System.getProperty("ftbdevenvironment", "0").equals("1"))
+		{
+			Display.setTitle(Minecraft.getMinecraft().getVersion() + " Dev :: " + Minecraft.getMinecraft().getSession().getUsername());
+		}
 	}
 
 	@Override
