@@ -48,6 +48,7 @@ public class ItemEntryWithCount
 
 		if (id instanceof NBTTagIntArray)
 		{
+			ItemEntry e = ItemEntry.EMPTY;
 			int[] ai = ((NBTTagIntArray) id).getIntArray();
 
 			if (ai.length > 0)
@@ -71,10 +72,12 @@ public class ItemEntryWithCount
 
 					NBTTagCompound tag = (NBTTagCompound) nbt.getTag("N");
 					NBTTagCompound caps = (NBTTagCompound) nbt.getTag("C");
-					entry = new ItemEntry(item, meta, tag, caps);
-					return;
+					e = new ItemEntry(item, meta, tag, caps);
 				}
 			}
+
+			entry = e;
+			return;
 		}
 
 		Item item = id instanceof NBTTagString ? Item.REGISTRY.getObject(new ResourceLocation(((NBTTagString) id).getString())) : Item.REGISTRY.getObjectById(((NBTPrimitive) id).getInt());
