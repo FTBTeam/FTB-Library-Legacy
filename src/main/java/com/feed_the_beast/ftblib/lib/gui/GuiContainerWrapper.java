@@ -110,7 +110,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	@Override
 	public void handleKeyboardInput() throws IOException
 	{
-		if (!Keyboard.getEventKeyState())
+		if (!(Keyboard.getEventKey() == 0 && Keyboard.getEventCharacter() >= ' ' || Keyboard.getEventKeyState()))
 		{
 			wrappedGui.keyReleased(Keyboard.getEventKey());
 		}
