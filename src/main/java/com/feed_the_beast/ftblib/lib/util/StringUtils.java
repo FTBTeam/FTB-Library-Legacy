@@ -37,19 +37,23 @@ public class StringUtils
 	public static final DecimalFormat DOUBLE_FORMATTER_0 = new DecimalFormat("#0.0");
 	public final static int[] INT_SIZE_TABLE = {9, 99, 999, 9999, 99999, 999999, 9999999, 99999999, 999999999, Integer.MAX_VALUE};
 
-	private static final Pattern SNAKE_CASE_ID_PATTERN = Pattern.compile("[^a-z0-9_]");
-	private static final Pattern REPEATING_UNDERSCORE_PATTERN = Pattern.compile("_+");
-	private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("(?i)\u00a7[0-9A-FK-OR]");
-	private static final Pattern FORMATTING_CODE_AND_PATTERN = Pattern.compile("(?i)\\&([0-9A-FK-OR])");
+	private static final Pattern NOT_SNAKE_CASE_PATTERN = Pattern.compile("[^a-z0-9_]");
+	private static final Pattern REPEATING_UNDERSCORE_PATTERN = Pattern.compile("_{2,}");
+	private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("(?i)[\\&\u00a7]([0-9A-FK-OR])");
 
 	public static String unformatted(String string)
 	{
 		return string.isEmpty() ? string : FORMATTING_CODE_PATTERN.matcher(string).replaceAll("");
 	}
 
+	public static String addFormatting(String string)
+	{
+		return FORMATTING_CODE_PATTERN.matcher(string).replaceAll("\u00a7$1");
+	}
+
 	public static String toSnakeCase(String string)
 	{
-		return string.isEmpty() ? string : REPEATING_UNDERSCORE_PATTERN.matcher(SNAKE_CASE_ID_PATTERN.matcher(unformatted(string).toLowerCase()).replaceAll("_")).replaceAll("_");
+		return string.isEmpty() ? string : REPEATING_UNDERSCORE_PATTERN.matcher(NOT_SNAKE_CASE_PATTERN.matcher(unformatted(string).toLowerCase()).replaceAll("_")).replaceAll("_");
 	}
 
 	public static String emptyIfNull(@Nullable Object o)
@@ -577,10 +581,5 @@ public class StringUtils
 		}
 
 		return builder.toString();
-	}
-
-	public static String addFormatting(String string)
-	{
-		return FORMATTING_CODE_AND_PATTERN.matcher(string).replaceAll("\u00a7$1");
 	}
 }
