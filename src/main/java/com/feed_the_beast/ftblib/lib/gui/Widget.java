@@ -294,4 +294,8 @@ public class Widget implements IGuiWrapper
 	{
 		return GuiScreen.isKeyComboCtrlA(key);
 	}
+
+	public void tick()
+	{
+	}
 }

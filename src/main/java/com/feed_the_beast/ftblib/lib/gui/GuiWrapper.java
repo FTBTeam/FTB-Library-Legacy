@@ -148,6 +148,13 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 	}
 
 	@Override
+	public void updateScreen()
+	{
+		super.updateScreen();
+		wrappedGui.tick();
+	}
+
+	@Override
 	public GuiBase getGui()
 	{
 		return wrappedGui;

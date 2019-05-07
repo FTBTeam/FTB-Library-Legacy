@@ -410,4 +410,20 @@ public abstract class Panel extends Widget
 	{
 		return index < 0 || index >= widgets.size() ? null : widgets.get(index);
 	}
+
+	@Override
+	public void tick()
+	{
+		setOffset(true);
+
+		for (Widget widget : widgets)
+		{
+			if (widget.isEnabled())
+			{
+				widget.tick();
+			}
+		}
+
+		setOffset(false);
+	}
 }
