@@ -72,7 +72,15 @@ public class ServerUtils
 			case 1:
 				return new TextComponentTranslation("advancements.end.root.title");
 			default:
-				return new TextComponentString("DIM_" + dim);
+				for (DimensionType type : DimensionType.values())
+				{
+					if (type.getId() == dim)
+					{
+						return new TextComponentString(type.getName());
+					}
+				}
+
+				return new TextComponentString("dim_" + dim);
 		}
 	}
 
