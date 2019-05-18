@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.lib.config.ConfigItemStack;
 import com.feed_the_beast.ftblib.lib.config.ConfigNBT;
 import com.feed_the_beast.ftblib.lib.config.ConfigString;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
+import com.feed_the_beast.ftblib.lib.gui.BlankPanel;
 import com.feed_the_beast.ftblib.lib.gui.Button;
 import com.feed_the_beast.ftblib.lib.gui.GuiBase;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
@@ -506,22 +507,12 @@ public class GuiSelectItemStack extends GuiBase
 
 		buttonAccept.setPosAndSize(width - bsize - 8, height - 24, bsize, 16);
 
-		panelStacks = new Panel(this)
+		panelStacks = new BlankPanel(this)
 		{
-			@Override
-			public void clearWidgets()
-			{
-			}
-
 			@Override
 			public void addWidgets()
 			{
 				update = System.currentTimeMillis() + 200L;
-			}
-
-			@Override
-			public void alignWidgets()
-			{
 			}
 
 			@Override

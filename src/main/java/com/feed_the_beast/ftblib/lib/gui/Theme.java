@@ -30,6 +30,7 @@ public class Theme
 	public static final int CENTERED = 4;
 	public static final int UNICODE = 8;
 	public static final int MOUSE_OVER = 16;
+	public static final int CENTERED_V = 32;
 
 	private static final Color4I CONTENT_COLOR_MOUSE_OVER = Color4I.rgb(16777120);
 	private static final Color4I CONTENT_COLOR_DISABLED = Color4I.rgb(10526880);

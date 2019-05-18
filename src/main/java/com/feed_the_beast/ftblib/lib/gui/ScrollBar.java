@@ -23,7 +23,7 @@ public class ScrollBar extends Widget
 	}
 
 	public final Plane plane;
-	private int sliderSize;
+	private int scrollBarSize;
 	private int value = 0;
 	private int scrollStep = 20;
 	private int grab = -10000;
@@ -36,7 +36,7 @@ public class ScrollBar extends Widget
 	{
 		super(parent);
 		plane = p;
-		sliderSize = Math.max(ss, 0);
+		scrollBarSize = Math.max(ss, 0);
 	}
 
 	public void setCanAlwaysScroll(boolean v)
@@ -76,9 +76,9 @@ public class ScrollBar extends Widget
 		scrollStep = Math.max(1, s);
 	}
 
-	public int getSliderSize()
+	public int getScrollBarSize()
 	{
-		return sliderSize;
+		return scrollBarSize;
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public class ScrollBar extends Widget
 	{
 		if (isMouseOver())
 		{
-			grab = (plane.isVertical ? (getMouseY() - (getY() + getValueI(height - getSliderSize()))) : (getMouseX() - (getX() + getValueI(width - getSliderSize()))));
+			grab = (plane.isVertical ? (getMouseY() - (getY() + getValueI(height - getScrollBarSize()))) : (getMouseX() - (getX() + getValueI(width - getScrollBarSize()))));
 			return true;
 		}
 
@@ -104,7 +104,7 @@ public class ScrollBar extends Widget
 	{
 		if (scroll != 0 && canMouseScrollPlane() && canMouseScroll())
 		{
-			setValue(getValue() + ((scroll < 0) ? getScrollStep() : -getScrollStep()));
+			setValue(getValue() - getScrollStep() * scroll);
 			return true;
 		}
 
@@ -122,7 +122,7 @@ public class ScrollBar extends Widget
 
 		if (Theme.renderDebugBoxes)
 		{
-			list.add(TextFormatting.DARK_GRAY + "Size: " + getSliderSize());
+			list.add(TextFormatting.DARK_GRAY + "Size: " + getScrollBarSize());
 			list.add(TextFormatting.DARK_GRAY + "Max: " + getMaxValue());
 			list.add(TextFormatting.DARK_GRAY + "Value: " + getValue());
 		}
@@ -136,9 +136,9 @@ public class ScrollBar extends Widget
 	@Override
 	public void draw(Theme theme, int x, int y, int w, int h)
 	{
-		int sliderSize = getSliderSize();
+		int scrollBarSize = getScrollBarSize();
 
-		if (sliderSize > 0)
+		if (scrollBarSize > 0)
 		{
 			int v = getValue();
 
@@ -148,11 +148,11 @@ public class ScrollBar extends Widget
 				{
 					if (plane.isVertical)
 					{
-						v = (int) ((getMouseY() - (y + grab)) * getMaxValue() / (double) (height - sliderSize));
+						v = (int) ((getMouseY() - (y + grab)) * getMaxValue() / (double) (height - scrollBarSize));
 					}
 					else
 					{
-						v = (int) ((getMouseX() - (x + grab)) * getMaxValue() / (double) (width - sliderSize));
+						v = (int) ((getMouseX() - (x + grab)) * getMaxValue() / (double) (width - scrollBarSize));
 					}
 				}
 				else
@@ -166,15 +166,15 @@ public class ScrollBar extends Widget
 
 		drawBackground(theme, x, y, width, height);
 
-		if (sliderSize > 0)
+		if (scrollBarSize > 0)
 		{
 			if (plane.isVertical)
 			{
-				drawScrollBar(theme, x, y + getValueI(height - sliderSize), width, sliderSize);
+				drawScrollBar(theme, x, y + getValueI(height - scrollBarSize), width, scrollBarSize);
 			}
 			else
 			{
-				drawScrollBar(theme, x + getValueI(width - sliderSize), y, sliderSize, height);
+				drawScrollBar(theme, x + getValueI(width - scrollBarSize), y, scrollBarSize, height);
 			}
 		}
 	}

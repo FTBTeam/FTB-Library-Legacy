@@ -2,23 +2,25 @@ package com.feed_the_beast.ftblib.lib.gui;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
-import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public abstract class Panel extends Widget
 {
-	public static final Comparator<Widget> WIDGET_TITLE_COMPARATOR = (o1, o2) -> StringUtils.unformatted(o1.getTitle()).compareToIgnoreCase(StringUtils.unformatted(o2.getTitle()));
-
 	public final List<Widget> widgets;
 	private int scrollX = 0, scrollY = 0;
 	private int offsetX = 0, offsetY = 0;
-	private boolean unicode = false, onlyRenderWidgetsInside = true, onlyInteractWithWidgetsInside = true;
+	private boolean unicode = false;
+	private boolean onlyRenderWidgetsInside = true;
+	private boolean onlyInteractWithWidgetsInside = true;
+	private int scrollStep = 20;
+	private int contentWidth = -1, contentHeight = -1;
+	public int contentWidthExtra, contentHeightExtra;
 
 	public Panel(Panel panel)
 	{
@@ -67,6 +69,7 @@ public abstract class Panel extends Widget
 
 	public void refreshWidgets()
 	{
+		contentWidth = contentHeight = -1;
 		clearWidgets();
 		Theme theme = getGui().getTheme();
 		theme.pushFontUnicode(getUnicode());
@@ -84,7 +87,7 @@ public abstract class Panel extends Widget
 			ex.printStackTrace();
 		}
 
-		alignWidgets();
+		//alignWidgets();
 
 		for (Widget widget : widgets)
 		{
@@ -106,6 +109,7 @@ public abstract class Panel extends Widget
 		}
 
 		widgets.add(widget);
+		contentWidth = contentHeight = -1;
 	}
 
 	public void addAll(Iterable<? extends Widget> list)
@@ -116,7 +120,7 @@ public abstract class Panel extends Widget
 		}
 	}
 
-	protected final int align(WidgetLayout layout)
+	public final int align(WidgetLayout layout)
 	{
 		return layout.align(this);
 	}
@@ -131,6 +135,58 @@ public abstract class Panel extends Widget
 	public int getY()
 	{
 		return super.getY() + offsetY;
+	}
+
+	public int getContentWidth()
+	{
+		if (contentWidth == -1)
+		{
+			int minX = Integer.MAX_VALUE;
+			int maxX = Integer.MIN_VALUE;
+
+			for (Widget widget : widgets)
+			{
+				if (widget.posX < minX)
+				{
+					minX = widget.posX;
+				}
+
+				if (widget.posX + widget.width > maxX)
+				{
+					maxX = widget.posX + widget.width;
+				}
+			}
+
+			contentWidth = maxX - minX + contentWidthExtra;
+		}
+
+		return contentWidth;
+	}
+
+	public int getContentHeight()
+	{
+		if (contentHeight == -1)
+		{
+			int minY = Integer.MAX_VALUE;
+			int maxY = Integer.MIN_VALUE;
+
+			for (Widget widget : widgets)
+			{
+				if (widget.posY < minY)
+				{
+					minY = widget.posY;
+				}
+
+				if (widget.posY + widget.height > maxY)
+				{
+					maxY = widget.posY + widget.height;
+				}
+			}
+
+			contentHeight = maxY - minY + contentHeightExtra;
+		}
+
+		return contentHeight;
 	}
 
 	public void setOffset(boolean flag)
@@ -350,7 +406,67 @@ public abstract class Panel extends Widget
 		}
 
 		setOffset(false);
-		return false;
+		return scrollPanel(scroll);
+	}
+
+	public boolean scrollPanel(int scroll)
+	{
+		if (isDefaultScrollVertical() != isShiftKeyDown())
+		{
+			return movePanelScroll(0, -getScrollStep() * scroll);
+		}
+		else
+		{
+			return movePanelScroll(-getScrollStep() * scroll, 0);
+		}
+	}
+
+	public boolean movePanelScroll(int dx, int dy)
+	{
+		if (dx == 0 && dy == 0)
+		{
+			return false;
+		}
+
+		int sx = getScrollX();
+		int sy = getScrollY();
+
+		if (dx != 0)
+		{
+			int w = getContentWidth();
+
+			if (w > width)
+			{
+				setScrollX(MathHelper.clamp(sx + dx, 0, w - width));
+			}
+		}
+
+		if (dy != 0)
+		{
+			int h = getContentHeight();
+
+			if (h > height)
+			{
+				setScrollY(MathHelper.clamp(sy + dy, 0, h - height));
+			}
+		}
+
+		return getScrollX() != sx || getScrollY() != sy;
+	}
+
+	public boolean isDefaultScrollVertical()
+	{
+		return true;
+	}
+
+	public void setScrollStep(int s)
+	{
+		scrollStep = s;
+	}
+
+	public int getScrollStep()
+	{
+		return scrollStep;
 	}
 
 	@Override

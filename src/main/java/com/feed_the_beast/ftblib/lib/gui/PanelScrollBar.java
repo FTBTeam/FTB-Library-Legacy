@@ -36,7 +36,19 @@ public class PanelScrollBar extends ScrollBar
 	}
 
 	@Override
-	public int getSliderSize()
+	public void setScrollStep(int s)
+	{
+		panel.setScrollStep(s);
+	}
+
+	@Override
+	public int getScrollStep()
+	{
+		return panel.getScrollStep();
+	}
+
+	@Override
+	public int getScrollBarSize()
 	{
 		int max = getMaxValue();
 
@@ -57,12 +69,6 @@ public class PanelScrollBar extends ScrollBar
 		}
 
 		return size < 10 ? 10 : size;
-	}
-
-	@Override
-	public boolean canMouseScroll()
-	{
-		return panel.isMouseOver() || super.canMouseScroll();
 	}
 
 	@Override

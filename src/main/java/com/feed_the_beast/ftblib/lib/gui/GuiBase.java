@@ -50,6 +50,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	}
 
 	private int mouseX, mouseY;
+	private float partialTicks;
 	private boolean refreshWidgets;
 	private ScaledResolution screen;
 	public boolean fixUnicode;
@@ -215,10 +216,11 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		refreshWidgets = true;
 	}
 
-	public final void updateGui(int mx, int my)
+	public final void updateGui(int mx, int my, float pt)
 	{
 		mouseX = mx;
 		mouseY = my;
+		partialTicks = pt;
 
 		if (refreshWidgets)
 		{
@@ -402,6 +404,12 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	public final int getMouseY()
 	{
 		return mouseY;
+	}
+
+	@Override
+	public final float getPartialTicks()
+	{
+		return partialTicks;
 	}
 
 	public boolean isMouseOver(int x, int y, int w, int h)

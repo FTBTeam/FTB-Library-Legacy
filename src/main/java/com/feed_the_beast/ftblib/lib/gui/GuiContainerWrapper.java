@@ -99,11 +99,11 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	public void handleMouseInput() throws IOException
 	{
 		super.handleMouseInput();
-
 		int scroll = Mouse.getEventDWheel();
+
 		if (scroll != 0)
 		{
-			wrappedGui.mouseScrolled(scroll);
+			wrappedGui.mouseScrolled(scroll / 120);
 		}
 	}
 
@@ -201,7 +201,7 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks)
 	{
-		wrappedGui.updateGui(mouseX, mouseY);
+		wrappedGui.updateGui(mouseX, mouseY, partialTicks);
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
 

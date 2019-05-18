@@ -84,6 +84,11 @@ public class TextField extends Widget
 			text = StringUtils.EMPTY_ARRAY;
 		}
 
+		return resize(theme);
+	}
+
+	public TextField resize(Theme theme)
+	{
 		if (maxWidth == 0)
 		{
 			setWidth(0);
@@ -181,6 +186,7 @@ public class TextField extends Widget
 		}
 
 		boolean centered = Bits.getFlag(textFlags, Theme.CENTERED);
+		boolean centeredV = Bits.getFlag(textFlags, Theme.CENTERED_V);
 
 		Color4I col = textColor;
 
@@ -189,24 +195,20 @@ public class TextField extends Widget
 			col = theme.getContentColor(WidgetType.mouseOver(Bits.getFlag(textFlags, Theme.MOUSE_OVER)));
 		}
 
+		int tx = x + (centered ? (w / 2) : 0);
+		int ty = y + (centeredV ? ((h - theme.getFontHeight()) / 2) : 0);
+
 		if (scale == 1F)
 		{
 			for (int i = 0; i < text.length; i++)
 			{
-				if (centered)
-				{
-					theme.drawString(text[i], x + w / 2, y + i * textSpacing, col, textFlags);
-				}
-				else
-				{
-					theme.drawString(text[i], x, y + i * textSpacing, col, textFlags);
-				}
+				theme.drawString(text[i], tx, ty + i * textSpacing, col, textFlags);
 			}
 		}
 		else
 		{
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(x + (centered ? (int) (w / 2D) : 0), y, 0);
+			GlStateManager.translate(tx, ty, 0);
 			GlStateManager.scale(scale, scale, 1F);
 
 			for (int i = 0; i < text.length; i++)

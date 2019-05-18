@@ -204,6 +204,11 @@ public class Widget implements IGuiWrapper
 		return parent.getMouseY();
 	}
 
+	public float getPartialTicks()
+	{
+		return parent.getPartialTicks();
+	}
+
 	public boolean handleClick(String scheme, String path)
 	{
 		return parent.handleClick(scheme, path);

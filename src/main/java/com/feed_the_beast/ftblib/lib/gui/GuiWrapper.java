@@ -80,11 +80,11 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 	public void handleMouseInput() throws IOException
 	{
 		super.handleMouseInput();
-
 		int scroll = Mouse.getEventDWheel();
+
 		if (scroll != 0)
 		{
-			wrappedGui.mouseScrolled(scroll);
+			wrappedGui.mouseScrolled(scroll / 120);
 		}
 	}
 
@@ -109,7 +109,7 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 			GuiHelper.setFixUnicode(true);
 		}
 
-		wrappedGui.updateGui(mouseX, mouseY);
+		wrappedGui.updateGui(mouseX, mouseY, partialTicks);
 		drawDefaultBackground();
 		GuiHelper.setupDrawing();
 		int x = wrappedGui.getX();
