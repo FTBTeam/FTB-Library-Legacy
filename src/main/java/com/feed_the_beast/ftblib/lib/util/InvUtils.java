@@ -9,11 +9,14 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -31,12 +34,23 @@ import java.util.function.Predicate;
 public class InvUtils
 {
 	public static final IInventory EMPTY_INVENTORY = new InventoryBasic("[Null]", true, 0);
-	public static final ItemStack ERROR_ITEM = new ItemStack(Blocks.BARRIER);
 	public static final Predicate<ItemStack> NO_FILTER = stack -> true;
 
-	static
+	@GameRegistry.ObjectHolder("itemfilters:missing")
+	public static Item missingItem;
+
+	public static final ItemStack brokenItem(String id)
 	{
-		ERROR_ITEM.setStackDisplayName("Broken Item!");
+		if (missingItem != null)
+		{
+			ItemStack stack = new ItemStack(missingItem);
+			stack.setTagInfo("item", new NBTTagString(id));
+			return stack;
+		}
+
+		ItemStack stack = new ItemStack(Blocks.BARRIER);
+		stack.setStackDisplayName("Broken Item with ID " + id);
+		return stack;
 	}
 
 	@Nullable
