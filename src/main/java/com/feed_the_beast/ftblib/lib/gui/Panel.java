@@ -21,6 +21,7 @@ public abstract class Panel extends Widget
 	private int scrollStep = 20;
 	private int contentWidth = -1, contentHeight = -1;
 	public int contentWidthExtra, contentHeightExtra;
+	public PanelScrollBar attachedScrollbar = null;
 
 	public Panel(Panel panel)
 	{
@@ -310,14 +311,7 @@ public abstract class Panel extends Widget
 
 				if (Theme.renderDebugBoxes)
 				{
-					String s = widget.getClass().getSimpleName();
-
-					if (s.isEmpty())
-					{
-						s = widget.getClass().getSuperclass().getSimpleName();
-					}
-
-					list.add(TextFormatting.DARK_GRAY + s + ": " + widget.width + "x" + widget.height);
+					list.add(TextFormatting.DARK_GRAY + widget.toString() + ": " + widget.width + "x" + widget.height);
 				}
 			}
 		}
@@ -405,12 +399,18 @@ public abstract class Panel extends Widget
 			}
 		}
 
+		boolean scrollPanel = scrollPanel(scroll);
 		setOffset(false);
-		return scrollPanel(scroll);
+		return scrollPanel;
 	}
 
 	public boolean scrollPanel(int scroll)
 	{
+		if (attachedScrollbar != null || !isMouseOver())
+		{
+			return false;
+		}
+
 		if (isDefaultScrollVertical() != isShiftKeyDown())
 		{
 			return movePanelScroll(0, -getScrollStep() * scroll);
@@ -525,6 +525,32 @@ public abstract class Panel extends Widget
 	public Widget getWidget(int index)
 	{
 		return index < 0 || index >= widgets.size() ? null : widgets.get(index);
+	}
+
+	@Override
+	@Nullable
+	public Object getIngredientUnderMouse()
+	{
+		setOffset(true);
+
+		for (int i = widgets.size() - 1; i >= 0; i--)
+		{
+			Widget widget = widgets.get(i);
+
+			if (widget.isEnabled() && widget.isMouseOver())
+			{
+				Object object = widget.getIngredientUnderMouse();
+
+				if (object != null)
+				{
+					setOffset(false);
+					return object;
+				}
+			}
+		}
+
+		setOffset(false);
+		return null;
 	}
 
 	@Override

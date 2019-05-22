@@ -122,7 +122,7 @@ public class GuiSelectItemStack extends GuiBase
 
 		@Override
 		@Nullable
-		public Object getJEIFocus()
+		public Object getIngredientUnderMouse()
 		{
 			return stack;
 		}

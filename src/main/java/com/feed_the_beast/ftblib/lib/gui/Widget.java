@@ -1,10 +1,8 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
-import com.feed_the_beast.ftblib.integration.FTBLibJEIIntegration;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraftforge.fml.common.Loader;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -172,17 +170,7 @@ public class Widget implements IGuiWrapper
 
 	public boolean keyPressed(int key, char keyChar)
 	{
-		if (isMouseOver() && Loader.isModLoaded("jei"))
-		{
-			return openFocus(key);
-		}
-
 		return false;
-	}
-
-	private boolean openFocus(int key)
-	{
-		return FTBLibJEIIntegration.openFocus(key, getJEIFocus());
 	}
 
 	public void keyReleased(int key)
@@ -231,17 +219,17 @@ public class Widget implements IGuiWrapper
 	}
 
 	@Nullable
-	public Object getJEIFocus()
+	public Object getIngredientUnderMouse()
 	{
 		return null;
 	}
 
-	public boolean isJEIGhostTarget(Object ingredient)
+	public boolean isGhostIngredientTarget(Object ingredient)
 	{
 		return false;
 	}
 
-	public void acceptJEIGhostIngredient(Object ingredient)
+	public void acceptGhostIngredient(Object ingredient)
 	{
 	}
 
@@ -302,5 +290,17 @@ public class Widget implements IGuiWrapper
 
 	public void tick()
 	{
+	}
+
+	public String toString()
+	{
+		String s = getClass().getSimpleName();
+
+		if (s.isEmpty())
+		{
+			s = getClass().getSuperclass().getSimpleName();
+		}
+
+		return s;
 	}
 }

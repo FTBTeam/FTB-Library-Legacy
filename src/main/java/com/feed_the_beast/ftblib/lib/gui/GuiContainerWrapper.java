@@ -5,6 +5,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -162,7 +163,8 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 		GlStateManager.translate(-guiLeft, -guiTop, 0D);
 		GuiHelper.setupDrawing();
 
-		wrappedGui.drawForeground(wrappedGui.getTheme(), guiLeft, guiTop, xSize, ySize);
+		Theme theme = wrappedGui.getTheme();
+		wrappedGui.drawForeground(theme, guiLeft, guiTop, xSize, ySize);
 
 		if (wrappedGui.contextMenu != null)
 		{
@@ -173,7 +175,20 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 			wrappedGui.addMouseOverText(tempTextList);
 		}
 
-		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), wrappedGui.getScreen().getScaledWidth(), wrappedGui.getScreen().getScaledHeight(), 0, wrappedGui.getTheme().getFont());
+		if (tempTextList.isEmpty())
+		{
+			Object object = wrappedGui.getIngredientUnderMouse();
+
+			if (object instanceof ItemStack && !((ItemStack) object).isEmpty())
+			{
+				renderToolTip((ItemStack) object, mouseX, mouseY);
+			}
+		}
+		else
+		{
+			GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), wrappedGui.getScreen().getScaledWidth(), wrappedGui.getScreen().getScaledHeight(), 0, theme.getFont());
+		}
+
 		tempTextList.clear();
 
 		if (wrappedGui.contextMenu == null)

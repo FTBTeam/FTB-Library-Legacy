@@ -66,7 +66,7 @@ public class GuiSelectFluid extends GuiButtonListBase
 				}
 
 				@Override
-				public Object getJEIFocus()
+				public Object getIngredientUnderMouse()
 				{
 					return new FluidStack(fluid, Fluid.BUCKET_VOLUME);
 				}

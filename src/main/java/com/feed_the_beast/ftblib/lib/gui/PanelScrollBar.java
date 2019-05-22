@@ -11,6 +11,7 @@ public class PanelScrollBar extends ScrollBar
 	{
 		super(parent, plane, 0);
 		panel = p;
+		panel.attachedScrollbar = this;
 	}
 
 	public PanelScrollBar(Panel parent, Panel panel)
@@ -84,5 +85,11 @@ public class PanelScrollBar extends ScrollBar
 		{
 			panel.setScrollX(value);
 		}
+	}
+
+	@Override
+	public boolean canMouseScroll()
+	{
+		return super.canMouseScroll() || panel.isMouseOver();
 	}
 }

@@ -82,12 +82,6 @@ public class ScrollBar extends Widget
 	}
 
 	@Override
-	public boolean isEnabled()
-	{
-		return true;
-	}
-
-	@Override
 	public boolean mousePressed(MouseButton button)
 	{
 		if (isMouseOver())

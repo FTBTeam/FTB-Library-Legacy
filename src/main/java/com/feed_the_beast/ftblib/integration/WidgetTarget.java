@@ -26,6 +26,6 @@ public class WidgetTarget implements IGhostIngredientHandler.Target<Object>
 	@Override
 	public void accept(Object ingredient)
 	{
-		widget.acceptJEIGhostIngredient(ingredient);
+		widget.acceptGhostIngredient(ingredient);
 	}
 }

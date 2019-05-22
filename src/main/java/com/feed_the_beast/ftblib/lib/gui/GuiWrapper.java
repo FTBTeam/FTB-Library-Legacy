@@ -1,8 +1,11 @@
 package com.feed_the_beast.ftblib.lib.gui;
 
+import com.feed_the_beast.ftblib.integration.FTBLibJEIIntegration;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import net.minecraftforge.fml.common.Loader;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -73,7 +76,21 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 			{
 				wrappedGui.closeGui(false);
 			}
+			else if (Loader.isModLoaded("jei"))
+			{
+				Object object = wrappedGui.getIngredientUnderMouse();
+
+				if (object != null)
+				{
+					handleIngredientKey(key, object);
+				}
+			}
 		}
+	}
+
+	private void handleIngredientKey(int key, Object object)
+	{
+		FTBLibJEIIntegration.handleIngredientKey(key, object);
 	}
 
 	@Override
@@ -129,7 +146,20 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 			wrappedGui.addMouseOverText(tempTextList);
 		}
 
-		GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), wrappedGui.getScreen().getScaledWidth(), wrappedGui.getScreen().getScaledHeight(), 0, theme.getFont());
+		if (tempTextList.isEmpty())
+		{
+			Object object = wrappedGui.getIngredientUnderMouse();
+
+			if (object instanceof ItemStack && !((ItemStack) object).isEmpty())
+			{
+				renderToolTip((ItemStack) object, mouseX, mouseY);
+			}
+		}
+		else
+		{
+			GuiUtils.drawHoveringText(tempTextList, mouseX, Math.max(mouseY, 18), wrappedGui.getScreen().getScaledWidth(), wrappedGui.getScreen().getScaledHeight(), 0, theme.getFont());
+		}
+
 		tempTextList.clear();
 
 		if (wrappedGui.fixUnicode)

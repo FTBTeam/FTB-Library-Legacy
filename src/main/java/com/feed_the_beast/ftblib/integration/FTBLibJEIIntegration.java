@@ -1,25 +1,24 @@
 package com.feed_the_beast.ftblib.integration;
 
-import com.feed_the_beast.ftblib.client.FTBLibClientEventHandler;
 import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.lib.gui.GuiContainerWrapper;
+import mezz.jei.Internal;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
-import mezz.jei.api.gui.IGlobalGuiHandler;
+import mezz.jei.api.gui.IAdvancedGuiHandler;
 import mezz.jei.api.recipe.IFocus;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import mezz.jei.bookmarks.BookmarkList;
+import mezz.jei.config.KeyBindings;
+import mezz.jei.input.InputHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import org.lwjgl.input.Keyboard;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.Optional;
 
 /**
  * @author mezz
@@ -29,6 +28,7 @@ import java.util.Collections;
 public class FTBLibJEIIntegration implements IModPlugin
 {
 	public static IJeiRuntime RUNTIME;
+	private static Optional<BookmarkList> bookmarkList;
 
 	@Override
 	public void onRuntimeAvailable(IJeiRuntime r)
@@ -41,21 +41,7 @@ public class FTBLibJEIIntegration implements IModPlugin
 	{
 		try
 		{
-			registry.addGlobalGuiHandlers(new IGlobalGuiHandler()
-			{
-				@Override
-				public Collection<Rectangle> getGuiExtraAreas()
-				{
-					GuiScreen currentScreen = Minecraft.getMinecraft().currentScreen;
-
-					if (FTBLibClientEventHandler.areButtonsVisible(currentScreen))
-					{
-						return Collections.singleton(FTBLibClientEventHandler.lastDrawnArea);
-					}
-
-					return Collections.emptySet();
-				}
-			});
+			registry.addGlobalGuiHandlers(new JEIGlobalGuiHandler());
 		}
 		catch (RuntimeException | LinkageError ignored)
 		{
@@ -70,26 +56,66 @@ public class FTBLibJEIIntegration implements IModPlugin
 		{
 		}
 
+		registry.addAdvancedGuiHandlers(new IAdvancedGuiHandler<GuiContainerWrapper>()
+		{
+			@Override
+			public Class<GuiContainerWrapper> getGuiContainerClass()
+			{
+				return GuiContainerWrapper.class;
+			}
+
+			@Override
+			@Nullable
+			public Object getIngredientUnderMouse(GuiContainerWrapper guiContainer, int mouseX, int mouseY)
+			{
+				return guiContainer.getGui().getIngredientUnderMouse();
+			}
+		});
+
 		MinecraftForge.EVENT_BUS.register(FTBLibJEIIntegration.class);
 	}
 
-	public static boolean openFocus(int key, @Nullable Object object)
+	/**
+	 * FIXME: Remove hacks when JEI API supports ingredients in non-container GuiScreens
+	 */
+	public static void handleIngredientKey(int key, @Nullable Object object)
 	{
 		if (object != null && RUNTIME != null)
 		{
-			if (key == Keyboard.KEY_R) // Replace with JEI Key
+			if (KeyBindings.showRecipe.isActiveAndMatches(key))
 			{
 				RUNTIME.getRecipesGui().show(RUNTIME.getRecipeRegistry().createFocus(IFocus.Mode.OUTPUT, object));
-				return true;
 			}
-			else if (key == Keyboard.KEY_U) // Replace with JEI Key
+			else if (KeyBindings.showUses.isActiveAndMatches(key))
 			{
 				RUNTIME.getRecipesGui().show(RUNTIME.getRecipeRegistry().createFocus(IFocus.Mode.INPUT, object));
-				return true;
+			}
+			else if (KeyBindings.bookmark.isActiveAndMatches(key))
+			{
+				addBookmark(object);
+			}
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void addBookmark(Object object)
+	{
+		if (bookmarkList == null)
+		{
+			try
+			{
+				bookmarkList = Optional.of((BookmarkList) ReflectionHelper.findField(InputHandler.class, "bookmarkList").get(ReflectionHelper.findField(Internal.class, "inputHandler").get(null)));
+			}
+			catch (Exception ex)
+			{
+				bookmarkList = Optional.empty();
 			}
 		}
 
-		return false;
+		if (bookmarkList.isPresent())
+		{
+			bookmarkList.get().add(object);
+		}
 	}
 
 	@SubscribeEvent

@@ -27,7 +27,7 @@ public class JEIGhostItemHandler implements IGhostIngredientHandler<GuiContainer
 	{
 		for (Widget widget : panel.widgets)
 		{
-			if (widget.isJEIGhostTarget(ingredient))
+			if (widget.isGhostIngredientTarget(ingredient))
 			{
 				list.add((Target<I>) new WidgetTarget(widget));
 			}

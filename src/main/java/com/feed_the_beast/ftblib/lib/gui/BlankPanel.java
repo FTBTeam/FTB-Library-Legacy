@@ -5,9 +5,17 @@ package com.feed_the_beast.ftblib.lib.gui;
  */
 public class BlankPanel extends Panel
 {
+	public String id;
+
 	public BlankPanel(Panel panel)
 	{
+		this(panel, "");
+	}
+
+	public BlankPanel(Panel panel, String _id)
+	{
 		super(panel);
+		id = _id;
 	}
 
 	@Override
@@ -23,5 +31,11 @@ public class BlankPanel extends Panel
 	@Override
 	public void alignWidgets()
 	{
+	}
+
+	@Override
+	public String toString()
+	{
+		return id.isEmpty() ? super.toString() : id;
 	}
 }

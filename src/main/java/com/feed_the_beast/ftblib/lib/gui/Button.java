@@ -79,7 +79,7 @@ public abstract class Button extends Widget
 
 	@Override
 	@Nullable
-	public Object getJEIFocus()
+	public Object getIngredientUnderMouse()
 	{
 		return icon.getJEIFocus();
 	}
