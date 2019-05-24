@@ -19,6 +19,7 @@ import com.feed_the_beast.ftblib.lib.gui.Theme;
 import com.feed_the_beast.ftblib.lib.gui.Widget;
 import com.feed_the_beast.ftblib.lib.gui.WidgetLayout;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
+import com.feed_the_beast.ftblib.lib.gui.WrappedIngredient;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import com.feed_the_beast.ftblib.lib.icon.ItemIcon;
@@ -38,7 +39,6 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -92,7 +92,6 @@ public class GuiSelectItemStack extends GuiBase
 		@Override
 		public void addMouseOverText(List<String> list)
 		{
-			GuiHelper.addStackTooltip(stack, list);
 		}
 
 		@Override
@@ -121,10 +120,9 @@ public class GuiSelectItemStack extends GuiBase
 		}
 
 		@Override
-		@Nullable
 		public Object getIngredientUnderMouse()
 		{
-			return stack;
+			return new WrappedIngredient(stack).tooltip();
 		}
 	}
 

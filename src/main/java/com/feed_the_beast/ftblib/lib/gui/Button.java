@@ -81,6 +81,6 @@ public abstract class Button extends Widget
 	@Nullable
 	public Object getIngredientUnderMouse()
 	{
-		return icon.getJEIFocus();
+		return new WrappedIngredient(icon.getIngredient()).tooltip();
 	}
 }

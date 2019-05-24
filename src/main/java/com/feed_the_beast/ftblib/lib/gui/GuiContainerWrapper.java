@@ -179,9 +179,14 @@ public class GuiContainerWrapper extends GuiContainer implements IGuiWrapper
 		{
 			Object object = wrappedGui.getIngredientUnderMouse();
 
-			if (object instanceof ItemStack && !((ItemStack) object).isEmpty())
+			if (object instanceof WrappedIngredient && ((WrappedIngredient) object).tooltip)
 			{
-				renderToolTip((ItemStack) object, mouseX, mouseY);
+				Object ingredient = WrappedIngredient.unwrap(object);
+
+				if (ingredient instanceof ItemStack && !((ItemStack) ingredient).isEmpty())
+				{
+					renderToolTip((ItemStack) ingredient, mouseX, mouseY);
+				}
 			}
 		}
 		else

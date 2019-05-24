@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.integration;
 
 import com.feed_the_beast.ftblib.client.FTBLibClientEventHandler;
 import com.feed_the_beast.ftblib.lib.gui.IGuiWrapper;
+import com.feed_the_beast.ftblib.lib.gui.WrappedIngredient;
 import mezz.jei.api.gui.IGlobalGuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
@@ -37,7 +38,7 @@ public class JEIGlobalGuiHandler implements IGlobalGuiHandler
 
 		if (currentScreen instanceof IGuiWrapper)
 		{
-			return ((IGuiWrapper) currentScreen).getGui().getIngredientUnderMouse();
+			return WrappedIngredient.unwrap(((IGuiWrapper) currentScreen).getGui().getIngredientUnderMouse());
 		}
 
 		return null;

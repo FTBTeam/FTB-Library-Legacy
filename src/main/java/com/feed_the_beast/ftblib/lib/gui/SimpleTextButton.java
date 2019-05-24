@@ -29,6 +29,12 @@ public abstract class SimpleTextButton extends Button
 		return false;
 	}
 
+	@Override
+	public Object getIngredientUnderMouse()
+	{
+		return icon.getIngredient();
+	}
+
 	public boolean hasIcon()
 	{
 		return !icon.isEmpty();

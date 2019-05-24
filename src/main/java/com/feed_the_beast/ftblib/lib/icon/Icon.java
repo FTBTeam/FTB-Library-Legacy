@@ -301,7 +301,7 @@ public abstract class Icon
 	}
 
 	@Nullable
-	public Object getJEIFocus()
+	public Object getIngredient()
 	{
 		return null;
 	}

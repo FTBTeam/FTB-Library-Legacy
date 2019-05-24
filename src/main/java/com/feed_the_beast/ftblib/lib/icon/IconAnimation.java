@@ -101,11 +101,11 @@ public class IconAnimation extends Icon
 
 	@Override
 	@Nullable
-	public Object getJEIFocus()
+	public Object getIngredient()
 	{
 		if (!list.isEmpty())
 		{
-			return list.get((int) ((System.currentTimeMillis() / 1000L) % list.size())).getJEIFocus();
+			return list.get((int) ((System.currentTimeMillis() / 1000L) % list.size())).getIngredient();
 		}
 
 		return null;

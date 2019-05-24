@@ -7,7 +7,6 @@ import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
-import mezz.jei.api.gui.IAdvancedGuiHandler;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.bookmarks.BookmarkList;
 import mezz.jei.config.KeyBindings;
@@ -16,7 +15,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -56,39 +54,23 @@ public class FTBLibJEIIntegration implements IModPlugin
 		{
 		}
 
-		registry.addAdvancedGuiHandlers(new IAdvancedGuiHandler<GuiContainerWrapper>()
-		{
-			@Override
-			public Class<GuiContainerWrapper> getGuiContainerClass()
-			{
-				return GuiContainerWrapper.class;
-			}
-
-			@Override
-			@Nullable
-			public Object getIngredientUnderMouse(GuiContainerWrapper guiContainer, int mouseX, int mouseY)
-			{
-				return guiContainer.getGui().getIngredientUnderMouse();
-			}
-		});
-
 		MinecraftForge.EVENT_BUS.register(FTBLibJEIIntegration.class);
 	}
 
 	/**
 	 * FIXME: Remove hacks when JEI API supports ingredients in non-container GuiScreens
 	 */
-	public static void handleIngredientKey(int key, @Nullable Object object)
+	public static void handleIngredientKey(int key, Object object)
 	{
-		if (object != null && RUNTIME != null)
+		if (RUNTIME != null)
 		{
 			if (KeyBindings.showRecipe.isActiveAndMatches(key))
 			{
-				RUNTIME.getRecipesGui().show(RUNTIME.getRecipeRegistry().createFocus(IFocus.Mode.OUTPUT, object));
+				showRecipe(object);
 			}
 			else if (KeyBindings.showUses.isActiveAndMatches(key))
 			{
-				RUNTIME.getRecipesGui().show(RUNTIME.getRecipeRegistry().createFocus(IFocus.Mode.INPUT, object));
+				showUses(object);
 			}
 			else if (KeyBindings.bookmark.isActiveAndMatches(key))
 			{
@@ -97,7 +79,17 @@ public class FTBLibJEIIntegration implements IModPlugin
 		}
 	}
 
-	@SuppressWarnings("deprecation")
+	public static void showRecipe(Object object)
+	{
+		RUNTIME.getRecipesGui().show(RUNTIME.getRecipeRegistry().createFocus(IFocus.Mode.OUTPUT, object));
+	}
+
+	public static void showUses(Object object)
+	{
+		RUNTIME.getRecipesGui().show(RUNTIME.getRecipeRegistry().createFocus(IFocus.Mode.INPUT, object));
+	}
+
+	@SuppressWarnings({"deprecation", "OptionalAssignedToNull", "OptionalIsPresent"})
 	public static void addBookmark(Object object)
 	{
 		if (bookmarkList == null)

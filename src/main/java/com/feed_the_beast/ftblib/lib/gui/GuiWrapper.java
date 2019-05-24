@@ -78,7 +78,7 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 			}
 			else if (Loader.isModLoaded("jei"))
 			{
-				Object object = wrappedGui.getIngredientUnderMouse();
+				Object object = WrappedIngredient.unwrap(wrappedGui.getIngredientUnderMouse());
 
 				if (object != null)
 				{
@@ -150,9 +150,14 @@ public class GuiWrapper extends GuiScreen implements IGuiWrapper
 		{
 			Object object = wrappedGui.getIngredientUnderMouse();
 
-			if (object instanceof ItemStack && !((ItemStack) object).isEmpty())
+			if (object instanceof WrappedIngredient && ((WrappedIngredient) object).tooltip)
 			{
-				renderToolTip((ItemStack) object, mouseX, mouseY);
+				Object ingredient = WrappedIngredient.unwrap(object);
+
+				if (ingredient instanceof ItemStack && !((ItemStack) ingredient).isEmpty())
+				{
+					renderToolTip((ItemStack) ingredient, mouseX, mouseY);
+				}
 			}
 		}
 		else

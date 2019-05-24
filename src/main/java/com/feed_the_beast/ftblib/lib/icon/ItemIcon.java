@@ -132,7 +132,7 @@ public class ItemIcon extends Icon
 
 	@Override
 	@Nullable
-	public Object getJEIFocus()
+	public Object getIngredient()
 	{
 		return getStack();
 	}
