@@ -311,7 +311,7 @@ public abstract class Panel extends Widget
 
 				if (Theme.renderDebugBoxes)
 				{
-					list.add(TextFormatting.DARK_GRAY + widget.toString() + ": " + widget.width + "x" + widget.height);
+					list.add(TextFormatting.DARK_GRAY + widget.toString() + "#" + (i + 1) + ": " + widget.width + "x" + widget.height);
 				}
 			}
 		}
@@ -567,5 +567,18 @@ public abstract class Panel extends Widget
 		}
 
 		setOffset(false);
+	}
+
+	public boolean isMouseOverAnyWidget()
+	{
+		for (Widget widget : widgets)
+		{
+			if (widget.isMouseOver())
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

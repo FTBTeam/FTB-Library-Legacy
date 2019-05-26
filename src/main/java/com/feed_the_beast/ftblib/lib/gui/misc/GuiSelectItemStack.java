@@ -537,6 +537,7 @@ public class GuiSelectItemStack extends GuiBase
 
 		searchBox.setPosAndSize(8, 7, width - 16, 12);
 		searchBox.ghostText = I18n.format("gui.search_box");
+		searchBox.setFocused(true);
 
 		tabs = new Panel(this)
 		{
