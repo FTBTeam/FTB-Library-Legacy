@@ -13,9 +13,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.event.ClickEvent;
 
-public class CmdPrintState extends CmdBase
+public class CommandPrintState extends CmdBase
 {
-	public CmdPrintState()
+	public CommandPrintState()
 	{
 		super("print_block_state", Level.ALL);
 	}

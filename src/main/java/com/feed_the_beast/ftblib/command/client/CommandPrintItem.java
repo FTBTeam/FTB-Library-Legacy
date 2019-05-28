@@ -16,9 +16,9 @@ import net.minecraft.util.text.event.ClickEvent;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class CmdPrintItem extends CmdBase
+public class CommandPrintItem extends CmdBase
 {
-	public CmdPrintItem()
+	public CommandPrintItem()
 	{
 		super("print_item", Level.ALL);
 	}

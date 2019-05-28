@@ -3,10 +3,11 @@ package com.feed_the_beast.ftblib.client;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibCommon;
 import com.feed_the_beast.ftblib.FTBLibConfig;
-import com.feed_the_beast.ftblib.command.client.CmdClientConfig;
-import com.feed_the_beast.ftblib.command.client.CmdPrintItem;
-import com.feed_the_beast.ftblib.command.client.CmdPrintState;
-import com.feed_the_beast.ftblib.command.client.CmdSimulateButton;
+import com.feed_the_beast.ftblib.command.client.CommandClientConfig;
+import com.feed_the_beast.ftblib.command.client.CommandListAdvancements;
+import com.feed_the_beast.ftblib.command.client.CommandPrintItem;
+import com.feed_the_beast.ftblib.command.client.CommandPrintState;
+import com.feed_the_beast.ftblib.command.client.CommandSimulateButton;
 import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.client.ParticleColoredDust;
 import com.feed_the_beast.ftblib.lib.gui.misc.ChunkSelectorMap;
@@ -50,10 +51,11 @@ public class FTBLibClient extends FTBLibCommon
 	{
 		super.postInit();
 
-		ClientCommandHandler.instance.registerCommand(new CmdClientConfig());
-		ClientCommandHandler.instance.registerCommand(new CmdSimulateButton());
-		ClientCommandHandler.instance.registerCommand(new CmdPrintItem());
-		ClientCommandHandler.instance.registerCommand(new CmdPrintState());
+		ClientCommandHandler.instance.registerCommand(new CommandClientConfig());
+		ClientCommandHandler.instance.registerCommand(new CommandSimulateButton());
+		ClientCommandHandler.instance.registerCommand(new CommandPrintItem());
+		ClientCommandHandler.instance.registerCommand(new CommandPrintState());
+		ClientCommandHandler.instance.registerCommand(new CommandListAdvancements());
 	}
 
 	@Override
