@@ -83,6 +83,7 @@ public class CommandListAdvancements extends CmdBase
 		};
 
 		gui.setTitle(I18n.format("gui.advancements"));
+		gui.setHasSearchBox(true);
 		gui.openGuiLater();
 	}
 }
