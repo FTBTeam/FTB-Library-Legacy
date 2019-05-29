@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -16,6 +17,11 @@ public enum EnumTristate implements IStringSerializable
 	DEFAULT("default", Event.Result.DEFAULT, ConfigEnum.COLOR, 2);
 
 	public static final NameMap<EnumTristate> NAME_MAP = NameMap.create(DEFAULT, NameMap.ObjectProperties.withNameAndColor((sender, value) -> new TextComponentTranslation(value.getName()), EnumTristate::getColor), values());
+
+	public static EnumTristate read(NBTTagCompound nbt, String key)
+	{
+		return nbt.hasKey(key) ? nbt.getBoolean(key) ? TRUE : FALSE : DEFAULT;
+	}
 
 	private final String name;
 	private final Event.Result result;
@@ -74,5 +80,13 @@ public enum EnumTristate implements IStringSerializable
 	public String toString()
 	{
 		return name;
+	}
+
+	public void write(NBTTagCompound nbt, String key)
+	{
+		if (!isDefault())
+		{
+			nbt.setBoolean(key, isTrue());
+		}
 	}
 }
