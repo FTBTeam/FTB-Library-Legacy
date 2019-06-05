@@ -6,6 +6,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import javax.annotation.Nullable;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -40,6 +41,12 @@ public class StringUtils
 	private static final Pattern NOT_SNAKE_CASE_PATTERN = Pattern.compile("[^a-z0-9_]");
 	private static final Pattern REPEATING_UNDERSCORE_PATTERN = Pattern.compile("_{2,}");
 	private static final Pattern FORMATTING_CODE_PATTERN = Pattern.compile("(?i)[\\&\u00a7]([0-9A-FK-OR])");
+
+	static
+	{
+		DOUBLE_FORMATTER_00.setRoundingMode(RoundingMode.DOWN);
+		DOUBLE_FORMATTER_0.setRoundingMode(RoundingMode.DOWN);
+	}
 
 	public static String unformatted(String string)
 	{
@@ -285,7 +292,7 @@ public class StringUtils
 
 	public static String formatDouble00(double value)
 	{
-		String s = String.format("%.2f", value);
+		String s = DOUBLE_FORMATTER_00.format(value);
 		return s.endsWith(".00") ? s.substring(0, s.length() - 3) : s;
 	}
 
@@ -295,13 +302,21 @@ public class StringUtils
 		{
 			return "NaN";
 		}
-		else if (value == Double.POSITIVE_INFINITY || value == Long.MAX_VALUE)
+		else if (value == Double.POSITIVE_INFINITY)
 		{
 			return "+Inf";
 		}
-		else if (value == Double.NEGATIVE_INFINITY || value == Long.MIN_VALUE)
+		else if (value == Double.NEGATIVE_INFINITY)
 		{
 			return "-Inf";
+		}
+		else if (value == Long.MAX_VALUE)
+		{
+			return "2^63-1";
+		}
+		else if (value == Long.MIN_VALUE)
+		{
+			return "-2^63";
 		}
 		else if (value == 0D)
 		{
@@ -319,7 +334,7 @@ public class StringUtils
 		{
 			return formatDouble00(value / 1000000D) + "M";
 		}
-		else if (value >= 1000D)
+		else if (value >= 10000D)
 		{
 			return formatDouble00(value / 1000D) + "K";
 		}
