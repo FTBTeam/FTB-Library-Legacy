@@ -7,9 +7,12 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
@@ -236,6 +239,18 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 
 		if (!nbt.isEmpty())
 		{
+			ResourceLocation id = getKey(getClass());
+
+			if (id != null)
+			{
+				nbt.setString("id", id.toString());
+			}
+
+			NBTTagList lore = new NBTTagList();
+			lore.appendTag(new NBTTagString("(+NBT)"));
+			NBTTagCompound display = new NBTTagCompound();
+			display.setTag("Lore", lore);
+			stack.setTagInfo("display", display);
 			stack.setTagInfo(BlockUtils.DATA_TAG, nbt);
 		}
 	}
