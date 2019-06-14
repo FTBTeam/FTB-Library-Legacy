@@ -3,17 +3,17 @@ package com.feed_the_beast.ftblib.lib.icon;
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.google.common.base.Objects;
+import javafx.scene.image.Image;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.awt.image.BufferedImage;
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -64,6 +64,12 @@ public class ImageIcon extends Icon
 	}
 
 	@Override
+	public int hashCode()
+	{
+		return Objects.hashCode(texture, minU, minV, maxU, maxV);
+	}
+
+	@Override
 	public boolean equals(Object o)
 	{
 		if (o == this)
@@ -76,12 +82,6 @@ public class ImageIcon extends Icon
 			return texture.equals(img.texture) && minU == img.minU && minV == img.minV && maxU == img.maxU && maxV == img.maxV;
 		}
 		return false;
-	}
-
-	@Override
-	public int hashCode()
-	{
-		return Objects.hashCode(texture, minU, minV, maxU, maxV);
 	}
 
 	@Override
@@ -101,14 +101,22 @@ public class ImageIcon extends Icon
 	}
 
 	@Override
-	public boolean canBeCached()
+	public boolean isLoadedJFXImageInstant()
 	{
 		return true;
 	}
 
 	@Override
-	public BufferedImage readImage() throws Exception
+	@Nullable
+	public Image loadInstantJFXImage()
 	{
-		return TextureUtil.readBufferedImage(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream());
+		try
+		{
+			return new Image(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream());
+		}
+		catch (Exception ex)
+		{
+			return null;
+		}
 	}
 }

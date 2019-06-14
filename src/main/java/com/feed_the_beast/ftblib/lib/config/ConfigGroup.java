@@ -12,7 +12,6 @@ import net.minecraft.util.text.TextComponentTranslation;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,8 +94,8 @@ public class ConfigGroup extends FinalIDObject
 	private ConfigGroup(String id)
 	{
 		super(id);
-		values = new HashMap<>();
-		groups = new HashMap<>();
+		values = new LinkedHashMap<>();
+		groups = new LinkedHashMap<>();
 	}
 
 	public ConfigGroup setDisplayName(ITextComponent t)
@@ -249,10 +248,13 @@ public class ConfigGroup extends FinalIDObject
 	public ConfigGroup copy()
 	{
 		ConfigGroup g = new ConfigGroup(getID());
+		g.displayName = displayName == null ? null : displayName.createCopy();
 
-		if (displayName != null)
+		for (ConfigGroup group : getGroups())
 		{
-			g.setDisplayName(displayName.createCopy());
+			ConfigGroup gr = group.copy();
+			gr.parent = g;
+			g.groups.put(gr.getID(), gr);
 		}
 
 		for (ConfigValueInstance instance : getValues())

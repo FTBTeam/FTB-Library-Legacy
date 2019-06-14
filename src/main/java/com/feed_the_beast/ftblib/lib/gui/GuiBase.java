@@ -231,6 +231,18 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 		posX = getX();
 		posY = getY();
 
+		if (contextMenu != null)
+		{
+			if (contextMenu instanceof GuiBase)
+			{
+				((GuiBase) contextMenu).updateGui(mx, my, pt);
+			}
+			else
+			{
+				contextMenu.updateMouseOver(mouseX, mouseY);
+			}
+		}
+
 		updateMouseOver(mouseX, mouseY);
 	}
 
@@ -380,6 +392,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	@Override
 	public final void openGui()
 	{
+		openContextMenu((Panel) null);
 		Minecraft.getMinecraft().displayGuiScreen(getWrapper());
 	}
 

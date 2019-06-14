@@ -8,7 +8,7 @@ import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.AtlasSpriteIcon;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
 import com.feed_the_beast.ftblib.lib.icon.IconPresets;
-import com.feed_the_beast.ftblib.lib.icon.IconWrapper;
+import com.feed_the_beast.ftblib.lib.icon.IconRenderer;
 import com.feed_the_beast.ftblib.lib.util.InvUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
@@ -291,7 +291,11 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent(priority = EventPriority.HIGHEST, receiveCanceled = true)
 	public static void onRenderTick(TickEvent.RenderTickEvent event)
 	{
-		if (event.phase == TickEvent.Phase.END && currentNotification != null && currentNotification.isImportant())
+		if (event.phase == TickEvent.Phase.START)
+		{
+			IconRenderer.render();
+		}
+		else if (currentNotification != null && currentNotification.isImportant())
 		{
 			currentNotification.render(new ScaledResolution(Minecraft.getMinecraft()), event.renderTickTime);
 			GlStateManager.color(1F, 1F, 1F, 1F);
@@ -299,6 +303,11 @@ public class FTBLibClientEventHandler
 			GlStateManager.enableBlend();
 			GlStateManager.enableTexture2D();
 		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onFrameStart(TickEvent.RenderTickEvent e)
+	{
 	}
 
 	@SubscribeEvent
@@ -313,8 +322,6 @@ public class FTBLibClientEventHandler
 	@SubscribeEvent
 	public static void onBeforeTexturesStitched(TextureStitchEvent.Pre event)
 	{
-		IconWrapper.clearCache();
-
 		try
 		{
 			for (Field field : GuiIcons.class.getDeclaredFields())

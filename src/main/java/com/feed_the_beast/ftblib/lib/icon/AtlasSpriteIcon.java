@@ -1,18 +1,18 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
+import javafx.scene.image.Image;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.awt.image.BufferedImage;
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -52,15 +52,23 @@ public class AtlasSpriteIcon extends Icon
 	}
 
 	@Override
-	public boolean canBeCached()
+	public boolean isLoadedJFXImageInstant()
 	{
 		return true;
 	}
 
 	@Override
-	public BufferedImage readImage() throws Exception
+	@Nullable
+	public Image loadInstantJFXImage()
 	{
-		ResourceLocation rl = new ResourceLocation(name);
-		return TextureUtil.readBufferedImage(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(rl.getNamespace(), "textures/" + rl.getPath() + ".png")).getInputStream());
+		try
+		{
+			ResourceLocation rl = new ResourceLocation(name);
+			return new Image(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(rl.getNamespace(), "textures/" + rl.getPath() + ".png")).getInputStream());
+		}
+		catch (Exception ex)
+		{
+			return null;
+		}
 	}
 }

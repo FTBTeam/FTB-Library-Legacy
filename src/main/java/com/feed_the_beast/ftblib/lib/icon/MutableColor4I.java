@@ -3,9 +3,10 @@ package com.feed_the_beast.ftblib.lib.icon;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
+import javafx.scene.image.Image;
 import net.minecraft.util.math.MathHelper;
 
-import java.awt.image.BufferedImage;
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -37,11 +38,20 @@ public class MutableColor4I extends Color4I
 		}
 
 		@Override
-		public BufferedImage readImage()
+		@Nullable
+		public Image loadInstantJFXImage()
 		{
-			BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-			image.setRGB(0, 0, 0);
-			return image;
+			return null;
+		}
+
+		public int hashCode()
+		{
+			return 0;
+		}
+
+		public boolean equals(Object o)
+		{
+			return o == this;
 		}
 	}
 

@@ -10,6 +10,8 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -24,7 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.awt.image.BufferedImage;
 
 /**
  * @author LatvianModder
@@ -324,7 +325,7 @@ public class Color4I extends Icon
 		return (redi() << 16) | (greeni() << 8) | bluei();
 	}
 
-	public final int hashCode()
+	public int hashCode()
 	{
 		return rgba();
 	}
@@ -460,16 +461,17 @@ public class Color4I extends Icon
 	}
 
 	@Override
-	public boolean canBeCached()
+	public boolean isLoadedJFXImageInstant()
 	{
 		return true;
 	}
 
 	@Override
-	public BufferedImage readImage()
+	@Nullable
+	public Image loadInstantJFXImage()
 	{
-		BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
-		image.setRGB(0, 0, rgba());
+		WritableImage image = new WritableImage(1, 1);
+		image.getPixelWriter().setArgb(0, 0, rgba());
 		return image;
 	}
 }

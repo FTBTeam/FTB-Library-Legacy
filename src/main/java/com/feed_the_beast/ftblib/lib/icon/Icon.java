@@ -5,15 +5,16 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import javafx.scene.image.Image;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,6 +46,23 @@ public abstract class Icon
 		public MutableColor4I mutable()
 		{
 			return new MutableColor4I.None();
+		}
+
+		@Override
+		@Nullable
+		public Image loadInstantJFXImage()
+		{
+			return null;
+		}
+
+		public int hashCode()
+		{
+			return 0;
+		}
+
+		public boolean equals(Object o)
+		{
+			return o == this;
 		}
 	};
 
@@ -196,6 +214,12 @@ public abstract class Icon
 	}
 
 	@SideOnly(Side.CLIENT)
+	public void drawStatic(int x, int y, int w, int h)
+	{
+		draw(x, y, w, h);
+	}
+
+	@SideOnly(Side.CLIENT)
 	public void draw3D(Color4I col)
 	{
 		GlStateManager.pushMatrix();
@@ -231,26 +255,12 @@ public abstract class Icon
 		}
 		else if (icons.length == 1)
 		{
-			if (isEmpty())
-			{
-				return icons[0];
-			}
-			else if (icons[0].isEmpty())
-			{
-				return this;
-			}
-
-			return new CombinedIcon(this, icons[0]);
+			return combineWith(icons[0]);
 		}
 
 		List<Icon> list = new ArrayList<>(icons.length + 1);
 		list.add(this);
-
-		for (Icon i : icons)
-		{
-			list.add(i);
-		}
-
+		list.addAll(Arrays.asList(icons));
 		return CombinedIcon.getCombined(list);
 	}
 
@@ -284,20 +294,21 @@ public abstract class Icon
 		return o == this || o instanceof Icon && getJson().equals(((Icon) o).getJson());
 	}
 
-	public boolean canBeCached()
+	/**
+	 * @return false if this should be queued for rendering
+	 */
+	public boolean isLoadedJFXImageInstant()
 	{
 		return false;
 	}
 
-	public BufferedImage readImage() throws Exception
+	/**
+	 * @return null if failed to load
+	 */
+	@Nullable
+	public Image loadInstantJFXImage()
 	{
-		throw new IllegalStateException();
-	}
-
-	@SideOnly(Side.CLIENT)
-	public final javax.swing.ImageIcon getWrappedIcon()
-	{
-		return IconWrapper.from(this);
+		return null;
 	}
 
 	@Nullable

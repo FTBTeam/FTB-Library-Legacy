@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.lib.io.DataReader;
+import javafx.scene.image.Image;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
@@ -10,7 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.awt.image.BufferedImage;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.net.URI;
 
@@ -100,8 +101,16 @@ public class URLImageIcon extends ImageIcon
 	}
 
 	@Override
-	public BufferedImage readImage() throws Exception
+	@Nullable
+	public Image loadInstantJFXImage()
 	{
-		return DataReader.get(uri, Minecraft.getMinecraft().getProxy()).image();
+		try
+		{
+			return DataReader.get(uri, Minecraft.getMinecraft().getProxy()).imageJFX();
+		}
+		catch (Exception ex)
+		{
+			return null;
+		}
 	}
 }

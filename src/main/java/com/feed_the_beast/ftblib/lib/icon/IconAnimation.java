@@ -74,6 +74,16 @@ public class IconAnimation extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
+	public void drawStatic(int x, int y, int w, int h)
+	{
+		if (!list.isEmpty())
+		{
+			list.get(0).drawStatic(x, y, w, h);
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
 	public void draw3D(Color4I col)
 	{
 		if (!list.isEmpty())
@@ -97,6 +107,16 @@ public class IconAnimation extends Icon
 
 		json.add("icons", array);
 		return json;
+	}
+
+	public int hashCode()
+	{
+		return list.hashCode();
+	}
+
+	public boolean equals(Object o)
+	{
+		return o == this || o instanceof IconAnimation && list.equals(((IconAnimation) o).list);
 	}
 
 	@Override

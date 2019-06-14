@@ -17,6 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 /**
  * @author LatvianModder
@@ -97,6 +98,14 @@ public class ItemIcon extends Icon
 		GuiHelper.setupDrawing();
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void drawStatic(int x, int y, int w, int h)
+	{
+		GuiHelper.drawItem(getStack(), x, y, w / 16D, h / 16D, false);
+		GuiHelper.setupDrawing();
+	}
+
 	@SideOnly(Side.CLIENT)
 	public static void drawItem3D(ItemStack stack)
 	{
@@ -123,6 +132,16 @@ public class ItemIcon extends Icon
 	public String toString()
 	{
 		return "item:" + ItemStackSerializer.toString(getStack());
+	}
+
+	public int hashCode()
+	{
+		ItemStack stack = getStack();
+		int h = stack.getItem().hashCode();
+		h = h * 31 + stack.getCount();
+		h = h * 31 + stack.getMetadata();
+		h = h * 31 + Objects.hashCode(stack.getItem().getNBTShareTag(stack));
+		return h;
 	}
 
 	public boolean equals(Object o)

@@ -236,6 +236,7 @@ public class GuiHelper
 		}
 		catch (Exception ex)
 		{
+			ex.printStackTrace();
 			result = false;
 		}
 

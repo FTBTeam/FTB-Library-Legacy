@@ -71,6 +71,26 @@ public class CombinedIcon extends Icon
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
+	public void drawStatic(int x, int y, int w, int h)
+	{
+		for (Icon icon : list)
+		{
+			icon.drawStatic(x, y, w, h);
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void draw3D(Color4I col)
+	{
+		for (Icon icon : list)
+		{
+			icon.draw3D(col);
+		}
+	}
+
+	@Override
 	public JsonElement getJson()
 	{
 		JsonArray json = new JsonArray();
@@ -81,5 +101,15 @@ public class CombinedIcon extends Icon
 		}
 
 		return json;
+	}
+
+	public int hashCode()
+	{
+		return list.hashCode();
+	}
+
+	public boolean equals(Object o)
+	{
+		return o == this || o instanceof CombinedIcon && list.equals(((CombinedIcon) o).list);
 	}
 }
