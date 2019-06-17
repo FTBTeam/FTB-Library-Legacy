@@ -51,7 +51,7 @@ public class GuiSidebarButtonConfig extends GuiButtonListBase
 		public void drawBackground(Theme theme, int x, int y, int w, int h)
 		{
 			super.drawBackground(theme, x, y, w, h);
-			(sidebarButton.getConfig() ? (sidebarButton.isAvailable() ? COLOR_ENABLED : COLOR_UNAVAILABLE) : COLOR_DISABLED).draw(x, y, w, h);
+			(sidebarButton.getConfig() ? (sidebarButton.isVisible() ? COLOR_ENABLED : COLOR_UNAVAILABLE) : COLOR_DISABLED).draw(x, y, w, h);
 		}
 
 		@Override

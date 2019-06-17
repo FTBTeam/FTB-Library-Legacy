@@ -12,10 +12,12 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.client.ClientCommandHandler;
 
 import javax.annotation.Nullable;
+import java.util.function.BooleanSupplier;
 
 public class ClientUtils
 {
 	public static final NameMap<BlockRenderLayer> BLOCK_RENDER_LAYER_NAME_MAP = NameMap.create(BlockRenderLayer.SOLID, BlockRenderLayer.values());
+	public static final BooleanSupplier IS_CLIENT_OP = () -> Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().player.getPermissionLevel() > 0;
 
 	private static float lastBrightnessX, lastBrightnessY;
 
@@ -69,11 +71,6 @@ public class ClientUtils
 	public static void runLater(final Runnable runnable)
 	{
 		new Thread(() -> Minecraft.getMinecraft().addScheduledTask(runnable)).start();
-	}
-
-	public static boolean isClientOP()
-	{
-		return Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().player.getPermissionLevel() > 0;
 	}
 
 	@Nullable

@@ -411,7 +411,7 @@ public class FTBLibClientEventHandler
 
 				for (SidebarButton button : group.getButtons())
 				{
-					if (button.isVisible())
+					if (button.isActuallyVisible())
 					{
 						buttons.add(new GuiButtonSidebar(rx, ry, button));
 						rx++;
@@ -500,7 +500,7 @@ public class FTBLibClientEventHandler
 					Color4I.WHITE.withAlpha(33).draw(b.x, b.y, 16, 16);
 				}
 
-				if (b.button.hasCustomText() && b.button.getCustomTextHandler() != null)
+				if (b.button.getCustomTextHandler() != null)
 				{
 					String text = b.button.getCustomTextHandler().get();
 

@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.gui.misc.GuiLoading;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
+import com.feed_the_beast.ftblib.lib.util.ChainedBooleanSupplier;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import com.google.gson.JsonElement;
@@ -16,7 +17,9 @@ import net.minecraftforge.fml.common.Loader;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -25,16 +28,18 @@ import java.util.function.Supplier;
  */
 public class SidebarButton implements Comparable<SidebarButton>
 {
+	private static final BooleanSupplier NEI_NOT_LOADED = () -> !Loader.isModLoaded(OtherMods.NEI);
+
 	public final ResourceLocation id;
 	public final SidebarButtonGroup group;
 	private Icon icon = Icon.EMPTY;
 	private int x = 0;
 	private boolean defaultConfig = true;
 	private boolean configValue = true;
-	private final List<String> requiredServerMods = new ArrayList<>();
 	private final List<String> clickEvents = new ArrayList<>();
 	private final List<String> shiftClickEvents = new ArrayList<>();
-	private boolean requiresOp, hideWithNEI, loadingScreen, hasCustomText;
+	private boolean loadingScreen;
+	private ChainedBooleanSupplier visible = ChainedBooleanSupplier.TRUE;
 	private Supplier<String> customTextHandler = null;
 	private Consumer<List<String>> tooltipHandler = null;
 
@@ -85,22 +90,40 @@ public class SidebarButton implements Comparable<SidebarButton>
 		{
 			defaultConfig = configValue = json.get("config").getAsBoolean();
 		}
-		if (json.has("required_server_mods"))
-		{
-			for (JsonElement e : JsonUtils.toArray(json.get("required_server_mods")))
-			{
-				requiredServerMods.add(e.getAsString());
-			}
-		}
+
 		if (json.has("x"))
 		{
 			x = json.get("x").getAsInt();
 		}
 
-		requiresOp = json.has("requires_op") && json.get("requires_op").getAsBoolean();
-		hideWithNEI = json.has("hide_with_nei") && json.get("hide_with_nei").getAsBoolean();
+		if (json.has("requires_op") && json.get("requires_op").getAsBoolean())
+		{
+			addVisibilityCondition(ClientUtils.IS_CLIENT_OP);
+		}
+
+		if (json.has("hide_with_nei") && json.get("hide_with_nei").getAsBoolean())
+		{
+			addVisibilityCondition(NEI_NOT_LOADED);
+		}
+
+		if (json.has("required_server_mods"))
+		{
+			LinkedHashSet<String> requiredServerMods = new LinkedHashSet<>();
+
+			for (JsonElement e : JsonUtils.toArray(json.get("required_server_mods")))
+			{
+				requiredServerMods.add(e.getAsString());
+			}
+
+			addVisibilityCondition(() -> SidedUtils.areAllModsLoadedOnServer(requiredServerMods));
+		}
+
 		loadingScreen = json.has("loading_screen") && json.get("loading_screen").getAsBoolean();
-		hasCustomText = json.has("custom_text") && json.get("custom_text").getAsBoolean();
+	}
+
+	public void addVisibilityCondition(BooleanSupplier supplier)
+	{
+		visible = visible.and(supplier);
 	}
 
 	public String getLangKey()
@@ -153,25 +176,20 @@ public class SidebarButton implements Comparable<SidebarButton>
 			new GuiLoading(I18n.format(getLangKey())).openGui();
 		}
 
-		for (String event : (shift ? shiftClickEvents : clickEvents))
+		for (String event : (shift && !shiftClickEvents.isEmpty() ? shiftClickEvents : clickEvents))
 		{
 			GuiHelper.BLANK_GUI.handleClick(event);
 		}
 	}
 
+	public boolean isActuallyVisible()
+	{
+		return configValue && FTBLibClientConfig.action_buttons != EnumSidebarButtonPlacement.DISABLED && isVisible();
+	}
+
 	public boolean isVisible()
 	{
-		return configValue && FTBLibClientConfig.action_buttons != EnumSidebarButtonPlacement.DISABLED && isAvailable();
-	}
-
-	public boolean isAvailable()
-	{
-		return (!hideWithNEI || !Loader.isModLoaded(OtherMods.NEI)) && (!requiresOp || ClientUtils.isClientOP()) && SidedUtils.areAllModsLoadedOnServer(requiredServerMods);
-	}
-
-	public boolean hasCustomText()
-	{
-		return hasCustomText;
+		return visible.getAsBoolean();
 	}
 
 	public boolean getConfig()
