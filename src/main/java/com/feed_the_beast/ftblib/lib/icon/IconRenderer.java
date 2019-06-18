@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
+import com.feed_the_beast.ftblib.client.FTBLibClientEventHandler;
 import com.feed_the_beast.ftblib.lib.client.IPixelBuffer;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelFormat;
@@ -39,6 +40,7 @@ public class IconRenderer
 		public void run()
 		{
 			QUEUE.add(this);
+			FTBLibClientEventHandler.shouldRenderIcons = true;
 		}
 	}
 
@@ -121,16 +123,16 @@ public class IconRenderer
 		return false;
 	}
 
-	public static boolean canRender()
-	{
-		return !QUEUE.isEmpty();
-	}
-
 	/**
 	 * Modified version of BlockRenderer mod code
 	 */
 	public static void render()
 	{
+		if (QUEUE.isEmpty())
+		{
+			return;
+		}
+
 		IconCallbackPair[] queued = QUEUE.toArray(new IconCallbackPair[0]);
 		QUEUE.clear();
 

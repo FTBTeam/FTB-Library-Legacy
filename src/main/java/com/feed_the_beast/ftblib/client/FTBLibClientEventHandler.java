@@ -59,6 +59,7 @@ public class FTBLibClientEventHandler
 {
 	private static Temp currentNotification;
 	public static Rectangle lastDrawnArea = new Rectangle();
+	public static boolean shouldRenderIcons = false;
 
 	private static final IChatListener CHAT_LISTENER = (type, component) ->
 	{
@@ -293,7 +294,7 @@ public class FTBLibClientEventHandler
 	{
 		if (event.phase == TickEvent.Phase.START)
 		{
-			if (IconRenderer.canRender())
+			if (shouldRenderIcons)
 			{
 				IconRenderer.render();
 			}
