@@ -8,6 +8,7 @@ import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.launchwrapper.LaunchClassLoader;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -41,6 +42,17 @@ public class FTBLib
 	public static final String THIS_DEP = "required-after:" + MOD_ID + "@[" + VERSION + ",)";
 	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
 	public static final String KEY_CATEGORY = "key.categories.ftbmods";
+
+	static
+	{
+		//Caution, hacky code! This fixes JavaFX not working outside DevEnv, but also excludes it from Forge classloader and prevents core mods from touching it. Fixed by modmuss50.
+		ClassLoader classLoader = FTBLib.class.getClassLoader();
+
+		if (classLoader instanceof LaunchClassLoader)
+		{
+			((LaunchClassLoader) classLoader).addClassLoaderExclusion("javafx.");
+		}
+	}
 
 	@SidedProxy(serverSide = "com.feed_the_beast.ftblib.FTBLibCommon", clientSide = "com.feed_the_beast.ftblib.client.FTBLibClient")
 	public static FTBLibCommon PROXY;
