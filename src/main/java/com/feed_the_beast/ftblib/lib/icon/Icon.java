@@ -1,11 +1,11 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
+import com.feed_the_beast.ftblib.lib.client.IPixelBuffer;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import javafx.scene.image.Image;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -16,7 +16,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author LatvianModder
@@ -50,9 +49,10 @@ public abstract class Icon
 		}
 
 		@Override
-		public Optional<Image> loadInstantJFXImage()
+		@Nullable
+		public IPixelBuffer createPixelBuffer()
 		{
-			return Optional.empty();
+			return null;
 		}
 
 		public int hashCode()
@@ -297,7 +297,7 @@ public abstract class Icon
 	/**
 	 * @return false if this should be queued for rendering
 	 */
-	public boolean isLoadedJFXImageInstant()
+	public boolean hasPixelBuffer()
 	{
 		return false;
 	}
@@ -305,9 +305,10 @@ public abstract class Icon
 	/**
 	 * @return null if failed to load
 	 */
-	public Optional<Image> loadInstantJFXImage()
+	@Nullable
+	public IPixelBuffer createPixelBuffer()
 	{
-		return Optional.empty();
+		return null;
 	}
 
 	@Nullable

@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
+import com.feed_the_beast.ftblib.lib.client.IPixelBuffer;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelFormat;
 import javafx.scene.image.WritableImage;
@@ -88,13 +89,20 @@ public class IconRenderer
 			return true;
 		}
 
-		if (icon.isLoadedJFXImageInstant())
+		if (icon.hasPixelBuffer())
 		{
-			image = icon.loadInstantJFXImage().orElse(null);
+			IPixelBuffer buffer = icon.createPixelBuffer();
 
-			if (image == null)
+			if (buffer == null)
 			{
 				image = getNullImage();
+			}
+			else
+			{
+				int w = buffer.getWidth();
+				int h = buffer.getHeight();
+				image = new WritableImage(w, h);
+				((WritableImage) image).getPixelWriter().setPixels(0, 0, w, h, PixelFormat.getIntArgbInstance(), buffer.getPixels(), 0, w);
 			}
 
 			imageCache.put(icon, image);

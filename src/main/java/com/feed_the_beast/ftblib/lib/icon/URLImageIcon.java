@@ -1,7 +1,8 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
+import com.feed_the_beast.ftblib.lib.client.IPixelBuffer;
+import com.feed_the_beast.ftblib.lib.client.PixelBuffer;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
-import javafx.scene.image.Image;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
@@ -13,7 +14,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.File;
 import java.net.URI;
-import java.util.Optional;
 
 /**
  * @author LatvianModder
@@ -101,15 +101,15 @@ public class URLImageIcon extends ImageIcon
 	}
 
 	@Override
-	public Optional<Image> loadInstantJFXImage()
+	public IPixelBuffer createPixelBuffer()
 	{
 		try
 		{
-			return Optional.of(DataReader.get(uri, Minecraft.getMinecraft().getProxy()).imageJFX());
+			return PixelBuffer.from(DataReader.get(uri, Minecraft.getMinecraft().getProxy()).image());
 		}
 		catch (Exception ex)
 		{
-			return Optional.empty();
+			return null;
 		}
 	}
 }

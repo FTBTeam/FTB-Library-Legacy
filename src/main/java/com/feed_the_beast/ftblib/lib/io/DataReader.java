@@ -2,9 +2,6 @@ package com.feed_the_beast.ftblib.lib.io;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
-import javafx.scene.image.Image;
-import javafx.scene.image.PixelFormat;
-import javafx.scene.image.WritableImage;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
@@ -204,15 +201,4 @@ public abstract class DataReader
 	}
 
 	public abstract BufferedImage image() throws Exception;
-
-	public Image imageJFX() throws Exception
-	{
-		BufferedImage img = image();
-		int w = img.getWidth();
-		int h = img.getHeight();
-		int[] pixels = img.getRGB(0, 0, w, h, null, 0, w);
-		WritableImage image = new WritableImage(w, h);
-		image.getPixelWriter().setPixels(0, 0, w, h, PixelFormat.getIntArgbInstance(), pixels, 0, w);
-		return image;
-	}
 }

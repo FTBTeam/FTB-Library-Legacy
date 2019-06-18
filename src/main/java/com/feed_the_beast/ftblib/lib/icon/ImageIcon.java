@@ -1,9 +1,10 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.FTBLib;
+import com.feed_the_beast.ftblib.lib.client.IPixelBuffer;
+import com.feed_the_beast.ftblib.lib.client.PixelBuffer;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.google.common.base.Objects;
-import javafx.scene.image.Image;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
@@ -14,7 +15,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 /**
  * @author LatvianModder
@@ -102,22 +102,22 @@ public class ImageIcon extends Icon
 	}
 
 	@Override
-	public boolean isLoadedJFXImageInstant()
+	public boolean hasPixelBuffer()
 	{
 		return true;
 	}
 
 	@Override
 	@Nullable
-	public Optional<Image> loadInstantJFXImage()
+	public IPixelBuffer createPixelBuffer()
 	{
 		try
 		{
-			return Optional.of(new Image(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream()));
+			return PixelBuffer.from(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream());
 		}
 		catch (Exception ex)
 		{
-			return Optional.empty();
+			return null;
 		}
 	}
 }

@@ -1,6 +1,8 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
 import com.feed_the_beast.ftblib.lib.ATHelper;
+import com.feed_the_beast.ftblib.lib.client.IPixelBuffer;
+import com.feed_the_beast.ftblib.lib.client.PixelBuffer;
 import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
@@ -10,8 +12,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -26,7 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.util.Optional;
 
 /**
  * @author LatvianModder
@@ -462,16 +461,17 @@ public class Color4I extends Icon
 	}
 
 	@Override
-	public boolean isLoadedJFXImageInstant()
+	public boolean hasPixelBuffer()
 	{
 		return true;
 	}
 
 	@Override
-	public Optional<Image> loadInstantJFXImage()
+	@Nullable
+	public IPixelBuffer createPixelBuffer()
 	{
-		WritableImage image = new WritableImage(1, 1);
-		image.getPixelWriter().setArgb(0, 0, rgba());
-		return Optional.of(image);
+		IPixelBuffer buffer = new PixelBuffer(1, 1);
+		buffer.setRGB(0, 0, rgba());
+		return buffer;
 	}
 }

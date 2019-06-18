@@ -1,6 +1,7 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
-import javafx.scene.image.Image;
+import com.feed_the_beast.ftblib.lib.client.IPixelBuffer;
+import com.feed_the_beast.ftblib.lib.client.PixelBuffer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
@@ -12,7 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.util.Optional;
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -52,22 +53,23 @@ public class AtlasSpriteIcon extends Icon
 	}
 
 	@Override
-	public boolean isLoadedJFXImageInstant()
+	public boolean hasPixelBuffer()
 	{
 		return true;
 	}
 
 	@Override
-	public Optional<Image> loadInstantJFXImage()
+	@Nullable
+	public IPixelBuffer createPixelBuffer()
 	{
 		try
 		{
 			ResourceLocation rl = new ResourceLocation(name);
-			return Optional.of(new Image(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(rl.getNamespace(), "textures/" + rl.getPath() + ".png")).getInputStream()));
+			return PixelBuffer.from(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(rl.getNamespace(), "textures/" + rl.getPath() + ".png")).getInputStream());
 		}
 		catch (Exception ex)
 		{
-			return Optional.empty();
+			return null;
 		}
 	}
 }

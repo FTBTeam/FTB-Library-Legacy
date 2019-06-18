@@ -1,14 +1,25 @@
 package com.feed_the_beast.ftblib.lib.client;
 
-import org.lwjgl.BufferUtils;
-
 import javax.annotation.Nullable;
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.nio.ByteBuffer;
+import java.io.InputStream;
 import java.util.Arrays;
 
-public class PixelBuffer
+public class PixelBuffer implements IPixelBuffer
 {
+	public static PixelBuffer from(BufferedImage img)
+	{
+		PixelBuffer buffer = new PixelBuffer(img.getWidth(), img.getHeight());
+		buffer.setPixels(img.getRGB(0, 0, buffer.getWidth(), buffer.getHeight(), buffer.getPixels(), 0, buffer.getWidth()));
+		return buffer;
+	}
+
+	public static PixelBuffer from(InputStream stream) throws Exception
+	{
+		return from(ImageIO.read(stream));
+	}
+
 	private final int width, height;
 	private final int[] pixels;
 
@@ -19,32 +30,25 @@ public class PixelBuffer
 		pixels = new int[w * h];
 	}
 
-	public PixelBuffer(BufferedImage img)
-	{
-		this(img.getWidth(), img.getHeight());
-		loadFrom(img);
-	}
-
-	public void loadFrom(BufferedImage img)
-	{
-		img.getRGB(0, 0, width, height, pixels, 0, width);
-	}
-
+	@Override
 	public int getWidth()
 	{
 		return width;
 	}
 
+	@Override
 	public int getHeight()
 	{
 		return height;
 	}
 
+	@Override
 	public int[] getPixels()
 	{
 		return pixels;
 	}
 
+	@Override
 	public void setPixels(int[] p)
 	{
 		if (p.length == pixels.length)
@@ -53,33 +57,19 @@ public class PixelBuffer
 		}
 	}
 
+	@Override
 	public void setRGB(int x, int y, int col)
 	{
 		pixels[x + y * width] = col;
 	}
 
+	@Override
 	public int getRGB(int x, int y)
 	{
 		return pixels[x + y * width];
 	}
 
-	public void setRGB(int startX, int startY, int w, int h, int[] rgbArray)
-	{
-		int off = -1;
-		for (int y = startY; y < startY + h; y++)
-		{
-			for (int x = startX; x < startX + w; x++)
-			{
-				setRGB(x, y, rgbArray[++off]);
-			}
-		}
-	}
-
-	public void setRGB(int startX, int startY, PixelBuffer buffer)
-	{
-		setRGB(startX, startY, buffer.getWidth(), buffer.getHeight(), buffer.getPixels());
-	}
-
+	@Override
 	public int[] getRGB(int startX, int startY, int w, int h, @Nullable int[] p)
 	{
 		if (p == null || p.length != w * h)
@@ -106,22 +96,6 @@ public class PixelBuffer
 		BufferedImage image = new BufferedImage(width, height, type);
 		image.setRGB(0, 0, width, height, pixels, 0, width);
 		return image;
-	}
-
-	public void fill(int col)
-	{
-		Arrays.fill(pixels, col);
-	}
-
-	public void fill(int startX, int startY, int w, int h, int col)
-	{
-		for (int y = startY; y < startY + h; y++)
-		{
-			for (int x = startX; x < startX + w; x++)
-			{
-				setRGB(x, y, col);
-			}
-		}
 	}
 
 	public boolean equals(Object o)
@@ -158,6 +132,7 @@ public class PixelBuffer
 		return Arrays.hashCode(getPixels());
 	}
 
+	@Override
 	public PixelBuffer copy()
 	{
 		PixelBuffer b = new PixelBuffer(width, height);
@@ -165,27 +140,11 @@ public class PixelBuffer
 		return b;
 	}
 
+	@Override
 	public PixelBuffer getSubimage(int x, int y, int w, int h)
 	{
 		PixelBuffer b = new PixelBuffer(w, h);
 		getRGB(x, y, w, h, b.pixels);
 		return b;
-	}
-
-	public ByteBuffer toByteBuffer(boolean alpha)
-	{
-		ByteBuffer bb = BufferUtils.createByteBuffer(pixels.length * 4);
-		byte alpha255 = (byte) 255;
-
-		for (int c : pixels)
-		{
-			bb.put((byte) (c >> 16));
-			bb.put((byte) (c >> 8));
-			bb.put((byte) c);
-			bb.put(alpha ? (byte) (c >> 24) : alpha255);
-		}
-
-		bb.flip();
-		return bb;
 	}
 }

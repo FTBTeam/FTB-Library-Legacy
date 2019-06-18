@@ -1,12 +1,12 @@
 package com.feed_the_beast.ftblib.lib.icon;
 
+import com.feed_the_beast.ftblib.lib.client.IPixelBuffer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
-import javafx.scene.image.Image;
 import net.minecraft.util.math.MathHelper;
 
-import java.util.Optional;
+import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -38,9 +38,10 @@ public class MutableColor4I extends Color4I
 		}
 
 		@Override
-		public Optional<Image> loadInstantJFXImage()
+		@Nullable
+		public IPixelBuffer createPixelBuffer()
 		{
-			return Optional.empty();
+			return null;
 		}
 
 		public int hashCode()
