@@ -6,7 +6,7 @@ import com.google.gson.JsonObject;
 import javafx.scene.image.Image;
 import net.minecraft.util.math.MathHelper;
 
-import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * @author LatvianModder
@@ -38,10 +38,9 @@ public class MutableColor4I extends Color4I
 		}
 
 		@Override
-		@Nullable
-		public Image loadInstantJFXImage()
+		public Optional<Image> loadInstantJFXImage()
 		{
-			return null;
+			return Optional.empty();
 		}
 
 		public int hashCode()

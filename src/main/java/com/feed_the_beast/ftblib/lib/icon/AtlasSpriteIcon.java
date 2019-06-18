@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * @author LatvianModder
@@ -58,17 +58,16 @@ public class AtlasSpriteIcon extends Icon
 	}
 
 	@Override
-	@Nullable
-	public Image loadInstantJFXImage()
+	public Optional<Image> loadInstantJFXImage()
 	{
 		try
 		{
 			ResourceLocation rl = new ResourceLocation(name);
-			return new Image(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(rl.getNamespace(), "textures/" + rl.getPath() + ".png")).getInputStream());
+			return Optional.of(new Image(Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation(rl.getNamespace(), "textures/" + rl.getPath() + ".png")).getInputStream()));
 		}
 		catch (Exception ex)
 		{
-			return null;
+			return Optional.empty();
 		}
 	}
 }

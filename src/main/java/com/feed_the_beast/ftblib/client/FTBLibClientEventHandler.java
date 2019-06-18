@@ -293,7 +293,10 @@ public class FTBLibClientEventHandler
 	{
 		if (event.phase == TickEvent.Phase.START)
 		{
-			IconRenderer.render();
+			if (IconRenderer.canRender())
+			{
+				IconRenderer.render();
+			}
 		}
 		else if (currentNotification != null && currentNotification.isImportant())
 		{

@@ -16,6 +16,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author LatvianModder
@@ -49,10 +50,9 @@ public abstract class Icon
 		}
 
 		@Override
-		@Nullable
-		public Image loadInstantJFXImage()
+		public Optional<Image> loadInstantJFXImage()
 		{
-			return null;
+			return Optional.empty();
 		}
 
 		public int hashCode()
@@ -305,10 +305,9 @@ public abstract class Icon
 	/**
 	 * @return null if failed to load
 	 */
-	@Nullable
-	public Image loadInstantJFXImage()
+	public Optional<Image> loadInstantJFXImage()
 	{
-		return null;
+		return Optional.empty();
 	}
 
 	@Nullable

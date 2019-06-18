@@ -11,9 +11,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.net.URI;
+import java.util.Optional;
 
 /**
  * @author LatvianModder
@@ -101,16 +101,15 @@ public class URLImageIcon extends ImageIcon
 	}
 
 	@Override
-	@Nullable
-	public Image loadInstantJFXImage()
+	public Optional<Image> loadInstantJFXImage()
 	{
 		try
 		{
-			return DataReader.get(uri, Minecraft.getMinecraft().getProxy()).imageJFX();
+			return Optional.of(DataReader.get(uri, Minecraft.getMinecraft().getProxy()).imageJFX());
 		}
 		catch (Exception ex)
 		{
-			return null;
+			return Optional.empty();
 		}
 	}
 }

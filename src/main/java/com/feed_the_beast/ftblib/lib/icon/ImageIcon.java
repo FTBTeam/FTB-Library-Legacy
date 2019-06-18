@@ -14,6 +14,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * @author LatvianModder
@@ -108,15 +109,15 @@ public class ImageIcon extends Icon
 
 	@Override
 	@Nullable
-	public Image loadInstantJFXImage()
+	public Optional<Image> loadInstantJFXImage()
 	{
 		try
 		{
-			return new Image(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream());
+			return Optional.of(new Image(Minecraft.getMinecraft().getResourceManager().getResource(texture).getInputStream()));
 		}
 		catch (Exception ex)
 		{
-			return null;
+			return Optional.empty();
 		}
 	}
 }

@@ -26,6 +26,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 /**
  * @author LatvianModder
@@ -467,11 +468,10 @@ public class Color4I extends Icon
 	}
 
 	@Override
-	@Nullable
-	public Image loadInstantJFXImage()
+	public Optional<Image> loadInstantJFXImage()
 	{
 		WritableImage image = new WritableImage(1, 1);
 		image.getPixelWriter().setArgb(0, 0, rgba());
-		return image;
+		return Optional.of(image);
 	}
 }

@@ -90,7 +90,7 @@ public class IconRenderer
 
 		if (icon.isLoadedJFXImageInstant())
 		{
-			image = icon.loadInstantJFXImage();
+			image = icon.loadInstantJFXImage().orElse(null);
 
 			if (image == null)
 			{
@@ -113,16 +113,16 @@ public class IconRenderer
 		return false;
 	}
 
+	public static boolean canRender()
+	{
+		return !QUEUE.isEmpty();
+	}
+
 	/**
 	 * Modified version of BlockRenderer mod code
 	 */
 	public static void render()
 	{
-		if (QUEUE.isEmpty())
-		{
-			return;
-		}
-
 		IconCallbackPair[] queued = QUEUE.toArray(new IconCallbackPair[0]);
 		QUEUE.clear();
 
