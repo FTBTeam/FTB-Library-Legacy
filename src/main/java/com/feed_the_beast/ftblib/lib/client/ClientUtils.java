@@ -20,6 +20,7 @@ public class ClientUtils
 	public static final BooleanSupplier IS_CLIENT_OP = () -> Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().player.getPermissionLevel() > 0;
 
 	private static float lastBrightnessX, lastBrightnessY;
+	private static Boolean hasJavaFX = null;
 
 	public static PlayerHeadIcon localPlayerHead;
 
@@ -94,5 +95,23 @@ public class ClientUtils
 	public static <T> T getCurrentGuiAs(Class<T> clazz)
 	{
 		return Minecraft.getMinecraft().currentScreen == null ? null : getGuiAs(Minecraft.getMinecraft().currentScreen, clazz);
+	}
+
+	public static boolean hasJavaFX()
+	{
+		if (hasJavaFX == null)
+		{
+			try
+			{
+				Class.forName("javafx.scene.image.Image");
+				hasJavaFX = true;
+			}
+			catch (Exception ex)
+			{
+				hasJavaFX = false;
+			}
+		}
+
+		return hasJavaFX;
 	}
 }

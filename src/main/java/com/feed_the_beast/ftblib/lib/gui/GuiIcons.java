@@ -77,10 +77,15 @@ public interface GuiIcons
 	Icon TOGGLE_NIGHT = get("toggle_night");
 	Icon LOCK = get("lock");
 	Icon LOCK_OPEN = get("lock_open");
-	Icon SIGN = Icon.getIcon("minecraft:items/sign");
+	Icon SUPPORT = getImage("support");
 
 	static Icon get(String id)
 	{
 		return Icon.getIcon("ftblib:icons/" + id);
+	}
+
+	static Icon getImage(String id)
+	{
+		return Icon.getIcon("ftblib:textures/icons/" + id + ".png");
 	}
 }
