@@ -1,7 +1,7 @@
 package com.feed_the_beast.ftblib.events.player;
 
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
-import com.feed_the_beast.ftblib.lib.data.PlayerData;
+import com.feed_the_beast.ftblib.lib.data.NBTDataStorage;
 
 import java.util.function.Consumer;
 
@@ -10,15 +10,15 @@ import java.util.function.Consumer;
  */
 public class ForgePlayerDataEvent extends ForgePlayerEvent
 {
-	private final Consumer<PlayerData> callback;
+	private final Consumer<NBTDataStorage.Data> callback;
 
-	public ForgePlayerDataEvent(ForgePlayer player, Consumer<PlayerData> c)
+	public ForgePlayerDataEvent(ForgePlayer player, Consumer<NBTDataStorage.Data> c)
 	{
 		super(player);
 		callback = c;
 	}
 
-	public void register(PlayerData data)
+	public void register(NBTDataStorage.Data data)
 	{
 		callback.accept(data);
 	}
