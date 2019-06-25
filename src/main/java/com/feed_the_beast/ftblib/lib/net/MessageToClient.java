@@ -28,6 +28,14 @@ public abstract class MessageToClient extends MessageBase
 		channel.writeAndFlush(this).addListener(ChannelFutureListener.FIRE_EXCEPTION_ON_FAILURE);
 	}
 
+	public final void sendTo(Iterable<EntityPlayerMP> players)
+	{
+		for (EntityPlayerMP playerMP : players)
+		{
+			sendTo(playerMP);
+		}
+	}
+
 	public final void sendToAll()
 	{
 		FMLEmbeddedChannel channel = getWrapper().getChannel(Side.SERVER);
