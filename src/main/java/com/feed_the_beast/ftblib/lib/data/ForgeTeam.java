@@ -100,7 +100,7 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 		return o == this || uid == Objects.hashCode(o);
 	}
 
-	public final String toString()
+	public final String getUIDCode()
 	{
 		return String.format("%04X", uid);
 	}
