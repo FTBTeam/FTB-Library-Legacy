@@ -257,6 +257,11 @@ public abstract class TileBase extends TileEntity implements IWorldNameable, ICh
 
 	public void readFromItem(ItemStack stack)
 	{
-		readData(BlockUtils.getData(stack), EnumSaveType.ITEM);
+		NBTTagCompound nbt = BlockUtils.getData(stack);
+
+		if (!nbt.isEmpty())
+		{
+			readData(nbt, EnumSaveType.ITEM);
+		}
 	}
 }
