@@ -264,6 +264,7 @@ public class GuiEditConfig extends GuiBase
 	}
 
 	private final ConfigGroup group;
+	private final ConfigGroup originalGroup;
 	private final IConfigCallback callback;
 
 	private final String title;
@@ -277,6 +278,7 @@ public class GuiEditConfig extends GuiBase
 	public GuiEditConfig(ConfigGroup g, IConfigCallback c)
 	{
 		group = g;
+		originalGroup = group.copy();
 		callback = c;
 
 		ITextComponent title0 = g.getDisplayName().createCopy();
@@ -449,10 +451,12 @@ public class GuiEditConfig extends GuiBase
 	{
 		super.onClosed();
 
-		if (shouldClose == 1)
+		if (shouldClose != 1)
 		{
-			callback.onConfigSaved(group, Minecraft.getMinecraft().player);
+			group.deserializeNBT(originalGroup.serializeNBT());
 		}
+
+		callback.onConfigSaved(group, Minecraft.getMinecraft().player);
 	}
 
 	@Override

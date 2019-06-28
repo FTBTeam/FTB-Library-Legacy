@@ -351,7 +351,7 @@ public class ConfigGroup extends FinalIDObject
 		return nbt;
 	}
 
-	public void deserializeEditedNBT(NBTTagCompound nbt)
+	public void deserializeNBT(NBTTagCompound nbt)
 	{
 		for (ConfigValueInstance instance : getValues())
 		{
@@ -363,7 +363,7 @@ public class ConfigGroup extends FinalIDObject
 
 		for (ConfigGroup group : getGroups())
 		{
-			group.deserializeEditedNBT(nbt.getCompoundTag(group.getID()));
+			group.deserializeNBT(nbt.getCompoundTag(group.getID()));
 		}
 	}
 }
