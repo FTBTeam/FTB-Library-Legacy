@@ -211,7 +211,7 @@ public final class ConfigValueInstance extends FinalIDObject
 		inst.info = info == null ? null : info.createCopy();
 		inst.flags = flags;
 		inst.order = order;
-		inst.icon = icon.copy();
+		inst.icon = (icon == null || icon.isEmpty()) ? Icon.EMPTY : icon.copy();
 		return inst;
 	}
 

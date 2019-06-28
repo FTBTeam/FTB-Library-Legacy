@@ -90,9 +90,11 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	{
 		if (canAdd(v))
 		{
+			writeToList();
 			ConfigValue v1 = type.copy();
 			v1.setValueFromOtherValue(v);
 			list.add((T) v1);
+			readFromList();
 		}
 
 		return this;
@@ -133,6 +135,7 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	@Override
 	public String getString()
 	{
+		writeToList();
 		StringBuilder builder = new StringBuilder("[");
 
 		for (int i = 0; i < list.size(); i++)
@@ -165,6 +168,7 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	@Override
 	public ConfigList<T> copy()
 	{
+		writeToList();
 		ConfigList<T> l = new ConfigList<>((T) type.copy());
 
 		for (T value : list)
