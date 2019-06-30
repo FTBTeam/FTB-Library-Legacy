@@ -161,7 +161,7 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	{
 		try
 		{
-			int val = Integer.parseInt(string);
+			int val = string.startsWith("#") ? Long.decode(string).intValue() : Integer.parseInt(string);
 
 			if (val < getMin() || val > getMax())
 			{
