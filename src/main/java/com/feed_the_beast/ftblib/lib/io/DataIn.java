@@ -448,11 +448,6 @@ public class DataIn
 		return list;
 	}
 
-	public <E> E read(Deserializer<E> deserializer)
-	{
-		return deserializer.read(this);
-	}
-
 	public int readVarInt()
 	{
 		int b = readByte();

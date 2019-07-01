@@ -14,27 +14,19 @@ public enum EnumPrivacyLevel implements IStringSerializable
 	TEAM("team");
 
 	public static final EnumPrivacyLevel[] VALUES = values();
-	public static final String ENUM_LANG_KEY = "ftblib.privacy";
-	public static final NameMap<EnumPrivacyLevel> NAME_MAP = NameMap.create(PUBLIC, VALUES);
+	public static final NameMap<EnumPrivacyLevel> NAME_MAP = NameMap.createWithBaseTranslationKey(PUBLIC, "ftblib.privacy", VALUES);
 
 	private final String name;
-	private final String langKey;
 
 	EnumPrivacyLevel(String n)
 	{
 		name = n;
-		langKey = "ftblib.privacy." + name;
 	}
 
 	@Override
 	public String getName()
 	{
 		return name;
-	}
-
-	public String getLangKey()
-	{
-		return langKey;
 	}
 
 	public Icon getIcon()

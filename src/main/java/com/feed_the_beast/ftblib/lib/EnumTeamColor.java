@@ -24,7 +24,7 @@ public enum EnumTeamColor implements IStringSerializable
 	PURPLE("purple", EnumDyeColor.PURPLE, TextFormatting.DARK_PURPLE, 0xB342FF),
 	GRAY("gray", EnumDyeColor.GRAY, TextFormatting.GRAY, 0xC0C0C0);
 
-	public static final NameMap<EnumTeamColor> NAME_MAP = NameMap.create(BLUE, NameMap.ObjectProperties.withNameAndColor((sender, value) -> new TextComponentTranslation(value.getLangKey()), EnumTeamColor::getColor), values());
+	public static final NameMap<EnumTeamColor> NAME_MAP = NameMap.createWithNameAndColor(BLUE, (sender, value) -> new TextComponentTranslation(value.getLangKey()), EnumTeamColor::getColor, values());
 
 	private final String name;
 	private final EnumDyeColor dyeColor;

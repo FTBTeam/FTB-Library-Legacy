@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib;
 
 import com.feed_the_beast.ftblib.lib.util.misc.NameMap;
-import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * @author LatvianModder
@@ -12,12 +11,12 @@ public enum EnumMessageLocation
 	CHAT("options.chat.visibility"),
 	ACTION_BAR("action_bar");
 
-	public static final NameMap<EnumMessageLocation> NAME_MAP = NameMap.create(CHAT, NameMap.ObjectProperties.withName((sender, value) -> new TextComponentTranslation(value.langKey)), values());
+	public static final NameMap<EnumMessageLocation> NAME_MAP = NameMap.createWithTranslation(CHAT, (sender, value) -> value.translationKey, values());
 
-	public final String langKey;
+	public final String translationKey;
 
 	EnumMessageLocation(String k)
 	{
-		langKey = k;
+		translationKey = k;
 	}
 }

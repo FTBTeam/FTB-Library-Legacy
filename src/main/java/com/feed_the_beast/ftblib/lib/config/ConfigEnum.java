@@ -133,9 +133,18 @@ public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 	@Override
 	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
+		NameMap<E> nameMap = getNameMap();
+
 		if (inst.getCanEdit() && !inst.getDefaultValue().isNull())
 		{
-			list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + getNameMap().getDisplayName(null, getNameMap().get(inst.getDefaultValue().getString())).getFormattedText());
+			list.add(TextFormatting.AQUA + "Default: " + TextFormatting.RESET + nameMap.getDisplayName(null, nameMap.get(inst.getDefaultValue().getString())).getFormattedText());
+		}
+
+		list.add("");
+
+		for (E v : nameMap)
+		{
+			list.add((v == getValue() ? TextFormatting.AQUA : TextFormatting.DARK_GRAY) + nameMap.getDisplayName(null, v).getFormattedText());
 		}
 	}
 

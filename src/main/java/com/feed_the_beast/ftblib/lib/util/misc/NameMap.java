@@ -12,6 +12,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
@@ -48,36 +49,6 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 		{
 			return Icon.EMPTY;
 		}
-
-		public static <Y> ObjectProperties<Y> withName(BiFunction<ICommandSender, Y, ITextComponent> nameGetter)
-		{
-			return new ObjectProperties<Y>()
-			{
-				@Override
-				public ITextComponent getDisplayName(@Nullable ICommandSender sender, Y value)
-				{
-					return nameGetter.apply(sender, value);
-				}
-			};
-		}
-
-		public static <Y> ObjectProperties<Y> withNameAndColor(BiFunction<ICommandSender, Y, ITextComponent> nameGetter, Function<Y, Color4I> colorGetter)
-		{
-			return new ObjectProperties<Y>()
-			{
-				@Override
-				public ITextComponent getDisplayName(@Nullable ICommandSender sender, Y value)
-				{
-					return nameGetter.apply(sender, value);
-				}
-
-				@Override
-				public Color4I getColor(Y object)
-				{
-					return colorGetter.apply(object);
-				}
-			};
-		}
 	}
 
 	@SafeVarargs
@@ -105,6 +76,64 @@ public final class NameMap<E> implements Iterable<E>, DataIn.Deserializer<E>, Da
 	public static <T> NameMap<T> create(T defaultValue, T... values)
 	{
 		return create(defaultValue, CommonUtils.cast(ObjectProperties.DEFAULT), values);
+	}
+
+	@SafeVarargs
+	public static <T> NameMap<T> createWithName(T defaultValue, BiFunction<ICommandSender, T, ITextComponent> nameGetter, T... values)
+	{
+		return create(defaultValue, new ObjectProperties<T>()
+		{
+			@Override
+			public ITextComponent getDisplayName(@Nullable ICommandSender sender, T value)
+			{
+				return nameGetter.apply(sender, value);
+			}
+		}, values);
+	}
+
+	@SafeVarargs
+	public static <T> NameMap<T> createWithNameAndColor(T defaultValue, BiFunction<ICommandSender, T, ITextComponent> nameGetter, Function<T, Color4I> colorGetter, T... values)
+	{
+		return create(defaultValue, new ObjectProperties<T>()
+		{
+			@Override
+			public ITextComponent getDisplayName(@Nullable ICommandSender sender, T value)
+			{
+				return nameGetter.apply(sender, value);
+			}
+
+			@Override
+			public Color4I getColor(T object)
+			{
+				return colorGetter.apply(object);
+			}
+		}, values);
+	}
+
+	@SafeVarargs
+	public static <T> NameMap<T> createWithTranslation(T defaultValue, BiFunction<ICommandSender, T, String> nameGetter, T... values)
+	{
+		return create(defaultValue, new ObjectProperties<T>()
+		{
+			@Override
+			public ITextComponent getDisplayName(@Nullable ICommandSender sender, T value)
+			{
+				return new TextComponentTranslation(nameGetter.apply(sender, value));
+			}
+		}, values);
+	}
+
+	@SafeVarargs
+	public static <T> NameMap<T> createWithBaseTranslationKey(T defaultValue, String baseTranslationKey, T... values)
+	{
+		return create(defaultValue, new ObjectProperties<T>()
+		{
+			@Override
+			public ITextComponent getDisplayName(@Nullable ICommandSender sender, T value)
+			{
+				return new TextComponentTranslation(baseTranslationKey + "." + getName(value));
+			}
+		}, values);
 	}
 
 	private final ObjectProperties<E> objectProperties;

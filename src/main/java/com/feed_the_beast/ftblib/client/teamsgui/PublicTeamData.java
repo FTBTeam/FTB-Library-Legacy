@@ -26,7 +26,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
 		data.writeString(d.getID());
 		data.writeTextComponent(d.displayName);
 		data.writeString(d.description);
-		data.write(d.color, EnumTeamColor.NAME_MAP);
+		EnumTeamColor.NAME_MAP.write(data, d.color);
 		data.writeIcon(d.icon);
 		data.writeByte(d.type.ordinal());
 	};
@@ -44,7 +44,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
 		super(data.readString());
 		displayName = data.readTextComponent();
 		description = data.readString();
-		color = data.read(EnumTeamColor.NAME_MAP);
+		color = EnumTeamColor.NAME_MAP.read(data);
 		icon = data.readIcon();
 		type = Type.values()[data.readUnsignedByte()];
 	}

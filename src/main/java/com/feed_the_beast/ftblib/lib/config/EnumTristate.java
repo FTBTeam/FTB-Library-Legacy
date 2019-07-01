@@ -16,7 +16,7 @@ public enum EnumTristate implements IStringSerializable
 	FALSE("false", Event.Result.DENY, ConfigBoolean.COLOR_FALSE, 0),
 	DEFAULT("default", Event.Result.DEFAULT, ConfigEnum.COLOR, 2);
 
-	public static final NameMap<EnumTristate> NAME_MAP = NameMap.create(DEFAULT, NameMap.ObjectProperties.withNameAndColor((sender, value) -> new TextComponentTranslation(value.getName()), EnumTristate::getColor), values());
+	public static final NameMap<EnumTristate> NAME_MAP = NameMap.createWithNameAndColor(DEFAULT, (sender, value) -> new TextComponentTranslation(value.getName()), EnumTristate::getColor, values());
 
 	public static EnumTristate read(NBTTagCompound nbt, String key)
 	{

@@ -40,7 +40,7 @@ public class MessageMyTeamPlayerList extends MessageToClient
 		{
 			uuid = data.readUUID();
 			name = data.readString();
-			status = data.read(EnumTeamStatus.NAME_MAP);
+			status = EnumTeamStatus.NAME_MAP.read(data);
 			requestingInvite = data.readBoolean();
 		}
 
@@ -56,7 +56,7 @@ public class MessageMyTeamPlayerList extends MessageToClient
 		{
 			data.writeUUID(uuid);
 			data.writeString(name);
-			data.write(status, EnumTeamStatus.NAME_MAP);
+			EnumTeamStatus.NAME_MAP.write(data, status);
 			data.writeBoolean(requestingInvite);
 		}
 

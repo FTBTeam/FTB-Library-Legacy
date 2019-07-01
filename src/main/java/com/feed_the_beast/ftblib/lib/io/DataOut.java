@@ -428,11 +428,6 @@ public class DataOut
 		}
 	}
 
-	public <E> void write(E object, Serializer<E> serializer)
-	{
-		serializer.write(this, object);
-	}
-
 	public void writeVarInt(int value)
 	{
 		if (value > Short.MAX_VALUE || value < Short.MIN_VALUE)
