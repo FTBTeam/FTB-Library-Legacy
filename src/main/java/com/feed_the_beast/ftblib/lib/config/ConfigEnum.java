@@ -144,7 +144,7 @@ public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 
 		for (E v : nameMap)
 		{
-			list.add((v == getValue() ? TextFormatting.AQUA : TextFormatting.DARK_GRAY) + nameMap.getDisplayName(null, v).getFormattedText());
+			list.add((v == getValue() ? (TextFormatting.AQUA + "+ ") : (TextFormatting.DARK_GRAY + "- ")) + nameMap.getDisplayName(null, v).getUnformattedText());
 		}
 	}
 

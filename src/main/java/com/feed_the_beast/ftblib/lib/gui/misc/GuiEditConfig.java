@@ -240,25 +240,19 @@ public class GuiEditConfig extends GuiBase
 		{
 			if (getMouseY() > 18)
 			{
-				Theme theme = getGui().getTheme();
+				list.add(TextFormatting.UNDERLINE + keyText);
+				ITextComponent infoText = inst.getInfo();
 
-				if (getMouseX() < getX() + theme.getStringWidth(keyText) + 10)
+				if (!(infoText instanceof TextComponentTranslation) || I18n.hasKey(((TextComponentTranslation) infoText).getKey()))
 				{
-					ITextComponent infoText = inst.getInfo();
-
-					if (!(infoText instanceof TextComponentTranslation) || I18n.hasKey(((TextComponentTranslation) infoText).getKey()))
+					for (String s : infoText.getFormattedText().split("\\\n"))
 					{
-						for (String s : infoText.getFormattedText().split("\\\n"))
-						{
-							list.add(s);
-						}
+						list.add(TextFormatting.GRAY.toString() + TextFormatting.ITALIC + s);
 					}
 				}
 
-				if (getMouseX() > getGui().width - (Math.min(150, theme.getStringWidth(getValueString())) + 25))
-				{
-					inst.getValue().addInfo(inst, list);
-				}
+				list.add("");
+				inst.getValue().addInfo(inst, list);
 			}
 		}
 	}
