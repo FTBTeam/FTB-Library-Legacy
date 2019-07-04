@@ -4,6 +4,7 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.client.CustomClickEvent;
 import com.feed_the_beast.ftblib.lib.ClientATHelper;
+import com.feed_the_beast.ftblib.lib.client.ClientUtils;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.AtlasSpriteIcon;
 import com.feed_the_beast.ftblib.lib.icon.Color4I;
@@ -272,6 +273,18 @@ public class FTBLibClientEventHandler
 			{
 				currentNotification = new Temp(Temp.MAP.values().iterator().next());
 				Temp.MAP.remove(currentNotification.widget.id);
+			}
+		}
+		else if (event.phase == TickEvent.Phase.END)
+		{
+			if (!ClientUtils.RUN_LATER.isEmpty())
+			{
+				for (Runnable runnable : new ArrayList<>(ClientUtils.RUN_LATER))
+				{
+					runnable.run();
+				}
+
+				ClientUtils.RUN_LATER.clear();
 			}
 		}
 	}

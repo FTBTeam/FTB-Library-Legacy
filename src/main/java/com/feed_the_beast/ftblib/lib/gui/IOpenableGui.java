@@ -7,13 +7,13 @@ import javax.annotation.Nullable;
 /**
  * @author LatvianModder
  */
-public interface IOpenableGui
+public interface IOpenableGui extends Runnable
 {
 	void openGui();
 
 	default void openGuiLater()
 	{
-		ClientUtils.runLater(this::openGui);
+		ClientUtils.runLater(this);
 	}
 
 	default void closeGui()
@@ -43,5 +43,11 @@ public interface IOpenableGui
 		{
 			openContextMenu(null);
 		}
+	}
+
+	@Override
+	default void run()
+	{
+		openGui();
 	}
 }

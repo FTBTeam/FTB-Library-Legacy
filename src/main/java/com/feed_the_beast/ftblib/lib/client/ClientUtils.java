@@ -12,12 +12,15 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraftforge.client.ClientCommandHandler;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BooleanSupplier;
 
 public class ClientUtils
 {
 	public static final NameMap<BlockRenderLayer> BLOCK_RENDER_LAYER_NAME_MAP = NameMap.create(BlockRenderLayer.SOLID, BlockRenderLayer.values());
 	public static final BooleanSupplier IS_CLIENT_OP = () -> Minecraft.getMinecraft().player != null && Minecraft.getMinecraft().player.getPermissionLevel() > 0;
+	public static final List<Runnable> RUN_LATER = new ArrayList<>();
 
 	private static float lastBrightnessX, lastBrightnessY;
 	private static Boolean hasJavaFX = null;
@@ -71,7 +74,7 @@ public class ClientUtils
 
 	public static void runLater(final Runnable runnable)
 	{
-		new Thread(() -> Minecraft.getMinecraft().addScheduledTask(runnable)).start();
+		RUN_LATER.add(runnable);
 	}
 
 	@Nullable
