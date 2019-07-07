@@ -52,7 +52,7 @@ public abstract class GuiButtonListBase extends GuiBase
 				}
 				else
 				{
-					setWidth(0);
+					setWidth(100);
 
 					for (Widget w : widgets)
 					{
