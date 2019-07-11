@@ -126,6 +126,18 @@ public class GuiEditConfigValue extends GuiBase
 	}
 
 	@Override
+	public boolean onClosedByKey(int key)
+	{
+		if (super.onClosedByKey(key))
+		{
+			callback.onCallback(inst.getValue(), false);
+			return false;
+		}
+
+		return false;
+	}
+
+	@Override
 	public void addWidgets()
 	{
 		add(buttonCancel);

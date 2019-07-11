@@ -91,7 +91,7 @@ public abstract class ConfigValue implements IWithID
 			return;
 		}
 
-		gui.openContextMenu(new GuiEditConfigValue(inst, (value, set) ->
+		new GuiEditConfigValue(inst, (value, set) ->
 		{
 			if (set)
 			{
@@ -99,8 +99,8 @@ public abstract class ConfigValue implements IWithID
 				callback.run();
 			}
 
-			gui.closeContextMenu();
-		}));
+			gui.openGui();
+		}).openGui();
 	}
 
 	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
