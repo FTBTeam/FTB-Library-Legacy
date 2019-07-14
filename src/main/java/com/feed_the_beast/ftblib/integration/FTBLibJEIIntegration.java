@@ -62,6 +62,7 @@ public class FTBLibJEIIntegration implements IModPlugin
 	 */
 	public static void handleIngredientKey(int key, Object object)
 	{
+	try{
 		if (RUNTIME != null)
 		{
 			if (KeyBindings.showRecipe.isActiveAndMatches(key))
@@ -72,11 +73,12 @@ public class FTBLibJEIIntegration implements IModPlugin
 			{
 				showUses(object);
 			}
-			else if (KeyBindings.bookmark.isActiveAndMatches(key))
+			else if (KeyBindings.bookmark.isActiveAndMatches(key)) //null https://paste.dimdev.org/qosinakulu.http
 			{
 				addBookmark(object);
 			}
 		}
+		}catch(Exception e){e.printStackTrace();}
 	}
 
 	public static void showRecipe(Object object)
