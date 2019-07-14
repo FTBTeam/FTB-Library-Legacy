@@ -73,7 +73,7 @@ public class FTBLibJEIIntegration implements IModPlugin
 			{
 				showUses(object);
 			}
-			else if (KeyBindings.bookmark.isActiveAndMatches(key)) //null https://paste.dimdev.org/qosinakulu.http
+			else if (KeyBindings.bookmark.isActiveAndMatches(key)) //NoSuchFieldError https://paste.dimdev.org/qosinakulu.http
 			{
 				addBookmark(object);
 			}
