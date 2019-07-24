@@ -1,5 +1,6 @@
 package com.feed_the_beast.ftblib.lib.gui.misc;
 
+import com.feed_the_beast.ftblib.lib.gui.GuiHelper;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.lib.icon.Icon;
 import net.minecraft.client.Minecraft;
@@ -22,6 +23,7 @@ public class SimpleToast implements IToast
 	@Override
 	public Visibility draw(GuiToast gui, long delta)
 	{
+		GuiHelper.setupDrawing();
 		Minecraft mc = gui.getMinecraft();
 		mc.getTextureManager().bindTexture(TEXTURE_TOASTS);
 		GlStateManager.color(1F, 1F, 1F);
