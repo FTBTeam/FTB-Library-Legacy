@@ -23,6 +23,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 
@@ -244,7 +246,7 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 
 		if (title.isEmpty())
 		{
-			cachedTitle = hasOwner() ? owner.getDisplayName().appendText("'s Team") : new TextComponentString("Unnamed");
+			cachedTitle = hasOwner() ? owner.getDisplayName().appendText("'s Team") : new TextComponentTranslation("ftblib.lang.team.no_team");
 		}
 		else
 		{
@@ -253,6 +255,21 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 
 		cachedTitle = StringUtils.color(cachedTitle, getColor().getTextFormatting());
 		return cachedTitle;
+	}
+
+	public ITextComponent getCommandTitle()
+	{
+		ITextComponent component = getTitle().createCopy();
+
+		if (!isValid())
+		{
+			return component;
+		}
+
+		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("/team info " + getID())));
+		component.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/team info " + getID()));
+		component.getStyle().setColor(getColor().getTextFormatting());
+		return component;
 	}
 
 	public void setTitle(String s)

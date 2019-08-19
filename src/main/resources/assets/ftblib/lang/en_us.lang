@@ -141,6 +141,7 @@ team_config.ftblib.free_to_join=Free to Join
 team_config.ftblib.free_to_join.tooltip=Anyone can join without invitation
 
 # Teams
+ftblib.lang.team.no_team=No Team
 ftblib.lang.team.created=Team '%s' created
 ftblib.lang.team.id_already_exists=ID already registered!
 ftblib.lang.team.id_invalid=ID can only contain lowercase a-z, _ and |!
@@ -243,6 +244,14 @@ commands.team.status.cant_set=Status can't be set!
 commands.team.msg.usage=/team msg <message...>
 commands.team.delete.usage=/team delete <team>
 commands.team.request_invite.usage=/team request_invite <team>
+commands.team.info.usage=/team info <team>
+commands.team.info.id=ID: %s
+commands.team.info.uid=UID: %s
+commands.team.info.owner=Owner: %s
+commands.team.info.members=Members: %s
+commands.team.get.usage=/team get <player>
+commands.team.list.usage=/team list
+commands.team.list.teams=List of all teams (%d):
 commands.add_fake_player.usage=/add_fake_player <uuid> <name>
 
 # Client Commands
