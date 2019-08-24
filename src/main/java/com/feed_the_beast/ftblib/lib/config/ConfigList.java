@@ -46,6 +46,16 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 		@Override
 		public void readFromList()
 		{
+			if (list.size() == collection.size() && collection instanceof List)
+			{
+				for (int i = 0; i < list.size(); i++)
+				{
+					((List<V>) collection).set(i, fromConfig.apply(list.get(i)));
+				}
+
+				return;
+			}
+
 			collection.clear();
 
 			for (C value : list)
