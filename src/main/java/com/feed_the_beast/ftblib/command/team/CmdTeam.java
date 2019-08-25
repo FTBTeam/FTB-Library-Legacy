@@ -24,6 +24,7 @@ public class CmdTeam extends CmdTreeBase
 		addSubcommand(new CmdInfo());
 		addSubcommand(new CmdGet());
 		addSubcommand(new CmdList());
+		addSubcommand(new CmdSettingsFor());
 		addSubcommand(new CmdTreeHelp(this));
 	}
 }

@@ -11,9 +11,6 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * @author LatvianModder
  */
@@ -22,12 +19,6 @@ public class CmdSettings extends CmdEditConfigBase
 	public CmdSettings()
 	{
 		super("settings", Level.ALL);
-	}
-
-	@Override
-	public List<String> getAliases()
-	{
-		return Collections.singletonList("config");
 	}
 
 	@Override
