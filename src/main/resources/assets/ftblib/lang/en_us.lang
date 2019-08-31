@@ -172,7 +172,8 @@ team_action.ftblib.members=Members
 team_action.ftblib.allies=Allies
 team_action.ftblib.moderators=Moderators
 team_action.ftblib.enemies=Enemies
-team_action.ftblib.leave=Exit Team
+team_action.ftblib.leave=Leave Team
+team_action.ftblib.leave.warning=Warning! You may lose quest progress and other things if you do!
 team_action.ftblib.transfer_ownership=Transfer Ownership
 
 ftblib.lang.team.gui.join_team=Click to join '%s'
