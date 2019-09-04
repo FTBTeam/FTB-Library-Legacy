@@ -6,7 +6,9 @@ import com.feed_the_beast.ftblib.lib.gui.Panel;
 import com.feed_the_beast.ftblib.lib.gui.SimpleTextButton;
 import com.feed_the_beast.ftblib.lib.gui.WidgetType;
 import com.feed_the_beast.ftblib.lib.util.misc.MouseButton;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,7 +36,8 @@ public class GuiActionList extends GuiButtonListBase
 
 			if (action.requiresConfirm)
 			{
-				openYesNo(action.title.getFormattedText() + "?", "", () -> callback.accept(action.id));
+				String key = "team_action." + action.id.getNamespace() + "." + action.id.getPath() + ".confirmation";
+				openYesNo(action.title.getFormattedText() + "?", I18n.hasKey(key) ? (TextFormatting.RED + I18n.format(key)) : "", () -> callback.accept(action.id));
 			}
 			else
 			{

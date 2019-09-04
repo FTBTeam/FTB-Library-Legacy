@@ -22,6 +22,9 @@ gui.settings=Settings
 gui.rename=Rename
 gui.search_box=Search...
 gui.move=Move
+gui.copy=Copy
+gui.paste=Paste
+gui.cut=Cut
 
 ## Labels
 gui.other=Other
@@ -172,8 +175,9 @@ team_action.ftblib.members=Members
 team_action.ftblib.allies=Allies
 team_action.ftblib.moderators=Moderators
 team_action.ftblib.enemies=Enemies
+team_action.ftblib.change_team=Join another Team
 team_action.ftblib.leave=Leave Team
-team_action.ftblib.leave.warning=Warning! You may lose quest progress and other things if you do!
+team_action.ftblib.leave.confirmation=Warning! You may lose quest progress and other things if you do!
 team_action.ftblib.transfer_ownership=Transfer Ownership
 
 ftblib.lang.team.gui.join_team=Click to join '%s'
