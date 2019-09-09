@@ -883,8 +883,26 @@ public class Universe
 			}
 		}
 
+		if (id.equals("fakeplayer"))
+		{
+			return fakePlayerTeam;
+		}
+
 		ForgeTeam team = teams.get(id);
-		return team == null ? (id.equals("fakeplayer") ? fakePlayerTeam : noneTeam) : team;
+
+		if (team != null)
+		{
+			return team;
+		}
+
+		ForgePlayer player = getPlayer(id);
+
+		if (player != null)
+		{
+			return player.team;
+		}
+
+		return noneTeam;
 	}
 
 	public ForgeTeam getTeam(short uid)
