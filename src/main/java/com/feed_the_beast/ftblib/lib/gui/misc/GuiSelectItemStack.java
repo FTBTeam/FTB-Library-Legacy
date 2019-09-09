@@ -38,6 +38,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +50,9 @@ import java.util.function.Consumer;
 public class GuiSelectItemStack extends GuiBase
 {
 	private static boolean allItems = true;
+
+	@GameRegistry.ObjectHolder("ftbquests:custom_icon")
+	public static Item CUSTOM_ICON_ITEM;
 
 	private class ItemStackButton extends Button
 	{
@@ -109,7 +113,14 @@ public class GuiSelectItemStack extends GuiBase
 		@Override
 		public void drawIcon(Theme theme, int x, int y, int w, int h)
 		{
-			GuiHelper.drawItem(stack, x, y, w / 16D, h / 16D, true);
+			if (stack.getItem() == CUSTOM_ICON_ITEM && stack.hasTagCompound() && !stack.getTagCompound().getString("icon").isEmpty())
+			{
+				Icon.getIcon(stack.getTagCompound().getString("icon")).draw(x, y, w, h);
+			}
+			else
+			{
+				GuiHelper.drawItem(stack, x, y, w / 16D, h / 16D, true);
+			}
 		}
 
 		@Override
