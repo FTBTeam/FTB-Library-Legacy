@@ -35,7 +35,7 @@ public class ConfigTeam extends ConfigValue
 	}
 
 	@Override
-	public String getID()
+	public String getId()
 	{
 		return TEAM_ID;
 	}
@@ -49,7 +49,7 @@ public class ConfigTeam extends ConfigValue
 	@Override
 	public String getString()
 	{
-		return get.get().getID();
+		return get.get().getId();
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class ConfigTeam extends ConfigValue
 
 		for (ForgeTeam team : get.get().universe.getTeams())
 		{
-			list.add(team.getID());
+			list.add(team.getId());
 		}
 
 		list.sort(null);
@@ -131,7 +131,7 @@ public class ConfigTeam extends ConfigValue
 		for (ForgeTeam t : teams)
 		{
 			data.writeShort(t.getUID());
-			data.writeString(t.getID());
+			data.writeString(t.getId());
 			data.writeTextComponent(t.getTitle());
 			data.writeIcon(t.getIcon());
 		}

@@ -68,7 +68,7 @@ public class ConfigEnum<E> extends ConfigValue implements IIteratingConfig
 	}
 
 	@Override
-	public String getID()
+	public String getId()
 	{
 		return ID;
 	}

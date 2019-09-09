@@ -39,11 +39,11 @@ public class CmdCreateServerTeam extends CmdBase
 		Universe universe = Universe.get();
 		universe.clearCache();
 		ForgeTeam team = new ForgeTeam(universe, universe.generateTeamUID((short) 0), args[0], TeamType.SERVER);
-		team.setTitle(team.getID());
+		team.setTitle(team.getId());
 		team.setColor(EnumTeamColor.NAME_MAP.getRandom(sender.getEntityWorld().rand));
 		team.universe.addTeam(team);
 		new ForgeTeamCreatedEvent(team).post();
-		sender.sendMessage(FTBLib.lang(sender, "ftblib.lang.team.created", team.getID()));
+		sender.sendMessage(FTBLib.lang(sender, "ftblib.lang.team.created", team.getId()));
 		team.markDirty();
 	}
 }

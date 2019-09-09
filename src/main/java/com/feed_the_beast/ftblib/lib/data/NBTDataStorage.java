@@ -69,7 +69,7 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 
 	public void add(Data data)
 	{
-		map.put(data.getID(), data);
+		map.put(data.getId(), data);
 	}
 
 	@Nullable
@@ -99,7 +99,7 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 
 			if (!nbt1.isEmpty())
 			{
-				nbt.setTag(data.getID(), nbt1);
+				nbt.setTag(data.getId(), nbt1);
 			}
 		}
 
@@ -111,7 +111,7 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 	{
 		for (Data data : map.values())
 		{
-			data.deserializeNBT(nbt.getCompoundTag(data.getID()));
+			data.deserializeNBT(nbt.getCompoundTag(data.getId()));
 		}
 	}
 

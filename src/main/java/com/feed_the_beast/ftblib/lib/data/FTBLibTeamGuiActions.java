@@ -5,7 +5,9 @@ import com.feed_the_beast.ftblib.lib.EnumTeamStatus;
 import com.feed_the_beast.ftblib.lib.gui.GuiIcons;
 import com.feed_the_beast.ftblib.net.MessageMyTeamPlayerList;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.event.ClickEvent;
 
 import java.util.function.Predicate;
 
@@ -99,6 +101,12 @@ public class FTBLibTeamGuiActions
 						{
 							player.team.addMember(p, false);
 						}
+					}
+					else if (p.isOnline())
+					{
+						ITextComponent component = new TextComponentTranslation("ftblib.lang.team.invited_you", player.team, player.getDisplayName());
+						component.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/team join " + player.team.getId()));
+						p.getPlayer().sendMessage(component);
 					}
 
 					break;

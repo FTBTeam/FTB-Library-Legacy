@@ -68,7 +68,7 @@ public class ConfigInt extends ConfigValue implements IntSupplier
 	}
 
 	@Override
-	public String getID()
+	public String getId()
 	{
 		return ID;
 	}

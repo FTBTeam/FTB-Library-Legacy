@@ -86,14 +86,14 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	}
 
 	@Override
-	public String getID()
+	public String getId()
 	{
 		return ID;
 	}
 
 	public boolean canAdd(ConfigValue value)
 	{
-		return !value.isNull() && type.getID().equals(value.getID());
+		return !value.isNull() && type.getId().equals(value.getId());
 	}
 
 	public ConfigList<T> add(ConfigValue v)
@@ -114,7 +114,7 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	public void writeData(DataOut data)
 	{
 		writeToList();
-		data.writeString(type.getID());
+		data.writeString(type.getId());
 		type.writeData(data);
 		data.writeVarInt(list.size());
 
@@ -232,7 +232,7 @@ public class ConfigList<T extends ConfigValue> extends ConfigValue implements It
 	@Override
 	public void addInfo(ConfigValueInstance inst, List<String> l)
 	{
-		l.add(TextFormatting.AQUA + "Type: " + TextFormatting.RESET + type.getID());
+		l.add(TextFormatting.AQUA + "Type: " + TextFormatting.RESET + type.getId());
 
 		if (list.isEmpty())
 		{

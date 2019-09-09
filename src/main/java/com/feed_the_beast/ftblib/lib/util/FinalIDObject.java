@@ -18,7 +18,7 @@ public class FinalIDObject implements IWithID
 	}
 
 	@Override
-	public final String getID()
+	public final String getId()
 	{
 		return id;
 	}
@@ -38,6 +38,6 @@ public class FinalIDObject implements IWithID
 	@Override
 	public boolean equals(Object o)
 	{
-		return o == this || o instanceof IWithID && id.equals(((IWithID) o).getID());
+		return o == this || o instanceof IWithID && id.equals(((IWithID) o).getId());
 	}
 }

@@ -56,7 +56,7 @@ public class ConfigBoolean extends ConfigValue implements BooleanSupplier, Boole
 	}
 
 	@Override
-	public String getID()
+	public String getId()
 	{
 		return ID;
 	}

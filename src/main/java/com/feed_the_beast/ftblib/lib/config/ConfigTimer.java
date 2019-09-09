@@ -34,7 +34,7 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	}
 
 	@Override
-	public String getID()
+	public String getId()
 	{
 		return ID;
 	}

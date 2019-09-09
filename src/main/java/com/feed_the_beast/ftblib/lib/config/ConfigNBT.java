@@ -30,7 +30,7 @@ public class ConfigNBT extends ConfigValue
 	}
 
 	@Override
-	public String getID()
+	public String getId()
 	{
 		return ID;
 	}

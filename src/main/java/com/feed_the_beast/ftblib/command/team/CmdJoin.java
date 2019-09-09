@@ -2,6 +2,7 @@ package com.feed_the_beast.ftblib.command.team;
 
 import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibGameRules;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamChangedEvent;
 import com.feed_the_beast.ftblib.lib.command.CmdBase;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
@@ -48,7 +49,7 @@ public class CmdJoin extends CmdBase
 				{
 					if (team.addMember(player, true))
 					{
-						list.add(team.getID());
+						list.add(team.getId());
 					}
 				}
 
@@ -79,16 +80,25 @@ public class CmdJoin extends CmdBase
 		EntityPlayerMP player = getCommandSenderAsPlayer(sender);
 		ForgePlayer p = CommandUtils.getForgePlayer(player);
 
-		if (p.hasTeam())
-		{
-			throw FTBLib.error(sender, "ftblib.lang.team.error.must_leave");
-		}
-
 		checkArgs(sender, args, 1);
 
 		ForgeTeam team = CommandUtils.getTeam(sender, args[0]);
 
-		if (!team.addMember(p, false))
+		if (team.addMember(p, true))
+		{
+			if (p.team.isOwner(p))
+			{
+				new ForgeTeamChangedEvent(team, p.team).post();
+				p.team.removeMember(p);
+			}
+			else if (p.hasTeam())
+			{
+				throw FTBLib.error(sender, "ftblib.lang.team.error.must_leave");
+			}
+
+			team.addMember(p, false);
+		}
+		else
 		{
 			throw FTBLib.error(sender, "ftblib.lang.team.error.not_member", p.getDisplayName());
 		}

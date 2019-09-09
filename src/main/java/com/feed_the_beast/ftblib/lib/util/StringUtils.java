@@ -76,7 +76,7 @@ public class StringUtils
 		}
 		else if (o instanceof IWithID)
 		{
-			return ((IWithID) o).getID();
+			return ((IWithID) o).getId();
 		}
 		else if (o instanceof Enum)
 		{

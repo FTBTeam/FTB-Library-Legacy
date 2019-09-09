@@ -49,7 +49,7 @@ public class CmdInfo extends CmdBase
 			throw FTBLib.error(sender, "ftblib.lang.team.error.not_found", args[0]);
 		}
 
-		sender.sendMessage(FTBLib.lang(sender, "commands.team.info.id", StringUtils.color(new TextComponentString(team.getID()), TextFormatting.BLUE)));
+		sender.sendMessage(FTBLib.lang(sender, "commands.team.info.id", StringUtils.color(new TextComponentString(team.getId()), TextFormatting.BLUE)));
 		sender.sendMessage(FTBLib.lang(sender, "commands.team.info.uid", StringUtils.color(new TextComponentString(team.getUID() + " / " + String.format("%04x", team.getUID())), TextFormatting.BLUE)));
 		sender.sendMessage(FTBLib.lang(sender, "commands.team.info.owner", team.owner == null ? "-" : StringUtils.color(team.owner.getDisplayName(), TextFormatting.BLUE)));
 

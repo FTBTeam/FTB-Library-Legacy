@@ -47,7 +47,7 @@ public class ConfigTeamClient extends ConfigString
 	}
 
 	@Override
-	public String getID()
+	public String getId()
 	{
 		return ConfigTeam.TEAM_ID;
 	}
@@ -72,10 +72,10 @@ public class ConfigTeamClient extends ConfigString
 
 		for (TeamInst inst : map.values())
 		{
-			TeamInst inst1 = new TeamInst(inst.uid, inst.getID());
+			TeamInst inst1 = new TeamInst(inst.uid, inst.getId());
 			inst1.title = inst.title.createCopy();
 			inst1.icon = inst.icon.copy();
-			config.map.put(inst1.getID(), inst1);
+			config.map.put(inst1.getId(), inst1);
 		}
 
 		return config;
@@ -131,7 +131,7 @@ public class ConfigTeamClient extends ConfigString
 			{
 				if (inst.uid == ids)
 				{
-					setString(inst.getID());
+					setString(inst.getId());
 					return;
 				}
 			}
@@ -157,7 +157,7 @@ public class ConfigTeamClient extends ConfigString
 			TeamInst inst = new TeamInst(uid, id);
 			inst.title = data.readTextComponent();
 			inst.icon = data.readIcon();
-			map.put(inst.getID(), inst);
+			map.put(inst.getId(), inst);
 		}
 
 		setString(data.readString());

@@ -185,9 +185,9 @@ public final class ConfigValueInstance extends FinalIDObject
 
 	public void writeData(DataOut data)
 	{
-		data.writeString(value.getID());
+		data.writeString(value.getId());
 		value.writeData(data);
-		data.writeString(defaultValue.getID());
+		data.writeString(defaultValue.getId());
 		defaultValue.writeData(data);
 		data.writeVarInt(flags);
 		data.writeVarInt(order);
@@ -205,7 +205,7 @@ public final class ConfigValueInstance extends FinalIDObject
 
 	public ConfigValueInstance copy(ConfigGroup g)
 	{
-		ConfigValueInstance inst = new ConfigValueInstance(getID(), g, value.copy());
+		ConfigValueInstance inst = new ConfigValueInstance(getId(), g, value.copy());
 		inst.defaultValue = defaultValue.copy();
 		inst.displayName = displayName == null ? null : displayName.createCopy();
 		inst.info = info == null ? null : info.createCopy();
@@ -217,6 +217,6 @@ public final class ConfigValueInstance extends FinalIDObject
 
 	public String getPath()
 	{
-		return group.getPath() + "." + getID();
+		return group.getPath() + "." + getId();
 	}
 }

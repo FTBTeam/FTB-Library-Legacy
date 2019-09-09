@@ -23,7 +23,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
 
 	public static final DataOut.Serializer<PublicTeamData> SERIALIZER = (data, d) ->
 	{
-		data.writeString(d.getID());
+		data.writeString(d.getId());
 		data.writeTextComponent(d.displayName);
 		data.writeString(d.description);
 		EnumTeamColor.NAME_MAP.write(data, d.color);
@@ -51,7 +51,7 @@ public class PublicTeamData extends FinalIDObject implements Comparable<PublicTe
 
 	public PublicTeamData(ForgeTeam team, Type c)
 	{
-		super(team.getID());
+		super(team.getId());
 		displayName = team.getTitle();
 		description = team.getDesc();
 		color = team.getColor();

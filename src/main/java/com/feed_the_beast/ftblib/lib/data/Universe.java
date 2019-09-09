@@ -496,7 +496,7 @@ public class Universe
 				continue;
 			}
 
-			NBTTagCompound nbt = teamNBT.get(team.getID());
+			NBTTagCompound nbt = teamNBT.get(team.getId());
 
 			if (nbt != null && !nbt.isEmpty())
 			{
@@ -575,7 +575,7 @@ public class Universe
 				NBTTagCompound nbt = player.serializeNBT();
 				nbt.setString("Name", player.getName());
 				nbt.setString("UUID", StringUtils.fromUUID(player.getId()));
-				nbt.setString("TeamID", player.team.getID());
+				nbt.setString("TeamID", player.team.getId());
 				NBTUtils.writeNBTSafe(player.getDataFile(""), nbt);
 				new ForgePlayerSavedEvent(player).post();
 				player.needsSaving = false;
@@ -588,7 +588,7 @@ public class Universe
 			{
 				if (FTBLibConfig.debugging.print_more_info)
 				{
-					FTBLib.LOGGER.info("Saved team data for " + team.getID());
+					FTBLib.LOGGER.info("Saved team data for " + team.getId());
 				}
 
 				File file = team.getDataFile("");
@@ -596,7 +596,7 @@ public class Universe
 				if (team.type.save && team.isValid())
 				{
 					NBTTagCompound nbt = team.serializeNBT();
-					nbt.setString("ID", team.getID());
+					nbt.setString("ID", team.getId());
 					nbt.setShort("UID", team.getUID());
 					nbt.setString("Type", team.type.getName());
 					NBTUtils.writeNBTSafe(file, nbt);
@@ -951,7 +951,7 @@ public class Universe
 	public void addTeam(ForgeTeam team)
 	{
 		teamMap.put(team.getUID(), team);
-		teams.put(team.getID(), team);
+		teams.put(team.getId(), team);
 	}
 
 	public void removeTeam(ForgeTeam team)
@@ -959,8 +959,8 @@ public class Universe
 		File folder = new File(getWorldDirectory(), "data/ftb_lib/teams/");
 		new ForgeTeamDeletedEvent(team, folder).post();
 		teamMap.remove(team.getUID());
-		teams.remove(team.getID());
-		FileUtils.deleteSafe(new File(folder, team.getID() + ".dat"));
+		teams.remove(team.getId());
+		FileUtils.deleteSafe(new File(folder, team.getId() + ".dat"));
 		markDirty();
 		clearCache();
 	}

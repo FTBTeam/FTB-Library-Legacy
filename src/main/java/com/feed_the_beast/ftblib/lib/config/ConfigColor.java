@@ -29,7 +29,7 @@ public class ConfigColor extends ConfigValue
 	}
 
 	@Override
-	public String getID()
+	public String getId()
 	{
 		return ID;
 	}
@@ -80,7 +80,7 @@ public class ConfigColor extends ConfigValue
 
 				if (s.length == 3 || s.length == 4)
 				{
-					int c[] = new int[4];
+					int[] c = new int[4];
 					c[3] = 255;
 
 					for (int i = 0; i < s.length; i++)

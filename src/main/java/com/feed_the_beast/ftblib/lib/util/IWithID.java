@@ -5,5 +5,5 @@ package com.feed_the_beast.ftblib.lib.util;
  */
 public interface IWithID
 {
-	String getID();
+	String getId();
 }

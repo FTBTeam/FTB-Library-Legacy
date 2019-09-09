@@ -36,13 +36,13 @@ public class ConfigGroup extends FinalIDObject
 
 	public static final DataOut.Serializer<ConfigGroup> SERIALIZER = (data, object) ->
 	{
-		data.writeString(object.getID());
+		data.writeString(object.getId());
 		data.writeTextComponent(object.displayName);
 		data.writeVarInt(object.values.size());
 
 		for (ConfigValueInstance instance : object.getValues())
 		{
-			data.writeString(instance.getID());
+			data.writeString(instance.getId());
 			instance.writeData(data);
 		}
 
@@ -65,7 +65,7 @@ public class ConfigGroup extends FinalIDObject
 		for (int i = 0; i < s; i++)
 		{
 			ConfigValueInstance inst = new ConfigValueInstance(group, data);
-			group.values.put(inst.getID(), inst);
+			group.values.put(inst.getId(), inst);
 		}
 
 		s = data.readVarInt();
@@ -75,7 +75,7 @@ public class ConfigGroup extends FinalIDObject
 		{
 			ConfigGroup group1 = ConfigGroup.DESERIALIZER.read(data);
 			group1.parent = group;
-			group.groups.put(group1.getID(), group1);
+			group.groups.put(group1.getId(), group1);
 		}
 
 		return group;
@@ -127,7 +127,7 @@ public class ConfigGroup extends FinalIDObject
 			{
 				g = new ConfigGroup(id);
 				g.parent = this;
-				groups.put(g.getID(), g);
+				groups.put(g.getId(), g);
 			}
 
 			return g;
@@ -143,7 +143,7 @@ public class ConfigGroup extends FinalIDObject
 			throw new IllegalArgumentException("Can't add to this group, parent doesn't match!");
 		}
 
-		values.put(inst.getID(), inst);
+		values.put(inst.getId(), inst);
 		return inst;
 	}
 
@@ -247,14 +247,14 @@ public class ConfigGroup extends FinalIDObject
 
 	public ConfigGroup copy()
 	{
-		ConfigGroup g = new ConfigGroup(getID());
+		ConfigGroup g = new ConfigGroup(getId());
 		g.displayName = displayName == null ? null : displayName.createCopy();
 
 		for (ConfigGroup group : getGroups())
 		{
 			ConfigGroup gr = group.copy();
 			gr.parent = g;
-			g.groups.put(gr.getID(), gr);
+			g.groups.put(gr.getId(), gr);
 		}
 
 		for (ConfigValueInstance instance : getValues())
@@ -269,10 +269,10 @@ public class ConfigGroup extends FinalIDObject
 	{
 		if (parent == null)
 		{
-			return getID();
+			return getId();
 		}
 
-		return parent.getPath() + "." + getID();
+		return parent.getPath() + "." + getId();
 	}
 
 	public ITextComponent getDisplayNameOf(ConfigValueInstance inst)
@@ -305,11 +305,11 @@ public class ConfigGroup extends FinalIDObject
 		{
 			if (path.isEmpty())
 			{
-				list.add(instance.getID());
+				list.add(instance.getId());
 			}
 			else
 			{
-				list.add(path + "." + instance.getID());
+				list.add(path + "." + instance.getId());
 			}
 		}
 	}
@@ -320,15 +320,15 @@ public class ConfigGroup extends FinalIDObject
 
 		for (ConfigGroup group : getGroups())
 		{
-			map.put(group.getID(), group.toString());
+			map.put(group.getId(), group.toString());
 		}
 
 		for (ConfigValueInstance instance : getValues())
 		{
-			map.put(instance.getID(), instance.getValue().getString());
+			map.put(instance.getId(), instance.getValue().getString());
 		}
 
-		return parent == null ? (getID() + "#" + map) : map.toString();
+		return parent == null ? (getId() + "#" + map) : map.toString();
 	}
 
 	public NBTTagCompound serializeNBT()
@@ -339,13 +339,13 @@ public class ConfigGroup extends FinalIDObject
 		{
 			if (!instance.getExcluded())
 			{
-				instance.getValue().writeToNBT(nbt, instance.getID());
+				instance.getValue().writeToNBT(nbt, instance.getId());
 			}
 		}
 
 		for (ConfigGroup group : getGroups())
 		{
-			nbt.setTag(group.getID(), group.serializeNBT());
+			nbt.setTag(group.getId(), group.serializeNBT());
 		}
 
 		return nbt;
@@ -357,13 +357,13 @@ public class ConfigGroup extends FinalIDObject
 		{
 			if (!instance.getExcluded() && instance.getCanEdit())
 			{
-				instance.getValue().readFromNBT(nbt, instance.getID());
+				instance.getValue().readFromNBT(nbt, instance.getId());
 			}
 		}
 
 		for (ConfigGroup group : getGroups())
 		{
-			group.deserializeNBT(nbt.getCompoundTag(group.getID()));
+			group.deserializeNBT(nbt.getCompoundTag(group.getId()));
 		}
 	}
 }

@@ -266,8 +266,8 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 			return component;
 		}
 
-		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("/team info " + getID())));
-		component.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/team info " + getID()));
+		component.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("/team info " + getId())));
+		component.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/team info " + getId()));
 		component.getStyle().setColor(getColor().getTextFormatting());
 		return component;
 	}
@@ -409,7 +409,7 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 		{
 			return fakePlayerStatus;
 		}
-		else if (type == TeamType.SERVER && getID().equals("singleplayer"))
+		else if (type == TeamType.SERVER && getId().equals("singleplayer"))
 		{
 			return EnumTeamStatus.MOD;
 		}
@@ -732,7 +732,7 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 
 		if (ext.isEmpty())
 		{
-			return new File(dir, getID() + ".dat");
+			return new File(dir, getId() + ".dat");
 		}
 
 		File extFolder = new File(dir, ext);
@@ -742,11 +742,11 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 			extFolder.mkdirs();
 		}
 
-		File extFile = new File(extFolder, getID() + ".dat");
+		File extFile = new File(extFolder, getId() + ".dat");
 
 		if (!extFile.exists())
 		{
-			File oldExtFile = new File(dir, getID() + "." + ext + ".dat");
+			File oldExtFile = new File(dir, getId() + "." + ext + ".dat");
 
 			if (oldExtFile.exists())
 			{

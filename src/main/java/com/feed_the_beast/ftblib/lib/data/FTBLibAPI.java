@@ -169,7 +169,7 @@ public class FTBLibAPI
 			return false;
 		}
 
-		return p.hasTeam() ? p.team.getID().equals(team) : team.isEmpty();
+		return p.hasTeam() ? p.team.getId().equals(team) : team.isEmpty();
 	}
 
 	public static boolean isPlayerInTeam(UUID player, int team)
@@ -197,7 +197,7 @@ public class FTBLibAPI
 		}
 
 		ForgePlayer p = Universe.get().getPlayer(player);
-		return p == null ? "" : p.team.getID();
+		return p == null ? "" : p.team.getId();
 	}
 
 	public static short getTeamID(UUID player)

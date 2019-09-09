@@ -15,7 +15,7 @@ public abstract class PlayerData implements NBTDataStorage.Data
 	@Override
 	public final int hashCode()
 	{
-		return getID().hashCode() * 31 + player.hashCode();
+		return getId().hashCode() * 31 + player.hashCode();
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public abstract class PlayerData implements NBTDataStorage.Data
 		}
 		else if (o instanceof PlayerData)
 		{
-			return player.equalsPlayer(((PlayerData) o).player) && getID().equals(((PlayerData) o).getID());
+			return player.equalsPlayer(((PlayerData) o).player) && getId().equals(((PlayerData) o).getId());
 		}
 
 		return false;
@@ -35,6 +35,6 @@ public abstract class PlayerData implements NBTDataStorage.Data
 
 	public final String toString()
 	{
-		return player.getName() + ':' + getID();
+		return player.getName() + ':' + getId();
 	}
 }

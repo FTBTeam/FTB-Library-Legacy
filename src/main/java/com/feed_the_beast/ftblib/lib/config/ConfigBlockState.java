@@ -26,7 +26,7 @@ public class ConfigBlockState extends ConfigValue
 	}
 
 	@Override
-	public String getID()
+	public String getId()
 	{
 		return ID;
 	}
