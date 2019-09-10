@@ -16,6 +16,7 @@ import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.util.FinalIDObject;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
@@ -764,5 +765,20 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 		clearCache();
 		markDirty();
 		new ForgeTeamConfigSavedEvent(this, group, sender).post();
+	}
+
+	public List<EntityPlayerMP> getOnlineMembers()
+	{
+		List<EntityPlayerMP> list = new ArrayList<>();
+
+		for (ForgePlayer player : getMembers())
+		{
+			if (player.isOnline())
+			{
+				list.add(player.getPlayer());
+			}
+		}
+
+		return list;
 	}
 }
