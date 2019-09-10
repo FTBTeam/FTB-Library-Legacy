@@ -518,7 +518,7 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 
 				if (s.length == 2)
 				{
-					return handleClick("https://minecraft.curseforge.com/projects/" + s[0] + "/pages/" + s[1]);
+					return handleClick("https://www.curseforge.com/minecraft/mc-mods/" + s[0] + "/pages/" + s[1]);
 				}
 
 				return false;
