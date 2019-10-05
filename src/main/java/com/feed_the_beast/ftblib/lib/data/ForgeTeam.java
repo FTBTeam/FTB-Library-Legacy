@@ -233,9 +233,10 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 		return dataStorage;
 	}
 
-	public boolean hasOwner()
+	@Nullable
+	public ForgePlayer getOwner()
 	{
-		return type.isPlayer && owner != null;
+		return type.isPlayer ? owner : null;
 	}
 
 	public ITextComponent getTitle()
@@ -247,7 +248,7 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 
 		if (title.isEmpty())
 		{
-			cachedTitle = hasOwner() ? owner.getDisplayName().appendText("'s Team") : new TextComponentTranslation("ftblib.lang.team.no_team");
+			cachedTitle = getOwner() != null ? getOwner().getDisplayName().appendText("'s Team") : new TextComponentTranslation("ftblib.lang.team.no_team");
 		}
 		else
 		{
@@ -316,9 +317,9 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 		{
 			if (icon.isEmpty())
 			{
-				if (hasOwner())
+				if (getOwner() != null)
 				{
-					cachedIcon = new PlayerHeadIcon(owner.getProfile().getId());
+					cachedIcon = new PlayerHeadIcon(getOwner().getProfile().getId());
 				}
 				else
 				{
@@ -465,10 +466,10 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 				return false;
 			}
 
-			if (!player.equalsPlayer(owner))
+			if (!player.equalsPlayer(getOwner()))
 			{
 				universe.clearCache();
-				ForgePlayer oldOwner = owner;
+				ForgePlayer oldOwner = getOwner();
 				owner = player;
 				players.remove(player);
 				new ForgeTeamOwnerChangedEvent(this, oldOwner).post();
@@ -673,7 +674,7 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 
 	public boolean isOwner(@Nullable ForgePlayer player)
 	{
-		return player != null && player.equalsPlayer(owner);
+		return player != null && player.equalsPlayer(getOwner());
 	}
 
 	public ConfigGroup getSettings()
@@ -706,7 +707,7 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 			return false;
 		}
 
-		return type.isServer || hasOwner();
+		return type.isServer || getOwner() != null;
 	}
 
 	public boolean equalsTeam(@Nullable ForgeTeam team)

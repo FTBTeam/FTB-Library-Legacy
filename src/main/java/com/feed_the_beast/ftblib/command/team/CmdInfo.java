@@ -51,7 +51,7 @@ public class CmdInfo extends CmdBase
 
 		sender.sendMessage(FTBLib.lang(sender, "commands.team.info.id", StringUtils.color(new TextComponentString(team.getId()), TextFormatting.BLUE)));
 		sender.sendMessage(FTBLib.lang(sender, "commands.team.info.uid", StringUtils.color(new TextComponentString(team.getUID() + " / " + String.format("%04x", team.getUID())), TextFormatting.BLUE)));
-		sender.sendMessage(FTBLib.lang(sender, "commands.team.info.owner", team.owner == null ? "-" : StringUtils.color(team.owner.getDisplayName(), TextFormatting.BLUE)));
+		sender.sendMessage(FTBLib.lang(sender, "commands.team.info.owner", team.getOwner() == null ? "-" : StringUtils.color(team.getOwner().getDisplayName(), TextFormatting.BLUE)));
 
 		ITextComponent component = new TextComponentString("");
 		component.getStyle().setColor(TextFormatting.GOLD);

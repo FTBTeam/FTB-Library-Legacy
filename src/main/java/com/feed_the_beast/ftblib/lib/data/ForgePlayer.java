@@ -37,7 +37,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -52,12 +51,12 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 	private final NBTDataStorage dataStorage;
 	public ForgeTeam team;
 	private boolean hideTeamNotification;
-	public EntityPlayerMP entityPlayer;
 	public NBTTagCompound cachedPlayerNBT;
 	private ConfigGroup cachedConfig;
 	private GameProfile cachedProfile;
 	public long lastTimeSeen;
 	public boolean needsSaving;
+	private boolean online;
 
 	public ForgePlayer(Universe u, UUID id, String name)
 	{
@@ -68,6 +67,7 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 		hideTeamNotification = false;
 		new ForgePlayerDataEvent(this, dataStorage::add).post();
 		needsSaving = false;
+		online = false;
 	}
 
 	@Override
@@ -112,10 +112,6 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 		if (isFake())
 		{
 			return ServerUtils.FAKE_PLAYER_PROFILE;
-		}
-		else if (isOnline())
-		{
-			return entityPlayer.getGameProfile();
 		}
 
 		if (cachedProfile == null)
@@ -200,7 +196,7 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 
 	public boolean equalsPlayer(@Nullable ICommandSender player)
 	{
-		return player == entityPlayer || (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).getUniqueID().equals(getId()));
+		return player instanceof EntityPlayerMP && ((EntityPlayerMP) player).getUniqueID().equals(getId());
 	}
 
 	@Override
@@ -248,12 +244,24 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 
 	public boolean isOnline()
 	{
-		return entityPlayer != null;
+		return online;
+	}
+
+	void setOnline(boolean b)
+	{
+		online = b;
 	}
 
 	public EntityPlayerMP getPlayer()
 	{
-		return Objects.requireNonNull(entityPlayer, "EntityPlayer can't be null!");
+		EntityPlayerMP p = online ? team.universe.server.getPlayerList().getPlayerByUUID(getId()) : null;
+
+		if (p == null)
+		{
+			throw new NullPointerException(getName() + " is not online!");
+		}
+
+		return p;
 	}
 
 	public boolean isFake()
@@ -266,17 +274,13 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 		return ServerUtils.isOP(team.universe.server, getProfile());
 	}
 
-	public void onLoggedOut()
+	public void onLoggedOut(EntityPlayerMP entityPlayer)
 	{
-		if (entityPlayer != null)
-		{
-			lastTimeSeen = entityPlayer.world.getTotalWorldTime();
-			//FTBLibStats.updateLastSeen(stats());
-			new ForgePlayerLoggedOutEvent(this).post();
-			entityPlayer = null;
-			clearCache();
-			markDirty();
-		}
+		lastTimeSeen = entityPlayer.world.getTotalWorldTime();
+		//FTBLibStats.updateLastSeen(stats());
+		new ForgePlayerLoggedOutEvent(this).post();
+		clearCache();
+		markDirty();
 	}
 
 	public StatisticsManagerServer stats()

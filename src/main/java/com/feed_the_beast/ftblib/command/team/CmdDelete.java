@@ -46,17 +46,19 @@ public class CmdDelete extends CmdBase
 			throw FTBLib.error(sender, "ftblib.lang.team.error.not_found", args[0]);
 		}
 
+		ForgePlayer o = team.getOwner();
+
 		for (ForgePlayer player : team.getMembers())
 		{
-			if (player != team.owner)
+			if (player != o)
 			{
 				team.removeMember(player);
 			}
 		}
 
-		if (team.owner != null)
+		if (o != null)
 		{
-			team.removeMember(team.owner);
+			team.removeMember(o);
 		}
 
 		team.delete();

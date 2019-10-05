@@ -46,6 +46,7 @@ import net.minecraft.util.text.event.ClickEvent;
 import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -139,7 +140,10 @@ public class Universe
 		{
 			for (ForgePlayer player : INSTANCE.getPlayers())
 			{
-				player.onLoggedOut();
+				if (player.isOnline())
+				{
+					player.onLoggedOut(player.getPlayer());
+				}
 			}
 
 			LOGGED_IN_PLAYERS.clear();
@@ -173,7 +177,12 @@ public class Universe
 	{
 		if (loaded() && event.player instanceof EntityPlayerMP && LOGGED_IN_PLAYERS.remove(event.player.getUniqueID()))
 		{
-			INSTANCE.onPlayerLoggedOut((EntityPlayerMP) event.player);
+			ForgePlayer p = INSTANCE.getPlayer(event.player.getGameProfile());
+
+			if (p != null)
+			{
+				p.onLoggedOut((EntityPlayerMP) event.player);
+			}
 		}
 	}
 
@@ -183,12 +192,6 @@ public class Universe
 		if (event.getEntity() instanceof EntityPlayerMP)
 		{
 			INSTANCE.clearCache();
-			ForgePlayer player = INSTANCE.getPlayer(event.getEntity().getUniqueID());
-
-			if (player != null)
-			{
-				player.entityPlayer = (EntityPlayerMP) event.getEntity();
-			}
 		}
 	}
 
@@ -265,7 +268,7 @@ public class Universe
 	private boolean needsSaving;
 	boolean checkSaving;
 	public ForgeTeam fakePlayerTeam;
-	public ForgePlayer fakePlayer;
+	public FakeForgePlayer fakePlayer;
 	private final List<ScheduledTask> scheduledTasks;
 	private final List<PersistentScheduledTask> persistentScheduledTasks;
 	private final List<ScheduledTask> scheduledTaskQueue;
@@ -456,21 +459,7 @@ public class Universe
 			}
 		};
 
-		fakePlayer = new ForgePlayer(this, ServerUtils.FAKE_PLAYER_PROFILE.getId(), ServerUtils.FAKE_PLAYER_PROFILE.getName())
-		{
-			@Override
-			public void markDirty()
-			{
-				Universe.this.markDirty();
-			}
-
-			@Override
-			public boolean isFake()
-			{
-				return true;
-			}
-		};
-
+		fakePlayer = new FakeForgePlayer(this);
 		fakePlayer.team = fakePlayerTeam;
 		fakePlayerTeam.setColor(EnumTeamColor.GRAY);
 
@@ -628,18 +617,26 @@ public class Universe
 		}
 
 		ForgePlayer p = getPlayer(player.getGameProfile());
+
+		if (p != null && p.isOnline())
+		{
+			return;
+		}
+
 		boolean firstLogin = p == null;
 
 		if (firstLogin)
 		{
 			p = new ForgePlayer(this, player.getUniqueID(), player.getName());
 			players.put(p.getId(), p);
-			p.clearCache();
+			INSTANCE.clearCache();
 		}
 		else if (!p.getName().equals(player.getName()))
 		{
 			p.setName(player.getName());
 		}
+
+		p.setOnline(true);
 
 		boolean sendTeamJoinEvent = false, sendTeamCreatedEvent = false;
 
@@ -691,14 +688,13 @@ public class Universe
 			}
 		}
 
-		p.entityPlayer = player;
-		p.clearCache();
+		INSTANCE.clearCache();
 
 		if (!p.isFake())
 		{
 			p.lastTimeSeen = ticks.ticks();
 			//FTBLibStats.updateLastSeen(stats());
-			new MessageSyncData(true, player, p).sendTo(p.entityPlayer);
+			new MessageSyncData(true, player, p).sendTo(player);
 		}
 
 		new ForgePlayerLoggedInEvent(p).post();
@@ -733,16 +729,6 @@ public class Universe
 		}
 
 		p.markDirty();
-	}
-
-	private void onPlayerLoggedOut(EntityPlayerMP player)
-	{
-		ForgePlayer p = INSTANCE.getPlayer(player.getGameProfile());
-
-		if (p != null)
-		{
-			p.onLoggedOut();
-		}
 	}
 
 	public Collection<ForgePlayer> getPlayers()
@@ -813,7 +799,7 @@ public class Universe
 
 			if (ServerUtils.isFake(player))
 			{
-				fakePlayer.entityPlayer = player;
+				fakePlayer.playerEntity = (FakePlayer) player;
 				fakePlayer.clearCache();
 				return fakePlayer;
 			}
