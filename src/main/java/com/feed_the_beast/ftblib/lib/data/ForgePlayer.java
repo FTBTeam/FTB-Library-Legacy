@@ -5,16 +5,22 @@ import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerConfigSavedEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
+import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
+import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
+import com.feed_the_beast.ftblib.lib.EnumTeamColor;
 import com.feed_the_beast.ftblib.lib.config.ConfigGroup;
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
+import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.EnumPrivacyLevel;
 import com.feed_the_beast.ftblib.lib.util.misc.Node;
+import com.feed_the_beast.ftblib.net.MessageSyncData;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -25,6 +31,9 @@ import net.minecraft.stats.StatisticsManagerServer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.server.permission.PermissionAPI;
@@ -57,6 +66,7 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 	public long lastTimeSeen;
 	public boolean needsSaving;
 	private boolean online;
+	public EntityPlayerMP tempPlayer;
 
 	public ForgePlayer(Universe u, UUID id, String name)
 	{
@@ -65,7 +75,7 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 		dataStorage = new NBTDataStorage();
 		team = u.getTeam("");
 		hideTeamNotification = false;
-		new ForgePlayerDataEvent(this, dataStorage::add).post();
+		new ForgePlayerDataEvent(this, dataStorage).post();
 		needsSaving = false;
 		online = false;
 	}
@@ -107,13 +117,8 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 		return team.isValid();
 	}
 
-	public final GameProfile getProfile()
+	public GameProfile getProfile()
 	{
-		if (isFake())
-		{
-			return ServerUtils.FAKE_PLAYER_PROFILE;
-		}
-
 		if (cachedProfile == null)
 		{
 			cachedProfile = new GameProfile(playerId, playerName);
@@ -247,13 +252,13 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 		return online;
 	}
 
-	void setOnline(boolean b)
-	{
-		online = b;
-	}
-
 	public EntityPlayerMP getPlayer()
 	{
+		if (tempPlayer != null)
+		{
+			return tempPlayer;
+		}
+
 		EntityPlayerMP p = online ? team.universe.server.getPlayerList().getPlayerByUUID(getId()) : null;
 
 		if (p == null)
@@ -274,11 +279,106 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 		return ServerUtils.isOP(team.universe.server, getProfile());
 	}
 
-	public void onLoggedOut(EntityPlayerMP entityPlayer)
+	void onLoggedIn(EntityPlayerMP player, Universe universe, boolean firstLogin)
 	{
-		lastTimeSeen = entityPlayer.world.getTotalWorldTime();
-		//FTBLibStats.updateLastSeen(stats());
+		tempPlayer = player;
+		online = true;
+
+		boolean sendTeamJoinEvent = false, sendTeamCreatedEvent = false;
+
+		if (firstLogin && (player.server.isSinglePlayer() ? FTBLibConfig.teams.autocreate_sp : FTBLibConfig.teams.autocreate_mp))
+		{
+			if (player.server.isSinglePlayer())
+			{
+				team = universe.getTeam("singleplayer");
+
+				if (!team.isValid())
+				{
+					team = new ForgeTeam(universe, (short) 2, "singleplayer", TeamType.SERVER);
+					team.setFreeToJoin(true);
+					universe.addTeam(team);
+					team.setTitle(getName());
+					team.setIcon(new PlayerHeadIcon(getId()).toString());
+					team.setColor(EnumTeamColor.NAME_MAP.getRandom(universe.world.rand));
+					team.markDirty();
+					sendTeamCreatedEvent = true;
+				}
+
+				sendTeamJoinEvent = true;
+			}
+			else
+			{
+				String id = getName().toLowerCase();
+
+				if (universe.getTeam(id).isValid())
+				{
+					id = StringUtils.fromUUID(getId());
+				}
+
+				if (!universe.getTeam(id).isValid())
+				{
+					team = new ForgeTeam(universe, universe.generateTeamUID((short) 0), id, TeamType.PLAYER);
+					team.owner = this;
+					universe.addTeam(team);
+					team.setColor(EnumTeamColor.NAME_MAP.getRandom(universe.world.rand));
+					team.markDirty();
+					sendTeamCreatedEvent = true;
+					sendTeamJoinEvent = true;
+				}
+			}
+		}
+
+		universe.clearCache();
+
+		if (!isFake())
+		{
+			lastTimeSeen = universe.ticks.ticks();
+			//FTBLibStats.updateLastSeen(stats());
+			new MessageSyncData(true, player, this).sendTo(player);
+		}
+
+		new ForgePlayerLoggedInEvent(this).post();
+
+		if (sendTeamCreatedEvent)
+		{
+			new ForgeTeamCreatedEvent(team).post();
+		}
+
+		if (sendTeamJoinEvent)
+		{
+			ForgeTeamPlayerJoinedEvent event = new ForgeTeamPlayerJoinedEvent(this);
+			event.post();
+
+			if (event.getDisplayGui() != null)
+			{
+				event.getDisplayGui().run();
+			}
+		}
+
+		if (!hideTeamNotification() && !hasTeam())
+		{
+			ITextComponent b1 = FTBLib.lang(player, "click_here");
+			b1.getStyle().setColor(TextFormatting.GOLD);
+			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftblib_simulate_button custom:ftblib:my_team_gui"));
+			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLib.lang(player, "sidebar_button.ftblib.my_team")));
+			ITextComponent b2 = FTBLib.lang(player, "click_here");
+			b2.getStyle().setColor(TextFormatting.GOLD);
+			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/my_settings " + FTBLib.MOD_ID + ".hide_team_notification toggle"));
+			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLib.lang(player, "ftblib.lang.team.notification.hide")));
+			player.sendMessage(FTBLib.lang(player, "ftblib.lang.team.notification", b1, b2));
+		}
+
+		tempPlayer = null;
+		markDirty();
+	}
+
+	void onLoggedOut(EntityPlayerMP p)
+	{
+		tempPlayer = p;
+		lastTimeSeen = p.world.getTotalWorldTime();
 		new ForgePlayerLoggedOutEvent(this).post();
+		online = false;
+		tempPlayer = null;
 		clearCache();
 		markDirty();
 	}

@@ -1,36 +1,40 @@
 package com.feed_the_beast.ftblib.lib.data;
 
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.util.FakePlayer;
 
 /**
  * @author LatvianModder
  */
 public class FakeForgePlayer extends ForgePlayer
 {
-	public FakePlayer playerEntity;
-
 	public FakeForgePlayer(Universe u)
 	{
 		super(u, ServerUtils.FAKE_PLAYER_PROFILE.getId(), ServerUtils.FAKE_PLAYER_PROFILE.getName());
 	}
 
 	@Override
+	public GameProfile getProfile()
+	{
+		return ServerUtils.FAKE_PLAYER_PROFILE;
+	}
+
+	@Override
 	public boolean isOnline()
 	{
-		return playerEntity != null;
+		return tempPlayer != null;
 	}
 
 	@Override
 	public EntityPlayerMP getPlayer()
 	{
-		if (playerEntity == null)
+		if (tempPlayer == null)
 		{
 			throw new NullPointerException("Fake player not set yet!");
 		}
 
-		return playerEntity;
+		return tempPlayer;
 	}
 
 	@Override

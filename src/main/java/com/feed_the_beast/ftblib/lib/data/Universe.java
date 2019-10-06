@@ -4,12 +4,9 @@ import com.feed_the_beast.ftblib.FTBLib;
 import com.feed_the_beast.ftblib.FTBLibConfig;
 import com.feed_the_beast.ftblib.events.ServerReloadEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoadedEvent;
-import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerSavedEvent;
-import com.feed_the_beast.ftblib.events.team.ForgeTeamCreatedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamDeletedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamLoadedEvent;
-import com.feed_the_beast.ftblib.events.team.ForgeTeamPlayerJoinedEvent;
 import com.feed_the_beast.ftblib.events.team.ForgeTeamSavedEvent;
 import com.feed_the_beast.ftblib.events.universe.PersistentScheduledTaskEvent;
 import com.feed_the_beast.ftblib.events.universe.UniverseClearCacheEvent;
@@ -19,7 +16,6 @@ import com.feed_the_beast.ftblib.events.universe.UniverseSavedEvent;
 import com.feed_the_beast.ftblib.lib.ATHelper;
 import com.feed_the_beast.ftblib.lib.EnumReloadType;
 import com.feed_the_beast.ftblib.lib.EnumTeamColor;
-import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
 import com.feed_the_beast.ftblib.lib.io.DataReader;
 import com.feed_the_beast.ftblib.lib.math.MathUtils;
 import com.feed_the_beast.ftblib.lib.math.Ticks;
@@ -29,7 +25,6 @@ import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.IScheduledTask;
 import com.feed_the_beast.ftblib.lib.util.misc.TimeType;
-import com.feed_the_beast.ftblib.net.MessageSyncData;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
@@ -40,13 +35,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
@@ -629,106 +619,13 @@ public class Universe
 		{
 			p = new ForgePlayer(this, player.getUniqueID(), player.getName());
 			players.put(p.getId(), p);
-			INSTANCE.clearCache();
 		}
 		else if (!p.getName().equals(player.getName()))
 		{
 			p.setName(player.getName());
 		}
 
-		p.setOnline(true);
-
-		boolean sendTeamJoinEvent = false, sendTeamCreatedEvent = false;
-
-		if (firstLogin && (player.server.isSinglePlayer() ? FTBLibConfig.teams.autocreate_sp : FTBLibConfig.teams.autocreate_mp))
-		{
-			if (!player.server.isSinglePlayer())
-			{
-				String id = p.getName().toLowerCase();
-
-				if (getTeam(id).isValid())
-				{
-					id = StringUtils.fromUUID(p.getId());
-				}
-
-				if (!getTeam(id).isValid())
-				{
-					ForgeTeam team = new ForgeTeam(this, generateTeamUID((short) 0), id, TeamType.PLAYER);
-					team.owner = p;
-					addTeam(team);
-					p.team = team;
-					team.setColor(EnumTeamColor.NAME_MAP.getRandom(world.rand));
-					team.markDirty();
-					sendTeamCreatedEvent = true;
-					sendTeamJoinEvent = true;
-				}
-			}
-			else
-			{
-				ForgeTeam team = getTeam("singleplayer");
-
-				if (!team.isValid())
-				{
-					team = new ForgeTeam(this, (short) 2, "singleplayer", TeamType.SERVER);
-					team.setFreeToJoin(true);
-					addTeam(team);
-					p.team = team;
-					team.setTitle(p.getName());
-					team.setIcon(new PlayerHeadIcon(p.getId()).toString());
-					team.setColor(EnumTeamColor.NAME_MAP.getRandom(world.rand));
-					team.markDirty();
-					sendTeamCreatedEvent = true;
-				}
-				else
-				{
-					p.team = team;
-				}
-
-				sendTeamJoinEvent = true;
-			}
-		}
-
-		INSTANCE.clearCache();
-
-		if (!p.isFake())
-		{
-			p.lastTimeSeen = ticks.ticks();
-			//FTBLibStats.updateLastSeen(stats());
-			new MessageSyncData(true, player, p).sendTo(player);
-		}
-
-		new ForgePlayerLoggedInEvent(p).post();
-
-		if (sendTeamCreatedEvent)
-		{
-			new ForgeTeamCreatedEvent(p.team).post();
-		}
-
-		if (sendTeamJoinEvent)
-		{
-			ForgeTeamPlayerJoinedEvent event = new ForgeTeamPlayerJoinedEvent(p);
-			event.post();
-
-			if (event.getDisplayGui() != null)
-			{
-				event.getDisplayGui().run();
-			}
-		}
-
-		if (!p.hideTeamNotification() && !p.hasTeam())
-		{
-			ITextComponent b1 = FTBLib.lang(player, "click_here");
-			b1.getStyle().setColor(TextFormatting.GOLD);
-			b1.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/ftblib_simulate_button custom:ftblib:my_team_gui"));
-			b1.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLib.lang(player, "sidebar_button.ftblib.my_team")));
-			ITextComponent b2 = FTBLib.lang(player, "click_here");
-			b2.getStyle().setColor(TextFormatting.GOLD);
-			b2.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/my_settings " + FTBLib.MOD_ID + ".hide_team_notification toggle"));
-			b2.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, FTBLib.lang(player, "ftblib.lang.team.notification.hide")));
-			player.sendMessage(FTBLib.lang(player, "ftblib.lang.team.notification", b1, b2));
-		}
-
-		p.markDirty();
+		p.onLoggedIn(player, this, firstLogin);
 	}
 
 	public Collection<ForgePlayer> getPlayers()
@@ -799,7 +696,7 @@ public class Universe
 
 			if (ServerUtils.isFake(player))
 			{
-				fakePlayer.playerEntity = (FakePlayer) player;
+				fakePlayer.tempPlayer = player;
 				fakePlayer.clearCache();
 				return fakePlayer;
 			}

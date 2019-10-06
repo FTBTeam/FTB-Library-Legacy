@@ -82,7 +82,7 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 		requestingInvite = new HashSet<>();
 		players = new HashMap<>();
 		dataStorage = new NBTDataStorage();
-		new ForgeTeamDataEvent(this, dataStorage::add).post();
+		new ForgeTeamDataEvent(this, dataStorage).post();
 		clearCache();
 		cachedIcon = null;
 		needsSaving = false;

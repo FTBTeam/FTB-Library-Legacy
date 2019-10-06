@@ -9,11 +9,12 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * @author LatvianModder
  */
-public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
+public class NBTDataStorage implements INBTSerializable<NBTTagCompound>, Consumer<NBTDataStorage.Data>
 {
 	public interface Data extends IWithID, INBTSerializable<NBTTagCompound>
 	{
@@ -121,5 +122,11 @@ public class NBTDataStorage implements INBTSerializable<NBTTagCompound>
 		{
 			data.clearCache();
 		}
+	}
+
+	@Override
+	public void accept(Data data)
+	{
+		add(data);
 	}
 }
