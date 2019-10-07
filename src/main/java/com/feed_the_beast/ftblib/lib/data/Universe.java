@@ -181,7 +181,19 @@ public class Universe
 	{
 		if (event.getEntity() instanceof EntityPlayerMP)
 		{
+			ForgePlayer p = INSTANCE.getPlayer(event.getEntityPlayer().getGameProfile());
+
+			if (p != null)
+			{
+				p.tempPlayer = (EntityPlayerMP) event.getEntity();
+			}
+
 			INSTANCE.clearCache();
+
+			if (p != null)
+			{
+				p.tempPlayer = null;
+			}
 		}
 	}
 
