@@ -78,7 +78,7 @@ player_must_be_online=Player must be online!
 lat_support=Like this mod? Click to support my projects!
 
 ftblib.lang.reload_server_button=Reload Server
-ftblib.lang.reload_server=FTB Library: Server reloaded in %s
+ftblib.lang.reload_server=Server reloaded in %s
 ftblib.lang.reload_client=You can press %s to reload client
 ftblib.lang.reload_failed=These IDs failed to reload:
 

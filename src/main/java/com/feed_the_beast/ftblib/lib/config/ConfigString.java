@@ -135,6 +135,11 @@ public class ConfigString extends ConfigValue
 	@Override
 	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
+		if (string.length() >= 2 && string.charAt(0) == '"' && string.charAt(string.length() - 1) == '"')
+		{
+			return setValueFromString(sender, string.substring(1, string.length() - 1), simulate);
+		}
+
 		if (getPattern() != null && !getPattern().matcher(string).matches())
 		{
 			return false;
