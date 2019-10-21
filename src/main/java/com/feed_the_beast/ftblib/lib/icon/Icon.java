@@ -15,7 +15,9 @@ import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author LatvianModder
@@ -159,10 +161,39 @@ public abstract class Icon
 		{
 			return EMPTY;
 		}
-		else if (id.charAt(0) == '#')
+
+		String[] ids = id.split(";");
+
+		for (int i = 0; i < ids.length; i++)
 		{
-			return Color4I.fromJson(new JsonPrimitive(id));
+			ids[i] = ids[i].trim();
 		}
+
+		if (ids[0].charAt(0) == '#')
+		{
+			return Color4I.fromJson(new JsonPrimitive(ids[0]));
+		}
+
+		Icon icon = getIcon0(ids[0]);
+
+		if (ids.length > 1)
+		{
+			Map<String, String> properties = new HashMap<>();
+
+			for (int i = 1; i < ids.length; i++)
+			{
+				String[] p = ids[i].split("=", 2);
+				properties.put(p[0], p.length == 1 ? "1" : p[1]);
+			}
+
+			icon.setProperties(properties);
+		}
+
+		return icon;
+	}
+
+	private static Icon getIcon0(String id)
+	{
 		String[] ida = id.split(":", 2);
 
 		if (ida.length == 2)
@@ -315,5 +346,9 @@ public abstract class Icon
 	public Object getIngredient()
 	{
 		return null;
+	}
+
+	protected void setProperties(Map<String, String> properties)
+	{
 	}
 }

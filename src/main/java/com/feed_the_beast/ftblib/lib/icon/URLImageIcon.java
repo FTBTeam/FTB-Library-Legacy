@@ -23,21 +23,22 @@ public class URLImageIcon extends ImageIcon
 	public final URI uri;
 	private final String url;
 
-	public URLImageIcon(ResourceLocation tex, URI _uri, double u0, double v0, double u1, double v1)
+	public URLImageIcon(ResourceLocation tex, URI _uri)
 	{
-		super(tex, u0, v0, u1, v1);
+		super(tex);
 		uri = _uri;
 		url = uri.toString();
-	}
-
-	public URLImageIcon(ResourceLocation tex, URI uri)
-	{
-		this(tex, uri, 0, 0, 1, 1);
 	}
 
 	public URLImageIcon(URI uri)
 	{
 		this(new ResourceLocation(uri.toString()), uri);
+	}
+
+	@Override
+	public Icon copy()
+	{
+		return new URLImageIcon(texture, uri);
 	}
 
 	@Override
@@ -86,18 +87,6 @@ public class URLImageIcon extends ImageIcon
 	public String toString()
 	{
 		return url;
-	}
-
-	@Override
-	public URLImageIcon withUV(double u0, double v0, double u1, double v1)
-	{
-		return new URLImageIcon(texture, uri, u0, v0, u1, v1);
-	}
-
-	@Override
-	public URLImageIcon withUVfromCoords(int x, int y, int w, int h, int tw, int th)
-	{
-		return withUV(x / (double) tw, y / (double) th, (x + w) / (double) tw, (y + h) / (double) th);
 	}
 
 	@Override
