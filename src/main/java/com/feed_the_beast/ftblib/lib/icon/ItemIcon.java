@@ -92,7 +92,7 @@ public class ItemIcon extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw(int x, int y, int w, int h, Color4I col)
+	public void draw(int x, int y, int w, int h)
 	{
 		GuiHelper.drawItem(getStack(), x, y, w / 16D, h / 16D, true);
 		GuiHelper.setupDrawing();
@@ -124,7 +124,7 @@ public class ItemIcon extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw3D(Color4I col)
+	public void draw3D()
 	{
 		drawItem3D(getStack());
 	}

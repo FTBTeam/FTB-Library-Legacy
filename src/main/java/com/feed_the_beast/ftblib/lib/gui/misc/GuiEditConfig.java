@@ -59,7 +59,7 @@ public class GuiEditConfig extends GuiBase
 		@Override
 		public void drawScrollBar(int x, int y, int w, int h, WidgetType type, boolean vertical)
 		{
-			getContentColor(WidgetType.NORMAL).withAlpha(100).withOutline(Color4I.GRAY.withAlpha(100), false).draw(x, y, w, h);
+			getContentColor(WidgetType.NORMAL).withAlpha(100).withBorder(Color4I.GRAY.withAlpha(100), false).draw(x, y, w, h);
 		}
 	};
 

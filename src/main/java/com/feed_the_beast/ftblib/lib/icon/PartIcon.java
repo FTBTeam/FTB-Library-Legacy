@@ -57,13 +57,13 @@ public class PartIcon extends ImageIcon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw(int x, int y, int w, int h, Color4I col)
+	public void draw(int x, int y, int w, int h)
 	{
 		bindTexture();
 
 		if (w == width && h == height)
 		{
-			all.draw(x, y, w, h, col);
+			all.draw(x, y, w, h);
 			return;
 		}
 
@@ -71,17 +71,17 @@ public class PartIcon extends ImageIcon
 		int mw = w - c * 2;
 		int mh = h - c * 2;
 
-		middleU.draw(x + c, y, mw, c, col);
-		middleR.draw(x + w - c, y + c, c, mh, col);
-		middleD.draw(x + c, y + h - c, mw, c, col);
-		middleL.draw(x, y + c, c, mh, col);
+		middleU.draw(x + c, y, mw, c);
+		middleR.draw(x + w - c, y + c, c, mh);
+		middleD.draw(x + c, y + h - c, mw, c);
+		middleL.draw(x, y + c, c, mh);
 
-		cornerNN.draw(x, y, c, c, col);
-		cornerNP.draw(x, y + h - c, c, c, col);
-		cornerPN.draw(x + w - c, y, c, c, col);
-		cornerPP.draw(x + w - c, y + h - c, c, c, col);
+		cornerNN.draw(x, y, c, c);
+		cornerNP.draw(x, y + h - c, c, c);
+		cornerPN.draw(x + w - c, y, c, c);
+		cornerPP.draw(x + w - c, y + h - c, c, c);
 
-		center.draw(x + c, y + c, mw, mh, col);
+		center.draw(x + c, y + c, mw, mh);
 	}
 
 	@Override

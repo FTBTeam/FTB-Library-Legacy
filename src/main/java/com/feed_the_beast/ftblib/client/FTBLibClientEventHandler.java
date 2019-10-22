@@ -510,7 +510,7 @@ public class FTBLibClientEventHandler
 
 			for (GuiButtonSidebar b : buttons)
 			{
-				b.button.getIcon().draw(b.x, b.y, 16, 16, Color4I.WHITE);
+				b.button.getIcon().draw(b.x, b.y, 16, 16);
 
 				if (b == mouseOver)
 				{

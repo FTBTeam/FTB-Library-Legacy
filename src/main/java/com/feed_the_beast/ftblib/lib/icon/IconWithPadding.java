@@ -8,35 +8,38 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class IconWithTint extends Icon
+public class IconWithPadding extends IconWithParent
 {
-	public final Icon parent;
-	public final Color4I tint;
+	public int padding;
 
-	IconWithTint(Icon p, Color4I c)
+	IconWithPadding(Icon p, int b)
 	{
-		parent = p;
-		tint = c;
+		super(p);
+		padding = b;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw(int x, int y, int w, int h, Color4I col)
+	public void draw(int x, int y, int w, int h)
 	{
-		parent.draw(x, y, w, h, col.whiteIfEmpty().withTint(tint));
+		x += padding;
+		y += padding;
+		w -= padding * 2;
+		h -= padding * 2;
+		parent.draw(x, y, w, h);
 	}
 
 	@Override
 	public JsonElement getJson()
 	{
-		if (tint.isEmpty())
+		if (padding == 0)
 		{
 			return parent.getJson();
 		}
 
 		JsonObject json = new JsonObject();
-		json.addProperty("id", "tint");
-		json.add("tint", tint.getJson());
+		json.addProperty("id", "padding");
+		json.addProperty("padding", padding);
 		json.add("parent", parent.getJson());
 		return json;
 	}

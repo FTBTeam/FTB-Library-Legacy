@@ -62,11 +62,11 @@ public class CombinedIcon extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw(int x, int y, int w, int h, Color4I col)
+	public void draw(int x, int y, int w, int h)
 	{
 		for (Icon icon : list)
 		{
-			icon.draw(x, y, w, h, col);
+			icon.draw(x, y, w, h);
 		}
 	}
 
@@ -82,11 +82,11 @@ public class CombinedIcon extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw3D(Color4I col)
+	public void draw3D()
 	{
 		for (Icon icon : list)
 		{
-			icon.draw3D(col);
+			icon.draw3D();
 		}
 	}
 

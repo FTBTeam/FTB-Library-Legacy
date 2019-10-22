@@ -34,13 +34,13 @@ public abstract class Icon
 
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void draw(int x, int y, int w, int h, Color4I col)
+		public void draw(int x, int y, int w, int h)
 		{
 		}
 
 		@Override
 		@SideOnly(Side.CLIENT)
-		public void draw3D(Color4I col)
+		public void draw3D()
 		{
 		}
 
@@ -87,8 +87,8 @@ public abstract class Icon
 						Color4I color = Color4I.fromJson(o.get("color"));
 						return (o.has("mutable") && o.get("mutable").getAsBoolean()) ? color.mutable() : color;
 					}
-					case "border":
-						return getIcon(o.get("parent")).withBorder(o.has("border") ? o.get("border").getAsInt() : 0);
+					case "padding":
+						return getIcon(o.get("parent")).withPadding(o.has("padding") ? o.get("padding").getAsInt() : 0);
 					case "tint":
 						return getIcon(o.get("parent")).withTint(Color4I.fromJson(o.get("color")));
 					case "animation":
@@ -102,7 +102,7 @@ public abstract class Icon
 
 						return IconAnimation.fromList(icons, true);
 					}
-					case "outline":
+					case "border":
 					{
 						Icon icon = EMPTY;
 						Color4I outline = EMPTY;
@@ -123,11 +123,11 @@ public abstract class Icon
 							roundEdges = o.get("round_edges").getAsBoolean();
 						}
 
-						return icon.withOutline(outline, roundEdges);
+						return icon.withBorder(outline, roundEdges);
 					}
 					case "bullet":
 					{
-						return new BulletIcon().setColor(o.has("color") ? Color4I.fromJson(o.get("color")) : EMPTY);
+						return new BulletIcon().withColor(o.has("color") ? Color4I.fromJson(o.get("color")) : EMPTY);
 					}
 				}
 			}
@@ -162,21 +162,30 @@ public abstract class Icon
 			return EMPTY;
 		}
 
-		String[] ids = id.split(";");
+		String[] comb = id.split(" \\+ ");
+
+		if (comb.length > 1)
+		{
+			ArrayList<Icon> list = new ArrayList<>(comb.length);
+
+			for (String s : comb)
+			{
+				list.add(getIcon(s));
+			}
+
+			return CombinedIcon.getCombined(list);
+		}
+
+		String[] ids = id.split("; ");
 
 		for (int i = 0; i < ids.length; i++)
 		{
 			ids[i] = ids[i].trim();
 		}
 
-		if (ids[0].charAt(0) == '#')
-		{
-			return Color4I.fromJson(new JsonPrimitive(ids[0]));
-		}
-
 		Icon icon = getIcon0(ids[0]);
 
-		if (ids.length > 1)
+		if (ids.length > 1 && !icon.isEmpty())
 		{
 			Map<String, String> properties = new HashMap<>();
 
@@ -187,6 +196,26 @@ public abstract class Icon
 			}
 
 			icon.setProperties(properties);
+
+			if (properties.containsKey("padding"))
+			{
+				icon = icon.withPadding(Integer.parseInt(properties.get("padding")));
+			}
+
+			if (properties.containsKey("border"))
+			{
+				icon = icon.withBorder(Color4I.fromString(properties.get("border")), "1".equals(properties.get("border_round_edges")));
+			}
+
+			if (properties.containsKey("tint"))
+			{
+				icon = icon.withTint(Color4I.fromString(properties.get("tint")));
+			}
+
+			if (properties.containsKey("color"))
+			{
+				icon = icon.withColor(Color4I.fromString(properties.get("color")));
+			}
 		}
 
 		return icon;
@@ -194,14 +223,30 @@ public abstract class Icon
 
 	private static Icon getIcon0(String id)
 	{
+		if (id.isEmpty() || id.equals("none"))
+		{
+			return Icon.EMPTY;
+		}
+
+		Color4I col = Color4I.fromString(id);
+
+		if (!col.isEmpty())
+		{
+			return col;
+		}
+
 		String[] ida = id.split(":", 2);
 
 		if (ida.length == 2)
 		{
 			switch (ida[0])
 			{
+				case "color":
+					return Color4I.fromString(ida[1]);
 				case "item":
 					return ItemIcon.getItemIcon(ida[1]);
+				case "bullet":
+					return new BulletIcon().withColor(Color4I.fromString(ida[1]));
 				case "http":
 				case "https":
 				case "file":
@@ -214,6 +259,8 @@ public abstract class Icon
 					}
 				case "player":
 					return new PlayerHeadIcon(StringUtils.fromString(ida[1]));
+				case "hollow_rectangle":
+					return new HollowRectangleIcon(Color4I.fromString(ida[1]), false);
 			}
 		}
 
@@ -236,13 +283,7 @@ public abstract class Icon
 	}
 
 	@SideOnly(Side.CLIENT)
-	public abstract void draw(int x, int y, int w, int h, Color4I col);
-
-	@SideOnly(Side.CLIENT)
-	public final void draw(int x, int y, int w, int h)
-	{
-		draw(x, y, w, h, EMPTY);
-	}
+	public abstract void draw(int x, int y, int w, int h);
 
 	@SideOnly(Side.CLIENT)
 	public void drawStatic(int x, int y, int w, int h)
@@ -251,11 +292,11 @@ public abstract class Icon
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void draw3D(Color4I col)
+	public void draw3D()
 	{
 		GlStateManager.pushMatrix();
 		GlStateManager.scale(1D / 16D, 1D / 16D, 1D);
-		draw(-8, -8, 16, 16, col);
+		draw(-8, -8, 16, 16);
 		GlStateManager.popMatrix();
 	}
 
@@ -295,24 +336,29 @@ public abstract class Icon
 		return CombinedIcon.getCombined(list);
 	}
 
-	public final Icon withOutline(Color4I color, boolean roundEdges)
+	public Icon withColor(Color4I color)
+	{
+		return copy();
+	}
+
+	public final Icon withBorder(Color4I color, boolean roundEdges)
 	{
 		if (color.isEmpty())
 		{
-			return withBorder(1);
+			return withPadding(1);
 		}
 
-		return new IconWithOutline(this, color, roundEdges);
+		return new IconWithBorder(this, color, roundEdges);
 	}
 
-	public final Icon withBorder(int border)
+	public final Icon withPadding(int padding)
 	{
-		return border == 0 ? this : new IconWithBorder(this, border);
+		return padding == 0 ? this : new IconWithPadding(this, padding);
 	}
 
 	public Icon withTint(Color4I color)
 	{
-		return (isEmpty() || color == Color4I.WHITE) ? this : new IconWithTint(this, color);
+		return this;
 	}
 
 	public int hashCode()

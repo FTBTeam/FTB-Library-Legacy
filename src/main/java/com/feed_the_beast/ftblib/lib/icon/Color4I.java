@@ -138,23 +138,74 @@ public class Color4I extends Icon
 		return COLORS_256[id & 255];
 	}
 
+	public static Color4I fromString(@Nullable String s)
+	{
+		if (s == null || s.isEmpty())
+		{
+			return EMPTY;
+		}
+		else if ((s.length() == 7 || s.length() == 9) && s.charAt(0) == '#')
+		{
+			String hex = s.substring(1);
+			return hex.length() == 8 ? rgba((int) Long.parseLong(hex, 16)) : rgb((int) Long.parseLong(hex, 16));
+		}
+		else if (s.equalsIgnoreCase("transparent"))
+		{
+			return WHITE.withAlpha(0);
+		}
+		else if (s.equalsIgnoreCase("black"))
+		{
+			return BLACK;
+		}
+		else if (s.equalsIgnoreCase("dark_gray"))
+		{
+			return DARK_GRAY;
+		}
+		else if (s.equalsIgnoreCase("gray"))
+		{
+			return GRAY;
+		}
+		else if (s.equalsIgnoreCase("white"))
+		{
+			return WHITE;
+		}
+		else if (s.equalsIgnoreCase("red"))
+		{
+			return RED;
+		}
+		else if (s.equalsIgnoreCase("green"))
+		{
+			return GREEN;
+		}
+		else if (s.equalsIgnoreCase("blue"))
+		{
+			return BLUE;
+		}
+		else if (s.equalsIgnoreCase("light_red"))
+		{
+			return LIGHT_RED;
+		}
+		else if (s.equalsIgnoreCase("light_green"))
+		{
+			return LIGHT_GREEN;
+		}
+		else if (s.equalsIgnoreCase("light_blue"))
+		{
+			return LIGHT_BLUE;
+		}
+
+		return EMPTY;
+	}
+
 	public static Color4I fromJson(@Nullable JsonElement element)
 	{
 		if (JsonUtils.isNull(element))
 		{
-			return Icon.EMPTY;
+			return EMPTY;
 		}
 		else if (element.isJsonPrimitive())
 		{
-			String s = element.getAsString();
-
-			if ((s.length() == 7 || s.length() == 9) && s.charAt(0) == '#')
-			{
-				String hex = s.substring(1);
-				return hex.length() == 8 ? rgba((int) Long.parseLong(hex, 16)) : rgb((int) Long.parseLong(hex, 16));
-			}
-
-			return Icon.EMPTY;
+			return fromString(element.getAsString());
 		}
 		else if (element.isJsonArray())
 		{
@@ -193,7 +244,7 @@ public class Color4I extends Icon
 			return rgba(r, g, b, a);
 		}
 
-		return Icon.EMPTY;
+		return EMPTY;
 	}
 
 	public static Color4I rgba(int r, int g, int b, int a)
@@ -381,33 +432,26 @@ public class Color4I extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw(int x, int y, int w, int h, Color4I col)
+	public void draw(int x, int y, int w, int h)
 	{
 		if (w <= 0 || h <= 0)
 		{
 			return;
-		}
-		else if (!col.isEmpty())
-		{
-			col = withTint(col);
-
-			if (col.isEmpty())
-			{
-				return;
-			}
-		}
-		else
-		{
-			col = this;
 		}
 
 		GlStateManager.disableTexture2D();
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
-		GuiHelper.addRectToBuffer(buffer, x, y, w, h, col);
+		GuiHelper.addRectToBuffer(buffer, x, y, w, h, this);
 		tessellator.draw();
 		GlStateManager.enableTexture2D();
+	}
+
+	@Override
+	public Icon withColor(Color4I color)
+	{
+		return color;
 	}
 
 	@Override

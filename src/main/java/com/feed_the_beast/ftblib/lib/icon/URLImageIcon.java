@@ -36,7 +36,7 @@ public class URLImageIcon extends ImageIcon
 	}
 
 	@Override
-	public Icon copy()
+	public URLImageIcon copy()
 	{
 		return new URLImageIcon(texture, uri);
 	}

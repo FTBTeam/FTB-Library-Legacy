@@ -22,15 +22,17 @@ import javax.annotation.Nullable;
 public class AtlasSpriteIcon extends Icon
 {
 	public final String name;
+	public Color4I color;
 
 	AtlasSpriteIcon(String n)
 	{
 		name = n;
+		color = Color4I.WHITE;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw(int x, int y, int w, int h, Color4I col)
+	public void draw(int x, int y, int w, int h)
 	{
 		TextureManager textureManager = Minecraft.getMinecraft().getTextureManager();
 		textureManager.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
@@ -39,11 +41,10 @@ public class AtlasSpriteIcon extends Icon
 		BufferBuilder buffer = tessellator.getBuffer();
 		buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX_COLOR);
 		TextureAtlasSprite sprite = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(name);
-		col = col.whiteIfEmpty();
-		int r = col.redi();
-		int g = col.greeni();
-		int b = col.bluei();
-		int a = col.alphai();
+		int r = color.redi();
+		int g = color.greeni();
+		int b = color.bluei();
+		int a = color.alphai();
 		buffer.pos(x, y + h, 0D).tex(sprite.getMinU(), sprite.getMaxV()).color(r, g, b, a).endVertex();
 		buffer.pos(x + w, y + h, 0D).tex(sprite.getMaxU(), sprite.getMaxV()).color(r, g, b, a).endVertex();
 		buffer.pos(x + w, y, 0D).tex(sprite.getMaxU(), sprite.getMinV()).color(r, g, b, a).endVertex();

@@ -31,6 +31,7 @@ public class ImageIcon extends Icon
 	public final ResourceLocation texture;
 	public double minU, minV, maxU, maxV;
 	public double tileSize;
+	public Color4I color;
 
 	public ImageIcon(ResourceLocation tex)
 	{
@@ -40,10 +41,11 @@ public class ImageIcon extends Icon
 		maxU = 1;
 		maxV = 1;
 		tileSize = 0;
+		color = Color4I.WHITE;
 	}
 
 	@Override
-	public Icon copy()
+	public ImageIcon copy()
 	{
 		ImageIcon icon = new ImageIcon(texture);
 		icon.minU = minU;
@@ -103,21 +105,20 @@ public class ImageIcon extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw(int x, int y, int w, int h, Color4I col)
+	public void draw(int x, int y, int w, int h)
 	{
 		bindTexture();
-		Color4I c = col.whiteIfEmpty();
 
 		if (tileSize <= 0D)
 		{
-			GuiHelper.drawTexturedRect(x, y, w, h, c, minU, minV, maxU, maxV);
+			GuiHelper.drawTexturedRect(x, y, w, h, color, minU, minV, maxU, maxV);
 		}
 		else
 		{
-			int r = c.redi();
-			int g = c.greeni();
-			int b = c.bluei();
-			int a = c.alphai();
+			int r = color.redi();
+			int g = color.greeni();
+			int b = color.bluei();
+			int a = color.alphai();
 
 			Tessellator tessellator = Tessellator.getInstance();
 			BufferBuilder buffer = tessellator.getBuffer();
@@ -157,9 +158,23 @@ public class ImageIcon extends Icon
 		return texture.toString();
 	}
 
+	@Override
+	public ImageIcon withColor(Color4I color)
+	{
+		ImageIcon icon = copy();
+		icon.color = color;
+		return icon;
+	}
+
+	@Override
+	public ImageIcon withTint(Color4I c)
+	{
+		return withColor(color.withTint(c));
+	}
+
 	public ImageIcon withUV(double u0, double v0, double u1, double v1)
 	{
-		ImageIcon icon = (ImageIcon) copy();
+		ImageIcon icon = copy();
 		icon.minU = u0;
 		icon.minV = v0;
 		icon.maxU = u1;

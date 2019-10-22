@@ -44,7 +44,7 @@ public class GuiManagePlayersBase extends GuiButtonListBase
 		final void updateIcon()
 		{
 			//Variant 2: setIcon(gui.getTheme().getWidget(false).withColorAndBorder(getPlayerColor(), 1).combineWith(gui.getTheme().getSlot(false).withColorAndBorder(Color4I.DARK_GRAY, 3), new PlayerHeadIcon(entry.name).withBorder(4)));
-			setIcon(new PlayerHeadIcon(entry.uuid).withOutline(getPlayerColor(), false).withOutline(Color4I.DARK_GRAY, true).withBorder(2));
+			setIcon(new PlayerHeadIcon(entry.uuid).withBorder(getPlayerColor(), false).withBorder(Color4I.DARK_GRAY, true).withPadding(2));
 		}
 
 		@Override

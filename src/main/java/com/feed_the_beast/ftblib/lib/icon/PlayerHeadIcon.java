@@ -149,12 +149,11 @@ public class PlayerHeadIcon extends ImageIcon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw(int x, int y, int w, int h, Color4I col)
+	public void draw(int x, int y, int w, int h)
 	{
 		bindTexture();
-		col = col.whiteIfEmpty();
-		GuiHelper.drawTexturedRect(x, y, w, h, col, 0.125D, 0.125D, 0.25D, 0.25D);
-		GuiHelper.drawTexturedRect(x, y, w, h, col, 0.625D, 0.125D, 0.75D, 0.25D);
+		GuiHelper.drawTexturedRect(x, y, w, h, color, 0.125D, 0.125D, 0.25D, 0.25D);
+		GuiHelper.drawTexturedRect(x, y, w, h, color, 0.625D, 0.125D, 0.75D, 0.25D);
 	}
 
 	@Override

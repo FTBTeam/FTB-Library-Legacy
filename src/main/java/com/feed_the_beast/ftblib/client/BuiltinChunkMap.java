@@ -18,7 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class BuiltinChunkMap extends ChunkSelectorMap
 {
-	public static final Icon TEX_ENTITY = Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/entity.png");
+	public static final Icon TEX_ENTITY = Icon.getIcon(FTBLib.MOD_ID + ":textures/gui/entity.png").withColor(Color4I.WHITE.withAlpha(140));
 	public static final double UV = (double) TILES_GUI / (double) TILES_TEX;
 
 	@Override
@@ -49,7 +49,7 @@ public class BuiltinChunkMap extends ChunkSelectorMap
 			GlStateManager.translate(ax + x * GuiChunkSelectorBase.TILE_SIZE / 16D, ay + y * GuiChunkSelectorBase.TILE_SIZE / 16D, 0D);
 			GlStateManager.pushMatrix();
 			GlStateManager.rotate(player.rotationYaw + 180F, 0F, 0F, 1F);
-			TEX_ENTITY.draw(-8, -8, 16, 16, Color4I.WHITE.withAlpha(140));
+			TEX_ENTITY.draw(-8, -8, 16, 16);
 			GlStateManager.popMatrix();
 			ClientUtils.localPlayerHead.draw(-2, -2, 4, 4);
 			GlStateManager.popMatrix();

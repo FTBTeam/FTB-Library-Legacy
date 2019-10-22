@@ -99,11 +99,6 @@ public class GuiHelper
 
 	public static void drawTexturedRect(int x, int y, int w, int h, Color4I col, double u0, double v0, double u1, double v1)
 	{
-		if (col.isEmpty())
-		{
-			col = Color4I.WHITE;
-		}
-
 		if (u0 == u1 || v0 == v1)
 		{
 			Tessellator tessellator = Tessellator.getInstance();

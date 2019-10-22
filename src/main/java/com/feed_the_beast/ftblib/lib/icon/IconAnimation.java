@@ -64,11 +64,11 @@ public class IconAnimation extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw(int x, int y, int w, int h, Color4I col)
+	public void draw(int x, int y, int w, int h)
 	{
 		if (!list.isEmpty())
 		{
-			list.get((int) ((System.currentTimeMillis() / 1000L) % list.size())).draw(x, y, w, h, col);
+			list.get((int) ((System.currentTimeMillis() / 1000L) % list.size())).draw(x, y, w, h);
 		}
 	}
 
@@ -84,11 +84,11 @@ public class IconAnimation extends Icon
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void draw3D(Color4I col)
+	public void draw3D()
 	{
 		if (!list.isEmpty())
 		{
-			list.get((int) ((System.currentTimeMillis() / 1000L) % list.size())).draw3D(col);
+			list.get((int) ((System.currentTimeMillis() / 1000L) % list.size())).draw3D();
 		}
 	}
 

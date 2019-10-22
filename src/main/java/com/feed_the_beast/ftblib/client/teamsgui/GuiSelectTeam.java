@@ -51,7 +51,7 @@ public class GuiSelectTeam extends GuiButtonListBase
 
 		private ButtonTeam(Panel panel, PublicTeamData t)
 		{
-			super(panel, t.displayName.getUnformattedText(), t.icon.withOutline(t.color.getColor(), false));
+			super(panel, t.displayName.getUnformattedText(), t.icon.withBorder(t.color.getColor(), false));
 			team = t;
 
 			if (team.type == PublicTeamData.Type.REQUESTING_INVITE)
