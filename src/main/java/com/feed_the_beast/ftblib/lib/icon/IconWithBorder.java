@@ -10,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @author LatvianModder
  */
-public class IconWithBorder extends Icon
+public class IconWithBorder extends IconWithParent
 {
 	public static final Icon BUTTON_GRAY = Color4I.rgb(0x212121).withBorder(Color4I.rgb(0x141414), false);
 	public static final Icon BUTTON_RED = Color4I.rgb(0x1581B6).withBorder(Color4I.rgb(0xBF3726), false);
@@ -22,13 +22,12 @@ public class IconWithBorder extends Icon
 	public static final Icon BUTTON_ROUND_GREEN = Color4I.rgb(0x98C600).withBorder(Color4I.rgb(0x438700), true);
 	public static final Icon BUTTON_ROUND_BLUE = Color4I.rgb(0x80C7F2).withBorder(Color4I.rgb(0x1581B6), true);
 
-	public final Icon icon;
-	public final Color4I color;
-	public final boolean roundEdges;
+	public Color4I color;
+	public boolean roundEdges;
 
 	IconWithBorder(Icon i, Color4I c, boolean r)
 	{
-		icon = i;
+		super(i);
 		color = c;
 		roundEdges = r;
 	}
@@ -37,7 +36,7 @@ public class IconWithBorder extends Icon
 	@SideOnly(Side.CLIENT)
 	public void draw(int x, int y, int w, int h)
 	{
-		icon.draw(x + 1, y + 1, w - 2, h - 2);
+		parent.draw(x + 1, y + 1, w - 2, h - 2);
 		GuiHelper.drawHollowRect(x, y, w, h, color, roundEdges);
 		GlStateManager.color(1F, 1F, 1F, 1F);
 	}
@@ -47,7 +46,7 @@ public class IconWithBorder extends Icon
 	{
 		JsonObject o = new JsonObject();
 		o.addProperty("id", "border");
-		o.add("icon", icon.getJson());
+		o.add("icon", parent.getJson());
 		o.add("color", color.getJson());
 
 		if (roundEdges)
@@ -56,5 +55,23 @@ public class IconWithBorder extends Icon
 		}
 
 		return o;
+	}
+
+	@Override
+	public IconWithBorder copy()
+	{
+		return new IconWithBorder(parent.copy(), color.copy(), roundEdges);
+	}
+
+	@Override
+	public IconWithBorder withTint(Color4I c)
+	{
+		return new IconWithBorder(parent, color.withTint(c), roundEdges);
+	}
+
+	@Override
+	public IconWithBorder withColor(Color4I c)
+	{
+		return new IconWithBorder(parent, c, roundEdges);
 	}
 }

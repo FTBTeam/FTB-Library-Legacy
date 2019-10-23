@@ -43,4 +43,22 @@ public class IconWithPadding extends IconWithParent
 		json.add("parent", parent.getJson());
 		return json;
 	}
+
+	@Override
+	public IconWithPadding copy()
+	{
+		return new IconWithPadding(parent.copy(), padding);
+	}
+
+	@Override
+	public IconWithPadding withTint(Color4I color)
+	{
+		return new IconWithPadding(parent.withTint(color), padding);
+	}
+
+	@Override
+	public IconWithPadding withColor(Color4I color)
+	{
+		return new IconWithPadding(parent.withColor(color), padding);
+	}
 }

@@ -15,7 +15,7 @@ import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -187,7 +187,7 @@ public abstract class Icon
 
 		if (ids.length > 1 && !icon.isEmpty())
 		{
-			Map<String, String> properties = new HashMap<>();
+			Map<String, String> properties = new LinkedHashMap<>();
 
 			for (int i = 1; i < ids.length; i++)
 			{

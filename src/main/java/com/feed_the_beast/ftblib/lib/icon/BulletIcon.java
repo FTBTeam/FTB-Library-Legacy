@@ -68,6 +68,12 @@ public class BulletIcon extends Icon
 		return copy().setColor(col);
 	}
 
+	@Override
+	public BulletIcon withTint(Color4I c)
+	{
+		return withColor(color.withTint(c));
+	}
+
 	public BulletIcon setInverse(boolean v)
 	{
 		inverse = v;

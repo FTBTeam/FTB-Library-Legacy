@@ -5,47 +5,76 @@ import com.google.gson.JsonObject;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.Map;
+
 /**
  * @author LatvianModder
  */
 public class PartIcon extends ImageIcon
 {
 	public final ImageIcon parent;
-	public final boolean repeat;
-	public final int width, height;
-	public final int corner;
-	public final int middleH, middleV;
+	public int posX, posY, width, height;
+	public int corner, middleH, middleV;
 
-	private final Icon all, middleU, middleD, middleL, middleR, cornerNN, cornerPN, cornerNP, cornerPP, center;
+	private Icon all, middleU, middleD, middleL, middleR, cornerNN, cornerPN, cornerNP, cornerPP, center;
 
-	public PartIcon(ImageIcon icon, int x, int y, int w, int h, int c, int mh, int mv, boolean r)
+	public PartIcon(ImageIcon icon, int x, int y, int w, int h, int c, int mh, int mv)
 	{
 		super(icon.texture);
 		parent = icon;
+		posX = x;
+		posY = y;
 		width = w;
 		height = h;
 		corner = c;
 		middleH = mh;
 		middleV = mv;
-		repeat = r;
-		int cmh = c + mh;
-		int cmv = c + mv;
-
-		all = parent.withUVfromCoords(x, y, c + mh + c, c + mv + c, w, h);
-		middleU = parent.withUVfromCoords(x + c, y, mh, c, w, h);
-		middleD = parent.withUVfromCoords(x + c, y + cmv, mh, c, w, h);
-		middleL = parent.withUVfromCoords(x, y + c, c, mv, w, h);
-		middleR = parent.withUVfromCoords(x + cmh, y + c, c, mv, w, h);
-		cornerNN = parent.withUVfromCoords(x, y, c, c, w, h);
-		cornerPN = parent.withUVfromCoords(x + cmh, y, c, c, w, h);
-		cornerNP = parent.withUVfromCoords(x, y + cmv, c, c, w, h);
-		cornerPP = parent.withUVfromCoords(x + cmh, y + cmv, c, c, w, h);
-		center = parent.withUVfromCoords(x + c, y + c, mh, mv, w, h);
+		updateParts();
 	}
 
-	public PartIcon(ImageIcon icon, int s, int c, int m)
+	public PartIcon(ImageIcon icon)
 	{
-		this(icon, 0, 0, s, s, c, m, m, true);
+		this(icon, 0, 0, 256, 256, 0, 256, 256);
+	}
+
+	public void updateParts()
+	{
+		int cmh = corner + middleH;
+		int cmv = corner + middleV;
+		all = parent.withUVfromCoords(posX, posY, corner + middleH + corner, corner + middleV + corner, width, height);
+		middleU = parent.withUVfromCoords(posX + corner, posY, middleH, corner, width, height);
+		middleD = parent.withUVfromCoords(posX + corner, posY + cmv, middleH, corner, width, height);
+		middleL = parent.withUVfromCoords(posX, posY + corner, corner, middleV, width, height);
+		middleR = parent.withUVfromCoords(posX + cmh, posY + corner, corner, middleV, width, height);
+		cornerNN = parent.withUVfromCoords(posX, posY, corner, corner, width, height);
+		cornerPN = parent.withUVfromCoords(posX + cmh, posY, corner, corner, width, height);
+		cornerNP = parent.withUVfromCoords(posX, posY + cmv, corner, corner, width, height);
+		cornerPP = parent.withUVfromCoords(posX + cmh, posY + cmv, corner, corner, width, height);
+		center = parent.withUVfromCoords(posX + corner, posY + corner, middleH, middleV, width, height);
+	}
+
+	@Override
+	public PartIcon copy()
+	{
+		PartIcon icon = new PartIcon(parent.copy());
+		icon.minU = minU;
+		icon.minV = minV;
+		icon.maxU = maxU;
+		icon.maxV = maxV;
+		icon.posX = posX;
+		icon.posY = posY;
+		icon.width = width;
+		icon.height = height;
+		icon.corner = corner;
+		icon.middleH = middleH;
+		icon.middleV = middleV;
+		return icon;
+	}
+
+	@Override
+	protected void setProperties(Map<String, String> properties)
+	{
+		super.setProperties(properties);
 	}
 
 	@Override

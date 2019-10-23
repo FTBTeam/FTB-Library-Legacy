@@ -79,4 +79,24 @@ public class AtlasSpriteIcon extends Icon
 			return null;
 		}
 	}
+
+	@Override
+	public AtlasSpriteIcon copy()
+	{
+		return new AtlasSpriteIcon(name);
+	}
+
+	@Override
+	public AtlasSpriteIcon withColor(Color4I color)
+	{
+		AtlasSpriteIcon icon = copy();
+		icon.color = color;
+		return icon;
+	}
+
+	@Override
+	public AtlasSpriteIcon withTint(Color4I c)
+	{
+		return withColor(color.withTint(c));
+	}
 }

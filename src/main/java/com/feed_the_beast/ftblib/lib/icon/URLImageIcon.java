@@ -38,7 +38,13 @@ public class URLImageIcon extends ImageIcon
 	@Override
 	public URLImageIcon copy()
 	{
-		return new URLImageIcon(texture, uri);
+		URLImageIcon icon = new URLImageIcon(texture, uri);
+		icon.minU = minU;
+		icon.minV = minV;
+		icon.maxU = maxU;
+		icon.maxV = maxV;
+		icon.tileSize = tileSize;
+		return icon;
 	}
 
 	@Override
