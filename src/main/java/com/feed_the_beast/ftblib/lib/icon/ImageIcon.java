@@ -19,7 +19,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.util.Map;
 
 /**
  * @author LatvianModder
@@ -57,34 +56,14 @@ public class ImageIcon extends Icon
 	}
 
 	@Override
-	protected void setProperties(Map<String, String> properties)
+	protected void setProperties(IconProperties properties)
 	{
 		super.setProperties(properties);
-
-		if (properties.containsKey("u0"))
-		{
-			minU = Double.parseDouble(properties.get("u0"));
-		}
-
-		if (properties.containsKey("v0"))
-		{
-			minV = Double.parseDouble(properties.get("v0"));
-		}
-
-		if (properties.containsKey("u1"))
-		{
-			maxU = Double.parseDouble(properties.get("u1"));
-		}
-
-		if (properties.containsKey("v1"))
-		{
-			maxV = Double.parseDouble(properties.get("v1"));
-		}
-
-		if (properties.containsKey("tile_size"))
-		{
-			tileSize = Double.parseDouble(properties.get("tile_size"));
-		}
+		minU = properties.getDouble("u0", minU);
+		minV = properties.getDouble("v0", minV);
+		maxU = properties.getDouble("u1", maxU);
+		maxV = properties.getDouble("v1", maxV);
+		tileSize = properties.getDouble("tile_size", tileSize);
 	}
 
 	@Override
@@ -172,6 +151,7 @@ public class ImageIcon extends Icon
 		return withColor(color.withTint(c));
 	}
 
+	@Override
 	public ImageIcon withUV(double u0, double v0, double u1, double v1)
 	{
 		ImageIcon icon = copy();
@@ -180,11 +160,6 @@ public class ImageIcon extends Icon
 		icon.maxU = u1;
 		icon.maxV = v1;
 		return icon;
-	}
-
-	public ImageIcon withUVfromCoords(int x, int y, int w, int h, int tw, int th)
-	{
-		return withUV(x / (double) tw, y / (double) th, (x + w) / (double) tw, (y + h) / (double) th);
 	}
 
 	@Override

@@ -6,8 +6,6 @@ import com.google.gson.JsonObject;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.Map;
-
 /**
  * @author LatvianModder
  */
@@ -41,14 +39,10 @@ public class HollowRectangleIcon extends Icon
 	}
 
 	@Override
-	protected void setProperties(Map<String, String> properties)
+	protected void setProperties(IconProperties properties)
 	{
 		super.setProperties(properties);
-
-		if (properties.containsKey("round_edges"))
-		{
-			roundEdges = properties.get("round_edges").equals("1");
-		}
+		roundEdges = properties.getBoolean("round_edges", roundEdges);
 	}
 
 	@Override

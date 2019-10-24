@@ -11,8 +11,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.util.Map;
-
 /**
  * @author LatvianModder
  */
@@ -81,14 +79,10 @@ public class BulletIcon extends Icon
 	}
 
 	@Override
-	protected void setProperties(Map<String, String> properties)
+	protected void setProperties(IconProperties properties)
 	{
 		super.setProperties(properties);
-
-		if (properties.containsKey("inverse"))
-		{
-			inverse = properties.get("inverse").equals("1");
-		}
+		inverse = properties.getBoolean("inverse", inverse);
 	}
 
 	@Override

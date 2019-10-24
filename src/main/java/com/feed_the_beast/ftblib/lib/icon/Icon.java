@@ -6,7 +6,6 @@ import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -15,14 +14,12 @@ import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author LatvianModder
  */
-public abstract class Icon
+public abstract class Icon implements Drawable
 {
 	public static final Color4I EMPTY = new Color4I(255, 255, 255, 255)
 	{
@@ -129,6 +126,18 @@ public abstract class Icon
 					{
 						return new BulletIcon().withColor(o.has("color") ? Color4I.fromJson(o.get("color")) : EMPTY);
 					}
+					case "part":
+					{
+						PartIcon partIcon = new PartIcon(getIcon(o.get("parent")));
+						partIcon.posX = o.get("x").getAsInt();
+						partIcon.posY = o.get("y").getAsInt();
+						partIcon.width = o.get("width").getAsInt();
+						partIcon.height = o.get("height").getAsInt();
+						partIcon.corner = o.get("corner").getAsInt();
+						partIcon.textureWidth = o.get("texture_width").getAsInt();
+						partIcon.textureHeight = o.get("texture_height").getAsInt();
+						return partIcon;
+					}
 				}
 			}
 		}
@@ -187,34 +196,38 @@ public abstract class Icon
 
 		if (ids.length > 1 && !icon.isEmpty())
 		{
-			Map<String, String> properties = new LinkedHashMap<>();
+			IconProperties properties = new IconProperties();
 
 			for (int i = 1; i < ids.length; i++)
 			{
 				String[] p = ids[i].split("=", 2);
-				properties.put(p[0], p.length == 1 ? "1" : p[1]);
+				properties.set(p[0], p.length == 1 ? "1" : p[1]);
 			}
 
 			icon.setProperties(properties);
 
-			if (properties.containsKey("padding"))
+			int padding = properties.getInt("padding", 0);
+			if (padding != 0)
 			{
-				icon = icon.withPadding(Integer.parseInt(properties.get("padding")));
+				icon = icon.withPadding(padding);
 			}
 
-			if (properties.containsKey("border"))
+			Color4I border = properties.getColor("border");
+			if (border != null)
 			{
-				icon = icon.withBorder(Color4I.fromString(properties.get("border")), "1".equals(properties.get("border_round_edges")));
+				icon = icon.withBorder(border, properties.getBoolean("border_round_edges", false));
 			}
 
-			if (properties.containsKey("tint"))
+			Color4I color = properties.getColor("color");
+			if (color != null)
 			{
-				icon = icon.withTint(Color4I.fromString(properties.get("tint")));
+				icon = icon.withColor(color);
 			}
 
-			if (properties.containsKey("color"))
+			Color4I tint = properties.getColor("tint");
+			if (tint != null)
 			{
-				icon = icon.withColor(Color4I.fromString(properties.get("color")));
+				icon = icon.withTint(tint);
 			}
 		}
 
@@ -261,6 +274,8 @@ public abstract class Icon
 					return new PlayerHeadIcon(StringUtils.fromString(ida[1]));
 				case "hollow_rectangle":
 					return new HollowRectangleIcon(Color4I.fromString(ida[1]), false);
+				case "part":
+					return new PartIcon(getIcon(ida[1]));
 			}
 		}
 
@@ -280,24 +295,6 @@ public abstract class Icon
 	public Icon copy()
 	{
 		return this;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public abstract void draw(int x, int y, int w, int h);
-
-	@SideOnly(Side.CLIENT)
-	public void drawStatic(int x, int y, int w, int h)
-	{
-		draw(x, y, w, h);
-	}
-
-	@SideOnly(Side.CLIENT)
-	public void draw3D()
-	{
-		GlStateManager.pushMatrix();
-		GlStateManager.scale(1D / 16D, 1D / 16D, 1D);
-		draw(-8, -8, 16, 16);
-		GlStateManager.popMatrix();
 	}
 
 	public JsonElement getJson()
@@ -361,6 +358,16 @@ public abstract class Icon
 		return this;
 	}
 
+	public Icon withUV(double u0, double v0, double u1, double v1)
+	{
+		return this;
+	}
+
+	public Icon withUV(double x, double y, double w, double h, double tw, double th)
+	{
+		return withUV(x / tw, y / th, (x + w) / tw, (y + h) / th);
+	}
+
 	public int hashCode()
 	{
 		return getJson().hashCode();
@@ -394,7 +401,7 @@ public abstract class Icon
 		return null;
 	}
 
-	protected void setProperties(Map<String, String> properties)
+	protected void setProperties(IconProperties properties)
 	{
 	}
 }
