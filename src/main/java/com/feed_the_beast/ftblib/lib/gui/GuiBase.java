@@ -116,23 +116,23 @@ public abstract class GuiBase extends Panel implements IOpenableGui
 	}
 
 	@Override
-	public void setScrollX(int scroll)
+	public void setScrollX(double scroll)
 	{
 	}
 
 	@Override
-	public void setScrollY(int scroll)
+	public void setScrollY(double scroll)
 	{
 	}
 
 	@Override
-	public int getScrollX()
+	public double getScrollX()
 	{
 		return 0;
 	}
 
 	@Override
-	public int getScrollY()
+	public double getScrollY()
 	{
 		return 0;
 	}

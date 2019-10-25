@@ -13,7 +13,7 @@ import java.util.List;
 public abstract class Panel extends Widget
 {
 	public final List<Widget> widgets;
-	private int scrollX = 0, scrollY = 0;
+	private double scrollX = 0, scrollY = 0;
 	private int offsetX = 0, offsetY = 0;
 	private boolean unicode = false;
 	private boolean onlyRenderWidgetsInside = true;
@@ -194,8 +194,8 @@ public abstract class Panel extends Widget
 	{
 		if (flag)
 		{
-			offsetX = -scrollX;
-			offsetY = -scrollY;
+			offsetX = (int) -scrollX;
+			offsetY = (int) -scrollY;
 		}
 		else
 		{
@@ -208,22 +208,22 @@ public abstract class Panel extends Widget
 		return offsetX != 0 || offsetY != 0;
 	}
 
-	public void setScrollX(int scroll)
+	public void setScrollX(double scroll)
 	{
 		scrollX = scroll;
 	}
 
-	public void setScrollY(int scroll)
+	public void setScrollY(double scroll)
 	{
 		scrollY = scroll;
 	}
 
-	public int getScrollX()
+	public double getScrollX()
 	{
 		return scrollX;
 	}
 
-	public int getScrollY()
+	public double getScrollY()
 	{
 		return scrollY;
 	}
@@ -421,15 +421,15 @@ public abstract class Panel extends Widget
 		}
 	}
 
-	public boolean movePanelScroll(int dx, int dy)
+	public boolean movePanelScroll(double dx, double dy)
 	{
 		if (dx == 0 && dy == 0)
 		{
 			return false;
 		}
 
-		int sx = getScrollX();
-		int sy = getScrollY();
+		double sx = getScrollX();
+		double sy = getScrollY();
 
 		if (dx != 0)
 		{
