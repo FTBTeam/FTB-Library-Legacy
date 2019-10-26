@@ -79,7 +79,7 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 
 	public void setDouble(double v)
 	{
-		value = v;
+		value = MathHelper.clamp(v, getMin(), getMax());
 	}
 
 	public ConfigDouble setMin(double v)
@@ -138,7 +138,7 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	@Override
 	public ConfigDouble copy()
 	{
-		return new ConfigDouble(getDouble());
+		return new ConfigDouble(getDouble(), getMin(), getMax());
 	}
 
 	@Override
@@ -157,19 +157,17 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 	public void addInfo(ConfigValueInstance inst, List<String> list)
 	{
 		super.addInfo(inst, list);
+		double min = getMin();
+		double max = getMax();
 
-		double m = getMin();
-
-		if (m != Double.NEGATIVE_INFINITY)
+		if (min != Double.NEGATIVE_INFINITY)
 		{
-			list.add(TextFormatting.AQUA + "Min: " + TextFormatting.RESET + StringUtils.formatDouble(m));
+			list.add(TextFormatting.AQUA + "Min: " + TextFormatting.RESET + StringUtils.formatDouble(min));
 		}
 
-		m = getMax();
-
-		if (m != Double.POSITIVE_INFINITY)
+		if (max != Double.POSITIVE_INFINITY)
 		{
-			list.add(TextFormatting.AQUA + "Max: " + TextFormatting.RESET + StringUtils.formatDouble(m));
+			list.add(TextFormatting.AQUA + "Max: " + TextFormatting.RESET + StringUtils.formatDouble(max));
 		}
 	}
 
@@ -181,8 +179,16 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 			return false;
 		}
 
+		double min = getMin();
+		double max = getMax();
+
 		if (string.equals("+Inf"))
 		{
+			if (max != Double.POSITIVE_INFINITY)
+			{
+				return false;
+			}
+
 			if (!simulate)
 			{
 				setDouble(Double.POSITIVE_INFINITY);
@@ -192,6 +198,11 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 		}
 		else if (string.equals("-Inf"))
 		{
+			if (min != Double.NEGATIVE_INFINITY)
+			{
+				return false;
+			}
+
 			if (!simulate)
 			{
 				setDouble(Double.NEGATIVE_INFINITY);
@@ -222,7 +233,7 @@ public class ConfigDouble extends ConfigValue implements DoubleSupplier
 
 			double val = Double.parseDouble(string.trim()) * multiplier;
 
-			if (val < getMin() || val > getMax())
+			if (val < min || val > max)
 			{
 				return false;
 			}
