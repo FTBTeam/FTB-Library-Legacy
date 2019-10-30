@@ -12,11 +12,11 @@ public interface FTBLibGameRules
 
 	static boolean canCreateTeam(World world)
 	{
-		return !world.getGameRules().getBoolean(DISABLE_TEAM_CREATION);
+		return !FTBLibConfig.teams.disable_teams && !world.getGameRules().getBoolean(DISABLE_TEAM_CREATION);
 	}
 
 	static boolean canJoinTeam(World world)
 	{
-		return !world.getGameRules().getBoolean(DISABLE_TEAM_JOINING);
+		return !FTBLibConfig.teams.disable_teams && !world.getGameRules().getBoolean(DISABLE_TEAM_JOINING);
 	}
 }

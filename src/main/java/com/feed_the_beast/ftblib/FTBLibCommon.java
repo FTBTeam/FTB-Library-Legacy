@@ -147,8 +147,6 @@ public class FTBLibCommon
 		registry.registerConfigValueProvider(ConfigFluid.ID, () -> new ConfigFluid(null, null));
 		registry.registerConfigValueProvider(ConfigTeam.TEAM_ID, () -> new ConfigTeamClient(""));
 
-		registry.registerServerReloadHandler(new ResourceLocation(FTBLib.MOD_ID, "config"), reloadEvent -> FTBLibConfig.sync());
-
 		registry.registerAdminPanelAction(new AdminPanelAction(FTBLib.MOD_ID, "reload", GuiIcons.REFRESH, -1000)
 		{
 			@Override
