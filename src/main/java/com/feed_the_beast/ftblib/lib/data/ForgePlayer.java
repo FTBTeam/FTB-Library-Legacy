@@ -286,7 +286,7 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 
 		boolean sendTeamJoinEvent = false, sendTeamCreatedEvent = false;
 
-		if (firstLogin && (player.server.isSinglePlayer() ? FTBLibConfig.teams.autocreate_sp : FTBLibConfig.teams.autocreate_mp))
+		if (firstLogin && (FTBLibConfig.teams.disable_teams || (player.server.isSinglePlayer() ? FTBLibConfig.teams.autocreate_sp : FTBLibConfig.teams.autocreate_mp)))
 		{
 			if (player.server.isSinglePlayer())
 			{
@@ -500,7 +500,7 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 
 	public ConfigValue getRankConfig(Node node)
 	{
-		return RankConfigAPI.get(team.universe.server, getProfile(), node, getContext());
+		return RankConfigAPI.get(team.universe.server, getProfile(), node);
 	}
 
 	public File getDataFile(String ext)

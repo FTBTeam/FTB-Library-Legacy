@@ -37,6 +37,8 @@ public class FTBLibConfig
 
 	public static class Teams
 	{
+		public boolean disable_teams = false;
+
 		@Config.Comment("Automatically creates a team for player on multiplayer, based on their username and with a random color.")
 		public boolean autocreate_mp = false;
 

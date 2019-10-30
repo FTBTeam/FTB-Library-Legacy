@@ -5,7 +5,6 @@ import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.permission.context.IContext;
 
 import javax.annotation.Nullable;
 import java.util.Collection;
@@ -38,7 +37,7 @@ public enum DefaultRankConfigHandler implements IRankConfigHandler
 	}
 
 	@Override
-	public ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, Node node, @Nullable IContext context)
+	public ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, Node node)
 	{
 		RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(node);
 

@@ -8,10 +8,6 @@ import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.server.permission.context.IContext;
-import net.minecraftforge.server.permission.context.PlayerContext;
-
-import javax.annotation.Nullable;
 
 /**
  * @author LatvianModder
@@ -39,18 +35,18 @@ public class RankConfigAPI
 		return handler;
 	}
 
-	public static ConfigValue get(MinecraftServer server, GameProfile profile, Node node, @Nullable IContext context)
+	public static ConfigValue get(MinecraftServer server, GameProfile profile, Node node)
 	{
 		Preconditions.checkNotNull(profile, "GameProfile can't be null!");
 		Preconditions.checkNotNull(node, "Config node can't be null!");
-		return getHandler().getConfigValue(server, profile, node, context);
+		return getHandler().getConfigValue(server, profile, node);
 	}
 
 	public static ConfigValue get(EntityPlayerMP player, Node node)
 	{
 		Preconditions.checkNotNull(player, "Player can't be null!");
 		Preconditions.checkNotNull(node, "Config node can't be null!");
-		return get(player.server, player.getGameProfile(), node, new PlayerContext(player));
+		return get(player.server, player.getGameProfile(), node);
 	}
 
 	public static ConfigValue getConfigValue(Node node, boolean op)
