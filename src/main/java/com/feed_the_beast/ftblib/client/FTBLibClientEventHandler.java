@@ -31,6 +31,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ChatType;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -103,7 +104,18 @@ public class FTBLibClientEventHandler
 			text = new ArrayList<>();
 			timer = n instanceof Notification ? ((Notification) n).getTimer().ticks() : 60L;
 
-			for (String s : font.listFormattedStringToWidth(notification.getFormattedText(), new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth()))
+			String s0;
+
+			try
+			{
+				s0 = notification.getFormattedText();
+			}
+			catch (Exception ex)
+			{
+				s0 = TextFormatting.RED + ex.toString();
+			}
+
+			for (String s : font.listFormattedStringToWidth(s0, new ScaledResolution(Minecraft.getMinecraft()).getScaledWidth()))
 			{
 				for (String line : s.split("\n"))
 				{
