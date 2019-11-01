@@ -57,7 +57,7 @@ public class TextBox extends Widget
 
 	public String getSelectedText()
 	{
-		return text.substring(cursorPosition < selectionEnd ? cursorPosition : selectionEnd, cursorPosition < selectionEnd ? selectionEnd : cursorPosition);
+		return text.substring(Math.min(cursorPosition, selectionEnd), Math.max(cursorPosition, selectionEnd));
 	}
 
 	public final void setText(String s, boolean triggerChange)
@@ -106,8 +106,8 @@ public class TextBox extends Widget
 
 		String s = "";
 		String s1 = ChatAllowedCharacters.filterAllowedCharacters(textToWrite);
-		int i = cursorPosition < selectionEnd ? cursorPosition : selectionEnd;
-		int j = cursorPosition < selectionEnd ? selectionEnd : cursorPosition;
+		int i = Math.min(cursorPosition, selectionEnd);
+		int j = Math.max(cursorPosition, selectionEnd);
 		int k = charLimit - text.length() - (i - j);
 
 		if (!text.isEmpty())
