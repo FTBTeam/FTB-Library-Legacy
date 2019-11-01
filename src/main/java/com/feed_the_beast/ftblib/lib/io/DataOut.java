@@ -410,7 +410,7 @@ public class DataOut
 
 	public void writeIcon(@Nullable Icon icon)
 	{
-		writeJson((icon == null ? Icon.EMPTY : icon).getJson());
+		writeString(icon == null || icon.isEmpty() ? "" : icon.toString());
 	}
 
 	public void writeIntList(IntCollection collection)

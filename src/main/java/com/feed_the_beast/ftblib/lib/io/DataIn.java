@@ -422,7 +422,7 @@ public class DataIn
 
 	public Icon readIcon()
 	{
-		return Icon.getIcon(readJson());
+		return Icon.getIcon(readString());
 	}
 
 	public IntList readIntList()
