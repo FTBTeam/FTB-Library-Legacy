@@ -6,6 +6,7 @@ import com.feed_the_beast.ftblib.lib.util.BlockUtils;
 import com.feed_the_beast.ftblib.lib.util.JsonUtils;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufOutputStream;
@@ -410,7 +411,7 @@ public class DataOut
 
 	public void writeIcon(@Nullable Icon icon)
 	{
-		writeString(icon == null || icon.isEmpty() ? "" : icon.toString());
+		writeJson(icon == null || icon.isEmpty() ? JsonNull.INSTANCE : icon.getJson());
 	}
 
 	public void writeIntList(IntCollection collection)
