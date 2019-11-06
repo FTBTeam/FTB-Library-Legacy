@@ -1,7 +1,5 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
-
 import javax.annotation.Nullable;
 
 /**
@@ -9,11 +7,11 @@ import javax.annotation.Nullable;
  */
 public final class RankConfigValueInfo implements Comparable<RankConfigValueInfo>
 {
-	public final Node node;
+	public final String node;
 	public final ConfigValue defaultValue;
 	public final ConfigValue defaultOPValue;
 
-	public RankConfigValueInfo(Node s, ConfigValue def, @Nullable ConfigValue defOP)
+	public RankConfigValueInfo(String s, ConfigValue def, @Nullable ConfigValue defOP)
 	{
 		node = s;
 		defaultValue = def.copy();
@@ -27,7 +25,7 @@ public final class RankConfigValueInfo implements Comparable<RankConfigValueInfo
 
 	public String toString()
 	{
-		return node.toString();
+		return node;
 	}
 
 	public int hashCode()

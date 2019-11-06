@@ -1,7 +1,6 @@
 package com.feed_the_beast.ftblib.lib.config;
 
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.google.common.base.Preconditions;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
@@ -19,7 +18,7 @@ public enum DefaultRankConfigHandler implements IRankConfigHandler
 {
 	INSTANCE;
 
-	private static final Map<Node, RankConfigValueInfo> MAP = new HashMap<>();
+	private static final Map<String, RankConfigValueInfo> MAP = new HashMap<>();
 	private static Collection<RankConfigValueInfo> VALUES = Collections.unmodifiableCollection(MAP.values());
 
 	@Override
@@ -37,7 +36,7 @@ public enum DefaultRankConfigHandler implements IRankConfigHandler
 	}
 
 	@Override
-	public ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, Node node)
+	public ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, String node)
 	{
 		RankConfigValueInfo info = RankConfigAPI.getHandler().getInfo(node);
 
@@ -51,7 +50,7 @@ public enum DefaultRankConfigHandler implements IRankConfigHandler
 
 	@Override
 	@Nullable
-	public RankConfigValueInfo getInfo(Node node)
+	public RankConfigValueInfo getInfo(String node)
 	{
 		Preconditions.checkNotNull(node, "Config node can't be null!");
 		return MAP.get(node);

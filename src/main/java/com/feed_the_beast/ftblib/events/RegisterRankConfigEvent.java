@@ -2,7 +2,6 @@ package com.feed_the_beast.ftblib.events;
 
 import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.RankConfigValueInfo;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 
 import java.util.function.Consumer;
 
@@ -23,14 +22,14 @@ public class RegisterRankConfigEvent extends FTBLibEvent
 		callback.accept(info);
 	}
 
-	public RankConfigValueInfo register(Node id, ConfigValue defaultPlayerValue, ConfigValue defaultOPValue)
+	public RankConfigValueInfo register(String id, ConfigValue defaultPlayerValue, ConfigValue defaultOPValue)
 	{
 		RankConfigValueInfo info = new RankConfigValueInfo(id, defaultPlayerValue, defaultOPValue);
 		register(info);
 		return info;
 	}
 
-	public RankConfigValueInfo register(Node id, ConfigValue defaultValue)
+	public RankConfigValueInfo register(String id, ConfigValue defaultValue)
 	{
 		RankConfigValueInfo info = new RankConfigValueInfo(id, defaultValue, null);
 		register(info);

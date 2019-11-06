@@ -1,6 +1,5 @@
 package com.feed_the_beast.ftblib.lib.config;
 
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
 
@@ -16,8 +15,8 @@ public interface IRankConfigHandler
 
 	Collection<RankConfigValueInfo> getRegisteredConfigs();
 
-	ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, Node node);
+	ConfigValue getConfigValue(MinecraftServer server, GameProfile profile, String node);
 
 	@Nullable
-	RankConfigValueInfo getInfo(Node node);
+	RankConfigValueInfo getInfo(String node);
 }

@@ -19,7 +19,6 @@ import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.EnumPrivacyLevel;
-import com.feed_the_beast.ftblib.lib.util.misc.Node;
 import com.feed_the_beast.ftblib.net.MessageSyncData;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.command.CommandException;
@@ -498,7 +497,7 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 		return PermissionAPI.hasPermission(getProfile(), node, getContext());
 	}
 
-	public ConfigValue getRankConfig(Node node)
+	public ConfigValue getRankConfig(String node)
 	{
 		return RankConfigAPI.get(team.universe.server, getProfile(), node);
 	}
