@@ -120,6 +120,11 @@ public class ConfigTimer extends ConfigValue implements LongSupplier
 	@Override
 	public boolean setValueFromString(@Nullable ICommandSender sender, String string, boolean simulate)
 	{
+		if (string.length() > 2 && string.startsWith("\"") && string.endsWith("\""))
+		{
+			string = string.substring(1, string.length() - 1);
+		}
+
 		if (string.isEmpty())
 		{
 			return false;
