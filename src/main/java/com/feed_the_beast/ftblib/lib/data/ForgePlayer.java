@@ -327,8 +327,6 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 			}
 		}
 
-		universe.clearCache();
-
 		if (!isFake())
 		{
 			lastTimeSeen = universe.ticks.ticks();
@@ -367,6 +365,7 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 			player.sendMessage(FTBLib.lang(player, "ftblib.lang.team.notification", b1, b2));
 		}
 
+		universe.clearCache();
 		tempPlayer = null;
 		markDirty();
 	}
