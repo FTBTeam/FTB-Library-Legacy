@@ -39,6 +39,9 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
@@ -113,20 +116,21 @@ public class Universe
 
 	// Event handlers start //
 
-	@SubscribeEvent
-	public static void onWorldLoaded(WorldEvent.Load event)
+	public static void onServerAboutToStart(FMLServerAboutToStartEvent event)
 	{
-		if (event.getWorld().provider.getDimension() == 0 && !event.getWorld().isRemote)
-		{
-			INSTANCE = new Universe((WorldServer) event.getWorld());
-			INSTANCE.load();
-		}
+		INSTANCE = new Universe(event.getServer());
 	}
 
-	@SubscribeEvent
-	public static void onWorldUnloaded(WorldEvent.Unload event)
+	public static void onServerStarted(FMLServerStartedEvent event)
 	{
-		if (loaded() && event.getWorld() == INSTANCE.world)
+		INSTANCE.world = INSTANCE.server.getWorld(0);
+		INSTANCE.ticks = Ticks.get(INSTANCE.world.getTotalWorldTime());
+		INSTANCE.load();
+	}
+
+	public static void onServerStopping(FMLServerStoppingEvent event)
+	{
+		if (loaded())
 		{
 			for (ForgePlayer player : INSTANCE.getPlayers())
 			{
@@ -146,7 +150,7 @@ public class Universe
 	@SubscribeEvent
 	public static void onWorldSaved(WorldEvent.Save event)
 	{
-		if (loaded() && event.getWorld() == INSTANCE.world)
+		if (loaded())
 		{
 			INSTANCE.save();
 		}
@@ -209,7 +213,7 @@ public class Universe
 
 		if (event.phase == TickEvent.Phase.START)
 		{
-			universe.ticks = Ticks.get(universe.world.getTotalWorldTime());
+			universe.ticks = Ticks.get(event.world.getTotalWorldTime());
 		}
 		else if (!event.world.isRemote && event.world.provider.getDimension() == 0)
 		{
@@ -261,7 +265,7 @@ public class Universe
 
 	@Nonnull
 	public final MinecraftServer server;
-	public final WorldServer world;
+	public WorldServer world;
 	public final Map<UUID, ForgePlayer> players;
 	private final Map<String, ForgeTeam> teams;
 	private final Short2ObjectOpenHashMap<ForgeTeam> teamMap;
@@ -278,12 +282,10 @@ public class Universe
 	public Ticks ticks;
 	private boolean prevCheats = false;
 
-	@SuppressWarnings("ConstantConditions")
-	public Universe(WorldServer w)
+	public Universe(MinecraftServer s)
 	{
-		server = w.getMinecraftServer();
-		world = w;
-		ticks = Ticks.get(world.getTotalWorldTime());
+		server = s;
+		ticks = Ticks.NO_TICKS;
 		players = new HashMap<>();
 		teams = new HashMap<>();
 		teamMap = new Short2ObjectOpenHashMap<>();
@@ -367,7 +369,7 @@ public class Universe
 
 		NBTTagCompound data = universeData.getCompoundTag("Data");
 
-		new UniverseLoadedEvent.Pre(this, world, data).post();
+		new UniverseLoadedEvent.Pre(this, data).post();
 
 		Map<UUID, NBTTagCompound> playerNBT = new HashMap<>();
 		Map<String, NBTTagCompound> teamNBT = new HashMap<>();
@@ -465,7 +467,7 @@ public class Universe
 		fakePlayer.team = fakePlayerTeam;
 		fakePlayerTeam.setColor(EnumTeamColor.GRAY);
 
-		new UniverseLoadedEvent.CreateServerTeams(this, world).post();
+		new UniverseLoadedEvent.CreateServerTeams(this).post();
 
 		for (ForgePlayer player : players.values())
 		{
@@ -509,8 +511,8 @@ public class Universe
 
 		fakePlayerTeam.owner = fakePlayer;
 
-		new UniverseLoadedEvent.Post(this, world, data).post();
-		new UniverseLoadedEvent.Finished(this, world).post();
+		new UniverseLoadedEvent.Post(this, data).post();
+		new UniverseLoadedEvent.Finished(this).post();
 
 		FTBLibAPI.reloadServer(this, server, EnumReloadType.CREATED, ServerReloadEvent.ALL);
 	}
@@ -608,7 +610,7 @@ public class Universe
 
 	public File getWorldDirectory()
 	{
-		return world.getSaveHandler().getWorldDirectory();
+		return server.getWorld(0).getSaveHandler().getWorldDirectory();
 	}
 
 	private void onPlayerLoggedIn(EntityPlayerMP player)

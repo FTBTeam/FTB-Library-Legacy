@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.command.CmdMySettings;
 import com.feed_the_beast.ftblib.command.CmdReload;
 import com.feed_the_beast.ftblib.command.team.CmdTeam;
 import com.feed_the_beast.ftblib.lib.command.CommandUtils;
+import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.util.SidedUtils;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -15,7 +16,10 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
 import net.minecraftforge.fml.common.network.NetworkCheckHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
@@ -92,6 +96,12 @@ public class FTBLib
 	}
 
 	@Mod.EventHandler
+	public void onServerAboutToStart(FMLServerAboutToStartEvent event)
+	{
+		Universe.onServerAboutToStart(event);
+	}
+
+	@Mod.EventHandler
 	public void onServerStarting(FMLServerStartingEvent event)
 	{
 		event.registerServerCommand(new CmdReload());
@@ -102,6 +112,18 @@ public class FTBLib
 		{
 			event.registerServerCommand(new CmdAddFakePlayer());
 		}
+	}
+
+	@Mod.EventHandler
+	public void onServerStarted(FMLServerStartedEvent event)
+	{
+		Universe.onServerStarted(event);
+	}
+
+	@Mod.EventHandler
+	public void onServerStopping(FMLServerStoppingEvent event)
+	{
+		Universe.onServerStopping(event);
 	}
 
 	@NetworkCheckHandler

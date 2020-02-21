@@ -9,26 +9,23 @@ import net.minecraft.world.WorldServer;
  */
 public abstract class UniverseLoadedEvent extends UniverseEvent
 {
-	private final WorldServer world;
-
-	public UniverseLoadedEvent(Universe universe, WorldServer w)
+	public UniverseLoadedEvent(Universe universe)
 	{
 		super(universe);
-		world = w;
 	}
 
 	public WorldServer getWorld()
 	{
-		return world;
+		return getUniverse().world;
 	}
 
 	public static class Pre extends UniverseLoadedEvent
 	{
 		private final NBTTagCompound data;
 
-		public Pre(Universe universe, WorldServer world, NBTTagCompound nbt)
+		public Pre(Universe universe, NBTTagCompound nbt)
 		{
-			super(universe, world);
+			super(universe);
 			data = nbt;
 		}
 
@@ -41,9 +38,9 @@ public abstract class UniverseLoadedEvent extends UniverseEvent
 
 	public static class CreateServerTeams extends UniverseLoadedEvent
 	{
-		public CreateServerTeams(Universe universe, WorldServer world)
+		public CreateServerTeams(Universe universe)
 		{
-			super(universe, world);
+			super(universe);
 		}
 	}
 
@@ -51,9 +48,9 @@ public abstract class UniverseLoadedEvent extends UniverseEvent
 	{
 		private final NBTTagCompound data;
 
-		public Post(Universe universe, WorldServer world, NBTTagCompound nbt)
+		public Post(Universe universe, NBTTagCompound nbt)
 		{
-			super(universe, world);
+			super(universe);
 			data = nbt;
 		}
 
@@ -66,9 +63,9 @@ public abstract class UniverseLoadedEvent extends UniverseEvent
 
 	public static class Finished extends UniverseLoadedEvent
 	{
-		public Finished(Universe universe, WorldServer world)
+		public Finished(Universe universe)
 		{
-			super(universe, world);
+			super(universe);
 		}
 	}
 }

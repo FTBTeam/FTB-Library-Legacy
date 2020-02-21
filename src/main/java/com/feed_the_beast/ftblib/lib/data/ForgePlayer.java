@@ -258,7 +258,7 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 			return tempPlayer;
 		}
 
-		EntityPlayerMP p = online ? team.universe.server.getPlayerList().getPlayerByUUID(getId()) : null;
+		EntityPlayerMP p = team.universe.server.getPlayerList().getPlayerByUUID(getId());
 
 		if (p == null)
 		{
@@ -270,7 +270,7 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 
 	public boolean isFake()
 	{
-		return false;
+		return tempPlayer instanceof FakePlayer;
 	}
 
 	public boolean isOP()
@@ -375,9 +375,9 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 		tempPlayer = p;
 		lastTimeSeen = p.world.getTotalWorldTime();
 		new ForgePlayerLoggedOutEvent(this).post();
+		clearCache();
 		online = false;
 		tempPlayer = null;
-		clearCache();
 		markDirty();
 	}
 
