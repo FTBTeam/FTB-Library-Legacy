@@ -382,7 +382,7 @@ public class Universe
 			{
 				for (File file : files)
 				{
-					if (file.getName().indexOf('.') == file.getName().lastIndexOf('.'))
+					if (file.getName().endsWith(".nbt") && file.getName().indexOf('.') == file.getName().lastIndexOf('.'))
 					{
 						NBTTagCompound nbt = NBTUtils.readNBT(file);
 
@@ -622,24 +622,28 @@ public class Universe
 
 		ForgePlayer p = getPlayer(player.getGameProfile());
 
-		if (p != null && p.isOnline())
-		{
-			return;
-		}
-
-		boolean firstLogin = p == null;
-
-		if (firstLogin)
+		if (p == null)
 		{
 			p = new ForgePlayer(this, player.getUniqueID(), player.getName());
 			players.put(p.getId(), p);
+			p.onLoggedIn(player, this, true);
 		}
-		else if (!p.getName().equals(player.getName()))
+		else
 		{
-			p.setName(player.getName());
-		}
+			if (!p.getId().equals(player.getUniqueID()) || !p.getName().equals(player.getName()))
+			{
+				File old = p.getDataFile("");
+				players.remove(p.getId());
+				p.profile = new GameProfile(player.getUniqueID(), player.getName());
+				players.put(p.getId(), p);
+				old.renameTo(p.getDataFile(""));
+				p.markDirty();
+				p.team.markDirty();
+				markDirty();
+			}
 
-		p.onLoggedIn(player, this, firstLogin);
+			p.onLoggedIn(player, this, false);
+		}
 	}
 
 	public Collection<ForgePlayer> getPlayers()

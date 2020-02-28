@@ -15,7 +15,6 @@ import com.feed_the_beast.ftblib.lib.config.ConfigValue;
 import com.feed_the_beast.ftblib.lib.config.IConfigCallback;
 import com.feed_the_beast.ftblib.lib.config.RankConfigAPI;
 import com.feed_the_beast.ftblib.lib.icon.PlayerHeadIcon;
-import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.ServerUtils;
 import com.feed_the_beast.ftblib.lib.util.StringUtils;
 import com.feed_the_beast.ftblib.lib.util.misc.EnumPrivacyLevel;
@@ -54,29 +53,30 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 {
 	private static FakePlayer playerForStats;
 
-	private final UUID playerId;
-	private String playerName;
+	public GameProfile profile;
+	public File file;
 	private final NBTDataStorage dataStorage;
 	public ForgeTeam team;
 	private boolean hideTeamNotification;
 	public NBTTagCompound cachedPlayerNBT;
 	private ConfigGroup cachedConfig;
-	private GameProfile cachedProfile;
 	public long lastTimeSeen;
 	public boolean needsSaving;
-	private boolean online;
 	public EntityPlayerMP tempPlayer;
 
-	public ForgePlayer(Universe u, UUID id, String name)
+	public ForgePlayer(Universe u, GameProfile p)
 	{
-		playerId = id;
-		playerName = name;
+		profile = p;
 		dataStorage = new NBTDataStorage();
 		team = u.getTeam("");
 		hideTeamNotification = false;
 		new ForgePlayerDataEvent(this, dataStorage).post();
 		needsSaving = false;
-		online = false;
+	}
+
+	public ForgePlayer(Universe u, UUID id, String name)
+	{
+		this(u, new GameProfile(id, name));
 	}
 
 	@Override
@@ -100,7 +100,6 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 	public void clearCache()
 	{
 		cachedPlayerNBT = null;
-		cachedProfile = null;
 		cachedConfig = null;
 		dataStorage.clearCache();
 	}
@@ -118,32 +117,17 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 
 	public GameProfile getProfile()
 	{
-		if (cachedProfile == null)
-		{
-			cachedProfile = new GameProfile(playerId, playerName);
-		}
-
-		return cachedProfile;
+		return profile;
 	}
 
 	public final UUID getId()
 	{
-		return playerId;
+		return profile.getId();
 	}
 
 	public final String getName()
 	{
-		return playerName;
-	}
-
-	public final void setName(String n)
-	{
-		if (!isFake() && !playerName.equals(n))
-		{
-			FileUtils.deleteSafe(getDataFile(""));
-			playerName = n;
-			markDirty();
-		}
+		return profile.getName();
 	}
 
 	public final String getDisplayNameString()
@@ -248,17 +232,23 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 
 	public boolean isOnline()
 	{
-		return online;
+		return getNullablePlayer() != null;
 	}
 
-	public EntityPlayerMP getPlayer()
+	@Nullable
+	public EntityPlayerMP getNullablePlayer()
 	{
 		if (tempPlayer != null)
 		{
 			return tempPlayer;
 		}
 
-		EntityPlayerMP p = team.universe.server.getPlayerList().getPlayerByUUID(getId());
+		return team.universe.server.getPlayerList().getPlayerByUUID(getId());
+	}
+
+	public EntityPlayerMP getPlayer()
+	{
+		EntityPlayerMP p = getNullablePlayer();
 
 		if (p == null)
 		{
@@ -281,7 +271,6 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 	void onLoggedIn(EntityPlayerMP player, Universe universe, boolean firstLogin)
 	{
 		tempPlayer = player;
-		online = true;
 
 		boolean sendTeamJoinEvent = false, sendTeamCreatedEvent = false;
 
@@ -376,7 +365,6 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 		lastTimeSeen = p.world.getTotalWorldTime();
 		new ForgePlayerLoggedOutEvent(this).post();
 		clearCache();
-		online = false;
 		tempPlayer = null;
 		markDirty();
 	}

@@ -774,9 +774,11 @@ public class ForgeTeam extends FinalIDObject implements INBTSerializable<NBTTagC
 
 		for (ForgePlayer player : getMembers())
 		{
-			if (player.isOnline())
+			EntityPlayerMP p = player.getNullablePlayer();
+
+			if (p != null)
 			{
-				list.add(player.getPlayer());
+				list.add(p);
 			}
 		}
 
