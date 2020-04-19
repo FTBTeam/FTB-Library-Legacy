@@ -21,6 +21,10 @@ gui.inactive=Неактивный
 gui.settings=Настройки
 gui.rename=Переименовать
 gui.search_box=Поиск...
+gui.move=Отправить
+gui.copy=Копировать
+gui.paste=Вставить
+gui.cut=Вырезать
 
 ## Labels
 gui.other=Другой
@@ -65,15 +69,16 @@ key.categories.ftbmods=FTB Mods
 stand_still=Пожалуйста, остановитесь на %d секунд.
 stand_still_failed=Вы переместились! Телепорт отменен.
 teleporting=Телепортация...
-cooldown=Кулдаун
+cooldown=Перезарядка
 cant_use_now=Не могу использовать это прямо сейчас!
 cant_use_now_cooldown=Не могу использовать это прямо сейчас! Кулдаун: %s
 action_bar=Action Bar
 nothing_changed=Ничего не изменилось!
 player_must_be_online=Игрок должен быть в сети!
+lat_support=Нравится этот мод? Нажмите тут, чтобы поддержать мои проекты!
 
 ftblib.lang.reload_server_button=Перезагрузить сервер
-ftblib.lang.reload_server=FTBLib: Сервер перезагружен в %s
+ftblib.lang.reload_server=Сервер перезагрузится в %s
 ftblib.lang.reload_client=Вы можете нажать %s, чтобы перезагрузить клиент.
 ftblib.lang.reload_failed=Эти ID не удалось перезагрузить:
 
@@ -101,7 +106,7 @@ ftblib.general.clientless_mode=Безклиентский режим
 ftblib.general.replace_reload_command=Заменить команду /reload
 ftblib.general.merge_offline_mode_players=Объединение игроков в автономном режиме
 
-ftblib.teams=Teams
+ftblib.teams=Команды
 ftblib.teams.autocreate_sp=Автосоздание в одиночной игре
 ftblib.teams.autocreate_mp=Автосоздание в мультиплеере
 
@@ -139,6 +144,7 @@ team_config.ftblib.free_to_join=Свободно присоединиться
 team_config.ftblib.free_to_join.tooltip=Любой желающий может присоединиться без приглашения
 
 # Teams
+ftblib.lang.team.no_team=Нет команды
 ftblib.lang.team.created=Команда '%s' создана
 ftblib.lang.team.id_already_exists=ID уже зарегистрирован!
 ftblib.lang.team.id_invalid=ID может содержать только строчные буквы a-z, _ и |!
@@ -147,7 +153,7 @@ ftblib.lang.team.member_left=%s покинул вашу команду!
 ftblib.lang.team.member_joined=%s присоединился к вашей команде!
 ftblib.lang.team.transferred_ownership=Новый владелец сейчас %s
 ftblib.lang.team.invited=Приглашен %s в '%s'
-ftblib.lang.team.invited_you=Вы были приглашены в '%s' от %s
+ftblib.lang.team.invited_you=Вы были приглашены в '%s' от %s. Нажмите здесь, чтобы присоединиться!
 ftblib.lang.team.cancel_invite=Отменить приглашение
 ftblib.lang.team.error.not_found=Команда '%s' не найдена!
 ftblib.lang.team.error.no_team=Вы должны быть в команде, чтобы сделать это!
@@ -169,7 +175,9 @@ team_action.ftblib.members=Члены
 team_action.ftblib.allies=Союзники
 team_action.ftblib.moderators=Модераторы
 team_action.ftblib.enemies=Враги
+team_action.ftblib.change_team=Присоединиться к другой команде
 team_action.ftblib.leave=Выйти из команды
+team_action.ftblib.leave.confirmation=Внимание! Вы можете потерять прогресс квеста и другие вещи, если вы это сделаете!
 team_action.ftblib.transfer_ownership=Передача прав владельца
 
 ftblib.lang.team.gui.join_team=Нажмите, чтобы присоединиться '%s'
@@ -236,11 +244,20 @@ commands.team.transfer_ownership.usage=/team transfer_ownership <player>
 commands.team.kick.usage=/team kick <player>
 commands.team.join.usage=/team join <team>
 commands.team.status.usage=/team status <player> [set_status]
-commands.team.status.set=Status for %s set to %s
-commands.team.status.cant_set=Status can't be set!
+commands.team.status.set=Статус для %s установлен на %s
+commands.team.status.cant_set=Статус не может быть установлен!
 commands.team.msg.usage=/team msg <message...>
 commands.team.delete.usage=/team delete <team>
 commands.team.request_invite.usage=/team request_invite <team>
+commands.team.create_server_team.usage=/team create_server_team <id>
+commands.team.info.usage=/team info <team>
+commands.team.info.id=ID: %s
+commands.team.info.uid=UID: %s
+commands.team.info.owner=Владелец: %s
+commands.team.info.members=Участники: %s
+commands.team.get.usage=/team get <player>
+commands.team.list.usage=/team list
+commands.team.list.teams=Список всех команд (%d):
 commands.add_fake_player.usage=/add_fake_player <uuid> <name>
 
 # Client Commands
