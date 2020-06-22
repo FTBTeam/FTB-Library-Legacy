@@ -54,7 +54,6 @@ public class ForgePlayer implements INBTSerializable<NBTTagCompound>, Comparable
 	private static FakePlayer playerForStats;
 
 	public GameProfile profile;
-	public File file;
 	private final NBTDataStorage dataStorage;
 	public ForgeTeam team;
 	private boolean hideTeamNotification;

@@ -382,7 +382,7 @@ public class Universe
 			{
 				for (File file : files)
 				{
-					if (file.getName().endsWith(".nbt") && file.getName().indexOf('.') == file.getName().lastIndexOf('.'))
+					if (file.isFile() && file.getName().endsWith(".dat") && file.getName().indexOf('.') == file.getName().lastIndexOf('.'))
 					{
 						NBTTagCompound nbt = NBTUtils.readNBT(file);
 
@@ -422,7 +422,7 @@ public class Universe
 			{
 				for (File file : files)
 				{
-					if (file.isFile() && file.getName().indexOf('.') == file.getName().lastIndexOf('.'))
+					if (file.isFile() && file.getName().endsWith(".dat") && file.getName().indexOf('.') == file.getName().lastIndexOf('.'))
 					{
 						NBTTagCompound nbt = NBTUtils.readNBT(file);
 
