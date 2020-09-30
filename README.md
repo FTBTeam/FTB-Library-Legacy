@@ -21,5 +21,5 @@ dependencies {
 
 And `ftblib_version=5.+` line in your `gradle.properties` file. You can also specify exact version, e.g. `5.0.0`.
 
-You probably also want to add "required-after:ftblib" or "after:ftblib" in your @Mod's dependencies.
+You may probably also want to add "required-after:ftblib" or "after:ftblib" in your @Mod's dependencies.
 Most of the APIs don't need hard dependency, but things like GUIs won't work without FTBLib loaded
