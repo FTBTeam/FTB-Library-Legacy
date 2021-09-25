@@ -1,5 +1,7 @@
 # FTB Library [![](http://cf.way2muchnoise.eu/ftblib.svg) ![](https://cf.way2muchnoise.eu/packs/ftblib.svg) ![](http://cf.way2muchnoise.eu/versions/ftblib.svg)](https://www.curseforge.com/minecraft/mc-mods/ftblib)
 
+Use https://github.com/FTBTeam/FTB-Mods-Issues for any mod issues
+
 ### Building the mod
 
 - Make sure you have Java JDK 1.8+ installed
