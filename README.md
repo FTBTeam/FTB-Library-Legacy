@@ -1,4 +1,4 @@
-# FTB Library [![](http://cf.way2muchnoise.eu/ftblib.svg) ![](https://cf.way2muchnoise.eu/packs/ftblib.svg) ![](http://cf.way2muchnoise.eu/versions/ftblib.svg)](https://www.curseforge.com/minecraft/mc-mods/ftblib)
+# FTB Library [![](http://cf.way2muchnoise.eu/ftb-library-legacy-forge.svg) ![](https://cf.way2muchnoise.eu/packs/ftb-library-legacy-forge.svg) ![](http://cf.way2muchnoise.eu/versions/ftb-library-legacy-forge.svg)](https://www.curseforge.com/minecraft/mc-mods/ftb-library-legacy-forge)
 
 Use https://github.com/FTBTeam/FTB-Mods-Issues for any mod issues
 
